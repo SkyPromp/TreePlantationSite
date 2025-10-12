@@ -1,0 +1,95 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: apbtp-db
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+    networks:
+      - default 
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${SA_PASSWORD}\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 10s
+      start_period: 60s
+      retries: 10      
+
+  webapi:
+    build:
+      context: .
+      dockerfile: AP.BTP.WebAPI/Dockerfile
+    container_name: apbtp-webapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Default=Server=db;Database=btpdb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apbtp-webapi.rule=Host(`api.${DOMAIN}`)"
+      - "traefik.http.routers.apbtp-webapi.entrypoints=${WEB}"
+      - "traefik.http.routers.apbtp-webapi.tls=${TLS}"
+      - "traefik.http.services.apbtp-webapi.loadbalancer.server.port=80"
+
+  webapp:
+    build:
+      context: .
+      dockerfile: AP.BTP.WebApp/Dockerfile
+    container_name: apbtp-webapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Api__BaseUrl=https://api.${DOMAIN}
+      - API_CERT_PATH=/certs/local.crt
+    depends_on:
+      - webapi
+    volumes:
+      - ../traefik/certs:/certs:ro      
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apbtp-webapp.rule=Host(`app.${DOMAIN}`)"
+      - "traefik.http.routers.apbtp-webapp.entrypoints=${WEB}"
+      - "traefik.http.routers.apbtp-webapp.tls=${TLS}"
+      - "traefik.http.services.apbtp-webapp.loadbalancer.server.port=80"
+
+  webappmaintenance:
+    build:
+      context: .
+      dockerfile: AP.BTP.WebAppMaintenance/Dockerfile
+    container_name: apbtp-webapp-maintenance
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Api__BaseUrl=https://api.${DOMAIN}
+      - API_CERT_PATH=/certs/local.crt
+    depends_on:
+      - webapi
+    volumes:
+      - ../traefik/certs:/certs:ro
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apbtp-webapp-maintenance.rule=Host(`admin.${DOMAIN}`)"
+      - "traefik.http.routers.apbtp-webapp-maintenance.entrypoints=${WEB}"
+      - "traefik.http.routers.apbtp-webapp-maintenance.tls=${TLS}"
+      - "traefik.http.services.apbtp-webapp-maintenance.loadbalancer.server.port=80"
+
+volumes:
+  sqlvolume:
+
+networks:
+  default:
+    driver: bridge
+  proxy:
+    external: true

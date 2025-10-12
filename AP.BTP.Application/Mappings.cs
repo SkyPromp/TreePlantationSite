@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AP.BTP.Application.CQRS.Message;
+using AP.BTP.Domain;
+using AutoMapper;
 
 namespace AP.BTP.Application
 {
@@ -11,7 +8,7 @@ namespace AP.BTP.Application
     {
         public Mappings()
         {
-
+            CreateMap<Message, MessageDTO>().ReverseMap();
         }
     }
 }
