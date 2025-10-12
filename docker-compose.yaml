@@ -51,7 +51,7 @@ services:
     depends_on:
       - webapi
     volumes:
-      - ../traefik/certs:/certs:ro      
+      - ${TRAEFIK_CERT_PATH}:/certs:ro
     networks:
       - default
       - proxy
@@ -74,7 +74,7 @@ services:
     depends_on:
       - webapi
     volumes:
-      - ../traefik/certs:/certs:ro
+      - ${TRAEFIK_CERT_PATH}:/certs:ro
     networks:
       - default
       - proxy
