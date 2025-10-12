@@ -46,7 +46,7 @@ services:
     container_name: apbtp-webapp
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Api__BaseUrl=https://api.${DOMAIN}
+      - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
     depends_on:
       - webapi
@@ -69,7 +69,7 @@ services:
     container_name: apbtp-webapp-maintenance
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Api__BaseUrl=https://api.${DOMAIN}
+      - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
     depends_on:
       - webapi

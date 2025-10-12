@@ -28,7 +28,7 @@ else
         Console.WriteLine($"BaseAddress: {client.BaseAddress}");
         try
         {
-            messages = await client.GetFromJsonAsync<List<Message>>("api/v1/message");
+            messages = await client.GetFromJsonAsync<List<Message>>("message");
         }
         catch (Exception ex)
         {
