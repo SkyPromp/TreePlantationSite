@@ -3,6 +3,6 @@
     public interface IUnitOfWork
     {
         Task Commit();
-        IMessageRepository MessageRepository { get; }
+        IPlantationSiteRepository PlantationSiteRepository { get; }
     }
 }

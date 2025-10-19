@@ -21,7 +21,7 @@ namespace AP.BTP.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AP.BTP.Domain.Message", b =>
+            modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,24 +29,157 @@ namespace AP.BTP.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Content")
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GroundPlan")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HouseNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostalCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Message");
+                    b.ToTable("PlantationSite");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            Content = "Banana"
+                            City = "City Site 0",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 0",
+                            HouseNumber = 0,
+                            Name = "Site 0",
+                            PostalCode = 1000,
+                            Street = "Street Site 0"
                         },
                         new
                         {
                             Id = -2,
-                            Content = "Works"
+                            City = "City Site 1",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 1",
+                            HouseNumber = 1,
+                            Name = "Site 1",
+                            PostalCode = 1001,
+                            Street = "Street Site 1"
+                        },
+                        new
+                        {
+                            Id = -3,
+                            City = "City Site 2",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 2",
+                            HouseNumber = 2,
+                            Name = "Site 2",
+                            PostalCode = 1002,
+                            Street = "Street Site 2"
+                        },
+                        new
+                        {
+                            Id = -4,
+                            City = "City Site 3",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 3",
+                            HouseNumber = 3,
+                            Name = "Site 3",
+                            PostalCode = 1003,
+                            Street = "Street Site 3"
+                        },
+                        new
+                        {
+                            Id = -5,
+                            City = "City Site 4",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 4",
+                            HouseNumber = 4,
+                            Name = "Site 4",
+                            PostalCode = 1004,
+                            Street = "Street Site 4"
+                        },
+                        new
+                        {
+                            Id = -6,
+                            City = "City Site 5",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 5",
+                            HouseNumber = 5,
+                            Name = "Site 5",
+                            PostalCode = 1005,
+                            Street = "Street Site 5"
+                        },
+                        new
+                        {
+                            Id = -7,
+                            City = "City Site 6",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 6",
+                            HouseNumber = 6,
+                            Name = "Site 6",
+                            PostalCode = 1006,
+                            Street = "Street Site 6"
+                        },
+                        new
+                        {
+                            Id = -8,
+                            City = "City Site 7",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 7",
+                            HouseNumber = 7,
+                            Name = "Site 7",
+                            PostalCode = 1007,
+                            Street = "Street Site 7"
+                        },
+                        new
+                        {
+                            Id = -9,
+                            City = "City Site 8",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 8",
+                            HouseNumber = 8,
+                            Name = "Site 8",
+                            PostalCode = 1008,
+                            Street = "Street Site 8"
+                        },
+                        new
+                        {
+                            Id = -10,
+                            City = "City Site 9",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 9",
+                            HouseNumber = 9,
+                            Name = "Site 9",
+                            PostalCode = 1009,
+                            Street = "Street Site 9"
+                        },
+                        new
+                        {
+                            Id = -11,
+                            City = "City Site 10",
+                            Country = "Belgium",
+                            GroundPlan = "Groundplan Site 10",
+                            HouseNumber = 10,
+                            Name = "Site 10",
+                            PostalCode = 1010,
+                            Street = "Street Site 10"
                         });
                 });
 #pragma warning restore 612, 618

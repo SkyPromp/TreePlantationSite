@@ -6,15 +6,15 @@ namespace AP.BTP.Infrastructure.UOW
     public class UnitOfWork : IUnitOfWork
     {
         private readonly BTPContext ctxt;
-        private readonly IMessageRepository messageRepo;
+        private readonly IPlantationSiteRepository plantationSiteRepo;
 
-        public UnitOfWork(BTPContext ctxt, IMessageRepository messageRepo)
+        public UnitOfWork(BTPContext ctxt, IPlantationSiteRepository plantationSiteRepo)
         {
             this.ctxt = ctxt;
-            this.messageRepo = messageRepo;
+            this.plantationSiteRepo = plantationSiteRepo;
         }
         
-        public IMessageRepository MessageRepository => messageRepo;
+        public IPlantationSiteRepository PlantationSiteRepository => plantationSiteRepo;
 
         public async Task Commit()
         {

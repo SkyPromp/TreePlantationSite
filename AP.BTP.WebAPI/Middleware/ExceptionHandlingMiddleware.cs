@@ -27,6 +27,7 @@ namespace AP.BTP.WebAPI.Middleware
                 response.Message = ex.Message;
                 switch (ex)
                 {
+                    // TODO add exception handling voor dto errors
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
                         break;

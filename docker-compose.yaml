@@ -24,7 +24,7 @@ services:
       dockerfile: AP.BTP.WebAPI/Dockerfile
     container_name: apbtp-webapi
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ConnectionStrings__Default=Server=db;Database=btpdb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;
     depends_on:
       db:
@@ -45,7 +45,7 @@ services:
       dockerfile: AP.BTP.WebApp/Dockerfile
     container_name: apbtp-webapp
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
     depends_on:
@@ -68,7 +68,7 @@ services:
       dockerfile: AP.BTP.WebAppMaintenance/Dockerfile
     container_name: apbtp-webapp-maintenance
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
     depends_on:
