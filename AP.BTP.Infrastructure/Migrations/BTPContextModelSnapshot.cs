@@ -49,6 +49,26 @@ namespace AP.BTP.Infrastructure.Migrations
                             Content = "Works"
                         });
                 });
+
+            modelBuilder.Entity("AP.BTP.Domain.Tree", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Species")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tree");
+                });
 #pragma warning restore 612, 618
         }
     }
