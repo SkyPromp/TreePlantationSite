@@ -2,7 +2,7 @@
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 
-<form>
+<form @onsubmit="Submit" @onsubmit:preventDefault="true">
     <div class="container m-8">
         <div class="row p-4">
             <div class="col-2">
@@ -13,7 +13,7 @@
             <div class="col-6">
                 <div class="card">
                     <label for="tree-name">Tree name</label>
-                    <input type="text" id="tree-name"/>
+                    <input type="text" id="tree-name" @bind="treeName"/>
                 </div>
             </div>
             <div class="col-6 ps-2">
@@ -26,23 +26,39 @@
     </div>
 </form>
 
-@code {
-    AP.BTP.Application.CQRS.Tree.TreeDTO Tree;
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
 
-    protected override async Task OnInitializedAsync()
-    {
-        await
-    }
+@code {
+    string treeName;
+    string errorMessage;
 
     private async Task Submit()
     {
         try
         {
-            var client = HttpClientFactory.CreateClient("BackendAPI");
-        } 
+            if(string.IsNullOrEmpty(treeName))
+            {
+                this.errorMessage = "The tree name is empty";
+
+                return;
+            }
+            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+            HttpResponseMessage response = await client.PostAsJsonAsync("Tree",
+                new AP.BTP.Application.CQRS.Tree.TreeDTO() { Species = this.treeName });
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = null;
+                this.treeName = "";
+            }
+            else this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+        }
         catch (Exception e)
         {
-
+            this.errorMessage = e.Message;
         }
     }
 
