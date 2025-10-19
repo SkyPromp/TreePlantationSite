@@ -13,6 +13,8 @@ namespace AP.BTP.WebAppMaintenance
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddBlazorBootstrap();
+
             builder.Services.AddHttpClient("BTPApi", client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"]!);

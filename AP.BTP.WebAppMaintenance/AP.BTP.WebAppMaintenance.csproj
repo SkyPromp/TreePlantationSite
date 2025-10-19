@@ -11,4 +11,8 @@
     <ProjectReference Include="..\AP.BTP.WebAPI\AP.BTP.WebAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
+  </ItemGroup>
+
 </Project>
