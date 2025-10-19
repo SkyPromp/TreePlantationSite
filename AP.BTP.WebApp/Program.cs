@@ -1,5 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
+using AP.BTP.WebApp.Auth0;
+using AP.BTP.WebApp.Authentication;
 using AP.BTP.WebApp.Components;
+using AP.BTP.WebApp.Extentions;
 
 namespace AP.BTP.WebApp
 {
@@ -12,6 +15,8 @@ namespace AP.BTP.WebApp
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient("BTPApi", client =>
             {
@@ -40,7 +45,13 @@ namespace AP.BTP.WebApp
                 }
 
                 return handler;
+            }).AddHttpMessageHandler(provider =>
+            {
+                // Custom handler to add the access token as Bearer token
+                return new AuthTokenHandler(provider.GetRequiredService<IHttpContextAccessor>());
             });
+
+            builder.Services.AddAuth0Authentication(builder.Configuration);
 
 
             var app = builder.Build();
@@ -51,8 +62,15 @@ namespace AP.BTP.WebApp
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.MapAuth0Endpoints();
+
+            app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
