@@ -2,11 +2,6 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AP.BTP.Application.CQRS.Tree
 {
@@ -15,10 +10,17 @@ namespace AP.BTP.Application.CQRS.Tree
         public TreeDTO Tree { get; set; }
     }
 
-    public class AddTreeValidator: AbstractValidator<AddTreeCommand>
+    public class AddTreeCommandValidator: AbstractValidator<AddTreeCommand>
     {
-        public AddTreeValidator(IUnitOfWork uow)
+        public AddTreeCommandValidator(IUnitOfWork uow)
         {
+            RuleFor(command => command.Tree.Species)
+                .NotEmpty()
+                .WithMessage("Species name is required.");
+
+            RuleFor(command => command.Tree.Id)
+                .Equal(0)
+                .WithMessage("Id should be zero when adding a tree.");
         }
     }
 
