@@ -10,6 +10,7 @@
 
                 // Allow anonymous access to /welcome and static files
                 if (path.StartsWithSegments("/welcome") ||
+                    path.StartsWithSegments("/access-denied") ||
                     path.StartsWithSegments("/_framework") ||
                     path.StartsWithSegments("/_content") ||
                     path.StartsWithSegments("/css") ||
