@@ -1,6 +1,7 @@
 ﻿using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace AP.BTP.WebApp.Auth0
 {
@@ -14,6 +15,31 @@ namespace AP.BTP.WebApp.Auth0
                 options.ClientId = config["Auth0:ClientId"]!;
                 options.ClientSecret = config["Auth0:ClientSecret"]!;
                 options.CallbackPath = "/callback";
+                options.OpenIdConnectEvents = new OpenIdConnectEvents
+                {
+                    OnRemoteFailure = context =>
+                    {
+                        // Capture the Auth0 error
+                        var failureMessage = context.Failure?.Message;
+
+                        string description = "You do not have access to this application.";
+                        if (!string.IsNullOrEmpty(failureMessage))
+                        {
+                            // Attempt to extract error_description text
+                            var match = System.Text.RegularExpressions.Regex.Match(failureMessage, @"error_description: '(.+?)'");
+                            if (match.Success)
+                                description = match.Groups[1].Value;
+                        }
+
+                        // Redirect to access denied page, passing the description as query parameter
+                        var redirectUrl = $"/access-denied?description={Uri.EscapeDataString(description)}";
+                        context.Response.Redirect(redirectUrl);
+
+                        // Stop the exception from propagating
+                        context.HandleResponse();
+                        return Task.CompletedTask;
+                    }
+                };
             })
             .WithAccessToken(options =>
             {
