@@ -9,13 +9,13 @@ namespace AP.BTP.Infrastructure.Context
     {
         public BTPContext(DbContextOptions<BTPContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<Message>().Seed();
+            modelBuilder.Entity<Tree>();
         }
     }
 }
