@@ -1,0 +1,49 @@
+﻿@page "/tree"
+@inject IHttpClientFactory HttpClientFactory
+@rendermode InteractiveServer
+
+<form>
+    <div class="container m-8">
+        <div class="row p-4">
+            <div class="col-2">
+                <p>General</p>
+            </div>
+        </div>
+        <div class="row p-4">
+            <div class="col-6">
+                <div class="card">
+                    <label for="tree-name">Tree name</label>
+                    <input type="text" id="tree-name"/>
+                </div>
+            </div>
+            <div class="col-6 ps-2">
+            </div>
+        </div>
+        <div class="row mt-2">
+            <button>Cancel</button>
+            <input type="submit" value="Submit"/>
+        </div>
+    </div>
+</form>
+
+@code {
+    AP.BTP.Application.CQRS.Tree.TreeDTO Tree;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            var client = HttpClientFactory.CreateClient("BackendAPI");
+        } 
+        catch (Exception e)
+        {
+
+        }
+    }
+
+}
