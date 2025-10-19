@@ -26,6 +26,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__Default=Server=db;Database=btpdb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;
+      - Auth0__Domain=${Auth0_Domain}
+      - Auth0__Audience=${Auth0_Audience}
+      - Auth0__ManagementClientId=${Auth0_ManagementClientId}
+      - Auth0__ManagementClientSecret=${Auth0_ManagementClientSecret}
     depends_on:
       db:
         condition: service_healthy
@@ -48,6 +52,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
+      - Auth0__Domain=${Auth0_Domain}
+      - Auth0__ClientId=${Auth0_ClientId}
+      - Auth0__ClientSecret=${Auth0_ClientSecret}
     depends_on:
       - webapi
     volumes:
@@ -71,6 +78,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - Api__BaseUrl=${BASE_URL}
       - API_CERT_PATH=/certs/local.crt
+      - Auth0__Domain=${Auth0_Domain}
+      - Auth0__ClientId=${Auth0_ClientId}
+      - Auth0__ClientSecret=${Auth0_ClientSecret}
     depends_on:
       - webapi
     volumes:
