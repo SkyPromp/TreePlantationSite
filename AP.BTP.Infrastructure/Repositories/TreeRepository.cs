@@ -26,7 +26,7 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        public Task<IEnumerable<Tree>> GetAll()
         {
             throw new NotImplementedException();
         }

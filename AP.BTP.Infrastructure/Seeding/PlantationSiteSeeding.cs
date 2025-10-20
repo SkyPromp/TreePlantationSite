@@ -10,18 +10,18 @@ namespace AP.BTP.Infrastructure.Seeding
             List<PlantationSite> sites = new List<PlantationSite>();
 
 
-            for (int i = 0; i < 11; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 sites.Add(new PlantationSite
                 {
-                    Id = -(i + 1),
-                    Name = $"Site {i}",
-                    Street = $"Street Site {i}",
+                    Id = i,
+                    Name = $"Site{i}",
+                    Street = $"Street Site{i}",
                     HouseNumber = i,
-                    City = $"City Site {i}",
+                    City = $"City Site{i}",
                     PostalCode = 1000 + i,
                     Country = "Belgium",
-                    GroundPlan = $"Groundplan Site {i}"
+                    GroundPlan = $"Groundplan Site{i}"
                 });
             }
             

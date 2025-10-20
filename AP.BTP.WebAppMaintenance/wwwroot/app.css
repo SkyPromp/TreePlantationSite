@@ -5,7 +5,20 @@ html, body {
 
 .body{
     background-color: #F0F0F0;
-    padding: 4rem 8rem;
+    height: 91vh;
+    padding: 5vh 8vw;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #2c2c2c;
+    border-color: #2c2c2c;
+    color: white;
+}
+
+.pagination .page-item .page-link {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
 }
 
 .blazor-error-boundary {

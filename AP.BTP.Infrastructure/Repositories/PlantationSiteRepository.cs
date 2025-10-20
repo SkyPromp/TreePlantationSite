@@ -22,9 +22,18 @@ public class PlantationSiteRepository: IPlantationSiteRepository
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<PlantationSite>> GetAll(int pageNr, int pageSize)
+    public async Task<IEnumerable<PlantationSite>> GetAll()
     {
-        return await dbSet.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
+        throw new NotImplementedException();
+    }
+
+    public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize)
+    {
+        var totalCount = await dbSet.CountAsync();
+        var items = await dbSet.Skip((pageNr - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
+        return (items, totalCount);
     }
 
     public async Task<PlantationSite> GetById(int id)
