@@ -24,7 +24,7 @@
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         ClaimsPrincipal user = authState.User;
 
-        if (user.Identity?.IsAuthenticated == true)
+        if (user.Identity?.IsAuthenticated ?? false)
         {
             // Redirect authenticated users to main app
             Navigation.NavigateTo("/", true);
