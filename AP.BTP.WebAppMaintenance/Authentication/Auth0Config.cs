@@ -12,9 +12,9 @@ namespace AP.BTP.WebAppMaintenance.Auth0
         {
             services.AddAuth0WebAppAuthentication(options =>
             {
-                options.Domain = config["Auth0:Domain"]!;
-                options.ClientId = config["Auth0:ClientId"]!;
-                options.ClientSecret = config["Auth0:ClientSecret"]!;
+                options.Domain = config["AUTH0:DOMAIN"]!;
+                options.ClientId = config["AUTH0:CLIENT_ID"]!;
+                options.ClientSecret = config["AUTH0:CLIENT_SECRET"]!;
                 options.CallbackPath = "/callback";
                 options.OpenIdConnectEvents = new OpenIdConnectEvents
                 {
@@ -44,7 +44,7 @@ namespace AP.BTP.WebAppMaintenance.Auth0
             })
             .WithAccessToken(options =>
             {
-                options.Audience = config["Auth0:Audience"];
+                options.Audience = config["AUTH0:AUDIENCE"];
             });
 
             services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
