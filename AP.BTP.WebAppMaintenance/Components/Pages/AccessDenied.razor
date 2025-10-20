@@ -1,0 +1,37 @@
+﻿@page "/access-denied"
+@inject NavigationManager Nav
+
+<PageTitle>Access Denied</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0">Access Denied</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-exclamation-triangle-fill display-1 text-warning"></i>
+                    </div>
+                    <p class="lead">@Message</p>
+                    <a href="/welcome" class="btn btn-primary mt-3">
+                        <i class="bi bi-arrow-left-circle"></i>Return to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "description")]
+    public string? Message { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(Message))
+            Message = "You do not have access to this application.";
+    }
+}

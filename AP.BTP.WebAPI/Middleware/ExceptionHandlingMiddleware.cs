@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System;
 using FV = FluentValidation;
+using FluentValidation;
 
 namespace AP.BTP.WebAPI.Middleware
 {
@@ -27,7 +28,11 @@ namespace AP.BTP.WebAPI.Middleware
                 response.Message = ex.Message;
                 switch (ex)
                 {
-                    // TODO add exception handling voor dto errors
+                    case ValidationException validationException:
+                        response.StatusCode = StatusCodes.Status400BadRequest;
+                        response.Message = validationException.Message;
+
+                        break;
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
                         break;

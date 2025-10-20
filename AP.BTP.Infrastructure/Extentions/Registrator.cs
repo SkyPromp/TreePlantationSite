@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Infrastructure.Context;
+using AP.BTP.Infrastructure.Repositories;
 using AP.BTP.Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace AP.BTP.Infrastructure.Extentions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPlantationSiteRepository, PlantationSiteRepository>();
+            services.AddScoped<ITreeRepository, TreeRepository>();
             return services;
         }
     }
