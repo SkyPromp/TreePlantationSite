@@ -1,0 +1,33 @@
+﻿@page "/welcome"
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Welcome</PageTitle>
+
+<div class="container text-center mt-5">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 400px;">
+        <h2 class="mb-3">Welcome to BTP</h2>
+        <p class="text-muted">Please log in or create a new account to continue.</p>
+
+        <div class="d-grid gap-2 mt-4">
+            <a class="btn btn-primary btn-lg" href="/login">Login</a>
+            <a class="btn btn-outline-secondary btn-lg" href="/register">Register</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        ClaimsPrincipal user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            // Redirect authenticated users to main app
+            Navigation.NavigateTo("/", true);
+        }
+    }
+}
