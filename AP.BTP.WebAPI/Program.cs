@@ -2,8 +2,10 @@ using AP.BTP.Application.Extentions;
 using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Extentions;
 using AP.BTP.WebAPI.Extentions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AP.BTP.WebAPI
@@ -20,7 +22,13 @@ namespace AP.BTP.WebAPI
             builder.Services.RegisterApplication();
             builder.Services.RegisterInfrastructure(builder.Configuration);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                AuthorizationPolicy policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
