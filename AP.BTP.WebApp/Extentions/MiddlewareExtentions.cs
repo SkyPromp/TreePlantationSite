@@ -2,35 +2,39 @@
 {
     public static class MiddlewareExtentions
     {
+        private static readonly string[] _anonymousPaths =
+{
+            "/welcome",
+            "/access-denied",
+            "/register",
+            "/login",
+            "/callback",
+            "/logout",
+            "/_framework",
+            "/_content",
+            "/css"
+        };
         public static IApplicationBuilder UseRedirectToWelcomeWhenUnautenticated(this IApplicationBuilder app)
         {
             app.Use(async (context, next) =>
             {
                 PathString path = context.Request.Path;
 
-                // Allow anonymous access to /welcome and static files
-                if (path.StartsWithSegments("/welcome") ||
-                    path.StartsWithSegments("/access-denied") ||
-                    path.StartsWithSegments("/_framework") ||
-                    path.StartsWithSegments("/_content") ||
-                    path.StartsWithSegments("/css") ||
-                    path.StartsWithSegments("/login") ||
-                    path.StartsWithSegments("/register") ||
-                    path.StartsWithSegments("/callback") ||
-                    path.StartsWithSegments("/logout"))
+                // Skip authentication check for allowed paths
+                if (_anonymousPaths.Any(p => path.StartsWithSegments(p)))
                 {
                     await next();
+                    return;
                 }
-                else if (!(context.User.Identity?.IsAuthenticated ?? false))
+
+                // Redirect if unauthenticated
+                if (!(context.User.Identity?.IsAuthenticated ?? false))
                 {
                     context.Response.Redirect("/welcome");
+                    return;
                 }
-                else
-                {
-                    await next();
-                }
+                await next();
             });
-
             return app;
         }
     }
