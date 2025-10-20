@@ -10,7 +10,7 @@ namespace AP.BTP.WebApp
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
@@ -24,13 +24,13 @@ namespace AP.BTP.WebApp
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var handler = new HttpClientHandler();
+                HttpClientHandler handler = new HttpClientHandler();
 
-                var certPath = builder.Configuration["API_CERT_PATH"];
+                string? certPath = builder.Configuration["API_CERT_PATH"];
                 if (!string.IsNullOrEmpty(certPath) && File.Exists(certPath))
                 {
-                    var trustedCert = new X509Certificate2(certPath);
-                    var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+                    X509Certificate2 trustedCert = new X509Certificate2(certPath);
+                    X509Store store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
                     store.Open(OpenFlags.ReadWrite);
                     store.Add(trustedCert);
                     store.Close();
@@ -54,7 +54,7 @@ namespace AP.BTP.WebApp
             builder.Services.AddAuth0Authentication(builder.Configuration);
 
 
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

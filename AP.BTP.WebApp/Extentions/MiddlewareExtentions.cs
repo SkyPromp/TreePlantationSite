@@ -6,7 +6,7 @@
         {
             app.Use(async (context, next) =>
             {
-                var path = context.Request.Path;
+                PathString path = context.Request.Path;
 
                 // Allow anonymous access to /welcome and static files
                 if (path.StartsWithSegments("/welcome") ||

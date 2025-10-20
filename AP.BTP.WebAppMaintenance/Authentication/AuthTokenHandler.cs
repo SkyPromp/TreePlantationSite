@@ -14,10 +14,10 @@ namespace AP.BTP.WebAppMaintenance.Authentication
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var context = _httpContextAccessor.HttpContext;
+            HttpContext? context = _httpContextAccessor.HttpContext;
             if (context != null)
             {
-                var accessToken = await context.GetTokenAsync("access_token");
+                string? accessToken = await context.GetTokenAsync("access_token");
                 if (!string.IsNullOrEmpty(accessToken))
                 {
                     Console.WriteLine("access token: "+accessToken);

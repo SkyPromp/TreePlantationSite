@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Text.RegularExpressions;
 
 namespace AP.BTP.WebAppMaintenance.Auth0
 {
@@ -20,19 +21,19 @@ namespace AP.BTP.WebAppMaintenance.Auth0
                     OnRemoteFailure = context =>
                     {
                         // Capture the Auth0 error
-                        var failureMessage = context.Failure?.Message;
+                        string? failureMessage = context.Failure?.Message;
 
                         string description = "You do not have access to this application.";
                         if (!string.IsNullOrEmpty(failureMessage))
                         {
                             // Attempt to extract error_description text
-                            var match = System.Text.RegularExpressions.Regex.Match(failureMessage, @"error_description: '(.+?)'");
+                            Match match = Regex.Match(failureMessage, @"error_description: '(.+?)'");
                             if (match.Success)
                                 description = match.Groups[1].Value;
                         }
 
                         // Redirect to access denied page, passing the description as query parameter
-                        var redirectUrl = $"/access-denied?description={Uri.EscapeDataString(description)}";
+                        string redirectUrl = $"/access-denied?description={Uri.EscapeDataString(description)}";
                         context.Response.Redirect(redirectUrl);
 
                         // Stop the exception from propagating
@@ -59,7 +60,7 @@ namespace AP.BTP.WebAppMaintenance.Auth0
         {
             app.MapGet("/login", async (HttpContext context, string? redirectUri) =>
             {
-                var authProps = new LoginAuthenticationPropertiesBuilder()
+                AuthenticationProperties authProps = new LoginAuthenticationPropertiesBuilder()
                     .WithRedirectUri(redirectUri ?? "/")
                     .Build();
 
@@ -68,7 +69,7 @@ namespace AP.BTP.WebAppMaintenance.Auth0
 
             app.MapGet("/register", async (HttpContext context, string? redirectUri) =>
             {
-                var authProps = new LoginAuthenticationPropertiesBuilder()
+                AuthenticationProperties authProps = new LoginAuthenticationPropertiesBuilder()
                     .WithRedirectUri(redirectUri ?? "/")
                     .WithParameter("screen_hint", "signup")
                     .Build();
@@ -78,7 +79,7 @@ namespace AP.BTP.WebAppMaintenance.Auth0
 
             app.MapGet("/logout", async (HttpContext context) =>
             {
-                var authProps = new LogoutAuthenticationPropertiesBuilder()
+                AuthenticationProperties authProps = new LogoutAuthenticationPropertiesBuilder()
                     .WithRedirectUri("/")
                     .Build();
 
