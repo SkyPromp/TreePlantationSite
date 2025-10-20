@@ -3,6 +3,8 @@ using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Extentions;
 using AP.BTP.WebAPI.Extentions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AP.BTP.WebAPI
 {
@@ -10,9 +12,9 @@ namespace AP.BTP.WebAPI
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("Default");
+            string? connectionString = builder.Configuration.GetConnectionString("Default");
 
             // Add services to the container.
             builder.Services.RegisterApplication();
@@ -23,16 +25,34 @@ namespace AP.BTP.WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            // Configure JWT Bearer Authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = $"https://{builder.Configuration["AUTH0:DOMAIN"]}/";
+                options.Audience = $"{builder.Configuration["AUTH0:AUDIENCE"]}";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
+            WebApplication app = builder.Build();
 
             // Apply migrations at startup
-            using (var scope = app.Services.CreateScope())
+            using (IServiceScope scope = app.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<BTPContext>();
+                BTPContext db = scope.ServiceProvider.GetRequiredService<BTPContext>();
 
                 // Retry a few times if SQL Server isn't ready yet
-                var retryCount = 5;
-                var delay = TimeSpan.FromSeconds(5);
+                int retryCount = 5;
+                TimeSpan delay = TimeSpan.FromSeconds(5);
                 for (int i = 0; i < retryCount; i++)
                 {
                     try
@@ -57,6 +77,7 @@ namespace AP.BTP.WebAPI
             }
             app.UseErrorHandlingMiddleware();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
