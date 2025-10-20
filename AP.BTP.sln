@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.WebAPI", "AP.BTP.WebAPI\AP.BTP.WebAPI.csproj", "{FFFC4AB0-1F06-4BEC-A177-8B2D06385239}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.WebAPI", "AP.BTP.WebAPI\AP.BTP.WebAPI.csproj", "{FFFC4AB0-1F06-4BEC-A177-8B2D06385239}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -13,17 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationCore", "Applicat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{CA99A442-4B44-4061-8F6A-227409F7460F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Infrastructure", "AP.BTP.Infrastructure\AP.BTP.Infrastructure.csproj", "{38B418C8-7917-4C84-A0AE-08601CB2E76D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Infrastructure", "AP.BTP.Infrastructure\AP.BTP.Infrastructure.csproj", "{38B418C8-7917-4C84-A0AE-08601CB2E76D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Application", "AP.BTP.Application\AP.BTP.Application.csproj", "{3901F6EF-9475-4BA5-8E40-E26DB944EB90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Application", "AP.BTP.Application\AP.BTP.Application.csproj", "{3901F6EF-9475-4BA5-8E40-E26DB944EB90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Domain", "AP.BTP.Domain\AP.BTP.Domain.csproj", "{DCE10CF8-7488-48D5-9A8D-30B01FAA6E99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Domain", "AP.BTP.Domain\AP.BTP.Domain.csproj", "{DCE10CF8-7488-48D5-9A8D-30B01FAA6E99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Unittests", "AP.BTP.Unittests\AP.BTP.Unittests.csproj", "{E1B0EEBA-93B9-47EF-9A4C-A13E477E965B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Unittests", "AP.BTP.Unittests\AP.BTP.Unittests.csproj", "{E1B0EEBA-93B9-47EF-9A4C-A13E477E965B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.WebApp", "AP.BTP.WebApp\AP.BTP.WebApp.csproj", "{57B48646-1D4A-42BA-8161-9D5D3F1B6B49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.WebApp", "AP.BTP.WebApp\AP.BTP.WebApp.csproj", "{57B48646-1D4A-42BA-8161-9D5D3F1B6B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.WebAppMaintenance", "AP.BTP.WebAppMaintenance\AP.BTP.WebAppMaintenance.csproj", "{5707E864-4CFD-4DA3-8F2A-7FE6A535A14F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.WebAppMaintenance", "AP.BTP.WebAppMaintenance\AP.BTP.WebAppMaintenance.csproj", "{5707E864-4CFD-4DA3-8F2A-7FE6A535A14F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
