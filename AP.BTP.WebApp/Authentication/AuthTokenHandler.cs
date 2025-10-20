@@ -20,7 +20,6 @@ namespace AP.BTP.WebApp.Authentication
                 string? accessToken = await context.GetTokenAsync("access_token");
                 if (!string.IsNullOrEmpty(accessToken))
                 {
-                    Console.WriteLine("access token: " + accessToken);
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 }
                 else
