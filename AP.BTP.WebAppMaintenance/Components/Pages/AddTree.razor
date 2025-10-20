@@ -55,7 +55,7 @@
                 return;
             }
             HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-            HttpResponseMessage response = await client.PostAsJsonAsync("Tree",
+            HttpResponseMessage response = await client.PostAsJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>("Tree",
                 new AP.BTP.Application.CQRS.Tree.TreeDTO() { Species = this.treeName });
 
             if (response.IsSuccessStatusCode)

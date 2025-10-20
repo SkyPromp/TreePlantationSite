@@ -1,0 +1,60 @@
+﻿@page "/tree-overview"
+@inject IHttpClientFactory HttpClientFactory
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <input type="text" @bind="SearchString" placeholder="Search" class="btn btn-success"/>
+            <p @onclick="RemoveSearchString">X</p>
+        </div>
+    </div>
+    <div class="row-cols-3">
+        @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees)
+        {
+            <div class="col"></div>
+        }
+    </div>
+    <div class="row d-flex justify-content-center">
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    private string SearchString = "";
+    private List<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
+    private string errorMessage;
+    private uint PageSize = 6;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+            HttpResponseMessage response;
+
+            response = await client.GetFromJsonAsync<List<AP.BTP.Application.CQRS.Tree.TreeDTO>>("Tree", { Page=Page, PageSize=PageSize, this.SearchString });
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = null;
+                this.Trees = await response.Content.ReadFromJsonAsync<List<AP.BTP.Application.CQRS.Tree.TreeDTO>>() ?? new List<AP.BTP.Application.CQRS.Tree.TreeDTO>();
+            }
+            else this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+
+    }
+
+    private void RemoveSearchString()
+    {
+        this.SearchString = "";
+    }
+}
