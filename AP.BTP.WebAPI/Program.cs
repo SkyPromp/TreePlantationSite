@@ -82,7 +82,9 @@ namespace AP.BTP.WebAPI
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseSwaggerBypassAuth();
             }
+
             app.UseErrorHandlingMiddleware();
 
             app.UseAuthentication();
