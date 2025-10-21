@@ -9,5 +9,10 @@ namespace AP.BTP.WebAPI.Extentions
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             return app;
         }
+
+        public static IApplicationBuilder UseSwaggerBypassAuth(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<SwaggerBypassAuthMiddleware>();
+        }
     }
 }

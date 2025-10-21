@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.CQRS.Tree;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
@@ -15,6 +16,7 @@ namespace AP.BTP.WebAPI.Controllers
             this.mediator = mediator;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddTree([FromBody] TreeDTO tree)
         {
