@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using AP.BTP.Application.CQRS.PlantationSite;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AP.BTP.WebAPI.Controllers
 {
@@ -14,7 +15,7 @@ namespace AP.BTP.WebAPI.Controllers
         {
             this.mediator = mediator;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllPlantationSitesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
