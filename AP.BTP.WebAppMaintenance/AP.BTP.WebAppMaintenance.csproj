@@ -8,12 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.5.0" />
-    <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AP.BTP.Application\AP.BTP.Application.csproj" />
     <ProjectReference Include="..\AP.BTP.WebAPI\AP.BTP.WebAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
   </ItemGroup>
 
 </Project>
