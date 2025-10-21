@@ -16,9 +16,9 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPlantationSites([FromQuery] int pageNr = 1)
+        public async Task<IActionResult> GetAllPlantationSitesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
-            return Ok(await mediator.Send(new GetAllPlantationSitesPagedQuery() { PageNr = pageNr, PageSize = 6 }));
+            return Ok(await mediator.Send(new GetAllPlantationSitesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
     }
 }

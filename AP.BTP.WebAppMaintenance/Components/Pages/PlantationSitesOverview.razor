@@ -7,10 +7,10 @@
 
 
 <div class="d-flex justify-content-between px-4">
-    <Button Color="ButtonColor.Dark" Size="ButtonSize.Large" Style="width: 10vw;"><Icon Name="IconName.Plus"></Icon> Add new</Button>
-    <TextInput @bind-Value="@searchText" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw;"/>
+    <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
 </div>
-<div class="container-fluid h-auto m-0">
+<div class="container-fluid m-0">
     @if (response?.Items != null)
     {
         @foreach (var row in Rows)
@@ -19,15 +19,15 @@
                 @foreach (var item in row)
                 {
                     <div class="col-md-4" style="padding: 2vh">
-                        <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 3vh">
-                            <CardBody>
-                                <CardTitle Size="HeadingSize.H2" Style="font-weight: bold; margin-bottom: 3vh;">@item.Name</CardTitle>
+                        <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 4vh">
+                            <CardBody Class="p-0 m-0">
+                                <CardTitle Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Name</CardTitle>
                                 <CardText Class="mb-0">@item.Street @item.HouseNumber</CardText>
                                 <CardText Class="mb-0">@item.PostalCode @item.City</CardText>
                                 <CardText Style="margin-bottom: 3vh;">@item.Country</CardText>
                                 <div class="card-buttons d-flex justify-content-between">
-                                    <Button Color="ButtonColor.Dark" Style="width:85%;">Edit</Button>
-                                    <Button Style="box-shadow: none; border: none;"><Icon Name="IconName.Trash" Color="IconColor.Danger" Size="IconSize.x5"></Icon></Button>
+                                    <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;">Edit</Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
                                 </div>
                             </CardBody>
                             
@@ -37,9 +37,14 @@
             </div>
         }
     }
+    else
+    {
+        <p class="text-center mt-4">No results found.</p>
+    }
 
     <Pagination 
             Class="justify-content-center"
+            Style="margin-top: 2vh"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"
@@ -59,6 +64,7 @@
     private int maxRows = 2;
     private int pageSize => cardsPerRow * maxRows;
     private int totalPages => response?.TotalPages ?? 1;
+    private System.Timers.Timer? debounceTimer;
 
 
     protected override async Task OnInitializedAsync()
@@ -70,8 +76,35 @@
     {
         currentPage = page;
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-        response = await client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>(
-            $"PlantationSite?pageNr={page}&pageSize={pageSize}");
+
+        string url = $"PlantationSite?pageNr={page}&pageSize={pageSize}";
+        if (!string.IsNullOrWhiteSpace(searchText))
+            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        response = await client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>(url);
+        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString()?.Trim();
+
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadPage(1);
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
     }    
 
     private IEnumerable<List<PlantationSiteDTO>> Rows =>

@@ -27,12 +27,24 @@ public class PlantationSiteRepository: IPlantationSiteRepository
         throw new NotImplementedException();
     }
 
-    public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize)
+    public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
     {
-        var totalCount = await dbSet.CountAsync();
-        var items = await dbSet.Skip((pageNr - 1) * pageSize)
+        var query = dbSet.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.ToLower();
+
+            query = query.Where(ps =>
+                ps.Name.ToLower().Contains(search));
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query.Skip((pageNr - 1) * pageSize)
                             .Take(pageSize)
                             .ToListAsync();
+                            
         return (items, totalCount);
     }
 

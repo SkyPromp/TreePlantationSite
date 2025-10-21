@@ -8,6 +8,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     {
         public int PageNr { get; set; }
         public int PageSize { get; set; }
+        public required string Search { get; set; }
     }
 
     public class GetAllPlantationSitesPagedQueryHandler: IRequestHandler<GetAllPlantationSitesPagedQuery, PagedResponse<PlantationSiteDTO>>
@@ -23,7 +24,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
         public async Task<PagedResponse<PlantationSiteDTO>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
         {
-            var (items, totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize);
+            var (items, totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
 
             return new PagedResponse<PlantationSiteDTO>
             {
