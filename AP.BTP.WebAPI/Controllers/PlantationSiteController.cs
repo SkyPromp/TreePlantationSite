@@ -15,11 +15,19 @@ namespace AP.BTP.WebAPI.Controllers
         {
             this.mediator = mediator;
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllPlantationSitesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await mediator.Send(new GetAllPlantationSitesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
+        {
+            return Created("", await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO}));
         }
     }
 }

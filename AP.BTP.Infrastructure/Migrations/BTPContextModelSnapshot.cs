@@ -41,8 +41,12 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HouseNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -66,7 +70,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site1",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site1",
-                            HouseNumber = 1,
+                            HouseNumber = "1A",
+                            IsDeleted = false,
                             Name = "Site1",
                             PostalCode = 1001,
                             Street = "Street Site1"
@@ -77,7 +82,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site2",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site2",
-                            HouseNumber = 2,
+                            HouseNumber = "2A",
+                            IsDeleted = false,
                             Name = "Site2",
                             PostalCode = 1002,
                             Street = "Street Site2"
@@ -88,7 +94,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site3",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site3",
-                            HouseNumber = 3,
+                            HouseNumber = "3A",
+                            IsDeleted = false,
                             Name = "Site3",
                             PostalCode = 1003,
                             Street = "Street Site3"
@@ -99,7 +106,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site4",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site4",
-                            HouseNumber = 4,
+                            HouseNumber = "4A",
+                            IsDeleted = false,
                             Name = "Site4",
                             PostalCode = 1004,
                             Street = "Street Site4"
@@ -110,7 +118,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site5",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site5",
-                            HouseNumber = 5,
+                            HouseNumber = "5A",
+                            IsDeleted = false,
                             Name = "Site5",
                             PostalCode = 1005,
                             Street = "Street Site5"
@@ -121,7 +130,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site6",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site6",
-                            HouseNumber = 6,
+                            HouseNumber = "6A",
+                            IsDeleted = false,
                             Name = "Site6",
                             PostalCode = 1006,
                             Street = "Street Site6"
@@ -132,7 +142,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site7",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site7",
-                            HouseNumber = 7,
+                            HouseNumber = "7A",
+                            IsDeleted = false,
                             Name = "Site7",
                             PostalCode = 1007,
                             Street = "Street Site7"
@@ -143,7 +154,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site8",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site8",
-                            HouseNumber = 8,
+                            HouseNumber = "8A",
+                            IsDeleted = false,
                             Name = "Site8",
                             PostalCode = 1008,
                             Street = "Street Site8"
@@ -154,7 +166,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site9",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site9",
-                            HouseNumber = 9,
+                            HouseNumber = "9A",
+                            IsDeleted = false,
                             Name = "Site9",
                             PostalCode = 1009,
                             Street = "Street Site9"
@@ -165,7 +178,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site10",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site10",
-                            HouseNumber = 10,
+                            HouseNumber = "10A",
+                            IsDeleted = false,
                             Name = "Site10",
                             PostalCode = 1010,
                             Street = "Street Site10"
@@ -176,7 +190,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site11",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site11",
-                            HouseNumber = 11,
+                            HouseNumber = "11A",
+                            IsDeleted = false,
                             Name = "Site11",
                             PostalCode = 1011,
                             Street = "Street Site11"
@@ -187,7 +202,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site12",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site12",
-                            HouseNumber = 12,
+                            HouseNumber = "12A",
+                            IsDeleted = false,
                             Name = "Site12",
                             PostalCode = 1012,
                             Street = "Street Site12"
@@ -198,7 +214,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site13",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site13",
-                            HouseNumber = 13,
+                            HouseNumber = "13A",
+                            IsDeleted = false,
                             Name = "Site13",
                             PostalCode = 1013,
                             Street = "Street Site13"
@@ -209,7 +226,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site14",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site14",
-                            HouseNumber = 14,
+                            HouseNumber = "14A",
+                            IsDeleted = false,
                             Name = "Site14",
                             PostalCode = 1014,
                             Street = "Street Site14"
@@ -220,7 +238,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site15",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site15",
-                            HouseNumber = 15,
+                            HouseNumber = "15A",
+                            IsDeleted = false,
                             Name = "Site15",
                             PostalCode = 1015,
                             Street = "Street Site15"
@@ -231,7 +250,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site16",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site16",
-                            HouseNumber = 16,
+                            HouseNumber = "16A",
+                            IsDeleted = false,
                             Name = "Site16",
                             PostalCode = 1016,
                             Street = "Street Site16"
@@ -242,7 +262,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site17",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site17",
-                            HouseNumber = 17,
+                            HouseNumber = "17A",
+                            IsDeleted = false,
                             Name = "Site17",
                             PostalCode = 1017,
                             Street = "Street Site17"
@@ -253,7 +274,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site18",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site18",
-                            HouseNumber = 18,
+                            HouseNumber = "18A",
+                            IsDeleted = false,
                             Name = "Site18",
                             PostalCode = 1018,
                             Street = "Street Site18"
@@ -264,7 +286,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site19",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site19",
-                            HouseNumber = 19,
+                            HouseNumber = "19A",
+                            IsDeleted = false,
                             Name = "Site19",
                             PostalCode = 1019,
                             Street = "Street Site19"
@@ -275,7 +298,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site20",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site20",
-                            HouseNumber = 20,
+                            HouseNumber = "20A",
+                            IsDeleted = false,
                             Name = "Site20",
                             PostalCode = 1020,
                             Street = "Street Site20"
@@ -286,7 +310,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site21",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site21",
-                            HouseNumber = 21,
+                            HouseNumber = "21A",
+                            IsDeleted = false,
                             Name = "Site21",
                             PostalCode = 1021,
                             Street = "Street Site21"
@@ -297,7 +322,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site22",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site22",
-                            HouseNumber = 22,
+                            HouseNumber = "22A",
+                            IsDeleted = false,
                             Name = "Site22",
                             PostalCode = 1022,
                             Street = "Street Site22"
@@ -308,7 +334,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site23",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site23",
-                            HouseNumber = 23,
+                            HouseNumber = "23A",
+                            IsDeleted = false,
                             Name = "Site23",
                             PostalCode = 1023,
                             Street = "Street Site23"
@@ -319,7 +346,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site24",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site24",
-                            HouseNumber = 24,
+                            HouseNumber = "24A",
+                            IsDeleted = false,
                             Name = "Site24",
                             PostalCode = 1024,
                             Street = "Street Site24"
@@ -330,7 +358,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site25",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site25",
-                            HouseNumber = 25,
+                            HouseNumber = "25A",
+                            IsDeleted = false,
                             Name = "Site25",
                             PostalCode = 1025,
                             Street = "Street Site25"
@@ -341,7 +370,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site26",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site26",
-                            HouseNumber = 26,
+                            HouseNumber = "26A",
+                            IsDeleted = false,
                             Name = "Site26",
                             PostalCode = 1026,
                             Street = "Street Site26"
@@ -352,7 +382,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site27",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site27",
-                            HouseNumber = 27,
+                            HouseNumber = "27A",
+                            IsDeleted = false,
                             Name = "Site27",
                             PostalCode = 1027,
                             Street = "Street Site27"
@@ -363,7 +394,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site28",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site28",
-                            HouseNumber = 28,
+                            HouseNumber = "28A",
+                            IsDeleted = false,
                             Name = "Site28",
                             PostalCode = 1028,
                             Street = "Street Site28"
@@ -374,7 +406,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site29",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site29",
-                            HouseNumber = 29,
+                            HouseNumber = "29A",
+                            IsDeleted = false,
                             Name = "Site29",
                             PostalCode = 1029,
                             Street = "Street Site29"
@@ -385,7 +418,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site30",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site30",
-                            HouseNumber = 30,
+                            HouseNumber = "30A",
+                            IsDeleted = false,
                             Name = "Site30",
                             PostalCode = 1030,
                             Street = "Street Site30"
@@ -396,7 +430,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site31",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site31",
-                            HouseNumber = 31,
+                            HouseNumber = "31A",
+                            IsDeleted = false,
                             Name = "Site31",
                             PostalCode = 1031,
                             Street = "Street Site31"
@@ -407,7 +442,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site32",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site32",
-                            HouseNumber = 32,
+                            HouseNumber = "32A",
+                            IsDeleted = false,
                             Name = "Site32",
                             PostalCode = 1032,
                             Street = "Street Site32"
@@ -418,7 +454,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site33",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site33",
-                            HouseNumber = 33,
+                            HouseNumber = "33A",
+                            IsDeleted = false,
                             Name = "Site33",
                             PostalCode = 1033,
                             Street = "Street Site33"
@@ -429,7 +466,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site34",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site34",
-                            HouseNumber = 34,
+                            HouseNumber = "34A",
+                            IsDeleted = false,
                             Name = "Site34",
                             PostalCode = 1034,
                             Street = "Street Site34"
@@ -440,7 +478,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site35",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site35",
-                            HouseNumber = 35,
+                            HouseNumber = "35A",
+                            IsDeleted = false,
                             Name = "Site35",
                             PostalCode = 1035,
                             Street = "Street Site35"
@@ -451,7 +490,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site36",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site36",
-                            HouseNumber = 36,
+                            HouseNumber = "36A",
+                            IsDeleted = false,
                             Name = "Site36",
                             PostalCode = 1036,
                             Street = "Street Site36"
@@ -462,7 +502,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site37",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site37",
-                            HouseNumber = 37,
+                            HouseNumber = "37A",
+                            IsDeleted = false,
                             Name = "Site37",
                             PostalCode = 1037,
                             Street = "Street Site37"
@@ -473,7 +514,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site38",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site38",
-                            HouseNumber = 38,
+                            HouseNumber = "38A",
+                            IsDeleted = false,
                             Name = "Site38",
                             PostalCode = 1038,
                             Street = "Street Site38"
@@ -484,7 +526,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site39",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site39",
-                            HouseNumber = 39,
+                            HouseNumber = "39A",
+                            IsDeleted = false,
                             Name = "Site39",
                             PostalCode = 1039,
                             Street = "Street Site39"
@@ -495,7 +538,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site40",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site40",
-                            HouseNumber = 40,
+                            HouseNumber = "40A",
+                            IsDeleted = false,
                             Name = "Site40",
                             PostalCode = 1040,
                             Street = "Street Site40"
@@ -506,7 +550,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site41",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site41",
-                            HouseNumber = 41,
+                            HouseNumber = "41A",
+                            IsDeleted = false,
                             Name = "Site41",
                             PostalCode = 1041,
                             Street = "Street Site41"
@@ -517,7 +562,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site42",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site42",
-                            HouseNumber = 42,
+                            HouseNumber = "42A",
+                            IsDeleted = false,
                             Name = "Site42",
                             PostalCode = 1042,
                             Street = "Street Site42"
@@ -528,7 +574,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site43",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site43",
-                            HouseNumber = 43,
+                            HouseNumber = "43A",
+                            IsDeleted = false,
                             Name = "Site43",
                             PostalCode = 1043,
                             Street = "Street Site43"
@@ -539,7 +586,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site44",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site44",
-                            HouseNumber = 44,
+                            HouseNumber = "44A",
+                            IsDeleted = false,
                             Name = "Site44",
                             PostalCode = 1044,
                             Street = "Street Site44"
@@ -550,7 +598,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site45",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site45",
-                            HouseNumber = 45,
+                            HouseNumber = "45A",
+                            IsDeleted = false,
                             Name = "Site45",
                             PostalCode = 1045,
                             Street = "Street Site45"
@@ -561,7 +610,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site46",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site46",
-                            HouseNumber = 46,
+                            HouseNumber = "46A",
+                            IsDeleted = false,
                             Name = "Site46",
                             PostalCode = 1046,
                             Street = "Street Site46"
@@ -572,7 +622,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site47",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site47",
-                            HouseNumber = 47,
+                            HouseNumber = "47A",
+                            IsDeleted = false,
                             Name = "Site47",
                             PostalCode = 1047,
                             Street = "Street Site47"
@@ -583,7 +634,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site48",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site48",
-                            HouseNumber = 48,
+                            HouseNumber = "48A",
+                            IsDeleted = false,
                             Name = "Site48",
                             PostalCode = 1048,
                             Street = "Street Site48"
@@ -594,7 +646,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site49",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site49",
-                            HouseNumber = 49,
+                            HouseNumber = "49A",
+                            IsDeleted = false,
                             Name = "Site49",
                             PostalCode = 1049,
                             Street = "Street Site49"
@@ -605,7 +658,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site50",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site50",
-                            HouseNumber = 50,
+                            HouseNumber = "50A",
+                            IsDeleted = false,
                             Name = "Site50",
                             PostalCode = 1050,
                             Street = "Street Site50"
@@ -616,7 +670,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site51",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site51",
-                            HouseNumber = 51,
+                            HouseNumber = "51A",
+                            IsDeleted = false,
                             Name = "Site51",
                             PostalCode = 1051,
                             Street = "Street Site51"
@@ -627,7 +682,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site52",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site52",
-                            HouseNumber = 52,
+                            HouseNumber = "52A",
+                            IsDeleted = false,
                             Name = "Site52",
                             PostalCode = 1052,
                             Street = "Street Site52"
@@ -638,7 +694,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site53",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site53",
-                            HouseNumber = 53,
+                            HouseNumber = "53A",
+                            IsDeleted = false,
                             Name = "Site53",
                             PostalCode = 1053,
                             Street = "Street Site53"
@@ -649,7 +706,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site54",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site54",
-                            HouseNumber = 54,
+                            HouseNumber = "54A",
+                            IsDeleted = false,
                             Name = "Site54",
                             PostalCode = 1054,
                             Street = "Street Site54"
@@ -660,7 +718,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site55",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site55",
-                            HouseNumber = 55,
+                            HouseNumber = "55A",
+                            IsDeleted = false,
                             Name = "Site55",
                             PostalCode = 1055,
                             Street = "Street Site55"
@@ -671,7 +730,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site56",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site56",
-                            HouseNumber = 56,
+                            HouseNumber = "56A",
+                            IsDeleted = false,
                             Name = "Site56",
                             PostalCode = 1056,
                             Street = "Street Site56"
@@ -682,7 +742,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site57",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site57",
-                            HouseNumber = 57,
+                            HouseNumber = "57A",
+                            IsDeleted = false,
                             Name = "Site57",
                             PostalCode = 1057,
                             Street = "Street Site57"
@@ -693,7 +754,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site58",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site58",
-                            HouseNumber = 58,
+                            HouseNumber = "58A",
+                            IsDeleted = false,
                             Name = "Site58",
                             PostalCode = 1058,
                             Street = "Street Site58"
@@ -704,7 +766,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site59",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site59",
-                            HouseNumber = 59,
+                            HouseNumber = "59A",
+                            IsDeleted = false,
                             Name = "Site59",
                             PostalCode = 1059,
                             Street = "Street Site59"
@@ -715,7 +778,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site60",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site60",
-                            HouseNumber = 60,
+                            HouseNumber = "60A",
+                            IsDeleted = false,
                             Name = "Site60",
                             PostalCode = 1060,
                             Street = "Street Site60"
@@ -726,7 +790,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site61",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site61",
-                            HouseNumber = 61,
+                            HouseNumber = "61A",
+                            IsDeleted = false,
                             Name = "Site61",
                             PostalCode = 1061,
                             Street = "Street Site61"
@@ -737,7 +802,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site62",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site62",
-                            HouseNumber = 62,
+                            HouseNumber = "62A",
+                            IsDeleted = false,
                             Name = "Site62",
                             PostalCode = 1062,
                             Street = "Street Site62"
@@ -748,7 +814,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site63",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site63",
-                            HouseNumber = 63,
+                            HouseNumber = "63A",
+                            IsDeleted = false,
                             Name = "Site63",
                             PostalCode = 1063,
                             Street = "Street Site63"
@@ -759,7 +826,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site64",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site64",
-                            HouseNumber = 64,
+                            HouseNumber = "64A",
+                            IsDeleted = false,
                             Name = "Site64",
                             PostalCode = 1064,
                             Street = "Street Site64"
@@ -770,7 +838,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site65",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site65",
-                            HouseNumber = 65,
+                            HouseNumber = "65A",
+                            IsDeleted = false,
                             Name = "Site65",
                             PostalCode = 1065,
                             Street = "Street Site65"
@@ -781,7 +850,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site66",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site66",
-                            HouseNumber = 66,
+                            HouseNumber = "66A",
+                            IsDeleted = false,
                             Name = "Site66",
                             PostalCode = 1066,
                             Street = "Street Site66"
@@ -792,7 +862,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site67",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site67",
-                            HouseNumber = 67,
+                            HouseNumber = "67A",
+                            IsDeleted = false,
                             Name = "Site67",
                             PostalCode = 1067,
                             Street = "Street Site67"
@@ -803,7 +874,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site68",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site68",
-                            HouseNumber = 68,
+                            HouseNumber = "68A",
+                            IsDeleted = false,
                             Name = "Site68",
                             PostalCode = 1068,
                             Street = "Street Site68"
@@ -814,7 +886,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site69",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site69",
-                            HouseNumber = 69,
+                            HouseNumber = "69A",
+                            IsDeleted = false,
                             Name = "Site69",
                             PostalCode = 1069,
                             Street = "Street Site69"
@@ -825,7 +898,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site70",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site70",
-                            HouseNumber = 70,
+                            HouseNumber = "70A",
+                            IsDeleted = false,
                             Name = "Site70",
                             PostalCode = 1070,
                             Street = "Street Site70"
@@ -836,7 +910,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site71",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site71",
-                            HouseNumber = 71,
+                            HouseNumber = "71A",
+                            IsDeleted = false,
                             Name = "Site71",
                             PostalCode = 1071,
                             Street = "Street Site71"
@@ -847,7 +922,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site72",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site72",
-                            HouseNumber = 72,
+                            HouseNumber = "72A",
+                            IsDeleted = false,
                             Name = "Site72",
                             PostalCode = 1072,
                             Street = "Street Site72"
@@ -858,7 +934,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site73",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site73",
-                            HouseNumber = 73,
+                            HouseNumber = "73A",
+                            IsDeleted = false,
                             Name = "Site73",
                             PostalCode = 1073,
                             Street = "Street Site73"
@@ -869,7 +946,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site74",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site74",
-                            HouseNumber = 74,
+                            HouseNumber = "74A",
+                            IsDeleted = false,
                             Name = "Site74",
                             PostalCode = 1074,
                             Street = "Street Site74"
@@ -880,7 +958,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site75",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site75",
-                            HouseNumber = 75,
+                            HouseNumber = "75A",
+                            IsDeleted = false,
                             Name = "Site75",
                             PostalCode = 1075,
                             Street = "Street Site75"
@@ -891,7 +970,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site76",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site76",
-                            HouseNumber = 76,
+                            HouseNumber = "76A",
+                            IsDeleted = false,
                             Name = "Site76",
                             PostalCode = 1076,
                             Street = "Street Site76"
@@ -902,7 +982,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site77",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site77",
-                            HouseNumber = 77,
+                            HouseNumber = "77A",
+                            IsDeleted = false,
                             Name = "Site77",
                             PostalCode = 1077,
                             Street = "Street Site77"
@@ -913,7 +994,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site78",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site78",
-                            HouseNumber = 78,
+                            HouseNumber = "78A",
+                            IsDeleted = false,
                             Name = "Site78",
                             PostalCode = 1078,
                             Street = "Street Site78"
@@ -924,7 +1006,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site79",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site79",
-                            HouseNumber = 79,
+                            HouseNumber = "79A",
+                            IsDeleted = false,
                             Name = "Site79",
                             PostalCode = 1079,
                             Street = "Street Site79"
@@ -935,7 +1018,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site80",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site80",
-                            HouseNumber = 80,
+                            HouseNumber = "80A",
+                            IsDeleted = false,
                             Name = "Site80",
                             PostalCode = 1080,
                             Street = "Street Site80"
@@ -946,7 +1030,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site81",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site81",
-                            HouseNumber = 81,
+                            HouseNumber = "81A",
+                            IsDeleted = false,
                             Name = "Site81",
                             PostalCode = 1081,
                             Street = "Street Site81"
@@ -957,7 +1042,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site82",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site82",
-                            HouseNumber = 82,
+                            HouseNumber = "82A",
+                            IsDeleted = false,
                             Name = "Site82",
                             PostalCode = 1082,
                             Street = "Street Site82"
@@ -968,7 +1054,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site83",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site83",
-                            HouseNumber = 83,
+                            HouseNumber = "83A",
+                            IsDeleted = false,
                             Name = "Site83",
                             PostalCode = 1083,
                             Street = "Street Site83"
@@ -979,7 +1066,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site84",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site84",
-                            HouseNumber = 84,
+                            HouseNumber = "84A",
+                            IsDeleted = false,
                             Name = "Site84",
                             PostalCode = 1084,
                             Street = "Street Site84"
@@ -990,7 +1078,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site85",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site85",
-                            HouseNumber = 85,
+                            HouseNumber = "85A",
+                            IsDeleted = false,
                             Name = "Site85",
                             PostalCode = 1085,
                             Street = "Street Site85"
@@ -1001,7 +1090,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site86",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site86",
-                            HouseNumber = 86,
+                            HouseNumber = "86A",
+                            IsDeleted = false,
                             Name = "Site86",
                             PostalCode = 1086,
                             Street = "Street Site86"
@@ -1012,7 +1102,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site87",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site87",
-                            HouseNumber = 87,
+                            HouseNumber = "87A",
+                            IsDeleted = false,
                             Name = "Site87",
                             PostalCode = 1087,
                             Street = "Street Site87"
@@ -1023,7 +1114,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site88",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site88",
-                            HouseNumber = 88,
+                            HouseNumber = "88A",
+                            IsDeleted = false,
                             Name = "Site88",
                             PostalCode = 1088,
                             Street = "Street Site88"
@@ -1034,7 +1126,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site89",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site89",
-                            HouseNumber = 89,
+                            HouseNumber = "89A",
+                            IsDeleted = false,
                             Name = "Site89",
                             PostalCode = 1089,
                             Street = "Street Site89"
@@ -1045,7 +1138,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site90",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site90",
-                            HouseNumber = 90,
+                            HouseNumber = "90A",
+                            IsDeleted = false,
                             Name = "Site90",
                             PostalCode = 1090,
                             Street = "Street Site90"
@@ -1056,7 +1150,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site91",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site91",
-                            HouseNumber = 91,
+                            HouseNumber = "91A",
+                            IsDeleted = false,
                             Name = "Site91",
                             PostalCode = 1091,
                             Street = "Street Site91"
@@ -1067,7 +1162,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site92",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site92",
-                            HouseNumber = 92,
+                            HouseNumber = "92A",
+                            IsDeleted = false,
                             Name = "Site92",
                             PostalCode = 1092,
                             Street = "Street Site92"
@@ -1078,7 +1174,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site93",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site93",
-                            HouseNumber = 93,
+                            HouseNumber = "93A",
+                            IsDeleted = false,
                             Name = "Site93",
                             PostalCode = 1093,
                             Street = "Street Site93"
@@ -1089,7 +1186,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site94",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site94",
-                            HouseNumber = 94,
+                            HouseNumber = "94A",
+                            IsDeleted = false,
                             Name = "Site94",
                             PostalCode = 1094,
                             Street = "Street Site94"
@@ -1100,7 +1198,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site95",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site95",
-                            HouseNumber = 95,
+                            HouseNumber = "95A",
+                            IsDeleted = false,
                             Name = "Site95",
                             PostalCode = 1095,
                             Street = "Street Site95"
@@ -1111,7 +1210,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site96",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site96",
-                            HouseNumber = 96,
+                            HouseNumber = "96A",
+                            IsDeleted = false,
                             Name = "Site96",
                             PostalCode = 1096,
                             Street = "Street Site96"
@@ -1122,7 +1222,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site97",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site97",
-                            HouseNumber = 97,
+                            HouseNumber = "97A",
+                            IsDeleted = false,
                             Name = "Site97",
                             PostalCode = 1097,
                             Street = "Street Site97"
@@ -1133,7 +1234,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site98",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site98",
-                            HouseNumber = 98,
+                            HouseNumber = "98A",
+                            IsDeleted = false,
                             Name = "Site98",
                             PostalCode = 1098,
                             Street = "Street Site98"
@@ -1144,7 +1246,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site99",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site99",
-                            HouseNumber = 99,
+                            HouseNumber = "99A",
+                            IsDeleted = false,
                             Name = "Site99",
                             PostalCode = 1099,
                             Street = "Street Site99"
@@ -1155,7 +1258,8 @@ namespace AP.BTP.Infrastructure.Migrations
                             City = "City Site100",
                             Country = "Belgium",
                             GroundPlan = "Groundplan Site100",
-                            HouseNumber = 100,
+                            HouseNumber = "100A",
+                            IsDeleted = false,
                             Name = "Site100",
                             PostalCode = 1100,
                             Street = "Street Site100"

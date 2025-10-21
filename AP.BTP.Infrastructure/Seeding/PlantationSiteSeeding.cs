@@ -17,11 +17,12 @@ namespace AP.BTP.Infrastructure.Seeding
                     Id = i,
                     Name = $"Site{i}",
                     Street = $"Street Site{i}",
-                    HouseNumber = i,
+                    HouseNumber = $"{i}A",
                     City = $"City Site{i}",
                     PostalCode = 1000 + i,
                     Country = "Belgium",
-                    GroundPlan = $"Groundplan Site{i}"
+                    GroundPlan = $"Groundplan Site{i}",
+                    IsDeleted = false
                 });
             }
             
