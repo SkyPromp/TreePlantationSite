@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Tree
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
-        public string SearchString { get; set; }
+        public string? SearchString { get; set; }
     }
 
     public class GetTreeQueryValidator: AbstractValidator<GetTreeQuery>
@@ -32,9 +32,13 @@ namespace AP.BTP.Application.CQRS.Tree
         
         public async Task<Paged<TreeDTO>> Handle(GetTreeQuery request, CancellationToken cancellationToken)
         {
-            await uow.TreeRepository.GetAll(tree);
+            int totalPages = await uow.TreeRepository.GetTotalPages(request.PageSize);
 
-            return new Paged<TreeDTO>() { PageNr = request.Page, PageSize = request.PageSize, PageCount =, Data = };
+            IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll(pageNr:request.Page, pageSize:request.PageSize);
+
+            IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees);
+
+            return new Paged<TreeDTO>() { PageNr = request.Page, PageSize = request.PageSize, PageCount = totalPages, Data = treeDTOs };
         }
     }
 }

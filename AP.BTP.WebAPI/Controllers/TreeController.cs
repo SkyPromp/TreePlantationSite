@@ -16,15 +16,22 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddTree([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string searchString)
+        public async Task<IActionResult> GetTrees([FromQuery] int page = 1, [FromQuery] int pageSize = 6, [FromQuery] string? searchString = null)
         {
-            return Created("", await mediator.Send(new GetTreeQuery() { Page=page, PageSize=pageSize, searchString=searchString }));
+            return Ok(await mediator.Send(new GetTreeQuery() { Page=page, PageSize=pageSize, SearchString=searchString }));
         }
         
         [HttpPost]
         public async Task<IActionResult> AddTree([FromBody] TreeDTO tree)
         {
             return Created("", await mediator.Send(new AddTreeCommand() { Tree = tree }));
+        }
+
+        public async Task<IActionResult> DeleteTree(int id)
+        {
+            await mediator.Send(new DeleteTreeCommand() { Id = id });
+
+            return NoContent();
         }
     }
 }

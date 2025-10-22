@@ -1,6 +1,6 @@
 ﻿namespace AP.BTP.Application.CQRS
 {
-    class Paged<T>
+    public class Paged<T>
     {
         public int PageNr { get; set; }
         public int PageSize { get; set; }

@@ -1,21 +1,52 @@
-﻿@page "/tree-overview"
+﻿@page "/tree"
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 
 <div class="container">
-    <div class="row">
-        <div class="card">
-            <input type="text" @bind="SearchString" placeholder="Search" class="btn btn-success"/>
-            <p @onclick="RemoveSearchString">X</p>
+    <div class="row mb-2">
+        <div class="col">
+            <div class="row card rounded-4">
+                <div class="col">
+                    <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
+                </div>
+                <div class="col">
+                    <p @onclick="RemoveSearchString">X</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <NavLink href="tree/edit">
+                <button class="btn btn-secondary">+ Add new</button>
+            </NavLink>
         </div>
     </div>
-    <div class="row-cols-3">
-        @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees)
+    <div class="row row-cols-3 gap-4 mb-4">
+        @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees ?? [])
         {
-            <div class="col"></div>
+            <div class="col-3">
+                <div class="card p-2">
+                    <h1>@tree.Species</h1>
+                    <div class="row align-items-center">
+                        <div class="col-11">
+                            <NavLink href="@($"tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
+                                Edit
+                            </NavLink>
+                        </div>
+                        <div class="col-1">
+                            <h3 @onclick="() => DeleteTree(tree.Id)" class="bi bi-trash text-danger d-flex justify-content-center"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     </div>
     <div class="row d-flex justify-content-center">
+        <div class="col">
+            <NavLink href="tree?page=1" class="btn btn-secondary px-3">
+                1
+            </NavLink>
+        </div>
     </div>
 </div>
 
@@ -26,32 +57,50 @@
 
 @code {
     private string SearchString = "";
-    private List<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
-    private string errorMessage;
+    private IEnumerable<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
+    private string errorMessage = "";
     private int PageSize = 6;
     private int Page = 1;
+    private HttpClient? client;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-            HttpResponseMessage response;
+            client = HttpClientFactory.CreateClient("BTPApi");
+            AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>? response;
 
-            response = await client.GetFromJsonAsync<List<AP.BTP.Application.CQRS.Tree.TreeDTO>>("Tree", { Page=Page, PageSize=PageSize, this.SearchString });
+            response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
 
-            if (response.IsSuccessStatusCode)
+            if (response != null)
             {
-                this.errorMessage = null;
-                this.Trees = await response.Content.ReadFromJsonAsync<List<AP.BTP.Application.CQRS.Tree.TreeDTO>>() ?? new List<AP.BTP.Application.CQRS.Tree.TreeDTO>();
-            }
-            else this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+                this.errorMessage = "";
+                this.Trees = response.Data;
+            } else
+                this.errorMessage = "No content found!";
         }
         catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
+    }
 
+    private async void DeleteTree(int id)
+    {
+        HttpResponseMessage? response;
+
+        if (this.client != null)
+        {
+            response = await this.client.DeleteAsync($"Tree?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                this.errorMessage = $"The deletion of id={id} has been unsuccessfull";
+            } else
+            {
+                this.errorMessage = $"{id} has been sucessfully deleted";
+            }
+        }
     }
 
     private void RemoveSearchString()
