@@ -4,13 +4,17 @@
 
 <div class="container">
     <div class="row mb-2">
-        <div class="col">
-            <div class="row card rounded-4">
-                <div class="col">
-                    <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
-                </div>
-                <div class="col">
-                    <p @onclick="RemoveSearchString">X</p>
+        <div class="col-4">
+            <div class="card rounded-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-11">
+                            <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
+                        </div>
+                        <div class="col-1 d-flex justify-content-center">
+                            <p @onclick="RemoveSearchString" class="my-1">X</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,16 +29,16 @@
         @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees ?? [])
         {
             <div class="col-3">
-                <div class="card p-2">
-                    <h1>@tree.Species</h1>
+                <div class="card p-3">
+                    <h2>@tree.Species</h2>
                     <div class="row align-items-center">
-                        <div class="col-11">
+                        <div class="col-10">
                             <NavLink href="@($"tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
                                 Edit
                             </NavLink>
                         </div>
                         <div class="col-1">
-                            <h3 @onclick="() => DeleteTree(tree.Id)" class="bi bi-trash text-danger d-flex justify-content-center"></h3>
+                            <h3 @onclick="() => DeleteTree(tree.Id)" class="bi bi-trash text-danger d-flex justify-content-center my-1"></h3>
                         </div>
                     </div>
                 </div>
@@ -42,11 +46,14 @@
         }
     </div>
     <div class="row d-flex justify-content-center">
-        <div class="col">
-            <NavLink href="tree?page=1" class="btn btn-secondary px-3">
-                1
-            </NavLink>
-        </div>
+        @for(int i = 1; i <= @TotalPages; i++)
+        {
+            <div class="col">
+                <a href="@($"tree?page={i}")" class="btn btn-secondary px-3">
+                    @i
+                </a>
+            </div>
+        }
     </div>
 </div>
 
@@ -61,6 +68,7 @@
     private string errorMessage = "";
     private int PageSize = 6;
     private int Page = 1;
+    private int TotalPages = 1;
     private HttpClient? client;
 
     protected override async Task OnInitializedAsync()
@@ -76,6 +84,7 @@
             {
                 this.errorMessage = "";
                 this.Trees = response.Data;
+                this.TotalPages = response.PageCount;
             } else
                 this.errorMessage = "No content found!";
         }
