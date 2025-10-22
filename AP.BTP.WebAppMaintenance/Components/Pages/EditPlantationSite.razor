@@ -1,8 +1,72 @@
 @page "/plantation-site/edit"
-@page "/plantation-site/edit/{id:int}" 
+@*page "/plantation-site/edit/{id:int}" *@
 @* Edit form for plantation sites. TODO: implement updating. *@
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
 @using BlazorBootstrap
-@inject IHttpClientFactory HttpClientFactory
+@*inject IHttpClientFactory HttpClientFactory*@
 
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+    <Tab Title="Site details">
+        <Content>
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label">Name</label>
+                        <TextInput @bind-value="@name"></TextInput>
+                        <label class="form-label">Address</label>
+                        <TextInput @bind-value="@address"></TextInput>
+                        <label class="form-label">Size</label>
+                        <div id="size-input" class="d-flex justify-content-between">
+                            <NumberInput @bind-value="@size" Style="width: 85%"></NumberInput>
+                            <p style="font-size: 1.75rem; font-weight: 500; color: #5f5f5f">m²</p>
+                        </div>
+                        <label class="form-label">Map</label>
+                        <InputFile OnChange="HandleMapUpload" class="form-control mb-2" />
+                    </div>
+                    <div class="col-8 d-flex justify-content-center align-items-center">
+                        @if (!string.IsNullOrEmpty(mapPreview))
+                        {
+                            <img src="@mapPreview" alt="Map Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;"/>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No map uploaded yet.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab Title="Zones">
+        <Content>
+            <div class="form-content">
+                This is the placeholder content for the <b>Zones</b> tab.
+            </div>
+        </Content>
+    </Tab>
+</Tabs>
+<div class="buttons d-flex justify-content-end mt-4">
+    <Button Style="background-color: #929393; color: white; padding: 0.7vw; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;">Cancel</Button>
+    <Button Style="background-color: #4EB862; color: white; padding: 0.7vw; width: 6vw; box-shadow: none; height: 5vh;">Save</Button>
+</div>
+@code {
+    string name = "";
+    string address = "";
+    int size = 0;
+    string map = "";
+    string mapPreview = ""; 
+
+    private async Task HandleMapUpload(InputFileChangeEventArgs e)
+    {
+        IBrowserFile file = e.File;
+
+        using var stream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(stream);
+
+        var base64 = Convert.ToBase64String(stream.ToArray());
+        mapPreview = $"data:{file.ContentType};base64,{base64}";        
+    
+        map = $"uploads/{file.Name}"; 
+    }
+}
