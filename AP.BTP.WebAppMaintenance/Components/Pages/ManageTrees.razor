@@ -28,7 +28,8 @@
     private string SearchString = "";
     private List<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
     private string errorMessage;
-    private uint PageSize = 6;
+    private int PageSize = 6;
+    private int Page = 1;
 
     protected override async Task OnInitializedAsync()
     {

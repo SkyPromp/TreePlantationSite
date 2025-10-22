@@ -26,9 +26,9 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        public  async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
         {
-            throw new NotImplementedException();
+            return await dbSet.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public Task<Tree> GetById(int id)

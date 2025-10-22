@@ -15,6 +15,12 @@ namespace AP.BTP.WebAPI.Controllers
             this.mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddTree([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string searchString)
+        {
+            return Created("", await mediator.Send(new GetTreeQuery() { Page=page, PageSize=pageSize, searchString=searchString }));
+        }
+        
         [HttpPost]
         public async Task<IActionResult> AddTree([FromBody] TreeDTO tree)
         {
