@@ -1,4 +1,5 @@
 using AP.BTP.Domain.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace AP.BTP.Domain
 {
@@ -13,6 +14,7 @@ namespace AP.BTP.Domain
         public required string Country { get; set; }
         public double Size { get; set; }
         public required string GroundPlan { get; set; }
+        [JsonIgnore] public IEnumerable<Zone>? Zones { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }
