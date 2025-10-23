@@ -8,8 +8,8 @@
 
 
 <div class="d-flex justify-content-between px-4">
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
     <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
 </div>
 <div class="container-fluid m-0">
     @if (response?.Items != null)
