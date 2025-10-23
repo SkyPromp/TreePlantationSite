@@ -1,0 +1,115 @@
+@page "/plantationSite"
+@rendermode InteractiveServer
+@using AP.BTP.Application.CQRS.PlantationSite
+@using BlazorBootstrap
+@using System.Drawing
+@inject IHttpClientFactory HttpClientFactory
+
+
+<div class="d-flex justify-content-between px-4">
+    <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
+</div>
+<div class="container-fluid m-0">
+    @if (response?.Items != null)
+    {
+        @foreach (var row in Rows)
+        {
+            <div class="row">
+                @foreach (var item in row)
+                {
+                    <div class="col-md-4" style="padding: 2vh">
+                        <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 4vh">
+                            <CardBody Class="p-0 m-0">
+                                <CardTitle Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Name</CardTitle>
+                                <CardText Class="mb-0">@item.Street @item.HouseNumber</CardText>
+                                <CardText Class="mb-0">@item.PostalCode @item.City</CardText>
+                                <CardText Style="margin-bottom: 3vh;">@item.Country</CardText>
+                                <div class="card-buttons d-flex justify-content-between">
+                                    <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;">Edit</Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
+                                </div>
+                            </CardBody>
+                            
+                        </Card>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center mt-4">No results found.</p>
+    }
+
+    <Pagination 
+            Class="justify-content-center"
+            Style="margin-top: 2vh"
+            ActivePageNumber="@currentPage"
+            TotalPages="@totalPages"
+            PageChanged="LoadPage"
+            FirstLinkIcon="IconName.ChevronDoubleLeft"
+            PreviousLinkIcon="IconName.ChevronLeft"
+            NextLinkIcon="IconName.ChevronRight"
+            LastLinkIcon="IconName.ChevronDoubleRight">
+    </Pagination>
+</div>
+
+
+@code {
+    private string? searchText = null;
+    PagedResponse<PlantationSiteDTO>? response;
+    private int currentPage = 1;
+    private int cardsPerRow = 3;
+    private int maxRows = 2;
+    private int pageSize => cardsPerRow * maxRows;
+    private int totalPages => response?.TotalPages ?? 1;
+    private System.Timers.Timer? debounceTimer;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPage(1);
+    }
+
+    private async Task LoadPage(int page)
+    {
+        currentPage = page;
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+
+        string url = $"PlantationSite?pageNr={page}&pageSize={pageSize}";
+        if (!string.IsNullOrWhiteSpace(searchText))
+            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        response = await client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>(url);
+        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString()?.Trim();
+
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadPage(1);
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
+    }    
+
+    private IEnumerable<List<PlantationSiteDTO>> Rows =>
+        (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
+            .Select((item, index) => new { item, index })
+            .GroupBy(x => x.index / cardsPerRow)
+            .Select(g => g.Select(x => x.item).ToList());        
+}

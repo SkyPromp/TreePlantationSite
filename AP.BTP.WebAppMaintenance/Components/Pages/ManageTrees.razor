@@ -100,7 +100,7 @@
     private bool IsConfirm
     {
         get { return this.isConfirm; }
-        set { 
+        set {
             this.isConfirm = value;
             this.showConfirm = false;
             if(value) this.DeleteTree(selectedTreeId);
@@ -110,9 +110,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        client = HttpClientFactory.CreateClient("BTPApi");
+        await LoadTrees();
+    }
+
+    private async Task LoadTrees()
+    {
+        if (this.client == null) return;
+
         try
         {
-            client = HttpClientFactory.CreateClient("BTPApi");
             AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>? response;
 
             response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
@@ -153,6 +160,9 @@
                 this.errorMessage = $"{id} has been sucessfully deleted";
             }
         }
+
+        await this.LoadTrees();
+        StateHasChanged();
     }
 
     private void RemoveSearchString()

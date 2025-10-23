@@ -50,5 +50,10 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             return (int)(await dbSet.CountAsync() / (double)pageSize);
         }
+
+        public async Task<IEnumerable<Tree>> GetAll()
+        {
+            return await dbSet.ToListAsync();
+        }
     }
 }

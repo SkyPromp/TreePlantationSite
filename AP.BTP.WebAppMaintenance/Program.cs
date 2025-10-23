@@ -15,6 +15,7 @@ namespace AP.BTP.WebAppMaintenance
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
             builder.Services.AddBlazorBootstrap();
 
             builder.Services.AddHttpContextAccessor();

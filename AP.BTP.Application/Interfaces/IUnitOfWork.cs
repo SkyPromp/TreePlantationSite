@@ -4,6 +4,6 @@
     {
         public ITreeRepository TreeRepository { get; }
         Task Commit();
-        IMessageRepository MessageRepository { get; }
+        IPlantationSiteRepository PlantationSiteRepository { get; }
     }
 }

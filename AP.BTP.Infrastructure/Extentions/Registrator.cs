@@ -29,7 +29,7 @@ namespace AP.BTP.Infrastructure.Extentions
         public static IServiceCollection RegisterRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IPlantationSiteRepository, PlantationSiteRepository>();
             services.AddScoped<ITreeRepository, TreeRepository>();
             return services;
         }
