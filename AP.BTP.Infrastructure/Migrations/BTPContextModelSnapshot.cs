@@ -1388,6 +1388,61 @@ namespace AP.BTP.Infrastructure.Migrations
 
                     b.ToTable("Tree");
                 });
+
+            modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PlantationSiteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TreeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantationSiteId");
+
+                    b.HasIndex("TreeId");
+
+                    b.ToTable("Zone");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
+                {
+                    b.HasOne("AP.BTP.Domain.PlantationSite", "PlantationSite")
+                        .WithMany("Zones")
+                        .HasForeignKey("PlantationSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AP.BTP.Domain.Tree", "Tree")
+                        .WithMany("Zones")
+                        .HasForeignKey("TreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlantationSite");
+
+                    b.Navigation("Tree");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
+                {
+                    b.Navigation("Zones");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.Tree", b =>
+                {
+                    b.Navigation("Zones");
+                });
 #pragma warning restore 612, 618
         }
     }
