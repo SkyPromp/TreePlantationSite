@@ -16,7 +16,6 @@ public class PlantationSiteRepository: IPlantationSiteRepository
     {
         await dbSet.AddAsync(plantationSite);
         return plantationSite;
-        // FIXME does ef core auto remap plantationSite to the saved entity (for ID)
     }
 
     public void Delete(PlantationSite item)
@@ -52,11 +51,21 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<PlantationSite> GetById(int id)
     {
-        throw new NotImplementedException();
+        PlantationSite? site = await dbSet.FirstOrDefaultAsync(p => p.Id == id);
+        if (site == null)
+            throw new KeyNotFoundException($"PlantationSite with ID {id} not found.");
+
+        return site;
     }
 
     public PlantationSite Update(PlantationSite modifiedItem)
     {
-        throw new NotImplementedException();
+        var existingEntity = dbSet.Find(modifiedItem.Id);
+        if (existingEntity == null)
+            throw new KeyNotFoundException($"PlantationSite with ID {modifiedItem.Id} not found.");
+
+        dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+        return existingEntity;
     }
 }

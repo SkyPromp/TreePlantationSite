@@ -2,7 +2,6 @@
 @page "/plantation-site/edit/{id:int}"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
-@using BlazorBootstrap
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -99,7 +98,7 @@
 @code {
     [Parameter] public int id { get; set; }
 
-    PlantationSiteDTO plantationSite = new PlantationSiteDTO()
+    PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
     {
         Id = 0,
         Name = "",
@@ -114,6 +113,19 @@
     };
 
     string groundPlanPreview = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id != 0) {
+            try {
+                HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+
+                plantationSite = await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{id}");
+            } catch (Exception ex) {
+                // TODO implement snackbar
+            }
+        }
+    }
 
     private async Task HandleValidSubmit(){
         try {
