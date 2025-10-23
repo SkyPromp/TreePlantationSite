@@ -25,9 +25,9 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpGet("pending")]
-        public async Task<IActionResult> GetPending()
+        public async Task<IActionResult> GetAllUnapprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
-            return Ok(await _mediator.Send(new GetAllUnapprovedUsersQuery()));
+            return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
     }
 }

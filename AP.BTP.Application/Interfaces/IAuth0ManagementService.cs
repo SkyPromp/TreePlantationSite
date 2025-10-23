@@ -1,5 +1,4 @@
 ﻿using AP.BTP.Application.CQRS.Users;
-using System.Text.Json;
 
 namespace AP.BTP.Application.Interfaces
 {
@@ -7,6 +6,6 @@ namespace AP.BTP.Application.Interfaces
     {
         Task<string> GetManagementTokenAsync();
         Task ApproveUserAsync(string userId);
-        Task<List<Auth0User>> ListUnapprovedUsersAsync();
+        Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search);
     }
 }

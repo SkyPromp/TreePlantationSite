@@ -79,13 +79,23 @@ namespace AP.BTP.Infrastructure.Auth0
             }
         }
 
-        public async Task<List<Auth0User>> ListUnapprovedUsersAsync()
+        public async Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
         {
             string token = await GetManagementTokenAsync();
 
-            RestClient client = new RestClient($"https://{_domain}/api/v2/users?q=app_metadata.approved:false&search_engine=v3");
-            RestRequest request = new RestRequest();
-            request.Method = Method.Get;
+            // Base URL for Auth0 Management API users endpoint
+            string baseUrl = $"https://{_domain}/api/v2/users";
+
+            var query = $"q=app_metadata.approved:false";
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query += $" AND email:*{search}*";
+            }
+
+            query += $"&search_engine=v3&page={pageNr - 1}&per_page={pageSize}&include_totals=true";
+
+            RestClient client = new RestClient(baseUrl);
+            RestRequest request = new RestRequest($"?{query}", Method.Get);
             request.AddHeader("Authorization", $"Bearer {token}");
 
             RestResponse response = await client.ExecuteAsync(request);
@@ -96,10 +106,15 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException("Failed to list users.");
             }
 
-            List<Auth0User> users = JsonSerializer.Deserialize<List<Auth0User>>(response.Content!,
+            using JsonDocument doc = JsonDocument.Parse(response.Content!);
+
+            JsonElement usersElement = doc.RootElement.GetProperty("users");
+            int totalCount = doc.RootElement.GetProperty("total").GetInt32();
+
+            List<Auth0User> users = JsonSerializer.Deserialize<List<Auth0User>>(usersElement.GetRawText(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
-            return users;
+            return (users, totalCount);
         }
     }
 }
