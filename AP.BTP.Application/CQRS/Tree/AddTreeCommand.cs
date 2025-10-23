@@ -7,7 +7,7 @@ namespace AP.BTP.Application.CQRS.Tree
 {
     public class AddTreeCommand: IRequest<TreeDTO>
     {
-        public TreeDTO Tree { get; set; }
+        public required TreeDTO Tree { get; set; }
     }
 
     public class AddTreeCommandValidator: AbstractValidator<AddTreeCommand>
@@ -42,7 +42,7 @@ namespace AP.BTP.Application.CQRS.Tree
             await uow.TreeRepository.Create(tree);
             await uow.Commit();
 
-            return request.Tree;
+            return mapper.Map<TreeDTO>(tree);
         }
     }
 }
