@@ -43,11 +43,11 @@ div.nav.nav-tabs .nav-link {
     height: 65vh;
     border-top-left-radius: 0px;
     background-color: white;
-    padding: 6vh 8vw;
+    padding: 5vh 8vw;
 }
 
 .tab-content .tab-pane.active .form-content input {
-    margin-bottom: 3vh;
+    margin-bottom: 1vh;
 }
 
 .tab-content .tab-pane.active .form-content label {
