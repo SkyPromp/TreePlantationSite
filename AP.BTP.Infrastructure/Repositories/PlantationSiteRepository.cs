@@ -14,7 +14,9 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<PlantationSite> Create(PlantationSite plantationSite)
     {
-        throw new NotImplementedException();
+        await dbSet.AddAsync(plantationSite);
+        return plantationSite;
+        // FIXME does ef core auto remap plantationSite to the saved entity (for ID)
     }
 
     public void Delete(PlantationSite item)
