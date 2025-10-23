@@ -45,6 +45,10 @@ namespace AP.BTP.Application.CQRS.PlantationSite
                 .NotEmpty()
                 .WithMessage("Country cannot be empty.");
 
+            RuleFor(command => command.PlantationSite.Size)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Size must be zero or positive.");
+
             RuleFor(command => command.PlantationSite.GroundPlan)
                 .NotEmpty()
                 .WithMessage("Groundplan cannot be empty.");

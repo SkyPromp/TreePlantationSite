@@ -39,6 +39,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -63,6 +64,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -87,6 +89,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -111,6 +114,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -135,6 +139,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -159,6 +164,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -183,6 +189,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -207,6 +214,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 100,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -231,6 +239,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -255,6 +264,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };
@@ -279,6 +289,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = true
                 }
             };
@@ -287,6 +298,31 @@ namespace AP.BTP.Unittests
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.PlantationSite.IsDeleted).WithErrorMessage("Plantation site cannot be created as 'deleted'.") != null);
         }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Size_Negative()
+        {
+            AddPlantationSiteCommand command = new AddPlantationSiteCommand
+            {
+                PlantationSite = new PlantationSiteDTO
+                {
+                    Id = 0,
+                    Name = "Test",
+                    Street = "Street",
+                    HouseNumber = "15A",
+                    City = "City",
+                    PostalCode = 5555,
+                    Country = "Country",
+                    GroundPlan = "Groundplan",
+                    Size = -200.0,
+                    IsDeleted = false
+                }
+            };
+
+            TestValidationResult<AddPlantationSiteCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.PlantationSite.Size).WithErrorMessage("Size must be zero or positive.") != null);
+        } 
 
         [TestMethod]
         public async Task Should_Not_Have_Error_When_PlantationSiteDTO_Is_Valid()
@@ -303,6 +339,7 @@ namespace AP.BTP.Unittests
                     PostalCode = 5555,
                     Country = "Country",
                     GroundPlan = "Groundplan",
+                    Size = 200.0,
                     IsDeleted = false
                 }
             };

@@ -27,7 +27,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
         public required string Country { get; set; }
 
-        [Required(ErrorMessage = "Size is required.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Size must be zero or positive.")]
         public double Size { get; set; }
 
         [Required(ErrorMessage = "Ground plan is required.")]
