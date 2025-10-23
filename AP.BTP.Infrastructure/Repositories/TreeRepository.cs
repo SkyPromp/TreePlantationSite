@@ -23,12 +23,17 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public void Delete(Tree item)
         {
-            throw new NotImplementedException();
+            this.Delete(item.Id);
         }
 
-        public Task<IEnumerable<Tree>> GetAll()
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
+        }
+
+        public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        {
+            return await dbSet.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public Task<Tree> GetById(int id)
@@ -39,6 +44,16 @@ namespace AP.BTP.Infrastructure.Repositories
         public Tree Update(Tree modifiedItem)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> GetTotalPages(int pageSize)
+        {
+            return (int)(await dbSet.CountAsync() / (double)pageSize);
+        }
+
+        public async Task<IEnumerable<Tree>> GetAll()
+        {
+            return await dbSet.ToListAsync();
         }
     }
 }
