@@ -1,9 +1,7 @@
-
-
 using AP.BTP.Application.Interfaces;
 using Moq;
 
-namespace AP.BTP.Unittests
+namespace AP.BTP.Unittests.PlantationSite
 {
     [TestClass]
     public class GetAllPlantationSitesPagedQueryTests

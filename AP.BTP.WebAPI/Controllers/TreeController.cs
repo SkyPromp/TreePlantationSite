@@ -23,9 +23,10 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTrees([FromQuery] int page = 1, [FromQuery] int pageSize = 6, [FromQuery] string? searchString = null)
+        public async Task<IActionResult> GetTrees([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? searchString = null)
         {
-            return Ok(await mediator.Send(new GetTreeQuery() { Page=page, PageSize=pageSize, SearchString=searchString }));
+            if(page != null && pageSize != null) return Ok(await mediator.Send(new GetTreeQuery() { Page=page.Value, PageSize=pageSize.Value, SearchString=searchString }));
+            return Ok(await mediator.Send(new GetAllTreeQuery() { }));  // Make this for admins only
         }
         
         [Authorize(Roles = "Admin")]

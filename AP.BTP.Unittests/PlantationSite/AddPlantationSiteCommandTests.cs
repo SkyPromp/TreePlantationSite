@@ -1,10 +1,9 @@
-
 using AP.BTP.Application.CQRS.PlantationSite;
 using AP.BTP.Application.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
 
-namespace AP.BTP.Unittests
+namespace AP.BTP.Unittests.PlantationSite
 {
     [TestClass]
     public class AddPlantationSiteCommandTests
@@ -322,7 +321,7 @@ namespace AP.BTP.Unittests
             TestValidationResult<AddPlantationSiteCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.PlantationSite.Size).WithErrorMessage("Size must be zero or positive.") != null);
-        } 
+        }
 
         [TestMethod]
         public async Task Should_Not_Have_Error_When_PlantationSiteDTO_Is_Valid()

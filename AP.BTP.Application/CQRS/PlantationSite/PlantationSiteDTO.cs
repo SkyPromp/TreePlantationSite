@@ -1,3 +1,4 @@
+using AP.BTP.Application.CQRS.Zone;
 using System.ComponentModel.DataAnnotations;
 
 namespace AP.BTP.Application.CQRS.PlantationSite
@@ -32,6 +33,8 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
         [Required(ErrorMessage = "Ground plan is required.")]
         public required string GroundPlan { get; set; }
+
+        public IEnumerable<ZoneDTO>? Zones { get; set; }
 
         public bool IsDeleted { get; set; } = false;
     }

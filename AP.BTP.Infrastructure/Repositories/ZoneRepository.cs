@@ -1,13 +1,24 @@
 ﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Domain;
+using AP.BTP.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AP.BTP.Infrastructure.Repositories
 {
     public class ZoneRepository: IZoneRepository
     {
-        public Task<Zone> Create(Zone item)
+        private readonly DbSet<Zone> dbSet;
+
+        public ZoneRepository(BTPContext context)
         {
-            throw new NotImplementedException();
+            this.dbSet = context.Set<Zone>();
+        }
+
+        public async Task<Zone> Create(Zone item)
+        {
+            await this.dbSet.AddAsync(item);
+
+            return item;
         }
 
         public void Delete(Zone item)
@@ -20,9 +31,11 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Zone?> GetById(int id)
+        public async Task<Zone?> GetById(int id)
         {
-            throw new NotImplementedException();
+            Zone? zone = await this.dbSet.FindAsync(id);
+
+            return (zone?.IsDeleted ?? true) ? null : zone;
         }
 
         public Zone Update(Zone modifiedItem)
