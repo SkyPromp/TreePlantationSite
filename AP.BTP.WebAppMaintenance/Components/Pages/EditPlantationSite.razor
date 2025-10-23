@@ -117,7 +117,7 @@
 
     private async Task HandleValidSubmit(){
         try {
-            var client = HttpClientFactory.CreateClient("BTPApi");
+            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
             HttpResponseMessage response;
 
@@ -132,7 +132,7 @@
             }
             else
             {
-                var error = await response.Content.ReadAsStringAsync();
+                string error = await response.Content.ReadAsStringAsync();
                 // TODO add snackbar error
             }
         }
@@ -151,10 +151,10 @@
     {
         IBrowserFile file = e.File;
 
-        using var stream = new MemoryStream();
+        using MemoryStream stream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(stream);
 
-        var base64 = Convert.ToBase64String(stream.ToArray());
+        string base64 = Convert.ToBase64String(stream.ToArray());
         groundPlanPreview = $"data:{file.ContentType};base64,{base64}";        
     
         plantationSite.GroundPlan = $"uploads/{file.Name}"; 
