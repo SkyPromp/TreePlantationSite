@@ -1,0 +1,172 @@
+﻿@page "/tree"
+@inject IHttpClientFactory HttpClientFactory
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-4">
+            <div class="card rounded-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-11">
+                            <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
+                        </div>
+                        <div class="col-1 d-flex justify-content-center">
+                            <p @onclick="RemoveSearchString" class="my-1">X</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <NavLink href="tree/edit">
+                <button class="btn btn-secondary">+ Add new</button>
+            </NavLink>
+        </div>
+    </div>
+    <div class="row row-cols-3 gap-4 mb-4">
+        @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees ?? [])
+        {
+            <div class="col-3">
+                <div class="card p-3">
+                    <h2>@tree.Species</h2>
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            <a href="@($"tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
+                                Edit
+                            </a>
+                        </div>
+                        <div class="col-1">
+                            <h3 @onclick="() => ConfirmDeleteTree(tree.Id)" class="bi bi-trash text-danger d-flex justify-content-center my-1"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row d-flex justify-content-center">
+        @for(int i = 1; i <= @TotalPages; i++)
+        {
+            <div class="col">
+                <a href="@($"tree?page={i}")" class="btn btn-secondary px-3">
+                    @i
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@if (this.ShowConfirm)
+{
+    <div class="d-flex justify-content-center">
+        <div class="card position-absolute align-self-center p-4">
+            <h1>Confirm</h1>
+            <p>Do you wish to confirm?</p>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Cancel</button>
+                </div>
+                <div class="col">
+                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    private string SearchString = "";
+    private IEnumerable<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
+    private string errorMessage = "";
+    private int PageSize = 6;
+    private int Page = 1;
+    private int TotalPages = 1;
+    private int selectedTreeId;
+    private bool showConfirm;
+    private bool ShowConfirm {
+        get { return this.showConfirm; }
+        set {
+            this.IsConfirm = false;
+            this.showConfirm = value;
+        }
+    }
+    private bool isConfirm;
+    private bool IsConfirm
+    {
+        get { return this.isConfirm; }
+        set {
+            this.isConfirm = value;
+            this.showConfirm = false;
+            if(value) this.DeleteTree(selectedTreeId);
+        }
+    }
+    private HttpClient? client;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = HttpClientFactory.CreateClient("BTPApi");
+        await LoadTrees();
+    }
+
+    private async Task LoadTrees()
+    {
+        if (this.client == null) return;
+
+        try
+        {
+            AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>? response;
+
+            response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
+
+            if (response != null)
+            {
+                this.errorMessage = "";
+                this.Trees = response.Data;
+                this.TotalPages = response.PageCount;
+            } else
+                this.errorMessage = "No content found!";
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    private void ConfirmDeleteTree(int id)
+    {
+        this.selectedTreeId = id;
+        this.showConfirm = true;
+    }
+
+    private async void DeleteTree(int id)
+    {
+        HttpResponseMessage? response;
+
+        if (this.client != null)
+        {
+            response = await this.client.DeleteAsync($"Tree?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                this.errorMessage = $"The deletion of id={id} has been unsuccessfull";
+            } else
+            {
+                this.errorMessage = $"{id} has been sucessfully deleted";
+            }
+        }
+
+        await this.LoadTrees();
+        StateHasChanged();
+    }
+
+    private void RemoveSearchString()
+    {
+        this.SearchString = "";
+    }
+}
