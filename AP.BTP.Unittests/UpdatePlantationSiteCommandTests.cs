@@ -271,7 +271,7 @@ namespace AP.BTP.Unittests
 
             TestValidationResult<UpdatePlantationSiteCommand> result = await validator.TestValidateAsync(command);
 
-            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.UpdatedSite.IsDeleted).WithErrorMessage("Plantation site cannot be created as 'deleted'.") != null);
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.UpdatedSite.IsDeleted).WithErrorMessage("Plantation site cannot be updated as 'deleted'.") != null);
         }
 
         [TestMethod]

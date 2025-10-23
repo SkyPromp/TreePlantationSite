@@ -9,7 +9,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
 	public PlantationSiteRepository(BTPContext context)
 	{
-        this.dbSet = context.Set<PlantationSite>();
+        dbSet = context.Set<PlantationSite>();
 	}
 
     public async Task<PlantationSite> Create(PlantationSite plantationSite)
@@ -30,7 +30,9 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
     {
-        var query = dbSet.AsQueryable();
+        var query = dbSet
+            .Where(ps => !ps.IsDeleted)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -51,7 +53,10 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<PlantationSite> GetById(int id)
     {
-        PlantationSite? site = await dbSet.FirstOrDefaultAsync(p => p.Id == id);
+        PlantationSite? site = await dbSet
+            .Where(ps => !ps.IsDeleted)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
         if (site == null)
             throw new KeyNotFoundException($"PlantationSite with ID {id} not found.");
 

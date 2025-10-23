@@ -50,7 +50,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
             RuleFor(command => command.UpdatedSite.IsDeleted)
                 .Equal(false)
-                .WithMessage("Plantation site cannot be created as 'deleted'."); 
+                .WithMessage("Plantation site cannot be updated as 'deleted'."); 
         }
     }    
 
