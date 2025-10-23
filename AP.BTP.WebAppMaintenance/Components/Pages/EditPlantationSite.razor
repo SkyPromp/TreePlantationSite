@@ -9,58 +9,79 @@
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Site details">
         <Content>
-            <div class="form-content">
-                <div class="row">
-                    <div class="col-4">
-                        <label class="form-label">Name</label>
-                        <TextInput @bind-Value="@name"></TextInput>
+            <EditForm Model="plantationSite" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-4">
+                                <div>
+                                    <label class="form-label">Name</label>
+                                    <TextInput @bind-Value="@plantationSite.Name"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.Name)" />
+                                </div>
 
-                        <div class="d-flex justify-content-between">
-                            <div style="width: 45%">
-                                <label class="form-label">Street</label>
-                                <TextInput @bind-Value="@street"></TextInput>
-                            </div>
+                                <div class="d-flex justify-content-between">
+                                    <div style="width: 45%">
+                                        <label class="form-label">Street</label>
+                                        <TextInput @bind-Value="@plantationSite.Street"></TextInput>
+                                        <ValidationMessage For="@(() => plantationSite.Street)" />
+                                    </div>
 
-                            <div style="width: 45%">
-                                <label class="form-label">House number</label>
-                                <TextInput @bind-Value="@houseNumber"></TextInput>
-                            </div>
+                                    <div style="width: 45%">
+                                        <label class="form-label">House number</label>
+                                        <TextInput @bind-Value="@plantationSite.HouseNumber"></TextInput>
+                                        <ValidationMessage For="@(() => plantationSite.HouseNumber)" />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div style="width: 45%">
+                                        <label class="form-label">City</label>
+                                        <TextInput @bind-Value="@plantationSite.City"></TextInput>
+                                        <ValidationMessage For="@(() => plantationSite.City)" />
+                                    </div>
+                                    <div style="width: 45%">
+                                        <label class="form-label">Postal code</label>
+                                        <NumberInput TValue="int" @bind-Value="@plantationSite.PostalCode"></NumberInput>
+                                        <ValidationMessage For="@(() => plantationSite.PostalCode)" />   
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label">Country</label>
+                                    <TextInput @bind-Value="@plantationSite.Country"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.Country)" />  
+                                </div> 
+
+                                <label class="form-label">Size</label>
+                                <div id="size-input" class="d-flex justify-content-between">
+                                    <NumberInput TValue="double" @bind-Value="@plantationSite.Size" Style="width: 85%"></NumberInput>
+                                    <p style="font-size: 1.5rem; font-weight: 500; color: #5f5f5f">m²</p>
+                                </div>
+
+                                <div>
+                                    <label class="form-label">GroundPlan</label>
+                                    <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
+                                    <ValidationMessage For="@(() => plantationSite.GroundPlan)" />
+                                </div>
                         </div>
-
-                        <div class="d-flex justify-content-between">
-                            <div style="width: 45%">
-                                <label class="form-label">City</label>
-                                <TextInput @bind-Value="@city"></TextInput>
-                            </div>
-                            <div style="width: 45%">
-                                <label class="form-label">Postal code</label>
-                                <NumberInput TValue="int" @bind-Value="@postalCode"></NumberInput>   
-                            </div>
+                        <div class="col-8 d-flex justify-content-center align-items-center">
+                            @if (!string.IsNullOrEmpty(groundPlanPreview))
+                            {
+                                <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;"/>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No groundPlan uploaded yet.</p>
+                            }
                         </div>
-
-                        <label class="form-label">Country</label>
-                        <TextInput @bind-Value="@country"></TextInput> 
-
-                        <label class="form-label">Size</label>
-                        <div id="size-input" class="d-flex justify-content-between">
-                            <NumberInput TValue="double" @bind-Value="@size" Style="width: 85%"></NumberInput>
-                            <p style="font-size: 1.75rem; font-weight: 500; color: #5f5f5f">m²</p>
-                        </div>
-                        <label class="form-label">GroundPlan</label>
-                        <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
-                    </div>
-                    <div class="col-8 d-flex justify-content-center align-items-center">
-                        @if (!string.IsNullOrEmpty(groundPlanPreview))
-                        {
-                            <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;"/>
-                        }
-                        else
-                        {
-                            <p class="text-muted">No groundPlan uploaded yet.</p>
-                        }
                     </div>
                 </div>
-            </div>
+                <div class="buttons d-flex justify-content-end mt-4">
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Cancel</Button>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                </div>
+            </EditForm>
         </Content>
     </Tab>
     <Tab Title="Zones">
@@ -71,37 +92,28 @@
         </Content>
     </Tab>
 </Tabs>
-<div class="buttons d-flex justify-content-end mt-4">
-    <Button Style="background-color: #929393; color: white; padding: 0.7vw; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="cancel">Cancel</Button>
-    <Button Style="background-color: #4EB862; color: white; padding: 0.7vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="async () => await saveSite()" Type="ButtonType.Button">Save</Button>
-</div>
+
 @code {
     [Parameter] public int id { get; set; }
-    string name = string.Empty;
-    string street = string.Empty;
-    string houseNumber = string.Empty;
-    string city = string.Empty;
-    int postalCode = 0;
-    string country = string.Empty;
-    double size = 0.0;
-    string groundPlan = string.Empty;
+
+    PlantationSiteDTO plantationSite = new PlantationSiteDTO()
+    {
+        Id = 0,
+        Name = "",
+        Street = "",
+        HouseNumber = "",
+        City = "",
+        Country = "",
+        PostalCode = 0,
+        Size = 0.0,
+        GroundPlan = "",
+        IsDeleted = false
+    };
+
     string groundPlanPreview = string.Empty;
 
-    private async Task saveSite(){
+    private async Task HandleValidSubmit(){
         try {
-            Console.WriteLine("In save method");
-            PlantationSiteDTO plantationSite = new PlantationSiteDTO(){
-                Id = 0,
-                Name = name,
-                Street = street,
-                HouseNumber = houseNumber,
-                City = city,
-                Country = country,
-                PostalCode = postalCode,
-                GroundPlan = groundPlan,
-                IsDeleted = false
-            };
-
             var client = HttpClientFactory.CreateClient("BTPApi");
 
             HttpResponseMessage response;
@@ -127,7 +139,7 @@
         }
     }
 
-    private void cancel()
+    private void Cancel()
     {
         Navigation.NavigateTo("/plantation-site");
     }    
@@ -142,6 +154,6 @@
         var base64 = Convert.ToBase64String(stream.ToArray());
         groundPlanPreview = $"data:{file.ContentType};base64,{base64}";        
     
-        groundPlan = $"uploads/{file.Name}"; 
+        plantationSite.GroundPlan = $"uploads/{file.Name}"; 
     }
 }

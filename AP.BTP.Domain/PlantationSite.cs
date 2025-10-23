@@ -11,6 +11,7 @@ namespace AP.BTP.Domain
         public required string City { get; set; }
         public int PostalCode { get; set; }        
         public required string Country { get; set; }
+        public double Size { get; set; }
         public required string GroundPlan { get; set; }
         public bool IsDeleted { get; set; } = false;
     }

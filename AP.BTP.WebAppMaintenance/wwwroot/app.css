@@ -29,8 +29,8 @@ div.nav.nav-tabs .nav-link {
     padding: 1vw 4vw;
     font-size: 2.5vh;
     font-weight: 600;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
     border-color: #c4c4c4;
     border-bottom: none;
     color: #2c2c2c;
@@ -38,8 +38,9 @@ div.nav.nav-tabs .nav-link {
 
 .tab-content .tab-pane.active .form-content {
     display: block;
+    overflow: scroll;
     border: 1px solid #c4c4c4;
-    border-radius: 24px;
+    border-radius: 15px;
     height: 65vh;
     border-top-left-radius: 0px;
     background-color: white;
@@ -52,6 +53,11 @@ div.nav.nav-tabs .nav-link {
 
 .tab-content .tab-pane.active .form-content label {
     font-size: 2vh;
+}
+
+.validation-message {
+    color: #b32121;
+    font-size: small;
 }
 
 .blazor-error-boundary {

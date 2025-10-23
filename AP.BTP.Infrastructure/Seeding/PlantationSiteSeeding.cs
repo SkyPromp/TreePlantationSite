@@ -21,6 +21,7 @@ namespace AP.BTP.Infrastructure.Seeding
                     City = $"City Site{i}",
                     PostalCode = 1000 + i,
                     Country = "Belgium",
+                    Size = 200.0,
                     GroundPlan = $"Groundplan Site{i}",
                     IsDeleted = false
                 });
