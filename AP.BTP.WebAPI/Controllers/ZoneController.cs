@@ -18,6 +18,23 @@ namespace AP.BTP.WebAPI.Controllers
             this.mediator = mediator;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetZoneById(int id)
+        {
+            return Ok(await mediator.Send(new GetZoneByIdQuery() { Id = id }));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetZonesByPlantationSiteId([FromQuery] int? plantationSiteId)
+        {
+            if (plantationSiteId != null)
+            {
+                return Ok(await mediator.Send(new GetAllZonesByPlantationSiteIdQuery() { PlantationSiteId = plantationSiteId.Value }));
+            }
+
+            return BadRequest("Not implemented yet, must provide a plantationSiteId currently");
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddZoneByParams([FromBody] ZoneDTO? zone, [FromQuery] int? treeId, int? plantationSiteId)
@@ -34,6 +51,15 @@ namespace AP.BTP.WebAPI.Controllers
             }
 
             return BadRequest("Incorrect parameters given");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTree(int id)
+        {
+            await mediator.Send(new DeleteZoneCommand() { Id = id });
+
+            return NoContent();
         }
     }
 }

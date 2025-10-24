@@ -23,12 +23,40 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public void Delete(Zone item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
         }
 
-        public Task<IEnumerable<Zone>> GetAll()
+        public async void Delete(int id)
         {
-            throw new NotImplementedException();
+            Zone? zone = await this.dbSet.FindAsync(id);
+
+            if (zone != null) Delete(zone);
+        }
+
+        public void HardDelete(Zone item)
+        {
+            this.HardDelete(item.Id);
+        }
+
+        public void HardDelete(int id)
+        {
+            this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
+        }
+
+        public async Task<IEnumerable<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
+        {
+            return await this.dbSet.Where(zone => !zone.IsDeleted && zone.PlantationSite.Id == plantationSiteId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Zone>> GetAll()
+        {
+            return await this.dbSet.Where(zone => !zone.IsDeleted).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Zone>> GetAll(int pageNr, int pageSize)
+        {
+            return await this.dbSet.Where(zone => !zone.IsDeleted).Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<Zone?> GetById(int id)
@@ -40,7 +68,7 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public Zone Update(Zone modifiedItem)
         {
-            throw new NotImplementedException();
+            return this.dbSet.Update(modifiedItem).Entity;
         }
     }
 }
