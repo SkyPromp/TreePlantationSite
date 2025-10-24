@@ -7,7 +7,7 @@ namespace AP.BTP.Application.CQRS.Tree
 {
     public class EditTreeCommand: IRequest<TreeDTO>
     {
-        public TreeDTO Tree { get; set; }
+        public required TreeDTO Tree { get; set; }
     }
 
     public class EditTreeCommandValidator: AbstractValidator<EditTreeCommand>

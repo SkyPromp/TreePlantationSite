@@ -47,7 +47,6 @@ namespace AP.BTP.WebAPI.Controllers
             if (zones != null)
             {
                 foreach (ZoneDTO zone in zones) zone.PlantationSiteId = newPlantationSite.Id;
-                foreach (ZoneDTO zone in zones) Console.WriteLine($"{zone.Id}, {zone.PlantationSiteId}, {zone.TreeId}");
 
                 await mediator.Send(new AddZonesManyCommand() { Zones = zones });
             }
@@ -61,10 +60,16 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePlantationSite(int id, [FromBody] PlantationSiteDTO plantationSiteDTO)
         {
-            if (id != plantationSiteDTO.Id)
-                return BadRequest("Mismatched ID.");
+            if (plantationSiteDTO == null) return BadRequest("Missing parameter: plantationSite");
+            if (id != plantationSiteDTO.Id) return BadRequest("Mismatched ID.");
 
-            return Ok(await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO}));
+            List<ZoneDTO> zones = plantationSiteDTO.Zones?.ToList() ?? new List<ZoneDTO>();
+
+            PlantationSiteDTO newPlantationSite = await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO });
+
+            foreach(ZoneDTO zone in zones ?? []) await mediator.Send(new UpdateZoneCommand() { Zone = zone });
+
+            return Ok(newPlantationSite);
         }        
     }
 }

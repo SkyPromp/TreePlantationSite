@@ -44,7 +44,7 @@
                                     </div>
                                     <div style="width: 45%">
                                         <label class="form-label">Postal code</label>
-                                        <NumberInput TValue="int" @bind-Value="@plantationSite.PostalCode"></NumberInput>
+                                        <NumberInput TValue="int" Min="1000" Max="9999" @bind-Value="@plantationSite.PostalCode"></NumberInput>
                                         <ValidationMessage For="@(() => plantationSite.PostalCode)" />   
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
                                 <td>@zone.PlantationSiteId</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
-                                    <i class="bi bi-pencil-square"></i>
+                                    <i @onclick="() => EditZone(zone.Id)" class="bi bi-pencil-square"></i>
                                     <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-trash"></i>
                                 </td>
                             </tr>
@@ -134,7 +134,7 @@
         <div class="card position-absolute align-self-center p-4">
             <h1>Select tree species</h1>
             <p>Which tree species would you like to assign to this zone?</p>
-            <select @bind="SelectedTreeId" class="form-select mb-3">
+            <select @bind="this.SelectedZone.TreeId" class="form-select mb-3">
                 @foreach(TreeDTO tree in this.Trees ?? [])
                 {
                     <option value="@tree.Id">@tree.Species</option>
@@ -196,7 +196,6 @@
 
     string groundPlanPreview = string.Empty;
 
-    private int? SelectedTreeId;
     private bool showTreeList;
     private bool ShowTreeList {
         get { return this.showTreeList; }
@@ -215,12 +214,11 @@
             if (value)
             {
                 this.AddZone();
-                this.SelectedTreeId = null;
+                this.SelectedZone = EmptyZone;
             }
         }
     }
 
-    private int SelectedZone;
     private bool showConfirmZoneDeletion;
     private bool ShowConfirmZoneDeletion {
         get { return this.showConfirmZoneDeletion; }
@@ -236,16 +234,31 @@
         set {
             this.isZoneRemoved = value;
             this.showConfirmZoneDeletion = false;
-            if(value) this.DeleteZone(SelectedZone);
+            if(value) this.DeleteZone(this.SelectedZone.Id);
         }
     }
 
+    private ZoneDTO EmptyZone {
+        get
+        {
+            return new ZoneDTO()
+            {
+                Id = 0,
+                PlantationSiteId = this.plantationSite?.Id ?? 0,
+                TreeId = 0
+            };
+        }
+    }
+
+    private ZoneDTO SelectedZone;
+    private bool IsEditZone;
     private IEnumerable<TreeDTO>? Trees;
     HttpClient? client;
 
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
+        this.SelectedZone = EmptyZone;
 
         if (this.id != 0) {
             try {
@@ -259,7 +272,7 @@
                 // TODO implement snackbar
             }
         }
-        
+
         await this.LoadTrees();
         await this.LoadZones();
     }
@@ -379,22 +392,48 @@
         return id == null? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
     }
 
+    private ZoneDTO? findZone(int? id)
+    {
+        if (this.plantationSite == null) return null;
+
+        return id == null? null : this.plantationSite.Zones?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
+    }
+
     private void AddZone()
     {
+        if (this.SelectedZone == null) this.SelectedZone = EmptyZone;
         if (this.plantationSite == null) return;
 
         if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
 
-        TreeDTO? tree = findTree(this.SelectedTreeId);
+        if (this.SelectedZone.TreeId == 0 || this.plantationSite == null) return;
 
-        if (tree == null || this.plantationSite == null) return;
+        if (this.IsEditZone)
+        {
+            // TODO NOT implemented yet
+        } else
+        {
+            this.plantationSite.Zones = this.plantationSite.Zones.Append(this.SelectedZone);
+        }
 
-        this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id });
+        this.IsEditZone = false;
+    }
+
+    private void EditZone(int id)
+    {
+        this.IsEditZone = true;
+        this.ShowTreeList = true;
+        ZoneDTO? zone = findZone(id);
+
+        if (zone == null) return;
+
+        this.SelectedZone = zone;
+        this.SelectedZone.TreeId = zone.TreeId;
     }
 
     private void ConfirmDeleteZone(int id)
     {
-        this.SelectedZone = id;
+        this.SelectedZone.Id = id;
         this.ShowConfirmZoneDeletion = true;
     }
 
@@ -427,6 +466,7 @@
         }
 
         await this.LoadTrees();
+        this.SelectedZone = EmptyZone;
         StateHasChanged();
     }
 
