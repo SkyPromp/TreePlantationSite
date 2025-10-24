@@ -112,8 +112,8 @@
                         @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
-                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Id: zone.Id)</td>
-                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.PlantationSiteId: zone.PlantationSiteId)</td>
+                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Name: zone.Name)</td>
+                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Size: zone.Size)</td>
                                 <td>@(this.findTree((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.TreeId: zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
                                     <i @onclick="() => EditZone(zone.Id)" class="bi bi-pencil-square"></i>
@@ -132,7 +132,13 @@
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
         <div class="card position-absolute align-self-center p-4">
-            <h1>Select tree species</h1>
+            <h5>Give a zone name</h5>
+            <input type="text" @bind="this.SelectedZone.Name" />
+
+            <h5>Specify the zone area (in m^2)</h5>
+            <input type="number" @bind="this.SelectedZone.Size" />
+
+            <h5>Select tree species</h5>
             <p>Which tree species would you like to assign to this zone?</p>
             <select @bind="this.SelectedZone.TreeId" class="form-select mb-3">
                 @foreach(TreeDTO tree in this.Trees ?? [])
