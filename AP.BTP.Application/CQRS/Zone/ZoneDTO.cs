@@ -6,9 +6,10 @@ namespace AP.BTP.Application.CQRS.Zone
     public class ZoneDTO
     {
         public int Id { get; set; }
-        //public required TreeDTO Tree { get; set; }
-        //public required PlantationSiteDTO PlantationSite { get; set; }
         public required int TreeId { get; set; }
         public required int PlantationSiteId { get; set; }
+
+        public ZoneDTO Clone() => new ZoneDTO() { Id = this.Id, PlantationSiteId = this.PlantationSiteId, TreeId = this.TreeId };
+
     }
 }

@@ -112,9 +112,9 @@
                         @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
-                                <td>@zone.Id</td>
-                                <td>@zone.PlantationSiteId</td>
-                                <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
+                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Id: zone.Id)</td>
+                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.PlantationSiteId: zone.PlantationSiteId)</td>
+                                <td>@(this.findTree((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.TreeId: zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
                                     <i @onclick="() => EditZone(zone.Id)" class="bi bi-pencil-square"></i>
                                     <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-trash"></i>
@@ -215,6 +215,10 @@
             {
                 this.AddZone();
                 this.SelectedZone = EmptyZone;
+            } else if (this.OldZone != null)  // Restore state
+            {
+                this.SelectedZone = this.OldZone;
+                this.OldZone = null;
             }
         }
     }
@@ -250,8 +254,10 @@
         }
     }
 
+    private int tempAddedZoneIndex = -1;
     private ZoneDTO SelectedZone;
     private bool IsEditZone;
+    private ZoneDTO? OldZone;
     private IEnumerable<TreeDTO>? Trees;
     HttpClient? client;
 
@@ -331,9 +337,15 @@
 
     private async Task HandleValidSubmit(){
         try {
-            if (this.client == null) return;
+            if (this.client == null || this.plantationSite == null) return;
 
             HttpResponseMessage response;
+
+            foreach (ZoneDTO zone in this.plantationSite.Zones ?? [])
+            {
+                if (zone.Id < 0) zone.Id = 0;
+                if (zone.PlantationSiteId == 0) zone.PlantationSiteId = this.plantationSite.Id;
+            }
 
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
             else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
@@ -408,14 +420,13 @@
 
         if (this.SelectedZone.TreeId == 0 || this.plantationSite == null) return;
 
-        if (this.IsEditZone)
+        if (!this.IsEditZone)
         {
-            // TODO NOT implemented yet
-        } else
-        {
+            this.SelectedZone.Id = this.tempAddedZoneIndex--;
             this.plantationSite.Zones = this.plantationSite.Zones.Append(this.SelectedZone);
         }
 
+        this.OldZone = null;
         this.IsEditZone = false;
     }
 
@@ -423,11 +434,13 @@
     {
         this.IsEditZone = true;
         this.ShowTreeList = true;
+
         ZoneDTO? zone = findZone(id);
 
         if (zone == null) return;
 
         this.SelectedZone = zone;
+        this.OldZone = this.SelectedZone.Clone();
         this.SelectedZone.TreeId = zone.TreeId;
     }
 
