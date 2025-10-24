@@ -51,7 +51,7 @@ namespace AP.BTP.WebAPI.Controllers
 
         private static string GetContentType(string path)
         {
-            var ext = Path.GetExtension(path).ToLowerInvariant();
+            string ext = Path.GetExtension(path).ToLowerInvariant();
 
             return ext switch
             {
