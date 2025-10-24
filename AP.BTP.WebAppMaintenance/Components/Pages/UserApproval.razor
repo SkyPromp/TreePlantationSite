@@ -1,0 +1,152 @@
+﻿@page "/users/approve"
+@rendermode InteractiveServer
+@using AP.BTP.Application.CQRS.Users
+@using System.Drawing
+@using System.Text.Json
+@inject IHttpClientFactory HttpClientFactory
+
+<div class="d-flex justify-content-between px-4">
+    <Button Href="/users"
+            Class="d-flex align-items-center justify-content-center p-0"
+            Style=" box-shadow: none; border: none; text-decoration: none; font-size: 2.7vh;">
+        <Icon Name="IconName.ArrowLeft" Style="font-size: 5vh; margin-right: 0.5rem;"></Icon>
+        Registered users
+    </Button>
+    <div class="d-flex flex-column align-items-end">
+        <TextInput @bind-Value="@searchText"
+                   @oninput="OnSearchChanged"
+                   TextAlignment="Alignment.Start"
+                   Placeholder="Search e-mail"
+                   Class="@(showSearchWarning ? "border-danger" : "")"
+                   Style="width: 15vw; height: 5vh; border-width: 2px;" />
+        @if (showSearchWarning)
+        {
+            <small class="text-danger mt-1">Please enter at least 3 characters.</small>
+        }
+    </div>
+</div>
+<div class="container-fluid m-0" Style="background-color: #D9D9D9; border-radius: 15px; padding: 4vh">
+    @if (response?.Items != null)
+    {
+        <div class="d-grid p-2 fw-bold"
+             style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
+            <div>Name</div>
+            <div>E-mail</div>
+            <div>Phone number</div>
+            <div>Sites</div>
+            <div class="text-center">Actions</div>
+        </div>
+        @foreach (List<Auth0User> row in Rows)
+        {
+            <div class="row">
+                @foreach (Auth0User item in row)
+                {
+                    <div style="padding: 1vh;">
+                        <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
+                            <CardBody Class="p-0 d-grid align-items-center"
+                                      Style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem;">
+                                <CardText class="m-0">@item.username</CardText>
+                                <CardText class="m-0">@item.email</CardText>
+                                <CardText class="m-0">123456456789</CardText>
+                                <CardText class="m-0">Site1, Site2</CardText>
+                                <div>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;" @onclick="() => ApproveUser(item.user_id)"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;"><Icon Name="IconName.X" Color="IconColor.Danger" Style="font-size: 3.2vh;"></Icon></Button>
+                                </div>
+                            </CardBody>
+
+                        </Card>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center mt-4">No results found.</p>
+    }
+</div>
+
+<Pagination Class="justify-content-center"
+            Style="margin-top: 2vh"
+            ActivePageNumber="@currentPage"
+            TotalPages="@totalPages"
+            PageChanged="LoadPage"
+            FirstLinkIcon="IconName.ChevronDoubleLeft"
+            PreviousLinkIcon="IconName.ChevronLeft"
+            NextLinkIcon="IconName.ChevronRight"
+            LastLinkIcon="IconName.ChevronDoubleRight">
+</Pagination>
+
+@code {
+    private string? searchText = null;
+    private bool showSearchWarning = false;
+    PagedResponse<Auth0User>? response;
+    private int currentPage = 1;
+    private int cardsPerRow = 1;
+    private int maxRows = 8;
+    private int pageSize => cardsPerRow * maxRows;
+    private int totalPages => response?.TotalPages ?? 1;
+    private System.Timers.Timer? debounceTimer;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPage(1);
+    }
+
+    private async Task LoadPage(int page)
+    {
+        currentPage = page;
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+
+        string url = $"UserManagement/pending?pageNr={page}&pageSize={pageSize}";
+        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
+            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>(url);
+        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ApproveUser(string id)
+    {
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+
+        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{id}/approve", null);
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            await Task.Delay(1000); // small delay to ensure auth0 has processed the change
+            await LoadPage(currentPage);
+            StateHasChanged();
+        }
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString()?.Trim();
+        showSearchWarning = !string.IsNullOrEmpty(searchText) && searchText.Length < 3;
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadPage(1);
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
+    }
+
+    private IEnumerable<List<Auth0User>> Rows =>
+        (response?.Items ?? Enumerable.Empty<Auth0User>())
+            .Select((item, index) => new { item, index })
+            .GroupBy(x => x.index / cardsPerRow)
+            .Select(g => g.Select(x => x.item).ToList());
+}
