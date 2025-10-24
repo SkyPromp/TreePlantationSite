@@ -130,24 +130,24 @@
 }
 
 @code {
-        [Parameter] public int id { get; set; }
+    [Parameter] public int id { get; set; }
 
-        PlantationSiteDTO plantationSite = new PlantationSiteDTO()
-        {
-            Id = 0,
-            Name = "",
-            Street = "",
-            HouseNumber = "",
-            City = "",
-            Country = "",
-            PostalCode = 0,
-            Size = 0.0,
-            GroundPlan = "",
-            IsDeleted = false,
-            Zones = new List<ZoneDTO>()
-        };
+    PlantationSiteDTO plantationSite = new PlantationSiteDTO()
+    {
+        Id = 0,
+        Name = "",
+        Street = "",
+        HouseNumber = "",
+        City = "",
+        Country = "",
+        PostalCode = 0,
+        Size = 0.0,
+        GroundPlan = "",
+        IsDeleted = false,
+        Zones = new List<ZoneDTO>()
+    };
 
-        string groundPlanPreview = string.Empty;
+    string groundPlanPreview = string.Empty;
 
     private bool showTreeList;
     private bool ShowTreeList {
@@ -248,12 +248,12 @@
 
     private void AddZone()
     {
-        //if(this.client != null && this.SelectedTreeId != null && (this.plantationSite?.Id ?? null) != null) await this.client.PostAsync($"Zone?treeId={this.SelectedTreeId}&plantationSiteId={this.plantationSite.Id}", null); 
+        if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
+
         TreeDTO? tree = this.Trees?.Where(tree => tree.Id == this.SelectedTreeId).FirstOrDefault() ?? null;
 
         if (tree == null || this.plantationSite == null) return;
-        if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
 
-        this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSite = this.plantationSite, Tree = tree});
+        this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id});
     }
 }

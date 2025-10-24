@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using AP.BTP.Application.CQRS.PlantationSite;
 using Microsoft.AspNetCore.Authorization;
+using AP.BTP.Application.CQRS.Zone;
+using Microsoft.Identity.Client;
 
 namespace AP.BTP.WebAPI.Controllers
 {
@@ -27,7 +29,24 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
         {
-            return Created("", await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO}));
+            IEnumerable<ZoneDTO>? zones = plantationSiteDTO.Zones;
+
+            PlantationSiteDTO newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
+
+            Console.WriteLine($"- zones amount: {zones?.Count() ?? -1}");
+            Console.WriteLine($"- newPlantationSiteId: {newPlantationSite.Id}");
+
+            if (zones != null)
+            {
+                foreach (ZoneDTO zone in zones) zone.PlantationSiteId = newPlantationSite.Id;
+                foreach (ZoneDTO zone in zones) Console.WriteLine($"{zone.Id}, {zone.PlantationSiteId}, {zone.TreeId}");
+
+                await mediator.Send(new AddZonesManyCommand() { Zones = zones });
+            }
+
+            newPlantationSite.Zones = zones;
+
+            return Created("", newPlantationSite);
         }
     }
 }

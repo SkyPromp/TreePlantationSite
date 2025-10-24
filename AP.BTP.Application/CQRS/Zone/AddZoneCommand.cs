@@ -18,11 +18,11 @@ namespace AP.BTP.Application.CQRS.Zone
                 .Equal(0)
                 .WithMessage("Id should be zero when adding a zone.");
 
-            RuleFor(command => command.Zone.PlantationSite.Id)
+            RuleFor(command => command.Zone.PlantationSiteId)
                 .NotEqual(0)
                 .WithMessage("The plantation site must already exist.");
 
-            RuleFor(command => command.Zone.Tree.Id)
+            RuleFor(command => command.Zone.TreeId)
                 .NotEqual(0)
                 .WithMessage("The tree must already exist.");
         }
