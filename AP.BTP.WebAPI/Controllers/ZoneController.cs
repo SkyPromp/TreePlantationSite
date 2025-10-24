@@ -52,5 +52,14 @@ namespace AP.BTP.WebAPI.Controllers
 
             return BadRequest("Incorrect parameters given");
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTree(int id)
+        {
+            await mediator.Send(new DeleteZoneCommand() { Id = id });
+
+            return NoContent();
+        }
     }
 }

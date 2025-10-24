@@ -116,8 +116,8 @@
                                 <td>@zone.PlantationSiteId</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
-                                    <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-pencil-square"></i>
-                                    <i class="bi bi-trash"></i>
+                                    <i class="bi bi-pencil-square"></i>
+                                    <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-trash"></i>
                                 </td>
                             </tr>
                         }
@@ -134,7 +134,7 @@
         <div class="card position-absolute align-self-center p-4">
             <h1>Select tree species</h1>
             <p>Which tree species would you like to assign to this zone?</p>
-            <select @bind="SelectedTreeId" class="form-select">
+            <select @bind="SelectedTreeId" class="form-select mb-3">
                 @foreach(TreeDTO tree in this.Trees ?? [])
                 {
                     <option value="@tree.Id">@tree.Species</option>
@@ -154,7 +154,7 @@
 
 @if (this.ShowConfirmZoneDeletion)
 {
-    <div class="d-flex justify-content-center">
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
         <div class="card position-absolute align-self-center p-4">
             <h1>Confirm</h1>
             <p>Do you wish to confirm?</p>
@@ -246,7 +246,6 @@
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
-        await LoadTrees();
 
         if (this.id != 0) {
             try {
@@ -259,6 +258,36 @@
             } catch (Exception ex) {
                 // TODO implement snackbar
             }
+        }
+        
+        await this.LoadTrees();
+        await this.LoadZones();
+    }
+
+    private async Task LoadZones()
+    {
+        if (this.plantationSite == null || this.plantationSite.Id == 0) return;
+
+        if (this.client == null) return;
+
+        try
+        {
+            IEnumerable<ZoneDTO>? response;
+
+            response = await this.client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
+
+            if (response != null)
+            {
+                this.plantationSite.Zones = response;
+                StateHasChanged();
+            } else
+            {
+                this.errorMessage = "Something went wrong when loading in the zones";
+            }
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
         }
     }
 
@@ -276,10 +305,14 @@
             {
                 this.Trees = response;
                 StateHasChanged();
+            } else
+            {
+                this.errorMessage = "Something went wrong when loading in the trees";
             }
         }
         catch (Exception e)
         {
+            this.errorMessage = e.Message;
         }
     }
 
@@ -389,6 +422,7 @@
             } else
             {
                 this.errorMessage = $"{id} has been sucessfully deleted";
+                this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
             }
         }
 
