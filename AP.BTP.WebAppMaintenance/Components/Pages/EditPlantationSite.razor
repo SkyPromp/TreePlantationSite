@@ -99,7 +99,30 @@
                         </div>
                     </div>
                 </div>
-                This is the placeholder content for the <b>Zones</b> tab.
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Zone Id</th>
+                            <th scope="col">Plantation Id</th>
+                            <th scope="col">Tree type</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
+                        {
+                            <tr>
+                                <td>@zone.Id</td>
+                                <td>@zone.PlantationSiteId</td>
+                                <td>@(this.findTree(zone.Id)?.Species ?? "No species name was found")</td>
+                                <td>
+                                    <i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-trash"></i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </Content>
     </Tab>
@@ -130,24 +153,24 @@
 }
 
 @code {
-        [Parameter] public int id { get; set; }
+    [Parameter] public int id { get; set; }
 
-        PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
-        {
-            Id = 0,
-            Name = "",
-            Street = "",
-            HouseNumber = "",
-            City = "",
-            Country = "",
-            PostalCode = 0,
-            Size = 0.0,
-            GroundPlan = "",
-            IsDeleted = false,
-            Zones = new List<ZoneDTO>()
-        };
+    PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+    {
+        Id = 0,
+        Name = "",
+        Street = "",
+        HouseNumber = "",
+        City = "",
+        Country = "",
+        PostalCode = 0,
+        Size = 0.0,
+        GroundPlan = "",
+        IsDeleted = false,
+        Zones = new List<ZoneDTO>()
+    };
 
-        string groundPlanPreview = string.Empty;
+    string groundPlanPreview = string.Empty;
 
     private bool showTreeList;
     private bool ShowTreeList {
@@ -274,11 +297,18 @@
         }
     }
 
+    private TreeDTO? findTree(int? id)
+    {
+        return id == null? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
+    }
+
     private void AddZone()
     {
+        if (this.plantationSite == null) return;
+
         if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
 
-        TreeDTO? tree = this.Trees?.Where(tree => tree.Id == this.SelectedTreeId).FirstOrDefault() ?? null;
+        TreeDTO? tree = findTree(this.SelectedTreeId);
 
         if (tree == null || this.plantationSite == null) return;
 
