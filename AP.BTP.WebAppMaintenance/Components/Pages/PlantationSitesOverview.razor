@@ -26,7 +26,7 @@
                                 <CardText Class="mb-0">@item.PostalCode @item.City</CardText>
                                 <CardText Style="margin-bottom: 3vh;">@item.Country</CardText>
                                 <div class="card-buttons d-flex justify-content-between">
-                                    <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;">Edit</Button>
+                                    <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Edit</Button>
                                     <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
                                 </div>
                             </CardBody>
@@ -111,6 +111,11 @@
     {
         Navigation.NavigateTo("/plantation-site/edit");
     }        
+
+    private void GoToUpdateForm(int id)
+    {
+        Navigation.NavigateTo($"/plantation-site/edit/{id}");
+    }     
 
     private IEnumerable<List<PlantationSiteDTO>> Rows =>
         (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
