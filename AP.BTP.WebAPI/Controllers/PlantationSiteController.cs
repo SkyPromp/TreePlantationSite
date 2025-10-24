@@ -24,10 +24,27 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAllPlantationSitesPaged(int id)
+        {
+            return Ok(await mediator.Send(new GetPlantationSiteByIdQuery() { Id = id }));
+        }        
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
         {
-            return Created("", await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO}));
+            return Created("", await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO }));
         }
+        
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePlantationSite(int id, [FromBody] PlantationSiteDTO plantationSiteDTO)
+        {
+            if (id != plantationSiteDTO.Id)
+                return BadRequest("Mismatched ID.");
+
+            return Ok(await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO}));
+        }        
     }
 }

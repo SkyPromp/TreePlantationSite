@@ -9,14 +9,13 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
 	public PlantationSiteRepository(BTPContext context)
 	{
-        this.dbSet = context.Set<PlantationSite>();
+        dbSet = context.Set<PlantationSite>();
 	}
 
     public async Task<PlantationSite> Create(PlantationSite plantationSite)
     {
         await dbSet.AddAsync(plantationSite);
         return plantationSite;
-        // FIXME does ef core auto remap plantationSite to the saved entity (for ID)
     }
 
     public void Delete(PlantationSite item)
@@ -31,7 +30,9 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
     {
-        var query = dbSet.AsQueryable();
+        var query = dbSet
+            .Where(ps => !ps.IsDeleted)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -52,11 +53,24 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<PlantationSite> GetById(int id)
     {
-        throw new NotImplementedException();
+        PlantationSite? site = await dbSet
+            .Where(ps => !ps.IsDeleted)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (site == null)
+            throw new KeyNotFoundException($"PlantationSite with ID {id} not found.");
+
+        return site;
     }
 
     public PlantationSite Update(PlantationSite modifiedItem)
     {
-        throw new NotImplementedException();
+        var existingEntity = dbSet.Find(modifiedItem.Id);
+        if (existingEntity == null)
+            throw new KeyNotFoundException($"PlantationSite with ID {modifiedItem.Id} not found.");
+
+        dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+        return existingEntity;
     }
 }
