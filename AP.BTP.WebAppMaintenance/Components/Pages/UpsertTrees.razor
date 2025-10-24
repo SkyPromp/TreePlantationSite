@@ -1,0 +1,141 @@
+﻿@page "/tree/edit/{Id:int?}"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@using AP.BTP.Application.CQRS.Tree
+
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+    <Tab Title="Site details">
+        <Content>
+            <EditForm Model="Tree" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-4">
+                            <div>
+                                <label class="form-label">Tree species</label>
+                                <TextInput @bind-Value="@Tree.Species"></TextInput>
+                                <ValidationMessage For="@(() => Tree.Species)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons d-flex justify-content-end mt-4">
+                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="tree">Cancel</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                </div>
+            </EditForm>
+        </Content>
+    </Tab>
+    <Tab Title="Maintenance">
+        <Content>
+            <EditForm Model="Tree" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-4">
+                            <div>
+                                <label class="form-label">Maintenance</label>
+                                <InputFile OnChange="HandleUploadMaintenancePlan" class="form-control mb-2" />
+                            </div>
+                        </div>
+                        <div class="col-8 d-flex justify-content-center align-items-center">
+                            <p class="text-muted">No maintenance plans uploaded yet.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons d-flex justify-content-end mt-4">
+                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="tree">Cancel</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                </div>
+            </EditForm>
+        </Content>
+    </Tab>
+</Tabs>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    string errorMessage = "";
+    HttpClient? client;
+
+    private TreeDTO Tree = new TreeDTO()
+    {
+        Id = 0,
+        Species = ""
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = HttpClientFactory.CreateClient("BTPApi");
+
+        if (Id.HasValue) await LoadTree(Id.Value);
+    }
+
+    private async Task LoadTree(int id)
+    {
+        if (this.client == null)
+        {
+            this.errorMessage = "No httpclient found.";
+
+            return;
+        }
+
+        AP.BTP.Application.CQRS.Tree.TreeDTO? response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>($"Tree/{id}");
+
+        if (response != null) this.Tree = response;
+        else this.errorMessage = "Couldn't load tree";
+
+        StateHasChanged();
+    }
+
+    private void ClearForm()
+    {
+        this.Tree.Species = "";
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            if (this.client == null)
+            {
+                this.errorMessage = "No httpclient found.";
+
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.Tree.Species))
+            {
+                this.errorMessage = "The tree name is empty";
+
+                return;
+            }
+
+            HttpResponseMessage response;
+
+            if (this.Id == null)
+            {
+                response = await this.client.PostAsJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>("Tree", this.Tree);
+            } else
+            {
+                response = await this.client.PutAsJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>("Tree", this.Tree);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                this.Tree.Species = "";
+                NavigationManager.NavigateTo("/tree");
+            } else
+                this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    private void HandleUploadMaintenancePlan()
+    {
+        this.errorMessage = "Handle updload mentenance plan not implemented yet";
+    }
+}

@@ -16,29 +16,44 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<Tree> Create(Tree tree)
         {
-            await dbSet.AddAsync(tree);
+            await this.dbSet.AddAsync(tree);
 
             return tree;
         }
 
         public void Delete(Tree item)
         {
-            throw new NotImplementedException();
+            this.Delete(item.Id);
         }
 
-        public Task<IEnumerable<Tree>> GetAll()
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
         }
 
-        public Task<Tree> GetById(int id)
+        public async Task<IEnumerable<Tree>> GetAll()
         {
-            throw new NotImplementedException();
+            return await this.dbSet.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        {
+            return await this.dbSet.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<Tree?> GetById(int id)
+        {
+            return await this.dbSet.FindAsync(id);
         }
 
         public Tree Update(Tree modifiedItem)
         {
-            throw new NotImplementedException();
+            return this.dbSet.Update(modifiedItem).Entity;
+        }
+
+        public async Task<int> GetTotalPages(int pageSize)
+        {
+            return (int)(await dbSet.CountAsync() / (double)pageSize);
         }
     }
 }

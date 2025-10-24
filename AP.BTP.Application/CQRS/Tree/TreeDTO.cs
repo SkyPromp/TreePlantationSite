@@ -3,6 +3,6 @@
     public class TreeDTO
     {
         public int Id { get; set; }
-        public String Species { get; set; }
+        public required string Species { get; set; }
     }
 }

@@ -1,12 +1,13 @@
-@page "/plantationSite"
+@page "/plantation-site"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
 @using System.Drawing
+@inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
 
 <div class="d-flex justify-content-between px-4">
-    <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+    <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Add new</Button>
     <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
 </div>
 <div class="container-fluid m-0">
@@ -104,7 +105,12 @@
         };
         debounceTimer.AutoReset = false;
         debounceTimer.Start();
-    }    
+    }
+
+    private void GoToAddForm()
+    {
+        Navigation.NavigateTo("/plantation-site/edit");
+    }        
 
     private IEnumerable<List<PlantationSiteDTO>> Rows =>
         (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
