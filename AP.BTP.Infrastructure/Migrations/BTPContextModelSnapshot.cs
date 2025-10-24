@@ -1400,7 +1400,13 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PlantationSiteId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Size")
                         .HasColumnType("int");
 
                     b.Property<int>("TreeId")

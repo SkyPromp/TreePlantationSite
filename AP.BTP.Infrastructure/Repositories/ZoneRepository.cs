@@ -27,21 +27,21 @@ namespace AP.BTP.Infrastructure.Repositories
             this.dbSet.Update(item);
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             Zone? zone = await this.dbSet.FindAsync(id);
 
             if (zone != null) Delete(zone);
         }
 
-        public void HardDelete(Zone item)
+        public async Task HardDelete(Zone item)
         {
-            this.HardDelete(item.Id);
+            await this.HardDelete(item.Id);
         }
 
-        public void HardDelete(int id)
+        public async Task HardDelete(int id)
         {
-            this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
+            await this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
         }
 
         public async Task<IEnumerable<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
