@@ -36,6 +36,8 @@ services:
     networks:
       - default
       - proxy
+    volumes:
+      - ../media:/app/media      
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.apbtp-webapi.rule=Host(`api.${DOMAIN}`)"

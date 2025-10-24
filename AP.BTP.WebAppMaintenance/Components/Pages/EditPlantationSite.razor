@@ -4,6 +4,7 @@
 @using AP.BTP.Application.CQRS.PlantationSite
 @using AP.BTP.Application.CQRS.Zone
 @using AP.BTP.Application.CQRS.Tree
+@using System.Text.Json
 @using BlazorBootstrap
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
@@ -130,24 +131,24 @@
 }
 
 @code {
-    [Parameter] public int id { get; set; }
+        [Parameter] public int id { get; set; }
 
-    PlantationSiteDTO plantationSite = new PlantationSiteDTO()
-    {
-        Id = 0,
-        Name = "",
-        Street = "",
-        HouseNumber = "",
-        City = "",
-        Country = "",
-        PostalCode = 0,
-        Size = 0.0,
-        GroundPlan = "",
-        IsDeleted = false,
-        Zones = new List<ZoneDTO>()
-    };
+        PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+        {
+            Id = 0,
+            Name = "",
+            Street = "",
+            HouseNumber = "",
+            City = "",
+            Country = "",
+            PostalCode = 0,
+            Size = 0.0,
+            GroundPlan = "",
+            IsDeleted = false,
+            Zones = new List<ZoneDTO>()
+        };
 
-    string groundPlanPreview = string.Empty;
+        string groundPlanPreview = string.Empty;
 
     private bool showTreeList;
     private bool ShowTreeList {
@@ -180,6 +181,19 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
         await LoadTrees();
+
+        if (this.id != 0) {
+            try {
+                this.plantationSite = await this.client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{this.id}");
+
+                if (!string.IsNullOrEmpty(this.plantationSite?.GroundPlan))
+                {
+                    await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
+                }
+            } catch (Exception ex) {
+                // TODO implement snackbar
+            }
+        }
     }
 
     private async Task LoadTrees()
@@ -237,13 +251,28 @@
     {
         IBrowserFile file = e.File;
 
-        using MemoryStream stream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(stream);
+        using MultipartFormDataContent content = new MultipartFormDataContent();
+        using Stream stream = file.OpenReadStream();
+        content.Add(new StreamContent(stream), "file", file.Name);
 
-        string base64 = Convert.ToBase64String(stream.ToArray());
-        groundPlanPreview = $"data:{file.ContentType};base64,{base64}";
+        HttpResponseMessage response = await client.PostAsync("File/upload", content);
 
-        plantationSite.GroundPlan = $"uploads/{file.Name}";
+        if (response.IsSuccessStatusCode)
+        {
+            JsonElement json = await response.Content.ReadFromJsonAsync<JsonElement>();
+            string? fileName = json.GetProperty("fileName").GetString();
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                plantationSite!.GroundPlan = fileName;
+                await LoadImagePreview(client, plantationSite.GroundPlan);
+            }
+        }
+        else
+        {
+            string error = await response.Content.ReadAsStringAsync();
+            // TODO implement snackbar
+        }
     }
 
     private void AddZone()
@@ -254,6 +283,28 @@
 
         if (tree == null || this.plantationSite == null) return;
 
-        this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id});
+        this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id });
+    }
+
+    private async Task LoadImagePreview(HttpClient client, string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName)) return;
+
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
+            response.EnsureSuccessStatusCode();
+
+            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+
+            string base64Image = Convert.ToBase64String(imageBytes);
+            groundPlanPreview = $"data:{contentType};base64,{base64Image}";
+        }
+        catch
+        {
+            groundPlanPreview = string.Empty;
+        }
     }
 }

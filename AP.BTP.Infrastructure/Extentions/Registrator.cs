@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Infrastructure.Auth0;
 using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Repositories;
 using AP.BTP.Infrastructure.UOW;
@@ -14,6 +15,7 @@ namespace AP.BTP.Infrastructure.Extentions
         {
             services.RegisterDbContext(configuration);
             services.RegisterRepositories();
+            services.AddScoped<IAuth0ManagementService, Auth0ManagementService>();
             return services;
         }
         public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
