@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.Users
 @using System.Drawing
+@using System.Text.Json
 @inject IHttpClientFactory HttpClientFactory
 
 <div class="d-flex justify-content-between px-4">
@@ -35,10 +36,10 @@
             <div>Sites</div>
             <div class="text-center">Actions</div>
         </div>
-        @foreach (var row in Rows)
+        @foreach (List<Auth0User> row in Rows)
         {
             <div class="row">
-                @foreach (var item in row)
+                @foreach (Auth0User item in row)
                 {
                     <div style="padding: 1vh;">
                         <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
@@ -49,7 +50,7 @@
                                 <CardText class="m-0">123456456789</CardText>
                                 <CardText class="m-0">Site1, Site2</CardText>
                                 <div>
-                                    <Button Class="p-0" Style="box-shadow: none; border: none;"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;" @onclick="() => ApproveUser(item.user_id)"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
                                     <Button Class="p-0" Style="box-shadow: none; border: none;"><Icon Name="IconName.X" Color="IconColor.Danger" Style="font-size: 3.2vh;"></Icon></Button>
                                 </div>
                             </CardBody>
@@ -106,6 +107,20 @@
         response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ApproveUser(string id)
+    {
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+
+        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{id}/approve", null);
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            await Task.Delay(1000); // small delay to ensure auth0 has processed the change
+            await LoadPage(currentPage);
+            StateHasChanged();
+        }
     }
 
     private void OnSearchChanged(ChangeEventArgs e)
