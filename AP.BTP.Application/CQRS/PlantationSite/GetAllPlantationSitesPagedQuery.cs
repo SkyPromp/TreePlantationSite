@@ -24,7 +24,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
         public async Task<PagedResponse<PlantationSiteDTO>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
         {
-            var (items, totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Domain.PlantationSite> items, int totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
 
             return new PagedResponse<PlantationSiteDTO>
             {
