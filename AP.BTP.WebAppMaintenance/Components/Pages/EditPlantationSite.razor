@@ -359,7 +359,7 @@
         this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id });
     }
 
-    private void ConfirmDeleteTree(int id)
+    private void ConfirmDeleteZone(int id)
     {
         this.SelectedZone = id;
         this.ShowConfirmZoneDeletion = true;

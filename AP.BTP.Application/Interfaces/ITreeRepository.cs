@@ -6,6 +6,8 @@ namespace AP.BTP.Application.Interfaces
     {
         public Task<int> GetTotalPages(int pageSize);
         public void Delete(int id);
+        public void HardDelete(int id);
+        public void HardDelete(Tree item);
         public Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize);
     }
 }

@@ -24,6 +24,17 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new GetZoneByIdQuery() { Id = id }));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetZonesByPlantationSiteId([FromQuery] int? plantationSiteId)
+        {
+            if (plantationSiteId != null)
+            {
+                return Ok(await mediator.Send(new GetAllZonesByPlantationSiteIdQuery() { PlantationSiteId = plantationSiteId.Value }));
+            }
+
+            return BadRequest("Not implemented yet, must provide a plantationSiteId currently");
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddZoneByParams([FromBody] ZoneDTO? zone, [FromQuery] int? treeId, int? plantationSiteId)

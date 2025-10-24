@@ -44,6 +44,11 @@ namespace AP.BTP.Infrastructure.Repositories
             this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
         }
 
+        public async Task<IEnumerable<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
+        {
+            return await this.dbSet.Where(zone => !zone.IsDeleted && zone.PlantationSite.Id == plantationSiteId).ToListAsync();
+        }
+
         public async Task<IEnumerable<Zone>> GetAll()
         {
             return await this.dbSet.Where(zone => !zone.IsDeleted).ToListAsync();
