@@ -30,6 +30,7 @@ namespace AP.BTP.WebAPI.Controllers
         public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
         {
             IEnumerable<ZoneDTO>? zones = plantationSiteDTO.Zones;
+            plantationSiteDTO.Zones = null; // avoid duplicated instances in database
 
             PlantationSiteDTO newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
 
