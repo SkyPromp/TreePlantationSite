@@ -3,7 +3,7 @@ using AP.BTP.Application.Interfaces;
 using FluentValidation.TestHelper;
 using Moq;
 
-namespace AP.BTP.Unittests
+namespace AP.BTP.Unittests.Tree
 {
     [TestClass]
     public class AddTreeCommandTests
@@ -15,12 +15,12 @@ namespace AP.BTP.Unittests
         [TestInitialize]
         public void Setup()
         {
-            this.uowMock = new Mock<IUnitOfWork>();
-            this.treeRepoMock = new Mock<ITreeRepository>();
+            uowMock = new Mock<IUnitOfWork>();
+            treeRepoMock = new Mock<ITreeRepository>();
 
-            this.uowMock.Setup(u => u.TreeRepository).Returns(this.treeRepoMock.Object);
+            uowMock.Setup(u => u.TreeRepository).Returns(treeRepoMock.Object);
 
-            this.validator = new AddTreeCommandValidator(this.uowMock.Object);
+            validator = new AddTreeCommandValidator(uowMock.Object);
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace AP.BTP.Unittests
                 Tree = new TreeDTO() { Id = 0, Species = "" }
             };
 
-            TestValidationResult<AddTreeCommand> result = await this.validator.TestValidateAsync(command);
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Species).WithErrorMessage("Species name is required.") != null);
         }
@@ -44,7 +44,7 @@ namespace AP.BTP.Unittests
                 Tree = new TreeDTO() { Id = 0, Species = null }
             };
 
-            TestValidationResult<AddTreeCommand> result = await this.validator.TestValidateAsync(command);
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Species).WithErrorMessage("Species name is required.") != null);
         }
@@ -57,11 +57,11 @@ namespace AP.BTP.Unittests
                 Tree = new TreeDTO() { Id = 0, Species = "Oak" }
             };
 
-            TestValidationResult<AddTreeCommand> result = await this.validator.TestValidateAsync(command);
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
-        
+
         [TestMethod]
         public async Task Should_Have_Error_When_Id_Not_Zero()
         {
@@ -70,7 +70,7 @@ namespace AP.BTP.Unittests
                 Tree = new TreeDTO() { Id = 1, Species = "Oak" }
             };
 
-            TestValidationResult<AddTreeCommand> result = await this.validator.TestValidateAsync(command);
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Id).WithErrorMessage("Id should be zero when adding a tree.") != null);
         }

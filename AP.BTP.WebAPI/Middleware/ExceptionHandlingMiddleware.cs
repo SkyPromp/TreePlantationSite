@@ -24,7 +24,7 @@ namespace AP.BTP.WebAPI.Middleware
             }
             catch (Exception ex)
             {
-                var response = new ErrorResponseInfo();
+                ErrorResponseInfo response = new ErrorResponseInfo();
                 response.Message = ex.Message;
                 switch (ex)
                 {

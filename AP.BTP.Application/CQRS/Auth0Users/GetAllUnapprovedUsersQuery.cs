@@ -21,7 +21,7 @@ namespace AP.BTP.Application.CQRS.Users
 
         public async Task<PagedResponse<Auth0User>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
-            var (items, totalCount) = await _auth0.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Auth0User> items, int totalCount) = await _auth0.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
 
             return new PagedResponse<Auth0User>
             {

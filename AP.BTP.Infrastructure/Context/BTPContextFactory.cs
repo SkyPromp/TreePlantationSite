@@ -7,10 +7,10 @@ namespace AP.BTP.Infrastructure.Context
     {
         public BTPContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<BTPContext>();
+            DbContextOptionsBuilder<BTPContext> optionsBuilder = new DbContextOptionsBuilder<BTPContext>();
 
             // Read connection string from environment variable
-            var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__Default");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__Default");
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException("Connection string not set in environment variables.");
 

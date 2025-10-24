@@ -30,15 +30,14 @@ namespace AP.BTP.Infrastructure.Auth0
             request.Method = Method.Post;
             request.AddHeader("content-type", "application/json");
 
-            var body = new
+
+            request.AddJsonBody(new
             {
                 client_id = _clientId,
                 client_secret = _clientSecret,
                 audience = _audience,
                 grant_type = "client_credentials"
-            };
-
-            request.AddJsonBody(body);
+            });
 
             RestResponse response = await client.ExecuteAsync(request);
 
@@ -61,11 +60,7 @@ namespace AP.BTP.Infrastructure.Auth0
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddHeader("content-type", "application/json");
 
-            var body = new
-            {
-                app_metadata = new { approved = true }
-            };
-            request.AddJsonBody(body);
+            request.AddJsonBody(new { app_metadata = new { approved = true } }); 
 
             RestResponse response = await client.ExecuteAsync(request);
 
@@ -81,7 +76,8 @@ namespace AP.BTP.Infrastructure.Auth0
 
             string baseUrl = $"https://{_domain}/api/v2/users";
 
-            var query = $"q=app_metadata.approved:false";
+            string query = $"q=app_metadata.approved:false";
+
             if (!string.IsNullOrWhiteSpace(search))
             {
                 query += $" AND email:*{search}*";

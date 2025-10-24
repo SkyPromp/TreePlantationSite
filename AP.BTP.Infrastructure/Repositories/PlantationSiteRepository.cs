@@ -30,7 +30,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
     {
-        var query = dbSet
+        IQueryable<PlantationSite> query = dbSet
             .Where(ps => !ps.IsDeleted)
             .AsQueryable();
 
@@ -42,9 +42,9 @@ public class PlantationSiteRepository: IPlantationSiteRepository
                 ps.Name.ToLower().Contains(search));
         }
 
-        var totalCount = await query.CountAsync();
+        int totalCount = await query.CountAsync();
 
-        var items = await query.Skip((pageNr - 1) * pageSize)
+        List<PlantationSite> items = await query.Skip((pageNr - 1) * pageSize)
                             .Take(pageSize)
                             .ToListAsync();
                             
@@ -65,7 +65,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public PlantationSite Update(PlantationSite modifiedItem)
     {
-        var existingEntity = dbSet.Find(modifiedItem.Id);
+        PlantationSite? existingEntity = dbSet.Find(modifiedItem.Id);
         if (existingEntity == null)
             throw new KeyNotFoundException($"PlantationSite with ID {modifiedItem.Id} not found.");
 

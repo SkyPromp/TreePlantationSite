@@ -1,4 +1,6 @@
 ﻿@page "/tree"
+@using AP.BTP.Application.CQRS.Tree;
+@using AP.BTP.Application.CQRS;
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 
@@ -26,7 +28,7 @@
         </div>
     </div>
     <div class="row row-cols-3 gap-4 mb-4">
-        @foreach (AP.BTP.Application.CQRS.Tree.TreeDTO tree in Trees ?? [])
+        @foreach (TreeDTO tree in Trees ?? [])
         {
             <div class="col-3">
                 <div class="card p-3">
@@ -82,7 +84,7 @@
 
 @code {
     private string SearchString = "";
-    private IEnumerable<AP.BTP.Application.CQRS.Tree.TreeDTO> Trees;
+    private IEnumerable<TreeDTO> Trees;
     private string errorMessage = "";
     private int PageSize = 6;
     private int Page = 1;
@@ -120,9 +122,9 @@
 
         try
         {
-            AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>? response;
+            Paged<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Paged<AP.BTP.Application.CQRS.Tree.TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
+            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
 
             if (response != null)
             {

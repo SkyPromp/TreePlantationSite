@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.Extensions.Primitives;
 
 namespace AP.BTP.WebAPI.Middleware
 {
@@ -10,7 +11,7 @@ namespace AP.BTP.WebAPI.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue("Referer", out var referer) &&
+            if (context.Request.Headers.TryGetValue("Referer", out StringValues referer) &&
                 referer.ToString().Contains("/swagger", StringComparison.OrdinalIgnoreCase))
             {
                 // Create a dummy authenticated user

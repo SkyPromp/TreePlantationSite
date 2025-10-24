@@ -2,6 +2,8 @@
 @page "/plantation-site/edit/{id:int}"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
+@using AP.BTP.Application.CQRS.Zone
+@using AP.BTP.Application.CQRS.Tree
 @using System.Text.Json
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
@@ -90,41 +92,102 @@
     <Tab Title="Zones">
         <Content>
             <div class="form-content">
+                <div class="container">
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-auto">
+                            <button @onclick="() => this.ShowTreeList=true" class="btn btn-secondary">+ Add new</button>
+                        </div>
+                    </div>
+                </div>
                 This is the placeholder content for the <b>Zones</b> tab.
             </div>
         </Content>
     </Tab>
 </Tabs>
 
+@if (this.ShowTreeList)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
+        <div class="card position-absolute align-self-center p-4">
+            <h1>Select tree species</h1>
+            <p>Which tree species would you like to assign to this zone?</p>
+            <select @bind="SelectedTreeId" class="form-select">
+                @foreach(TreeDTO tree in this.Trees ?? [])
+                {
+                    <option value="@tree.Id">@tree.Species</option>
+                }
+            </select>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Cancel</button>
+                </div>
+                <div class="col">
+                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
-    [Parameter] public int id { get; set; }
+        [Parameter] public int id { get; set; }
 
-    PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+        PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+        {
+            Id = 0,
+            Name = "",
+            Street = "",
+            HouseNumber = "",
+            City = "",
+            Country = "",
+            PostalCode = 0,
+            Size = 0.0,
+            GroundPlan = "",
+            IsDeleted = false,
+            Zones = new List<ZoneDTO>()
+        };
+
+        string groundPlanPreview = string.Empty;
+
+    private bool showTreeList;
+    private bool ShowTreeList {
+        get { return this.showTreeList; }
+        set {
+            this.IsConfirm = false;
+            this.showTreeList = value;
+        }
+    }
+    private bool isConfirm;
+    private bool IsConfirm
     {
-        Id = 0,
-        Name = "",
-        Street = "",
-        HouseNumber = "",
-        City = "",
-        Country = "",
-        PostalCode = 0,
-        Size = 0.0,
-        GroundPlan = "",
-        IsDeleted = false
-    };
+        get { return this.isConfirm; }
+        set {
+            this.isConfirm = value;
+            this.showTreeList = false;
+            if (value)
+            {
+                this.AddZone();
+                this.SelectedTreeId = null;
+            }
+        }
+    }
 
-    string groundPlanPreview = string.Empty;
+    private IEnumerable<TreeDTO>? Trees;
+    private int? SelectedTreeId;
+    HttpClient? client;
 
     protected override async Task OnInitializedAsync()
     {
-        if (id != 0) {
-            try {
-                HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-                plantationSite = await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{id}");
+        client = HttpClientFactory.CreateClient("BTPApi");
+        await LoadTrees();
 
-                if (!string.IsNullOrEmpty(plantationSite?.GroundPlan))
+        if (this.id != 0) {
+            try {
+                this.plantationSite = await this.client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{this.id}");
+
+                if (!string.IsNullOrEmpty(this.plantationSite?.GroundPlan))
                 {
-                    await LoadImagePreview(client, plantationSite.GroundPlan);
+                    await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
                 }
             } catch (Exception ex) {
                 // TODO implement snackbar
@@ -132,16 +195,35 @@
         }
     }
 
+    private async Task LoadTrees()
+    {
+        if (this.client == null) return;
+
+        try
+        {
+            IEnumerable<TreeDTO>? response;
+
+            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree");
+
+            if (response != null)
+            {
+                this.Trees = response;
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
     private async Task HandleValidSubmit(){
         try {
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+            if (this.client == null) return;
 
             HttpResponseMessage response;
 
-            if (id == 0)
-                response = await client.PostAsJsonAsync("PlantationSite", plantationSite);
-            else
-                response = await client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
+            if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
+            else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
 
             if (response.IsSuccessStatusCode)
             {
@@ -162,7 +244,7 @@
     private void Cancel()
     {
         Navigation.NavigateTo("/plantation-site");
-    }    
+    }
 
     private async Task HandleGroundPlanUpload(InputFileChangeEventArgs e)
     {
@@ -172,7 +254,6 @@
         using Stream stream = file.OpenReadStream();
         content.Add(new StreamContent(stream), "file", file.Name);
 
-        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         HttpResponseMessage response = await client.PostAsync("File/upload", content);
 
         if (response.IsSuccessStatusCode)
@@ -183,7 +264,7 @@
             if (!string.IsNullOrEmpty(fileName))
             {
                 plantationSite!.GroundPlan = fileName;
-                await LoadImagePreview(client, plantationSite.GroundPlan);            
+                await LoadImagePreview(client, plantationSite.GroundPlan);
             }
         }
         else
@@ -193,10 +274,20 @@
         }
     }
 
+    private void AddZone()
+    {
+        if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
+
+        TreeDTO? tree = this.Trees?.Where(tree => tree.Id == this.SelectedTreeId).FirstOrDefault() ?? null;
+
+        if (tree == null || this.plantationSite == null) return;
+
+        this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id });
+    }
+
     private async Task LoadImagePreview(HttpClient client, string fileName)
     {
-        if (string.IsNullOrWhiteSpace(fileName))
-            return;
+        if (string.IsNullOrWhiteSpace(fileName)) return;
 
         try
         {

@@ -14,8 +14,9 @@ namespace AP.BTP.Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.Entity<PlantationSite>().Seed();
             modelBuilder.Entity<Tree>();
+            modelBuilder.Entity<PlantationSite>().Seed();
+            modelBuilder.Entity<Zone>();
         }
     }
 }

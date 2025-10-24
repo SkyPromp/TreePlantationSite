@@ -23,10 +23,23 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public void Delete(Tree item)
         {
-            this.Delete(item.Id);
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
         }
 
-        public void Delete(int id)
+        public async void Delete(int id)
+        {
+            Tree? tree = await this.dbSet.FindAsync(id);
+
+            if (tree != null) Delete(tree);
+        }
+
+        public void HardDelete(Tree item)
+        {
+            this.HardDelete(item.Id);
+        }
+
+        public void HardDelete(int id)
         {
             this.dbSet.Where(t => t.Id == id).ExecuteDeleteAsync();
         }
@@ -38,12 +51,14 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
         {
-            return await this.dbSet.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
+            return await this.dbSet.Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<Tree?> GetById(int id)
         {
-            return await this.dbSet.FindAsync(id);
+            Tree? tree = await this.dbSet.FindAsync(id);
+
+            return (tree?.IsDeleted ?? true) ? null : tree;
         }
 
         public Tree Update(Tree modifiedItem)
