@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using AP.BTP.Application.CQRS.PlantationSite;
 using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
 {

@@ -124,7 +124,7 @@
 
                 if (!string.IsNullOrEmpty(plantationSite?.GroundPlan))
                 {
-                    groundPlanPreview = new Uri(client.BaseAddress!, $"api/v1/File/{plantationSite.GroundPlan}").ToString();
+                    await LoadImagePreview(client, plantationSite.GroundPlan);
                 }
             } catch (Exception ex) {
                 // TODO implement snackbar
@@ -183,14 +183,36 @@
             if (!string.IsNullOrEmpty(fileName))
             {
                 plantationSite!.GroundPlan = fileName;
-
-                groundPlanPreview = new Uri(client.BaseAddress!, $"api/v1/File/{fileName}").ToString();
+                await LoadImagePreview(client, plantationSite.GroundPlan);            
             }
         }
         else
         {
             string error = await response.Content.ReadAsStringAsync();
             // TODO implement snackbar
+        }
+    }
+
+    private async Task LoadImagePreview(HttpClient client, string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
+
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
+            response.EnsureSuccessStatusCode();
+
+            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+
+            string base64Image = Convert.ToBase64String(imageBytes);
+            groundPlanPreview = $"data:{contentType};base64,{base64Image}";
+        }
+        catch
+        {
+            groundPlanPreview = string.Empty;
         }
     }
 }
