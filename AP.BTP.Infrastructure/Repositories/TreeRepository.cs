@@ -46,7 +46,7 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<IEnumerable<Tree>> GetAll()
         {
-            return await this.dbSet.ToListAsync();
+            return await this.dbSet.Where(tree => !tree.IsDeleted).ToListAsync();
         }
 
         public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)

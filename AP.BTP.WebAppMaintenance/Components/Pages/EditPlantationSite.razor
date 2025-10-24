@@ -102,8 +102,8 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Zone Id</th>
-                            <th scope="col">Plantation Id</th>
+                            <th scope="col">Zone name</th>
+                            <th scope="col">Area</th>
                             <th scope="col">Tree type</th>
                             <th scope="col"></th>
                         </tr>
@@ -114,7 +114,7 @@
                             <tr>
                                 <td>@zone.Id</td>
                                 <td>@zone.PlantationSiteId</td>
-                                <td>@(this.findTree(zone.Id)?.Species ?? "No species name was found")</td>
+                                <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
                                     <i class="bi bi-pencil-square"></i>
                                     <i class="bi bi-trash"></i>
