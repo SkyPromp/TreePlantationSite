@@ -116,7 +116,7 @@
                                 <td>@zone.PlantationSiteId</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
-                                    <i class="bi bi-pencil-square"></i>
+                                    <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-pencil-square"></i>
                                     <i class="bi bi-trash"></i>
                                 </td>
                             </tr>
@@ -142,18 +142,42 @@
             </select>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Cancel</button>
+                    <button @onclick="() => this.IsZoneAdded = false" class="btn btn-warning">Cancel</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Confirm</button>
+                    <button @onclick="() => this.IsZoneAdded = true" class="btn btn-secondary">Confirm</button>
                 </div>
             </div>
         </div>
     </div>
 }
 
+@if (this.ShowConfirmZoneDeletion)
+{
+    <div class="d-flex justify-content-center">
+        <div class="card position-absolute align-self-center p-4">
+            <h1>Confirm</h1>
+            <p>Do you wish to confirm?</p>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="() => this.IsZoneRemoved = false" class="btn btn-warning">Cancel</button>
+                </div>
+                <div class="col">
+                    <button @onclick="() => this.IsZoneRemoved = true" class="btn btn-secondary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
 @code {
     [Parameter] public int id { get; set; }
+    private string errorMessage = "";
 
     PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
     {
@@ -172,20 +196,21 @@
 
     string groundPlanPreview = string.Empty;
 
+    private int? SelectedTreeId;
     private bool showTreeList;
     private bool ShowTreeList {
         get { return this.showTreeList; }
         set {
-            this.IsConfirm = false;
+            this.IsZoneAdded = false;
             this.showTreeList = value;
         }
     }
-    private bool isConfirm;
-    private bool IsConfirm
+    private bool isZoneAdded;
+    private bool IsZoneAdded
     {
-        get { return this.isConfirm; }
+        get { return this.isZoneAdded; }
         set {
-            this.isConfirm = value;
+            this.isZoneAdded = value;
             this.showTreeList = false;
             if (value)
             {
@@ -195,8 +220,27 @@
         }
     }
 
+    private int SelectedZone;
+    private bool showConfirmZoneDeletion;
+    private bool ShowConfirmZoneDeletion {
+        get { return this.showConfirmZoneDeletion; }
+        set {
+            this.IsZoneRemoved = false;
+            this.showConfirmZoneDeletion = value;
+        }
+    }
+    private bool isZoneRemoved;
+    private bool IsZoneRemoved
+    {
+        get { return this.isZoneRemoved; }
+        set {
+            this.isZoneRemoved = value;
+            this.showConfirmZoneDeletion = false;
+            if(value) this.DeleteZone(SelectedZone);
+        }
+    }
+
     private IEnumerable<TreeDTO>? Trees;
-    private int? SelectedTreeId;
     HttpClient? client;
 
     protected override async Task OnInitializedAsync()
@@ -313,6 +357,43 @@
         if (tree == null || this.plantationSite == null) return;
 
         this.plantationSite.Zones = this.plantationSite.Zones.Append(new ZoneDTO() { PlantationSiteId = this.plantationSite.Id, TreeId = tree.Id });
+    }
+
+    private void ConfirmDeleteTree(int id)
+    {
+        this.SelectedZone = id;
+        this.ShowConfirmZoneDeletion = true;
+    }
+
+    private async void DeleteZone(int id)
+    {
+        if (this.plantationSite == null || this.plantationSite.Zones == null) return;
+
+        // If the plantationSite id is 0, this means the the zone hasn't been sent to the backend yet, so it can just be removed from the frontend.
+        if(this.plantationSite.Id == 0)
+        {
+            this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
+
+            return;
+        }
+
+        HttpResponseMessage? response;
+
+        if (this.client != null)
+        {
+            response = await this.client.DeleteAsync($"Zone?id={id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                this.errorMessage = $"The deletion of id={id} has been unsuccessfull";
+            } else
+            {
+                this.errorMessage = $"{id} has been sucessfully deleted";
+            }
+        }
+
+        await this.LoadTrees();
+        StateHasChanged();
     }
 
     private async Task LoadImagePreview(HttpClient client, string fileName)

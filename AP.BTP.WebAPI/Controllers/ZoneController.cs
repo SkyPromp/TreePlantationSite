@@ -18,6 +18,12 @@ namespace AP.BTP.WebAPI.Controllers
             this.mediator = mediator;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetZoneById(int id)
+        {
+            return Ok(await mediator.Send(new GetZoneByIdQuery() { Id = id }));
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddZoneByParams([FromBody] ZoneDTO? zone, [FromQuery] int? treeId, int? plantationSiteId)
