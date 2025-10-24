@@ -2,6 +2,7 @@
 @page "/plantation-site/edit/{id:int}"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
+@using System.Text.Json
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -119,8 +120,12 @@
         if (id != 0) {
             try {
                 HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-
                 plantationSite = await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{id}");
+
+                if (!string.IsNullOrEmpty(plantationSite?.GroundPlan))
+                {
+                    groundPlanPreview = new Uri(client.BaseAddress!, $"api/v1/File/{plantationSite.GroundPlan}").ToString();
+                }
             } catch (Exception ex) {
                 // TODO implement snackbar
             }
@@ -163,12 +168,29 @@
     {
         IBrowserFile file = e.File;
 
-        using MemoryStream stream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(stream);
+        using MultipartFormDataContent content = new MultipartFormDataContent();
+        using Stream stream = file.OpenReadStream();
+        content.Add(new StreamContent(stream), "file", file.Name);
 
-        string base64 = Convert.ToBase64String(stream.ToArray());
-        groundPlanPreview = $"data:{file.ContentType};base64,{base64}";        
-    
-        plantationSite.GroundPlan = $"uploads/{file.Name}"; 
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        HttpResponseMessage response = await client.PostAsync("File/upload", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            JsonElement json = await response.Content.ReadFromJsonAsync<JsonElement>();
+            string? fileName = json.GetProperty("fileName").GetString();
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                plantationSite!.GroundPlan = fileName;
+
+                groundPlanPreview = new Uri(client.BaseAddress!, $"api/v1/File/{fileName}").ToString();
+            }
+        }
+        else
+        {
+            string error = await response.Content.ReadAsStringAsync();
+            // TODO implement snackbar
+        }
     }
 }
