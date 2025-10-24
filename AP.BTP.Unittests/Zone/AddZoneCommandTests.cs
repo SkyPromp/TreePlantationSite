@@ -25,14 +25,19 @@ namespace AP.BTP.Unittests.Zone
             validator = new AddZoneCommandValidator(uowMock.Object);
         }
 
-        private TreeDTO GetTree()
+        private TreeDTO Tree 
         {
-            return new TreeDTO() { Id = 1, Species = "Oak" };
+            get
+            {
+                return new TreeDTO() { Id = 1, Species = "Oak" };
+            }
         }
 
-        private PlantationSiteDTO GetPlantationSite()
-        {
-            return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "" };
+        private PlantationSiteDTO PlantationSite { 
+            get
+            {
+                return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "" };
+            }
         }
 
         [TestMethod]
@@ -40,12 +45,38 @@ namespace AP.BTP.Unittests.Zone
         {
             AddZoneCommand command = new AddZoneCommand
             {
-                Zone = new ZoneDTO() { Id = 1, Tree = GetTree(), PlantationSite = GetPlantationSite() }
+                Zone = new ZoneDTO() { Id = 1, TreeId = Tree.Id, PlantationSiteId = PlantationSite.Id }
             };
 
             TestValidationResult<AddZoneCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zone.Id).WithErrorMessage("Id should be zero when adding a zone.") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_PlantationId_Zero()
+        {
+            AddZoneCommand command = new AddZoneCommand
+            {
+                Zone = new ZoneDTO() { Id = 1, TreeId = Tree.Id, PlantationSiteId = 0 }
+            };
+
+            TestValidationResult<AddZoneCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zone.PlantationSiteId).WithErrorMessage("The plantation site must already exist.") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_TreeId_Zero()
+        {
+            AddZoneCommand command = new AddZoneCommand
+            {
+                Zone = new ZoneDTO() { Id = 1, TreeId = 0, PlantationSiteId = PlantationSite.Id }
+            };
+
+            TestValidationResult<AddZoneCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zone.TreeId).WithErrorMessage("The tree must already exist.") != null);
         }
     }
 }
