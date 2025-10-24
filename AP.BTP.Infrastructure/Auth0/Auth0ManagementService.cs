@@ -14,11 +14,9 @@ namespace AP.BTP.Infrastructure.Auth0
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly string _audience;
-        private readonly ILogger<Auth0ManagementService> _logger;
 
-        public Auth0ManagementService(IConfiguration config, ILogger<Auth0ManagementService> logger)
+        public Auth0ManagementService(IConfiguration config)
         {
-            _logger = logger;
             _domain = config["AUTH0:DOMAIN"] ?? throw new ArgumentNullException("AUTH0:DOMAIN");
             _clientId = config["AUTH0:MANAGEMENT_CLIENT_ID"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_ID");
             _clientSecret = config["AUTH0:MANAGEMENT_CLIENT_SECRET"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_SECRET");
@@ -46,7 +44,6 @@ namespace AP.BTP.Infrastructure.Auth0
 
             if (!response.IsSuccessful)
             {
-                _logger.LogError("Auth0 token request failed: {StatusCode} - {Content}", response.StatusCode, response.Content);
                 throw new InvalidOperationException($"Failed to get Auth0 management token: {response.StatusCode}");
             }
 
@@ -74,7 +71,6 @@ namespace AP.BTP.Infrastructure.Auth0
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Approving user failed: {StatusCode} - {Content}", response.StatusCode, response.Content);
                 throw new InvalidOperationException($"Failed to approve user: {response.StatusCode}");
             }
         }
@@ -83,7 +79,6 @@ namespace AP.BTP.Infrastructure.Auth0
         {
             string token = await GetManagementTokenAsync();
 
-            // Base URL for Auth0 Management API users endpoint
             string baseUrl = $"https://{_domain}/api/v2/users";
 
             var query = $"q=app_metadata.approved:false";
@@ -102,7 +97,6 @@ namespace AP.BTP.Infrastructure.Auth0
 
             if (!response.IsSuccessful)
             {
-                _logger.LogError("List users failed: {StatusCode} - {Content}", response.StatusCode, response.Content);
                 throw new InvalidOperationException("Failed to list users.");
             }
 

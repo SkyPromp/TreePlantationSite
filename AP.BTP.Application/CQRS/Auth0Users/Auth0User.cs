@@ -6,7 +6,7 @@ namespace AP.BTP.Application.CQRS.Users
     (
         string user_id,
         string email,
-        string ? username,
+        string? username,
         DateTime? created_at,
         JsonElement? app_metadata
     );
