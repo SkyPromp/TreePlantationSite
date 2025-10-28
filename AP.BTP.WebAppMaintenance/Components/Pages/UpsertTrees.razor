@@ -1,8 +1,10 @@
-﻿@page "/tree/edit/{Id:int?}"
+﻿@attribute [Authorize(Roles = "Admin")]
+@page "/admin/tree/edit/{Id:int?}"
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.Tree
+@using Microsoft.AspNetCore.Authorization
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Site details">
@@ -21,7 +23,7 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="tree">Cancel</a>
+                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Cancel</a>
                     <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
                 </div>
             </EditForm>
@@ -45,7 +47,7 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="tree">Cancel</a>
+                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Cancel</a>
                     <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
                 </div>
             </EditForm>
@@ -125,7 +127,7 @@
             {
                 this.errorMessage = "";
                 this.Tree.Species = "";
-                NavigationManager.NavigateTo("/tree");
+                NavigationManager.NavigateTo("/admin/tree");
             } else
                 this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)

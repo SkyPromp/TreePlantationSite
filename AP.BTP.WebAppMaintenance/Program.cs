@@ -3,6 +3,7 @@ using AP.BTP.WebAppMaintenance.Components;
 using AP.BTP.WebAppMaintenance.Auth0;
 using AP.BTP.WebAppMaintenance.Extentions;
 using AP.BTP.WebAppMaintenance.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace AP.BTP.WebAppMaintenance
 {
@@ -54,6 +55,14 @@ namespace AP.BTP.WebAppMaintenance
             });
 
             builder.Services.AddAuth0Authentication(builder.Configuration);
+
+            builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                };
+            });
 
             WebApplication app = builder.Build();
 

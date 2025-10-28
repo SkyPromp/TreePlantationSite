@@ -1,7 +1,9 @@
-@page "/plantation-site"
+@attribute [Authorize(Roles = "Admin")]
+@page "/admin/plantation-site"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
 @using System.Drawing
+@using Microsoft.AspNetCore.Authorization
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -109,12 +111,12 @@
 
     private void GoToAddForm()
     {
-        Navigation.NavigateTo("/plantation-site/edit");
+        Navigation.NavigateTo("/admin/plantation-site/edit");
     }        
 
     private void GoToUpdateForm(int id)
     {
-        Navigation.NavigateTo($"/plantation-site/edit/{id}");
+        Navigation.NavigateTo($"/admin/plantation-site/edit/{id}");
     }     
 
     private IEnumerable<List<PlantationSiteDTO>> Rows =>

@@ -1,6 +1,8 @@
-﻿@page "/tree"
+﻿@attribute [Authorize(Roles = "Admin")]
+@page "/admin/tree"
 @using AP.BTP.Application.CQRS.Tree;
 @using AP.BTP.Application.CQRS;
+@using Microsoft.AspNetCore.Authorization
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 
@@ -22,7 +24,7 @@
         </div>
 
         <div class="col">
-            <NavLink href="tree/edit">
+            <NavLink href="/admin/tree/edit">
                 <button class="btn btn-secondary">+ Add new</button>
             </NavLink>
         </div>
@@ -35,7 +37,7 @@
                     <h2>@tree.Species</h2>
                     <div class="row align-items-center">
                         <div class="col-10">
-                            <a href="@($"tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
+                            <a href="@($"/admin/tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
                                 Edit
                             </a>
                         </div>
@@ -51,7 +53,7 @@
         @for(int i = 1; i <= @TotalPages; i++)
         {
             <div class="col">
-                <a href="@($"tree?page={i}")" class="btn btn-secondary px-3">
+                <a href="@($"/admin/tree?page={i}")" class="btn btn-secondary px-3">
                     @i
                 </a>
             </div>
