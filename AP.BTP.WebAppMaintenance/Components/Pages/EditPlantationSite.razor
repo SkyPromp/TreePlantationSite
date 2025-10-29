@@ -1,10 +1,12 @@
-@page "/plantation-site/edit"
-@page "/plantation-site/edit/{id:int}"
+@attribute [Authorize(Roles = "Admin")]
+@page "/admin/plantation-site/edit"
+@page "/admin/plantation-site/edit/{id:int}"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.PlantationSite
 @using AP.BTP.Application.CQRS.Zone
 @using AP.BTP.Application.CQRS.Tree
 @using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -221,7 +223,7 @@
             {
                 this.AddZone();
                 this.SelectedZone = EmptyZone;
-            } else if (this.OldZone != null)  // Restore state
+            } else if (this.OldZone != null)
             {
                 this.SelectedZone = this.OldZone;
                 this.OldZone = null;
@@ -374,7 +376,7 @@
 
     private void Cancel()
     {
-        Navigation.NavigateTo("/plantation-site");
+        Navigation.NavigateTo("/admin/plantation-site");
     }
 
     private async Task HandleGroundPlanUpload(InputFileChangeEventArgs e)
