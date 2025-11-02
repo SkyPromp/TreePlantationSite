@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.CQRS.Users;
+﻿using AP.BTP.Application.CQRS.User;
+using AP.BTP.Application.CQRS.Auth0User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

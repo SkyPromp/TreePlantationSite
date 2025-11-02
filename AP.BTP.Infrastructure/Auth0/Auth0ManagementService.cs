@@ -1,7 +1,6 @@
-﻿using AP.BTP.Application.CQRS.Users;
+﻿using AP.BTP.Application.CQRS.Auth0User;
 using AP.BTP.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using RestSharp;
 using System.Net;
 using System.Text.Json;

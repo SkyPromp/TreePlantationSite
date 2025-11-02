@@ -1,7 +1,7 @@
 ﻿using AP.BTP.Application.Interfaces;
 using MediatR;
 
-namespace AP.BTP.Application.CQRS.Users
+namespace AP.BTP.Application.CQRS.Auth0User
 {
     public class ApproveUserCommand : IRequest
     {
