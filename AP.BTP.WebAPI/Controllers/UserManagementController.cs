@@ -21,7 +21,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost("{id}/approve")]
         public async Task<IActionResult> Approve(string id)
         {
-            await _mediator.Send(new ApproveUserCommand() { UserId = id});
+            await _mediator.Send(new ApproveUserCommand() { UserId = id });
             return Ok(new { message = "User approved." });
         }
 
@@ -29,6 +29,22 @@ namespace AP.BTP.WebAPI.Controllers
         public async Task<IActionResult> GetAllUnapprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+        }
+
+        [HttpPost("{auth0Id}/sites")]
+        public async Task<IActionResult> LinkUserToPlantationSites(
+            string auth0Id,
+            [FromBody] List<int> plantationSiteIds)
+        {
+            Console.WriteLine($"plantationSiteIds is: {plantationSiteIds.Count}");
+
+            await _mediator.Send(new LinkUserToPlantationSitesCommand
+            {
+                Auth0Id = auth0Id,
+                PlantationSiteIds = plantationSiteIds
+            });
+
+            return Ok(new { message = "User successfully linked to plantation sites." });
         }
     }
 }

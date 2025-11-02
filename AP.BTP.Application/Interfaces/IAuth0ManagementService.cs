@@ -1,4 +1,4 @@
-﻿using AP.BTP.Application.CQRS.Users;
+﻿using AP.BTP.Application.CQRS.Auth0User;
 
 namespace AP.BTP.Application.Interfaces
 {
