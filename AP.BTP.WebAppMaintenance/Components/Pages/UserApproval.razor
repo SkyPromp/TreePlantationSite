@@ -83,12 +83,13 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
             <h5>Select the role to assign to this user</h5>
-            <select @bind="this.role" class="form-select mb-3">
-                <option value="Admin">Admin</option>
-                <option value="Manager">Manager</option>
-                <option value="Operator">Operator</option>
+            <select @bind="this.roleId" class="form-select mb-3">
+                @foreach (Auth0Role auth0Role in this.roles)
+                {
+                    <option value="@auth0Role.Id">@auth0Role.Name</option>
+                }
             </select>
-            @if (this.role == "Operator")
+            @if (roles.FirstOrDefault(r => r.Id == roleId)?.Name == "Operator")
             {
                 <h5>Select the plantation sites to assign to this user</h5>
                 <p>Plantation site 1</p>
@@ -114,7 +115,7 @@
                     <button @onclick="CancelEditUser" class="btn btn-warning">Cancel</button>
                 </div>
                 <div class="col">
-                    <button @onclick="ApproveUser" class="btn btn-secondary">Confirm</button>
+                    <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(roleId)">Confirm</button>
                 </div>
             </div>
         </div>
@@ -151,13 +152,14 @@
     private string errorMessage = "";
 
     private bool showEditUser;
-    private IEnumerable<PlantationSiteDTO>? plantationSites;
+    private IEnumerable<PlantationSiteDTO> plantationSites = new List<PlantationSiteDTO>();
     private int? site1;
     private int? site2;
-    private string role = "";
+    private string roleId = "";
     private string selectedUserId = "";
     private bool showSuccessToast = false;
     private double toastOpacity = 1.0;
+    private IEnumerable<Auth0Role> roles = new List<Auth0Role>();
 
 
     protected override async Task OnInitializedAsync()
@@ -165,7 +167,8 @@
         client = HttpClientFactory.CreateClient("BTPApi");
 
         await LoadPage(1);
-        await this.LoadPlantationSites();
+        await LoadPlantationSites();
+        await LoadRoles();
     }
 
     private async Task LoadPage(int page)
@@ -186,7 +189,10 @@
     {
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
-        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{selectedUserId}/approve", null);
+
+        String json = JsonSerializer.Serialize(roleId);
+        StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{selectedUserId}/approve", content);
 
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -201,8 +207,8 @@
             if (site2.HasValue)
                 selectedSites.Add(site2.Value);
 
-            String json = JsonSerializer.Serialize(selectedSites);
-            StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            json = JsonSerializer.Serialize(selectedSites);
+            content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             await client.PostAsync($"UserManagement/{selectedUserId}/sites", content);
 
             CancelEditUser();
@@ -264,13 +270,39 @@
         }
     }
 
+    private async Task LoadRoles()
+    {
+        if (this.client == null) return;
+
+        try
+        {
+            IEnumerable<Auth0Role>? response;
+
+            response = await this.client.GetFromJsonAsync<IEnumerable<Auth0Role>>("UserManagement/Roles");
+
+            if (response != null)
+            {
+                this.roles = response;
+                StateHasChanged();
+            }
+            else
+            {
+                this.errorMessage = "Something went wrong when loading in the roles";
+            }
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
     private void CancelEditUser()
     {
         this.showEditUser = false;
         this.selectedUserId = "";
         this.site1 = null;
         this.site2 = null;
-        this.role = "";
+        this.roleId = "";
     }
 
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
@@ -281,14 +313,11 @@
         toastOpacity = 1.0;
         StateHasChanged();
 
-        // Keep visible for 2.5 seconds
         await Task.Delay(2500);
 
-        // Start fade out
         toastOpacity = 0.0;
         StateHasChanged();
 
-        // Wait for fade transition to complete (0.5s)
         await Task.Delay(500);
         showSuccessToast = false;
         StateHasChanged();

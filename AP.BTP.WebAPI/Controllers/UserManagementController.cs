@@ -36,8 +36,6 @@ namespace AP.BTP.WebAPI.Controllers
             string auth0Id,
             [FromBody] List<int> plantationSiteIds)
         {
-            Console.WriteLine($"plantationSiteIds is: {plantationSiteIds.Count}");
-
             await _mediator.Send(new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = auth0Id,
