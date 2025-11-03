@@ -19,9 +19,9 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpPost("{auth0Id}/approve")]
-        public async Task<IActionResult> Approve(string auth0Id)
+        public async Task<IActionResult> Approve(string auth0Id, [FromBody] string role)
         {
-            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id });
+            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = role });
             return Ok(new { message = "User approved." });
         }
 
@@ -45,6 +45,12 @@ namespace AP.BTP.WebAPI.Controllers
             });
 
             return Ok(new { message = "User successfully linked to plantation sites." });
+        }
+
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetAllRoles()
+        {
+            return Ok(await _mediator.Send(new GetAllRolesQuery()));
         }
     }
 }

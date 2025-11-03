@@ -6,6 +6,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     public class ApproveUserCommand : IRequest
     {
         public required string UserId { get; set; }
+        public required string Role { get; set; }
     }
 
     public class ApproveUserCommandHandler : IRequestHandler<ApproveUserCommand>
@@ -19,7 +20,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
 
         public async Task Handle(ApproveUserCommand request, CancellationToken cancellationToken)
         {
-            await _auth0.ApproveUserAsync(request.UserId);
+            await _auth0.ApproveUserAsync(request.UserId, request.Role);
         }
     }
 }
