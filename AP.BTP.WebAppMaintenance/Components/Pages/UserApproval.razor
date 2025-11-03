@@ -3,6 +3,8 @@
 @using AP.BTP.Application.CQRS.Auth0User
 @using System.Drawing
 @using System.Text.Json
+@using AP.BTP.Application.CQRS.PlantationSite
+@using System.Text.Encodings.Web
 @inject IHttpClientFactory HttpClientFactory
 
 <div class="d-flex justify-content-between px-4">
@@ -29,11 +31,10 @@
     @if (response?.Items != null)
     {
         <div class="d-grid p-2 fw-bold"
-             style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
+             style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
             <div>Name</div>
             <div>E-mail</div>
             <div>Phone number</div>
-            <div>Sites</div>
             <div class="text-center">Actions</div>
         </div>
         @foreach (List<Auth0User> row in Rows)
@@ -44,13 +45,12 @@
                     <div style="padding: 1vh;">
                         <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
                             <CardBody Class="p-0 d-grid align-items-center"
-                                      Style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem;">
+                                      Style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem;">
                                 <CardText class="m-0">@item.username</CardText>
                                 <CardText class="m-0">@item.email</CardText>
                                 <CardText class="m-0">123456456789</CardText>
-                                <CardText class="m-0">Site1, Site2</CardText>
                                 <div>
-                                    <Button Class="p-0" Style="box-shadow: none; border: none;" @onclick="() => ApproveUser(item.user_id)"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;" @onclick="() => { this.showEditUser = true; selectedUserId = item.user_id; }"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
                                     <Button Class="p-0" Style="box-shadow: none; border: none;"><Icon Name="IconName.X" Color="IconColor.Danger" Style="font-size: 3.2vh;"></Icon></Button>
                                 </div>
                             </CardBody>
@@ -78,6 +78,65 @@
             LastLinkIcon="IconName.ChevronDoubleRight">
 </Pagination>
 
+@if (this.showEditUser)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Select the role to assign to this user</h5>
+            <select @bind="this.role" class="form-select mb-3">
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Operator">Operator</option>
+            </select>
+            @if (this.role == "Operator")
+            {
+                <h5>Select the plantation sites to assign to this user</h5>
+                <p>Plantation site 1</p>
+                <select @bind="this.site1" class="form-select mb-3">
+                    <option value=""></option>
+                    @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                    {
+                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
+                    }
+                </select>
+
+                <p>Plantation site 2</p>
+                <select @bind="this.site2" class="form-select mb-3">
+                    <option value=""></option>
+                    @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                    {
+                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
+                    }
+                </select>
+            }
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelEditUser" class="btn btn-warning">Cancel</button>
+                </div>
+                <div class="col">
+                    <button @onclick="ApproveUser" class="btn btn-secondary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (this.showSuccessToast)
+{
+    <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
+        <div class="toast show text-white bg-success shadow" style="opacity:@toastOpacity; transition: opacity 0.5s ease;">
+            <div class="toast-body">
+                ✅ User approved successfully!
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
 @code {
     private string? searchText = null;
     private bool showSearchWarning = false;
@@ -88,11 +147,25 @@
     private int pageSize => cardsPerRow * maxRows;
     private int totalPages => response?.TotalPages ?? 1;
     private System.Timers.Timer? debounceTimer;
+    HttpClient? client;
+    private string errorMessage = "";
+
+    private bool showEditUser;
+    private IEnumerable<PlantationSiteDTO>? plantationSites;
+    private int? site1;
+    private int? site2;
+    private string role = "";
+    private string selectedUserId = "";
+    private bool showSuccessToast = false;
+    private double toastOpacity = 1.0;
 
 
     protected override async Task OnInitializedAsync()
     {
+        client = HttpClientFactory.CreateClient("BTPApi");
+
         await LoadPage(1);
+        await this.LoadPlantationSites();
     }
 
     private async Task LoadPage(int page)
@@ -109,17 +182,32 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task ApproveUser(string id)
+    private async Task ApproveUser()
     {
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
-        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{id}/approve", null);
+        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{selectedUserId}/approve", null);
 
         if (responseMessage.IsSuccessStatusCode)
         {
             await Task.Delay(1000); // small delay to ensure auth0 has processed the change
             await LoadPage(currentPage);
             StateHasChanged();
+            this.showEditUser = false;
+
+            List<int> selectedSites = new List<int>();
+            if (site1.HasValue)
+                selectedSites.Add(site1.Value);
+            if (site2.HasValue)
+                selectedSites.Add(site2.Value);
+
+            String json = JsonSerializer.Serialize(selectedSites);
+            StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            await client.PostAsync($"UserManagement/{selectedUserId}/sites", content);
+
+            CancelEditUser();
+
+            await ShowSuccessToast();
         }
     }
 
@@ -149,4 +237,60 @@
             .Select((item, index) => new { item, index })
             .GroupBy(x => x.index / cardsPerRow)
             .Select(g => g.Select(x => x.item).ToList());
+
+    private async Task LoadPlantationSites()
+    {
+        if (this.client == null) return;
+
+        try
+        {
+            PagedResponse<PlantationSiteDTO>? response;
+
+            response = await this.client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>("PlantationSite");
+
+            if (response != null)
+            {
+                this.plantationSites = response.Items;
+                StateHasChanged();
+            }
+            else
+            {
+                this.errorMessage = "Something went wrong when loading in the plantation sites";
+            }
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    private void CancelEditUser()
+    {
+        this.showEditUser = false;
+        this.selectedUserId = "";
+        this.site1 = null;
+        this.site2 = null;
+        this.role = "";
+    }
+
+    private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
+
+    private async Task ShowSuccessToast()
+    {
+        showSuccessToast = true;
+        toastOpacity = 1.0;
+        StateHasChanged();
+
+        // Keep visible for 2.5 seconds
+        await Task.Delay(2500);
+
+        // Start fade out
+        toastOpacity = 0.0;
+        StateHasChanged();
+
+        // Wait for fade transition to complete (0.5s)
+        await Task.Delay(500);
+        showSuccessToast = false;
+        StateHasChanged();
+    }
 }

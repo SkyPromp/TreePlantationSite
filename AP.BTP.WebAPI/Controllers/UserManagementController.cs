@@ -18,10 +18,10 @@ namespace AP.BTP.WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("{id}/approve")]
-        public async Task<IActionResult> Approve(string id)
+        [HttpPost("{auth0Id}/approve")]
+        public async Task<IActionResult> Approve(string auth0Id)
         {
-            await _mediator.Send(new ApproveUserCommand() { UserId = id });
+            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id });
             return Ok(new { message = "User approved." });
         }
 
