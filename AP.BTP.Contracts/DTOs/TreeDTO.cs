@@ -1,4 +1,4 @@
-﻿namespace AP.BTP.Application.CQRS.Tree
+﻿namespace AP.BTP.Contracts.DTOs
 {
     public class TreeDTO
     {

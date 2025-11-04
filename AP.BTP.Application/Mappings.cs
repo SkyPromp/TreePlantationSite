@@ -1,8 +1,6 @@
-using AP.BTP.Application.CQRS.Tree;
-using AP.BTP.Application.CQRS.PlantationSite;
-using AP.BTP.Application.CQRS.Zone;
 using AP.BTP.Domain;
 using AutoMapper;
+using AP.BTP.Contracts.DTOs;
 
 namespace AP.BTP.Application
 {

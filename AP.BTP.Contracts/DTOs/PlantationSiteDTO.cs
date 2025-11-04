@@ -1,7 +1,6 @@
-using AP.BTP.Application.CQRS.Zone;
 using System.ComponentModel.DataAnnotations;
 
-namespace AP.BTP.Application.CQRS.PlantationSite
+namespace AP.BTP.Contracts.DTOs
 {
     public class PlantationSiteDTO
     {

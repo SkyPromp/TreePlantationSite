@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace AP.BTP.Application.CQRS.Users
+namespace AP.BTP.Contracts.Records
 {
     public record Auth0User
     (

@@ -1,4 +1,4 @@
-﻿using AP.BTP.Application.CQRS.Users;
+﻿using AP.BTP.Contracts.Records;
 
 namespace AP.BTP.Application.Interfaces
 {

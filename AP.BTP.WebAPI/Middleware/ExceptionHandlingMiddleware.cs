@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System;
-using FV = FluentValidation;
+﻿using System.Text.Json;
 using FluentValidation;
 
 namespace AP.BTP.WebAPI.Middleware

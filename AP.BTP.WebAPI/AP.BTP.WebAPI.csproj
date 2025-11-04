@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AP.BTP.Application\AP.BTP.Application.csproj" />
+    <ProjectReference Include="..\AP.BTP.Contracts\AP.BTP.Contracts.csproj" />
     <ProjectReference Include="..\AP.BTP.Infrastructure\AP.BTP.Infrastructure.csproj" />
   </ItemGroup>
 

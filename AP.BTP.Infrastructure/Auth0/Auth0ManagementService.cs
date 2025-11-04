@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.CQRS.Users;
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.Records;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RestSharp;

@@ -1,4 +1,4 @@
-﻿namespace AP.BTP.Application.CQRS.Zone
+﻿namespace AP.BTP.Contracts.DTOs
 {
     public class ZoneDTO
     {

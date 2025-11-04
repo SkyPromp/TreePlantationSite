@@ -1,4 +1,4 @@
-﻿namespace AP.BTP.Application.CQRS
+﻿namespace AP.BTP.Contracts.DTOs
 {
     public class Paged<T>
     {

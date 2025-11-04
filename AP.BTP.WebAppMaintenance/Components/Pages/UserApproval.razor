@@ -1,7 +1,8 @@
 ﻿@attribute [Authorize(Roles = "Admin")]
 @page "/admin/users/approve"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Users
+@using AP.BTP.Contracts.DTOs
+@using AP.BTP.Contracts.Records
 @using System.Drawing
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
@@ -83,7 +84,7 @@
 @code {
     private string? searchText = null;
     private bool showSearchWarning = false;
-    PagedResponse<Auth0User>? response;
+    PagedResponseDTO<Auth0User>? response;
     private int currentPage = 1;
     private int cardsPerRow = 1;
     private int maxRows = 8;
@@ -106,7 +107,7 @@
         if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDTO<Auth0User>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
