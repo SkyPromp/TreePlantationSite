@@ -19,9 +19,9 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpPost("{auth0Id}/approve")]
-        public async Task<IActionResult> Approve(string auth0Id, [FromBody] string role)
+        public async Task<IActionResult> Approve(string auth0Id, [FromBody] ApproveUserDTO approveUserDTO)
         {
-            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = role });
+            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = approveUserDTO.Role });
             return Ok(new { message = "User approved." });
         }
 
@@ -34,12 +34,12 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost("{auth0Id}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
             string auth0Id,
-            [FromBody] List<int> plantationSiteIds)
+            [FromBody] LinkUserToPlantationSitesDto linkUserToPlantationSitesDto)
         {
             await _mediator.Send(new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = auth0Id,
-                PlantationSiteIds = plantationSiteIds
+                PlantationSiteIds = linkUserToPlantationSitesDto.PlantationSiteIds
             });
 
             return Ok(new { message = "User successfully linked to plantation sites." });

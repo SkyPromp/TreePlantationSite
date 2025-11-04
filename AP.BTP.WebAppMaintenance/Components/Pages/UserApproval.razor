@@ -5,7 +5,9 @@
 @using System.Text.Json
 @using AP.BTP.Application.CQRS.PlantationSite
 @using System.Text.Encodings.Web
+@using AP.BTP.Application.CQRS.User
 @inject IHttpClientFactory HttpClientFactory
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="d-flex justify-content-between px-4">
     <Button Href="/users"
@@ -189,10 +191,7 @@
     {
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
-
-        String json = JsonSerializer.Serialize(roleId);
-        StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        HttpResponseMessage responseMessage = await client.PostAsync($"UserManagement/{selectedUserId}/approve", content);
+        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/{selectedUserId}/approve", new ApproveUserDTO() { Role = roleId });
 
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -207,9 +206,7 @@
             if (site2.HasValue)
                 selectedSites.Add(site2.Value);
 
-            json = JsonSerializer.Serialize(selectedSites);
-            content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            await client.PostAsync($"UserManagement/{selectedUserId}/sites", content);
+            await client.PostAsJsonAsync($"UserManagement/{selectedUserId}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
 
             CancelEditUser();
 

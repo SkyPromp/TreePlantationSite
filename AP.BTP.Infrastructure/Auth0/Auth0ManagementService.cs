@@ -2,7 +2,6 @@
 using AP.BTP.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
-using System.Data;
 using System.Net;
 using System.Text.Json;
 
