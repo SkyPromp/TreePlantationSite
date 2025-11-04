@@ -12,15 +12,25 @@ namespace AP.BTP.Application.CQRS.Auth0User
     public class ApproveUserCommandHandler : IRequestHandler<ApproveUserCommand>
     {
         private readonly IAuth0ManagementService _auth0;
+        private readonly IUnitOfWork uow;
 
-        public ApproveUserCommandHandler(IAuth0ManagementService auth0)
+        public ApproveUserCommandHandler(IAuth0ManagementService auth0, IUnitOfWork uow)
         {
             _auth0 = auth0;
+            this.uow = uow;
         }
 
         public async Task Handle(ApproveUserCommand request, CancellationToken cancellationToken)
         {
             await _auth0.ApproveUserAsync(request.UserId, request.Role);
+
+            Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.UserId);
+            if (user == null)
+            {
+                user = new Domain.User { Auth0Id = request.UserId };
+                await uow.UserRepository.Create(user);
+                await uow.Commit();
+            }
         }
     }
 }

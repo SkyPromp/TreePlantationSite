@@ -15,6 +15,13 @@ namespace AP.BTP.Application.CQRS.User
     {
         public LinkUserToPlantationSitesCommandValidator(IUnitOfWork uow)
         {
+            RuleFor(x => x.Auth0Id)
+                .MustAsync(async (auth0Id, cancellation) => { 
+                    var user = await uow.UserRepository.GetUserByAuth0Id(auth0Id);
+                    return user != null;
+                })
+                .WithMessage("User with the given Auth0Id does not exist.");
+
             RuleFor(x => x.PlantationSiteIds)
               .Must(list => list.Count <= 2)
               .WithMessage("Users can only have a maximum of 2 plantation sites.");
@@ -32,24 +39,15 @@ namespace AP.BTP.Application.CQRS.User
     public class LinkUserToPlantationSitesCommandHandler : IRequestHandler<LinkUserToPlantationSitesCommand, Unit>
     {
         private readonly IUnitOfWork uow;
-        private readonly IMapper mapper;
 
-        public LinkUserToPlantationSitesCommandHandler(IUnitOfWork uow, IMapper mapper)
+        public LinkUserToPlantationSitesCommandHandler(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.mapper = mapper;
         }
 
         public async Task<Unit> Handle(LinkUserToPlantationSitesCommand request, CancellationToken cancellationToken)
         {
             Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);
-
-            if (user == null)
-            {
-                user = new Domain.User { Auth0Id = request.Auth0Id };
-                await uow.UserRepository.Create(user);
-                await uow.Commit();
-            }
 
             user.PlantationSites.Clear();
 
@@ -59,7 +57,6 @@ namespace AP.BTP.Application.CQRS.User
                 if (site != null)
                 {
                     user.PlantationSites.Add(site);
-                    //uow.UserRepository.Update(user);
                 }
             }
             await uow.Commit();
