@@ -15,6 +15,9 @@ namespace AP.BTP.Infrastructure.Auth0
         private readonly string _clientSecret;
         private readonly string _audience;
 
+        private string? _cachedToken;
+        private DateTime _tokenExpiry;
+
         public Auth0ManagementService(IConfiguration config)
         {
             _domain = config["AUTH0:DOMAIN"] ?? throw new ArgumentNullException("AUTH0:DOMAIN");
@@ -25,6 +28,9 @@ namespace AP.BTP.Infrastructure.Auth0
 
         private async Task<string> GetManagementTokenAsync()
         {
+            if (_cachedToken != null && DateTime.UtcNow < _tokenExpiry)
+                return _cachedToken;
+
             RestClient client = new RestClient($"https://{_domain}/oauth/token");
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
@@ -47,7 +53,11 @@ namespace AP.BTP.Infrastructure.Auth0
             }
 
             JsonDocument json = JsonDocument.Parse(response.Content);
-            return json.RootElement.GetProperty("access_token").GetString()!;
+            string token = json.RootElement.GetProperty("access_token").GetString()!;
+
+            _cachedToken = token;
+            _tokenExpiry = DateTime.UtcNow.AddMinutes(55);
+            return _cachedToken;
         }
 
         public async Task ApproveUserAsync(string userId, string role)
