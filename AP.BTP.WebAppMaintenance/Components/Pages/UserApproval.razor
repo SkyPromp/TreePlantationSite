@@ -1,4 +1,5 @@
-﻿@page "/users/approve"
+﻿@attribute [Authorize(Roles = "Admin")]
+@page "/admin/users/approve"
 @rendermode InteractiveServer
 @using AP.BTP.Application.CQRS.Auth0User
 @using System.Drawing
@@ -7,10 +8,9 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Application.CQRS.User
 @inject IHttpClientFactory HttpClientFactory
-@attribute [Authorize(Roles = "Admin")]
 
 <div class="d-flex justify-content-between px-4">
-    <Button Href="/users"
+    <Button Href="/admin/users"
             Class="d-flex align-items-center justify-content-center p-0"
             Style=" box-shadow: none; border: none; text-decoration: none; font-size: 2.7vh;">
         <Icon Name="IconName.ArrowLeft" Style="font-size: 5vh; margin-right: 0.5rem;"></Icon>

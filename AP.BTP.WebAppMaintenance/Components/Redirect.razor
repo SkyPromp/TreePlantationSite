@@ -1,0 +1,29 @@
+@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        ClaimsPrincipal user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            if (user.IsInRole("Admin"))
+            {
+                Navigation.NavigateTo("/admin/dashboard", true);
+            } 
+            else if (user.IsInRole("Manager"))
+            {
+                //TODO add correct navigation for managers
+            } 
+        }
+        else
+        {
+            Navigation.NavigateTo("/welcome", true);
+        }
+    }
+}

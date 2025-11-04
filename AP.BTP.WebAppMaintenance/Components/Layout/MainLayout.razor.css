@@ -8,14 +8,6 @@ main {
     flex: 1;
 }
 
-.top-row {
-    background-color: #4EB862;
-    justify-content: flex-end;
-    height: 9vh;
-    display: flex;
-    align-items: center;
-}
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
