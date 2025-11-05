@@ -16,8 +16,8 @@ namespace AP.BTP.Application.CQRS.User
         public LinkUserToPlantationSitesCommandValidator(IUnitOfWork uow)
         {
             RuleFor(x => x.Auth0Id)
-                .MustAsync(async (auth0Id, cancellation) => { 
-                    var user = await uow.UserRepository.GetUserByAuth0Id(auth0Id);
+                .MustAsync(async (auth0Id, cancellation) => {
+                    Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(auth0Id);
                     return user != null;
                 })
                 .WithMessage("User with the given Auth0Id does not exist.");
@@ -29,7 +29,7 @@ namespace AP.BTP.Application.CQRS.User
             RuleForEach(command => command.PlantationSiteIds)
                 .MustAsync(async (plantationSiteId, cancellation) =>
             {
-                var plantationSite = await uow.PlantationSiteRepository.GetById(plantationSiteId);
+                Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(plantationSiteId);
                 return plantationSite != null;
             })
             .WithMessage((command, plantationSiteId) => $"Plantation site with id {plantationSiteId} does not exist.");

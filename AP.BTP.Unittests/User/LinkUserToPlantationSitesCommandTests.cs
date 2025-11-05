@@ -39,18 +39,26 @@ namespace AP.BTP.Unittests.User
                 GroundPlan = "TestPlan",
                 IsDeleted = false
             };
+
+            userRepoMock
+            .Setup(r => r.GetUserByAuth0Id(It.IsAny<string>()))
+            .ReturnsAsync(new Domain.User
+            {
+                Auth0Id = "test",
+                PlantationSites = new List<Domain.PlantationSite>()
+            });
         }
 
         [TestMethod]
         public async Task Should_Have_Error_When_List_Has_more_than_2_Items()
         {
-            var command = new LinkUserToPlantationSitesCommand
+            LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = "test",
                 PlantationSiteIds = new List<int> { 1, 2, 3 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.PlantationSiteIds)
                   .WithErrorMessage("Users can only have a maximum of 2 plantation sites.");
@@ -59,7 +67,7 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_PlantationSite_Does_Not_Exist()
         {
-            var command = new LinkUserToPlantationSitesCommand
+            LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = "test",
                 PlantationSiteIds = new List<int> { 1, 2 }
@@ -73,7 +81,7 @@ namespace AP.BTP.Unittests.User
                     return null;
                 });
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.PlantationSiteIds)
                   .WithErrorMessage("Plantation site with id 2 does not exist.");
@@ -82,7 +90,7 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Not_Have_Error_When_All_PlantationSites_Exist()
         {
-            var command = new LinkUserToPlantationSitesCommand
+            LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = "test",
                 PlantationSiteIds = new List<int> { 1, 2 }
@@ -92,7 +100,7 @@ namespace AP.BTP.Unittests.User
                 .Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(plantationSite);
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
@@ -100,7 +108,7 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Not_Have_Error_When_List_Has_0_Items()
         {
-            var command = new LinkUserToPlantationSitesCommand
+            LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = "test",
                 PlantationSiteIds = new List<int>()
@@ -110,7 +118,7 @@ namespace AP.BTP.Unittests.User
                 .Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(plantationSite);
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
@@ -118,7 +126,7 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Not_Have_Error_When_List_Has_1_Items()
         {
-            var command = new LinkUserToPlantationSitesCommand
+            LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
                 Auth0Id = "test",
                 PlantationSiteIds = new List<int> { 1 }
@@ -128,7 +136,7 @@ namespace AP.BTP.Unittests.User
                 .Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(plantationSite);
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
