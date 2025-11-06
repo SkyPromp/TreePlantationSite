@@ -1,8 +1,10 @@
 ﻿using AP.BTP.Application.CQRS.Auth0User;
+using AP.BTP.Application.CQRS.PlantationSite;
 using AP.BTP.Application.CQRS.User;
 using AP.BTP.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
@@ -63,6 +65,12 @@ namespace AP.BTP.WebAPI.Controllers
         public async Task<IActionResult> GetAllRoles()
         {
             return Ok(await _mediator.Send(new GetAllRolesQuery()));
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllApprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
+        {
+            return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
     }
 }

@@ -30,6 +30,29 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
+        {
+            IQueryable<User> query = dbSet
+                .Where(u => !u.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u =>
+                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<User> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<User?> GetById(int id)
         {
             User? user = await this.dbSet.FindAsync(id);
