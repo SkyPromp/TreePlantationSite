@@ -1,6 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
-using AP.BTP.Contracts.Records;
 using MediatR;
 
 namespace AP.BTP.Application.CQRS.Users

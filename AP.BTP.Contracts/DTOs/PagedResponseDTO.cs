@@ -1,6 +1,6 @@
 namespace AP.BTP.Contracts.DTOs
 {
-    public class PagedResponseDTO<T>
+    public record PagedResponseDTO<T>
     {
         public IEnumerable<T> Items { get; set; } = new List<T>();
         public int PageNumber { get; set; }

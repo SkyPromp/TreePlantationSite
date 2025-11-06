@@ -1,6 +1,6 @@
 ﻿namespace AP.BTP.Contracts.DTOs
 {
-    public class Paged<T>
+    public record Paged<T>
     {
         public int PageNr { get; set; }
         public int PageSize { get; set; }

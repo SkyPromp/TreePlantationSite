@@ -1,4 +1,4 @@
-﻿using AP.BTP.Contracts.Records;
+﻿using AP.BTP.Contracts.DTOs;
 
 namespace AP.BTP.Application.Interfaces
 {

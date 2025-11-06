@@ -1,6 +1,6 @@
 ﻿namespace AP.BTP.Contracts.DTOs
 {
-    public class ZoneDTO
+    public record ZoneDTO
     {
         public int Id { get; set; }
         public required int TreeId { get; set; }
@@ -8,7 +8,7 @@
         public string? Name { get; set; }
         public int? Size { get; set; }
 
-        public ZoneDTO Clone() => new ZoneDTO() { 
+        public ZoneDTO CloneZone() => new ZoneDTO() { 
             Id = this.Id, 
             PlantationSiteId = this.PlantationSiteId,
             TreeId = this.TreeId,

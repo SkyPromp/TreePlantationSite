@@ -446,7 +446,7 @@
         if (zone == null) return;
 
         this.SelectedZone = zone;
-        this.OldZone = this.SelectedZone.Clone();
+        this.OldZone = this.SelectedZone.CloneZone();
         this.SelectedZone.TreeId = zone.TreeId;
     }
 
