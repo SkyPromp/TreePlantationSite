@@ -33,6 +33,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
         {
             IQueryable<User> query = dbSet
+                .Include(u => u.PlantationSites)
                 .Where(u => !u.IsDeleted)
                 .AsQueryable();
 
