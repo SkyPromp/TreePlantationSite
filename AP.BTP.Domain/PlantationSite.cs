@@ -15,6 +15,7 @@ namespace AP.BTP.Domain
         public double Size { get; set; }
         public required string GroundPlan { get; set; }
         [JsonIgnore] public IEnumerable<Zone>? Zones { get; set; }
+        [JsonIgnore] public IEnumerable<User>? Users { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

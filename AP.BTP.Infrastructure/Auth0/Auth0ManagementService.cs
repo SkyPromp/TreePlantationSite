@@ -1,7 +1,6 @@
-﻿using AP.BTP.Application.CQRS.Users;
+﻿using AP.BTP.Application.CQRS.Auth0User;
 using AP.BTP.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using RestSharp;
 using System.Net;
 using System.Text.Json;
@@ -15,6 +14,9 @@ namespace AP.BTP.Infrastructure.Auth0
         private readonly string _clientSecret;
         private readonly string _audience;
 
+        private string? _cachedToken;
+        private DateTime _tokenExpiry;
+
         public Auth0ManagementService(IConfiguration config)
         {
             _domain = config["AUTH0:DOMAIN"] ?? throw new ArgumentNullException("AUTH0:DOMAIN");
@@ -23,8 +25,11 @@ namespace AP.BTP.Infrastructure.Auth0
             _audience = $"https://{_domain}/api/v2/";
         }
 
-        public async Task<string> GetManagementTokenAsync()
+        private async Task<string> GetManagementTokenAsync()
         {
+            if (_cachedToken != null && DateTime.UtcNow < _tokenExpiry)
+                return _cachedToken;
+
             RestClient client = new RestClient($"https://{_domain}/oauth/token");
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
@@ -47,10 +52,14 @@ namespace AP.BTP.Infrastructure.Auth0
             }
 
             JsonDocument json = JsonDocument.Parse(response.Content);
-            return json.RootElement.GetProperty("access_token").GetString()!;
+            string token = json.RootElement.GetProperty("access_token").GetString()!;
+
+            _cachedToken = token;
+            _tokenExpiry = DateTime.UtcNow.AddMinutes(55);
+            return _cachedToken;
         }
 
-        public async Task ApproveUserAsync(string userId)
+        public async Task ApproveUserAsync(string userId, string role)
         {
             string token = await GetManagementTokenAsync();
 
@@ -68,6 +77,8 @@ namespace AP.BTP.Infrastructure.Auth0
             {
                 throw new InvalidOperationException($"Failed to approve user: {response.StatusCode}");
             }
+
+            await AssignRoleToUserAsync(userId, role);
         }
 
         public async Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
@@ -103,8 +114,50 @@ namespace AP.BTP.Infrastructure.Auth0
 
             List<Auth0User> users = JsonSerializer.Deserialize<List<Auth0User>>(usersElement.GetRawText(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-
             return (users, totalCount);
+        }
+
+        private async Task AssignRoleToUserAsync(string userId, string role)
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}/roles");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Post;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+            request.AddJsonBody(new { roles = new[] { role } });
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                throw new InvalidOperationException($"Failed to assign role: {response.StatusCode} - {response.Content}");
+            }
+        }
+
+        public async Task<IEnumerable<Auth0Role>> GetRoles()
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/roles");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Get;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                Console.WriteLine($"Failed to get roles: {response.StatusCode} - {response.Content}");
+                throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
+            }
+
+            List<Auth0Role>? roles = JsonSerializer.Deserialize<List<Auth0Role>>(response.Content!, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            return roles ?? new List<Auth0Role>();
         }
     }
 }
