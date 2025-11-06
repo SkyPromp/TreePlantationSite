@@ -13,12 +13,12 @@
 <h3 class="text-center">Approve Pending Users</h3>
 
 <div class="d-flex justify-content-between px-3">
-    <Button Href="/admin/users"
-            Class="d-flex align-items-center justify-content-center p-0 fs-4"
+    <a href="/admin/users" style="text-decoration: none;">
+        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
             Style=" box-shadow: none; border: none; text-decoration: none;">
         <Icon class="me-3" Name="IconName.ArrowLeft" Style="font-size: 2.5rem;"></Icon>
         Registered users
-    </Button>
+    </Button></a>
     <div class="d-flex flex-column align-items-end">
         <TextInput @bind-Value="@searchText"
                    @oninput="OnSearchChanged"
@@ -83,16 +83,16 @@
     }
 </div>
 
-    <Pagination Class="justify-content-center"
-                Style="margin-top: 10px"
-                ActivePageNumber="@currentPage"
-                TotalPages="@totalPages"
-                PageChanged="LoadPage"
-                FirstLinkIcon="IconName.ChevronDoubleLeft"
-                PreviousLinkIcon="IconName.ChevronLeft"
-                NextLinkIcon="IconName.ChevronRight"
-                LastLinkIcon="IconName.ChevronDoubleRight">
-    </Pagination>
+<Pagination Class="justify-content-center"
+            Style="margin-top: 10px"
+            ActivePageNumber="@currentPage"
+            TotalPages="@totalPages"
+            PageChanged="LoadPage"
+            FirstLinkIcon="IconName.ChevronDoubleLeft"
+            PreviousLinkIcon="IconName.ChevronLeft"
+            NextLinkIcon="IconName.ChevronRight"
+            LastLinkIcon="IconName.ChevronDoubleRight">
+</Pagination>
 
 @if (this.showEditUser)
 {
@@ -174,7 +174,7 @@
     private int pageSize => cardsPerRow * maxRows;
     private int totalPages => response?.TotalPages ?? 1;
     private System.Timers.Timer? debounceTimer;
-    HttpClient? client;
+    HttpClient client;
     private string errorMessage = "";
 
     private bool showEditUser;
@@ -189,19 +189,21 @@
     private bool isLoading = false;
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        client = HttpClientFactory.CreateClient("BTPApi");
+        if (firstRender)
+        {
+            client = HttpClientFactory.CreateClient("BTPApi");
 
-        await LoadPage(1);
-        await LoadPlantationSites();
-        await LoadRoles();
+            await LoadPage(1);
+            await LoadPlantationSites();
+            await LoadRoles();
+        }
     }
 
     private async Task LoadPage(int page)
     {
         currentPage = page;
-        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
         string url = $"UserManagement/pending?pageNr={page}&pageSize={pageSize}";
         if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
@@ -215,7 +217,6 @@
     private async Task ApproveUser()
     {
         isLoading = true;
-        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
         HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = roleId });
         Console.WriteLine("UserManagement/users/auth/{selectedUserId}/approval");
