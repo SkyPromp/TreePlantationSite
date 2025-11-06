@@ -5,9 +5,9 @@ using MediatR;
 
 namespace AP.BTP.Application.CQRS.User
 {
-    public class LinkUserToPlantationSitesCommand : IRequest<Unit>
+    public class LinkUserToPlantationSitesCommand : IRequest<UserDTO>
     {
-        public required string Auth0Id { get; set; }
+        public required int UserId { get; set; }
         public required List<int> PlantationSiteIds { get; set; }
     }
 
@@ -15,12 +15,12 @@ namespace AP.BTP.Application.CQRS.User
     {
         public LinkUserToPlantationSitesCommandValidator(IUnitOfWork uow)
         {
-            RuleFor(x => x.Auth0Id)
-                .MustAsync(async (auth0Id, cancellation) => {
-                    Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(auth0Id);
+            RuleFor(x => x.UserId)
+                .MustAsync(async (userId, cancellation) => {
+                    Domain.User? user = await uow.UserRepository.GetById(userId);
                     return user != null;
                 })
-                .WithMessage("User with the given Auth0Id does not exist.");
+                .WithMessage("User with the given Id does not exist.");
 
             RuleFor(x => x.PlantationSiteIds)
               .Must(list => list.Count <= 2)
@@ -36,18 +36,20 @@ namespace AP.BTP.Application.CQRS.User
         }
     }
 
-    public class LinkUserToPlantationSitesCommandHandler : IRequestHandler<LinkUserToPlantationSitesCommand, Unit>
+    public class LinkUserToPlantationSitesCommandHandler : IRequestHandler<LinkUserToPlantationSitesCommand, UserDTO>
     {
         private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
-        public LinkUserToPlantationSitesCommandHandler(IUnitOfWork uow)
+        public LinkUserToPlantationSitesCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
+            this.mapper = mapper;
         }
 
-        public async Task<Unit> Handle(LinkUserToPlantationSitesCommand request, CancellationToken cancellationToken)
+        public async Task<UserDTO> Handle(LinkUserToPlantationSitesCommand request, CancellationToken cancellationToken)
         {
-            Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);
+            Domain.User? user = await uow.UserRepository.GetById(request.UserId);
 
             user.PlantationSites.Clear();
 
@@ -60,7 +62,7 @@ namespace AP.BTP.Application.CQRS.User
                 }
             }
             await uow.Commit();
-            return Unit.Value;
+            return mapper.Map<UserDTO>(user);
         }
     }
 }

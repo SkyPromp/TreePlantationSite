@@ -191,7 +191,8 @@
     {
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/{selectedUserId}/approve", new ApproveUserDTO() { Role = roleId });
+        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = roleId });
+        Console.WriteLine("UserManagement/users/auth/{selectedUserId}/approval");
 
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -206,7 +207,10 @@
             if (site2.HasValue)
                 selectedSites.Add(site2.Value);
 
-            await client.PostAsJsonAsync($"UserManagement/{selectedUserId}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
+            UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
+
+            await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
+            Console.WriteLine("UserManagement/users/{user.Id}/sitesUserManagement/users/{user.Id}/sites");
 
             CancelEditUser();
 

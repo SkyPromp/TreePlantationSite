@@ -3,6 +3,7 @@ using AP.BTP.Application.CQRS.PlantationSite;
 using AP.BTP.Application.CQRS.Zone;
 using AP.BTP.Domain;
 using AutoMapper;
+using AP.BTP.Application.CQRS.User;
 
 namespace AP.BTP.Application
 {
@@ -13,6 +14,8 @@ namespace AP.BTP.Application
             CreateMap<Tree, TreeDTO>().ReverseMap();
             CreateMap<PlantationSite, PlantationSiteDTO>().ReverseMap();
             CreateMap<Zone, ZoneDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+
         }
     }
 }

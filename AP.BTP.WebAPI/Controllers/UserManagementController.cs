@@ -1,5 +1,6 @@
-﻿using AP.BTP.Application.CQRS.User;
-using AP.BTP.Application.CQRS.Auth0User;
+﻿using AP.BTP.Application.CQRS.Auth0User;
+using AP.BTP.Application.CQRS.User;
+using AP.BTP.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,24 @@ namespace AP.BTP.WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("{auth0Id}/approve")]
+        [HttpPost("users/auth/{auth0Id}/approval")]
         public async Task<IActionResult> Approve(string auth0Id, [FromBody] ApproveUserDTO approveUserDTO)
         {
-            await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = approveUserDTO.Role });
-            return Ok(new { message = "User approved." });
+            try
+            {
+                Console.WriteLine($"auth0id: {auth0Id}, approveUserDTO: {approveUserDTO.Role}");
+                UserDTO? user = await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = approveUserDTO.Role });
+                if (user == null)
+                    return NotFound();
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+
+            return Ok();
         }
 
         [HttpGet("pending")]
@@ -31,18 +45,18 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
-        [HttpPost("{auth0Id}/sites")]
+        [HttpPut("users/{userId}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
-            string auth0Id,
+            int userId,
             [FromBody] LinkUserToPlantationSitesDto linkUserToPlantationSitesDto)
         {
-            await _mediator.Send(new LinkUserToPlantationSitesCommand
+            UserDTO user = await _mediator.Send(new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = auth0Id,
+                UserId = userId,
                 PlantationSiteIds = linkUserToPlantationSitesDto.PlantationSiteIds
             });
 
-            return Ok(new { message = "User successfully linked to plantation sites." });
+            return Ok(user);
         }
 
         [HttpGet("roles")]

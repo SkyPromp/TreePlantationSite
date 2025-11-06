@@ -30,9 +30,11 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
-            throw new NotImplementedException();
+            User? user = await this.dbSet.FindAsync(id);
+
+            return (user?.IsDeleted ?? true) ? null : user;
         }
 
         public async Task<User?> GetUserByAuth0Id(string Auth0Id)
