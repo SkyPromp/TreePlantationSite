@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.CQRS.Auth0User;
 using AP.BTP.Application.CQRS.User;
+using AP.BTP.Contracts.DTOs;
 using AP.BTP.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -48,7 +49,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPut("users/{userId}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
             int userId,
-            [FromBody] LinkUserToPlantationSitesDto linkUserToPlantationSitesDto)
+            [FromBody] LinkUserToPlantationSitesDTO linkUserToPlantationSitesDto)
         {
             UserDTO user = await _mediator.Send(new LinkUserToPlantationSitesCommand
             {

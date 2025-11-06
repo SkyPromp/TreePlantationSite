@@ -1,6 +1,6 @@
-﻿namespace AP.BTP.Application.CQRS.Auth0User
+﻿namespace AP.BTP.Contracts.DTOs
 {
-    public record Auth0Role
+    public record Auth0RoleDTO
     (
         string Id,
         string Name,
