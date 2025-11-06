@@ -112,6 +112,15 @@
                     }
                 </select>
             }
+            @if (isLoading)
+            {
+
+                <div class="spinner-border align-self-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            }
+            else
+            {
             <div class="row gap-3">
                 <div class="col">
                     <button @onclick="CancelEditUser" class="btn btn-warning">Cancel</button>
@@ -120,6 +129,7 @@
                     <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(roleId)">Confirm</button>
                 </div>
             </div>
+            }
         </div>
     </div>
 }
@@ -162,6 +172,7 @@
     private bool showSuccessToast = false;
     private double toastOpacity = 1.0;
     private IEnumerable<Auth0Role> roles = new List<Auth0Role>();
+    private bool isLoading = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -189,6 +200,7 @@
 
     private async Task ApproveUser()
     {
+        isLoading = true;
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
         HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = roleId });
@@ -196,10 +208,9 @@
 
         if (responseMessage.IsSuccessStatusCode)
         {
-            await Task.Delay(1000); // small delay to ensure auth0 has processed the change
+            await Task.Delay(500); // small delay to ensure auth0 has processed the change
             await LoadPage(currentPage);
             StateHasChanged();
-            this.showEditUser = false;
 
             List<int> selectedSites = new List<int>();
             if (site1.HasValue)
@@ -216,6 +227,7 @@
 
             await ShowSuccessToast();
         }
+        isLoading = false;
     }
 
     private void OnSearchChanged(ChangeEventArgs e)
