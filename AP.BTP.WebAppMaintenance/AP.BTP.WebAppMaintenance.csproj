@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AP.BTP.Contracts\AP.BTP.Contracts.csproj" />
+    <ProjectReference Include="..\AP.BTP.Web.Shared\AP.BTP.Web.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
-using AP.BTP.WebApp.Auth0;
-using AP.BTP.WebApp.Authentication;
+using AP.BTP.Web.Authentication;
 using AP.BTP.WebApp.Components;
 using AP.BTP.WebApp.Extentions;
 

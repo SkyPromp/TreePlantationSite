@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 
-namespace AP.BTP.WebAppMaintenance.Authentication
+namespace AP.BTP.Web.Authentication
 {
     public class AuthTokenHandler : DelegatingHandler
     {
