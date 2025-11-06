@@ -8,12 +8,15 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Application.CQRS.User
 @inject IHttpClientFactory HttpClientFactory
+<PageTitle>Pending Users</PageTitle>
 
-<div class="d-flex justify-content-between px-4">
+<h3 class="text-center">Approve Pending Users</h3>
+
+<div class="d-flex justify-content-between px-3">
     <Button Href="/admin/users"
-            Class="d-flex align-items-center justify-content-center p-0"
-            Style=" box-shadow: none; border: none; text-decoration: none; font-size: 2.7vh;">
-        <Icon Name="IconName.ArrowLeft" Style="font-size: 5vh; margin-right: 0.5rem;"></Icon>
+            Class="d-flex align-items-center justify-content-center p-0 fs-4"
+            Style=" box-shadow: none; border: none; text-decoration: none;">
+        <Icon class="me-3" Name="IconName.ArrowLeft" Style="font-size: 2.5rem;"></Icon>
         Registered users
     </Button>
     <div class="d-flex flex-column align-items-end">
@@ -22,38 +25,49 @@
                    TextAlignment="Alignment.Start"
                    Placeholder="Search e-mail"
                    Class="@(showSearchWarning ? "border-danger" : "")"
-                   Style="width: 15vw; height: 5vh; border-width: 2px;" />
+                   Style="width: 15vw; border-width: 2px;" />
         @if (showSearchWarning)
         {
             <small class="text-danger mt-1">Please enter at least 3 characters.</small>
         }
     </div>
 </div>
-<div class="container-fluid m-0" Style="background-color: #D9D9D9; border-radius: 15px; padding: 4vh">
+<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
     @if (response?.Items != null)
     {
-        <div class="d-grid p-2 fw-bold"
+        <div class="d-grid p-1 fw-bold"
              style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
             <div>Name</div>
             <div>E-mail</div>
             <div>Phone number</div>
-            <div class="text-center">Actions</div>
+            <div class="text-center">Approval</div>
         </div>
         @foreach (List<Auth0User> row in Rows)
         {
             <div class="row">
                 @foreach (Auth0User item in row)
                 {
-                    <div style="padding: 1vh;">
+                    <div class="p-2">
                         <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
                             <CardBody Class="p-0 d-grid align-items-center"
                                       Style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem;">
                                 <CardText class="m-0">@item.username</CardText>
-                                <CardText class="m-0">@item.email</CardText>
+                                <CardText class="m-0">
+                                    <a href="mailto:@item.email" style="text-decoration:none; color:#0d6efd;">
+                                        @item.email
+                                    </a>
+                                </CardText>
                                 <CardText class="m-0">123456456789</CardText>
-                                <div>
-                                    <Button Class="p-0" Style="box-shadow: none; border: none;" @onclick="() => { this.showEditUser = true; selectedUserId = item.user_id; }"><Icon Name="IconName.Check2" Color="IconColor.Success" Style="font-size: 3.2vh;"></Icon></Button>
-                                    <Button Class="p-0" Style="box-shadow: none; border: none;"><Icon Name="IconName.X" Color="IconColor.Danger" Style="font-size: 3.2vh;"></Icon></Button>
+                                <div class="p-1">
+                                    <Button title="Approve user"
+                                            Class="btn btn-success btn-sm"
+                                            @onclick="() => { this.showEditUser = true; selectedUserId = item.user_id; }">
+                                        <Icon Name="IconName.Check2" />
+                                    </Button>
+                                    <Button title="Reject user"
+                                            Class="btn btn-danger btn-sm">
+                                        <Icon Name="IconName.X" />
+                                    </Button>
                                 </div>
                             </CardBody>
 
@@ -69,16 +83,16 @@
     }
 </div>
 
-<Pagination Class="justify-content-center"
-            Style="margin-top: 2vh"
-            ActivePageNumber="@currentPage"
-            TotalPages="@totalPages"
-            PageChanged="LoadPage"
-            FirstLinkIcon="IconName.ChevronDoubleLeft"
-            PreviousLinkIcon="IconName.ChevronLeft"
-            NextLinkIcon="IconName.ChevronRight"
-            LastLinkIcon="IconName.ChevronDoubleRight">
-</Pagination>
+    <Pagination Class="justify-content-center"
+                Style="margin-top: 10px"
+                ActivePageNumber="@currentPage"
+                TotalPages="@totalPages"
+                PageChanged="LoadPage"
+                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                PreviousLinkIcon="IconName.ChevronLeft"
+                NextLinkIcon="IconName.ChevronRight"
+                LastLinkIcon="IconName.ChevronDoubleRight">
+    </Pagination>
 
 @if (this.showEditUser)
 {
@@ -121,14 +135,14 @@
             }
             else
             {
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelEditUser" class="btn btn-warning">Cancel</button>
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Cancel</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(roleId)">Confirm</button>
+                    </div>
                 </div>
-                <div class="col">
-                    <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(roleId)">Confirm</button>
-                </div>
-            </div>
             }
         </div>
     </div>
@@ -156,7 +170,7 @@
     PagedResponse<Auth0User>? response;
     private int currentPage = 1;
     private int cardsPerRow = 1;
-    private int maxRows = 8;
+    private int maxRows = 7;
     private int pageSize => cardsPerRow * maxRows;
     private int totalPages => response?.TotalPages ?? 1;
     private System.Timers.Timer? debounceTimer;
