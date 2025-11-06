@@ -41,10 +41,11 @@ namespace AP.BTP.Unittests.User
             };
 
             userRepoMock
-            .Setup(r => r.GetUserByAuth0Id(It.IsAny<string>()))
+            .Setup(r => r.GetById(It.IsAny<int>()))
             .ReturnsAsync(new Domain.User
             {
-                Auth0Id = "test",
+                Id = 1,
+                Auth0Id = "auth0|test",
                 PlantationSites = new List<Domain.PlantationSite>()
             });
         }
@@ -54,7 +55,7 @@ namespace AP.BTP.Unittests.User
         {
             LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = "test",
+                UserId = 1,
                 PlantationSiteIds = new List<int> { 1, 2, 3 }
             };
 
@@ -69,7 +70,7 @@ namespace AP.BTP.Unittests.User
         {
             LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = "test",
+                UserId = 1,
                 PlantationSiteIds = new List<int> { 1, 2 }
             };
             plantationSiteRepoMock
@@ -92,7 +93,7 @@ namespace AP.BTP.Unittests.User
         {
             LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = "test",
+                UserId = 1,
                 PlantationSiteIds = new List<int> { 1, 2 }
             };
 
@@ -110,7 +111,7 @@ namespace AP.BTP.Unittests.User
         {
             LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = "test",
+                UserId = 1,
                 PlantationSiteIds = new List<int>()
             };
 
@@ -128,7 +129,7 @@ namespace AP.BTP.Unittests.User
         {
             LinkUserToPlantationSitesCommand command = new LinkUserToPlantationSitesCommand
             {
-                Auth0Id = "test",
+                UserId = 1,
                 PlantationSiteIds = new List<int> { 1 }
             };
 
