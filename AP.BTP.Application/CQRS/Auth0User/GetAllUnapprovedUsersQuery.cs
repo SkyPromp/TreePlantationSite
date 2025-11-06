@@ -2,7 +2,7 @@
 using AP.BTP.Contracts.DTOs;
 using MediatR;
 
-namespace AP.BTP.Application.CQRS.Users
+namespace AP.BTP.Application.CQRS.Auth0User
 {
     public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDTO<Auth0User>>
     {

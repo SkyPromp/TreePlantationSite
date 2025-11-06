@@ -17,6 +17,7 @@ namespace AP.BTP.Infrastructure.Context
             modelBuilder.Entity<Tree>();
             modelBuilder.Entity<PlantationSite>().Seed();
             modelBuilder.Entity<Zone>();
+            modelBuilder.Entity<User>();
         }
     }
 }

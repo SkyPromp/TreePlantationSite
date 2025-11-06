@@ -11,6 +11,8 @@ namespace AP.BTP.Application
             CreateMap<Tree, TreeDTO>().ReverseMap();
             CreateMap<PlantationSite, PlantationSiteDTO>().ReverseMap();
             CreateMap<Zone, ZoneDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+
         }
     }
 }

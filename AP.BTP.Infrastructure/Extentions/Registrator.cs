@@ -34,6 +34,7 @@ namespace AP.BTP.Infrastructure.Extentions
             services.AddScoped<IPlantationSiteRepository, PlantationSiteRepository>();
             services.AddScoped<ITreeRepository, TreeRepository>();
             services.AddScoped<IZoneRepository, ZoneRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

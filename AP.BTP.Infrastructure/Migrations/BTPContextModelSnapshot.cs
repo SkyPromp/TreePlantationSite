@@ -1389,6 +1389,26 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.ToTable("Tree");
                 });
 
+            modelBuilder.Entity("AP.BTP.Domain.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Auth0Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
                 {
                     b.Property<int>("Id")
@@ -1421,6 +1441,21 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.ToTable("Zone");
                 });
 
+            modelBuilder.Entity("PlantationSiteUser", b =>
+                {
+                    b.Property<int>("PlantationSitesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlantationSitesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("PlantationSiteUser");
+                });
+
             modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
                 {
                     b.HasOne("AP.BTP.Domain.PlantationSite", "PlantationSite")
@@ -1438,6 +1473,21 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Navigation("PlantationSite");
 
                     b.Navigation("Tree");
+                });
+
+            modelBuilder.Entity("PlantationSiteUser", b =>
+                {
+                    b.HasOne("AP.BTP.Domain.PlantationSite", null)
+                        .WithMany()
+                        .HasForeignKey("PlantationSitesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AP.BTP.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
