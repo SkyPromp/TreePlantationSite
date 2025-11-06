@@ -122,6 +122,7 @@
         {
             client = HttpClientFactory.CreateClient("BTPApi");
             await LoadPage(1);
+            await LoadRequestsCount();
         }
     }
 
@@ -162,4 +163,11 @@
             .Select((item, index) => new { item, index })
             .GroupBy(x => x.index / cardsPerRow)
             .Select(g => g.Select(x => x.item).ToList());
+
+    private async Task LoadRequestsCount()
+    {
+        PagedResponse<Auth0User>? response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>("UserManagement/pending");
+        requestsCount = response?.TotalItems ?? 0;
+        StateHasChanged();
+    }
 }
