@@ -219,7 +219,6 @@
         isLoading = true;
 
         HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = roleId });
-        Console.WriteLine("UserManagement/users/auth/{selectedUserId}/approval");
 
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -236,7 +235,6 @@
             UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
 
             await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
-            Console.WriteLine("UserManagement/users/{user.Id}/sitesUserManagement/users/{user.Id}/sites");
 
             CancelEditUser();
 
