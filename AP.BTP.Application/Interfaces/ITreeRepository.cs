@@ -8,6 +8,6 @@ namespace AP.BTP.Application.Interfaces
         public Task Delete(int id);
         public Task HardDelete(int id);
         public Task HardDelete(Tree item);
-        public Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize);
+        public Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize, string? search);
     }
 }

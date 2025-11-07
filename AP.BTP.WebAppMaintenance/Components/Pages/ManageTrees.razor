@@ -25,7 +25,7 @@
 
         <div class="col">
             <NavLink href="/admin/tree/edit">
-                <button class="btn btn-secondary">+ Add new</button>
+                <button class="btn btn-secondary">+ Toevoegen</button>
             </NavLink>
         </div>
     </div>
@@ -65,14 +65,14 @@
 {
     <div class="d-flex justify-content-center">
         <div class="card position-absolute align-self-center p-4">
-            <h1>Confirm</h1>
-            <p>Do you wish to confirm?</p>
+            <h1>Bevestig</h1>
+            <p>Wenst u om te bevestigen?</p>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Cancel</button>
+                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Annuleer</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Confirm</button>
+                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Bevestig</button>
                 </div>
             </div>
         </div>

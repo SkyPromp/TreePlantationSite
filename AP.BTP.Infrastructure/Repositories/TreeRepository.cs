@@ -49,9 +49,15 @@ namespace AP.BTP.Infrastructure.Repositories
             return await this.dbSet.Where(tree => !tree.IsDeleted).ToListAsync();
         }
 
-        public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize, string? search)
         {
-            return await this.dbSet.Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
+            Console.WriteLine("search");
+            Console.WriteLine(search);
+            return await this.dbSet
+                .Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize)
+                .Where(tree => ((search ?? "") != "")? tree.Species.ToLower().Contains(search!.ToLower()): true)  // This is delegated, 1 Where() is less readable than 2
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Tree?> GetById(int id)
