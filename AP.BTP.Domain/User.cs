@@ -7,6 +7,8 @@ namespace AP.BTP.Domain
     {
         public int Id { get; set; }
         public required string Auth0Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         [JsonIgnore] public ICollection<PlantationSite> PlantationSites { get; set; } = new List<PlantationSite>();
         public bool IsDeleted { get; set; }
     }

@@ -159,5 +159,32 @@ namespace AP.BTP.Infrastructure.Auth0
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             return roles ?? new List<Auth0Role>();
         }
+
+        public async Task<Auth0User?> GetUserByIdAsync(string userId)
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Get;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (!response.IsSuccessful)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null; // user not found
+                }
+                throw new InvalidOperationException($"Failed to get user: {response.StatusCode} - {response.Content}");
+            }
+
+            Auth0User? user = JsonSerializer.Deserialize<Auth0User>(response.Content!,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return user;
+        }
     }
 }
