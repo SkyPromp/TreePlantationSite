@@ -8,15 +8,15 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Application.CQRS.User
 @inject IHttpClientFactory HttpClientFactory
-<PageTitle>Users</PageTitle>
+<PageTitle>Gebruikers</PageTitle>
 
-<h3 class="text-center">Users Overview</h3>
+<h3 class="text-center">Gebruikers overzicht</h3>
 
 <div class="d-flex justify-content-between px-3">
     <a href="/admin/users/approve" style="text-decoration: none;">
         <Button Class="btn btn-dark d-flex align-items-center justify-content-center px-4 py-2 mb-3"
                 Style=" box-shadow: none; border: none; text-decoration: none;">
-            Requests (@this.requestsCount)
+            Verzoeken (@this.requestsCount)
         </Button>
     </a>
     <div class="d-flex flex-column align-items-end">
@@ -32,11 +32,11 @@
     {
         <div class="d-grid p-1 fw-bold"
              style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div>Name</div>
+            <div>Naam</div>
             <div>E-mail</div>
-            <div>Phone number</div>
-            <div>Sites</div>
-            <div class="text-center">Manage</div>
+            <div>Gsm-number</div>
+            <div>plantagelocaties</div>
+            <div class="text-center">Beheer</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
         @foreach (List<UserDTO> row in Rows)
@@ -61,14 +61,14 @@
                                 }
                                 else
                                 {
-                                    <CardText class="m-0">/awdqwfqwfqwfqwf</CardText>
+                                    <CardText class="m-0">n.v.t.</CardText>
                                 }
                                 <div class="p-1">
-                                    <Button title="Edit user"
+                                    <Button title="Bewerk gebruiker"
                                             Class="btn btn-dark btn-sm px-3">
                                         Edit
                                     </Button>
-                                    <Button title="Reject user"
+                                    <Button title="Verwijder gebruiker"
                                             Class="btn btn-danger btn-sm">
                                         <Icon Name="IconName.Trash" />
                                     </Button>
@@ -84,7 +84,7 @@
     }
     else
     {
-        <p class="text-center mt-4">No results found.</p>
+        <p class="text-center mt-4">Geen resultaten gevonden.</p>
     }
 </div>
 
