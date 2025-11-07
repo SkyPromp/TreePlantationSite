@@ -56,7 +56,7 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<User?> GetById(int id)
         {
-            User? user = await this.dbSet.FindAsync(id);
+            User? user = await this.dbSet.Include(u => u.PlantationSites).FirstOrDefaultAsync(u => u.Id == id);
 
             return (user?.IsDeleted ?? true) ? null : user;
         }

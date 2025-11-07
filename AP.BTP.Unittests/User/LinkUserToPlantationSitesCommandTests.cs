@@ -141,5 +141,44 @@ namespace AP.BTP.Unittests.User
 
             result.ShouldNotHaveAnyValidationErrors();
         }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_User_Does_Not_Exist()
+        {
+            // Arrange
+            userRepoMock
+                .Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync((Domain.User?)null);
+
+            LinkUserToPlantationSitesCommand command = new()
+            {
+                UserId = 99,
+                PlantationSiteIds = new List<int> { 1 }
+            };
+
+            // Act
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.UserId)
+                  .WithErrorMessage("User with the given Id does not exist.");
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Duplicate_PlantationSiteIds()
+        {
+            LinkUserToPlantationSitesCommand command = new()
+            {
+                UserId = 1,
+                PlantationSiteIds = new List<int> { 1, 1 }
+            };
+
+            plantationSiteRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(plantationSite);
+
+            TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.PlantationSiteIds)
+                  .WithErrorMessage("The 2 plantation sites cannot have the same id");
+        }
     }
 }
