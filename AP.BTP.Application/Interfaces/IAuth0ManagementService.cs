@@ -8,5 +8,6 @@ namespace AP.BTP.Application.Interfaces
         Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search);
         Task<IEnumerable<Auth0Role>> GetRoles();
         Task<Auth0User?> GetUserByIdAsync(string auth0Id);
+        Task DeleteUserAsync(string userId);
     }
 }
