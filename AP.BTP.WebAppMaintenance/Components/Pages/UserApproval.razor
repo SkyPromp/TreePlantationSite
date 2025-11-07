@@ -42,6 +42,7 @@
             <div>Phone number</div>
             <div class="text-center">Approval</div>
         </div>
+        <div style="overflow-x:hidden; max-height: 55vh;">
         @foreach (List<Auth0User> row in Rows)
         {
             <div class="row">
@@ -76,6 +77,7 @@
                 }
             </div>
         }
+        </div>
     }
     else
     {
