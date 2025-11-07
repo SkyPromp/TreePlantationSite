@@ -67,7 +67,8 @@
                                             <Icon Name="IconName.Check2" />
                                         </Button>
                                         <Button title="Gebruiker afwijzen"
-                                                Class="btn btn-danger btn-sm">
+                                                Class="btn btn-danger btn-sm"
+                                                @onclick="() => { this.showDeleteConfirmation = true; selectedUserId = item.user_id; }">
                                             <Icon Name="IconName.X" />
                                         </Button>
                                     </div>
@@ -151,6 +152,33 @@
     </div>
 }
 
+@if (this.showDeleteConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Ben je zeker dat je deze <br /> gebruiker wil afwijzen?</h5>
+            @if (isLoading)
+            {
+
+                <div class="spinner-border align-self-center" role="status">
+                    <span class="visually-hidden">Laden...</span>
+                </div>
+            }
+            else
+            {
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="RejectUser" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
 @if (this.showSuccessToast)
 {
     <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
@@ -191,6 +219,7 @@
     private IEnumerable<Auth0Role> roles = new List<Auth0Role>();
     private bool isLoading = false;
 
+    private bool showDeleteConfirmation = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -332,6 +361,7 @@
         this.site1 = null;
         this.site2 = null;
         this.roleId = "";
+        this.showDeleteConfirmation = false;
     }
 
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
@@ -350,5 +380,34 @@
         await Task.Delay(500);
         showSuccessToast = false;
         StateHasChanged();
+    }
+
+    private async Task RejectUser()
+    {
+        isLoading = true;
+        if (string.IsNullOrWhiteSpace(selectedUserId))
+            return;
+
+        try
+        {
+            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/auth/{selectedUserId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                await Task.Delay(500); // small delay to ensure auth0 has processed the change
+                await LoadPage(currentPage);
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = $"Kon gebruiker niet afwijzen: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het afwijzen van gebruiker: {ex.Message}";
+        }
+        CancelEditUser();
+        isLoading = false;
     }
 }

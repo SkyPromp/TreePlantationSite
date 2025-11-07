@@ -72,5 +72,24 @@ namespace AP.BTP.WebAPI.Controllers
         {
             return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
+
+        [HttpDelete("users/auth/{auth0Id}")]
+        public async Task<IActionResult> DeleteAuth0User(string auth0Id)
+        {
+            try
+            {
+                await _mediator.Send(new DeleteAuth0UserCommand(auth0Id));
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"User with Auth0 ID '{auth0Id}' not found.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500, "An error occurred while deleting the Auth0 user.");
+            }
+        }
     }
 }
