@@ -95,30 +95,22 @@
 
     private async Task LoadTrees()
     {
-        Console.WriteLine(1);
         if (this.client == null) return;
-        Console.WriteLine(2);
 
         try
         {
             Paged<TreeDTO>? response;
 
             response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&search={SearchString}");
-            Console.WriteLine(3);
-            Console.WriteLine(this.SearchString);
 
             if (response != null)
             {
-                Console.WriteLine(4);
                 this.errorMessage = "";
                 this.Trees = response.Data;
-                foreach (TreeDTO tree in response.Data) Console.WriteLine(tree.Species);
-                Console.WriteLine(5);
+
                 this.TotalPages = response.PageCount;
-                Console.WriteLine(6);
             } else
                 this.errorMessage = "No content found!";
-            Console.WriteLine(7);
         } catch (Exception e)
         {
             this.errorMessage = e.Message;
@@ -128,9 +120,7 @@
     private async Task SearchTrees(string searchString)
     {
         this.SearchString = searchString;
-        Console.WriteLine(this.SearchString);
         if (this.SearchString != null) await this.LoadTrees();
-        Console.WriteLine("Done");
         StateHasChanged();
     }
 

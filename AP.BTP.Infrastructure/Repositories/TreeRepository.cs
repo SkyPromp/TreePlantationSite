@@ -51,8 +51,6 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize, string? search)
         {
-            Console.WriteLine("search");
-            Console.WriteLine(search);
             return await this.dbSet
                 .Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize)
                 .Where(tree => ((search ?? "") != "")? tree.Species.ToLower().Contains(search!.ToLower()): true)  // This is delegated, 1 Where() is less readable than 2

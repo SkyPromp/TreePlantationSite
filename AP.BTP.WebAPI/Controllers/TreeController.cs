@@ -25,10 +25,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTrees([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? search = null)
         {
-            Console.WriteLine("GETTREES");
-            Console.WriteLine(search);
             if(page != null && pageSize != null) return Ok(await mediator.Send(new GetTreeQuery() { Page=page.Value, PageSize=pageSize.Value, SearchString=search }));
-            Console.WriteLine("GETTREESNONPAGED");
 
             return Ok(await mediator.Send(new GetAllTreeQuery() { }));
         }
