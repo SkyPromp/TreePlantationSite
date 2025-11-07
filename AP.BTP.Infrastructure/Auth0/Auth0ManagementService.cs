@@ -176,7 +176,7 @@ namespace AP.BTP.Infrastructure.Auth0
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return null; // user not found
+                    return null;
                 }
                 throw new InvalidOperationException($"Failed to get user: {response.StatusCode} - {response.Content}");
             }
