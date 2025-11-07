@@ -32,13 +32,11 @@ namespace AP.BTP.Application.CQRS.Tree
         
         public async Task<Paged<TreeDTO>> Handle(GetTreeQuery request, CancellationToken cancellationToken)
         {
-            int totalPages = await uow.TreeRepository.GetTotalPages(request.PageSize);
-
             IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll(pageNr:request.Page, pageSize:request.PageSize, search:request.SearchString);
 
             IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees);
 
-            return new Paged<TreeDTO>() { PageNr = request.Page, PageSize = request.PageSize, PageCount = totalPages, Data = treeDTOs };
+            return new Paged<TreeDTO>() { PageNr = request.Page, PageSize = request.PageSize, PageCount = (int)(treeDTOs.Count() / (double) request.PageSize), Data = treeDTOs };
         }
     }
 }

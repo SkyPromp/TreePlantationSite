@@ -69,10 +69,5 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             return this.dbSet.Update(modifiedItem).Entity;
         }
-
-        public async Task<int> GetTotalPages(int pageSize)
-        {
-            return (int)(await dbSet.CountAsync() / (double)pageSize);
-        }
     }
 }

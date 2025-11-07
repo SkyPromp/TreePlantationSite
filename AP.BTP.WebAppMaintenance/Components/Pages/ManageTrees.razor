@@ -9,25 +9,17 @@
 <div class="container">
     <div class="row mb-2">
         <div class="col-4">
-            <div class="card rounded-4">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-11">
-                            <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
-                        </div>
-                        <div class="col-1 d-flex justify-content-center">
-                            <p @onclick="RemoveSearchString" class="my-1">X</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-11 input-group">
+                <input type="text" @bind="SearchStringBind" @oninput="(e) => SearchTrees(e.Value?.ToString() ?? String.Empty)" placeholder="Search" class="form-control border-0"/>
+                <button @onclick="RemoveSearchString" class="form-control">X</button>
             </div>
         </div>
+    </div>
 
-        <div class="col">
-            <NavLink href="/admin/tree/edit">
-                <button class="btn btn-secondary">+ Toevoegen</button>
-            </NavLink>
-        </div>
+    <div class="col">
+        <NavLink href="/admin/tree/edit">
+            <button class="btn btn-secondary">+ Toevoegen</button>
+        </NavLink>
     </div>
     <div class="row row-cols-3 gap-4 mb-4">
         @foreach (TreeDTO tree in Trees ?? [])
@@ -38,7 +30,7 @@
                     <div class="row align-items-center">
                         <div class="col-10">
                             <a href="@($"/admin/tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
-                                Edit
+                                Bewerk
                             </a>
                         </div>
                         <div class="col-1">
@@ -49,16 +41,17 @@
             </div>
         }
     </div>
-    <div class="row d-flex justify-content-center">
-        @for(int i = 1; i <= @TotalPages; i++)
-        {
-            <div class="col">
-                <a href="@($"/admin/tree?page={i}")" class="btn btn-secondary px-3">
-                    @i
-                </a>
-            </div>
-        }
-    </div>
+
+     <Pagination Class="justify-content-center"
+                    Style="margin-top: 2vh"
+                    ActivePageNumber="@Page"
+                    TotalPages="@TotalPages"
+                    PageChanged="LoadTrees"
+                    FirstLinkIcon="IconName.ChevronDoubleLeft"
+                    PreviousLinkIcon="IconName.ChevronLeft"
+                    NextLinkIcon="IconName.ChevronRight"
+                    LastLinkIcon="IconName.ChevronDoubleRight">
+        </Pagination>
 </div>
 
 @if (this.ShowConfirm)
@@ -85,6 +78,7 @@
 }
 
 @code {
+    private string SearchStringBind = "";
     private string SearchString = "";
     private IEnumerable<TreeDTO> Trees;
     private string errorMessage = "";
@@ -112,8 +106,10 @@
     }
     private HttpClient? client;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+
         client = HttpClientFactory.CreateClient("BTPApi");
         await LoadTrees();
     }
@@ -126,13 +122,14 @@
         {
             Paged<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
+            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&search={SearchString}");
 
             if (response != null)
             {
                 this.errorMessage = "";
                 this.Trees = response.Data;
                 this.TotalPages = response.PageCount;
+                StateHasChanged();
             } else
                 this.errorMessage = "No content found!";
         }
@@ -172,5 +169,16 @@
     private void RemoveSearchString()
     {
         this.SearchString = "";
+        this.SearchStringBind = "";
+    }
+
+    private async Task SearchTrees(string searchString)
+    {
+        this.SearchString = searchString;
+
+        if (this.SearchString == null) return;
+
+        this.Page = 1;
+        await this.LoadTrees();
     }
 }
