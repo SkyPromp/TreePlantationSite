@@ -145,7 +145,6 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_User_Does_Not_Exist()
         {
-            // Arrange
             userRepoMock
                 .Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync((Domain.User?)null);
@@ -156,10 +155,8 @@ namespace AP.BTP.Unittests.User
                 PlantationSiteIds = new List<int> { 1 }
             };
 
-            // Act
             TestValidationResult<LinkUserToPlantationSitesCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldHaveValidationErrorFor(c => c.UserId)
                   .WithErrorMessage("User with the given Id does not exist.");
         }
