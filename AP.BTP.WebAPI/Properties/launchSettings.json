@@ -5,10 +5,15 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings__Default": "Server=db;Database=btpdb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;",
+        "AUTH0__DOMAIN": "dev-cuuh7l6bib15n0af.eu.auth0.com",
+        "AUTH0__AUDIENCE": "https://api.treesitter.dedyn.io",
+        "AUTH0__MANAGEMENT_CLIENT_ID": "Hzqvi4pnJRyCOuzGp1lj7TfORPLeJm8N",
+        "AUTH0__MANAGEMENT_CLIENT_SECRET": "9SG1Fzf8qVPoeAe-W0eUZYqkNRRZBHnYeUp4fhfpMV3znQh2UDp12K335vJ4O5Ta"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5205"
+      "applicationUrl": "http://localhost:8080"
     },
     "IIS Express": {
       "commandName": "IISExpress",
