@@ -53,12 +53,12 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<Paged<Tree>> GetAll(int pageNr, int pageSize, string? search)
         {
             IQueryable<Tree> trees = this.dbSet
-                .Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize)
+                .Where(tree => !tree.IsDeleted)
                 .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true);  // This is delegated, 1 Where() is less readable than 2
 
             if (pageSize == 0) pageSize = trees.Count();  //  Avoid divide by 0 exception
 
-            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)Math.Ceiling(trees.Count() / (double) pageSize), Data = await trees.Take(pageSize).ToListAsync()};
+            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)Math.Ceiling(trees.Count() / (double) pageSize), Data = await trees.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync()};
         }
 
         public async Task<Tree?> GetById(int id)
