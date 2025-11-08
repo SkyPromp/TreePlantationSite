@@ -10,16 +10,15 @@
     <div class="row mb-2">
         <div class="col-4">
             <div class="col-11 input-group">
-                <input type="text" @bind="SearchStringBind" @oninput="(e) => SearchTrees(e.Value?.ToString() ?? String.Empty)" placeholder="Search" class="form-control border-0"/>
-                <button @onclick="RemoveSearchString" class="form-control">X</button>
+                <input type="text" @bind="SearchStringBind" @oninput="(e) => SearchTrees(e.Value?.ToString() ?? String.Empty)" placeholder="Search" class="form-control border-0" />
+                <button @onclick="RemoveSearchString" class="form-control border-0" style="flex: 0 0 auto; width: 3rem">X</button>
             </div>
         </div>
-    </div>
-
-    <div class="col">
-        <NavLink href="/admin/tree/edit">
-            <button class="btn btn-secondary">+ Toevoegen</button>
-        </NavLink>
+        <div class="col">
+            <NavLink href="/admin/tree/edit">
+                <button class="btn btn-secondary">+ Toevoegen</button>
+            </NavLink>
+        </div>
     </div>
     <div class="row row-cols-3 gap-4 mb-4">
         @foreach (TreeDTO tree in Trees ?? [])
