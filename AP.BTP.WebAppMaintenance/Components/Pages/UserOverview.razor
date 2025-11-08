@@ -66,7 +66,7 @@
                                     <div class="p-1">
                                         <Button title="Bewerk gebruiker"
                                                 Class="btn btn-dark btn-sm px-3"
-                                                @onclick="() => { this.showEditUser = true; selectedUser = item; }">
+                                                @onclick="() => OnEditUser(item)">
                                             Edit
                                         </Button>
                                         <Button title="Verwijder gebruiker"
@@ -283,6 +283,24 @@
         await ShowSuccessToast();
         await LoadPage(currentPage);
         isLoading = false;
+    }
+
+    private void OnEditUser(UserDTO user)
+    {
+        selectedUser = user;
+        showEditUser = true;
+
+        // Reset first
+        site1 = null;
+        site2 = null;
+
+        // Preselect existing plantation sites if they exist
+        if (user.PlantationSites != null && user.PlantationSites.Any())
+        {
+            var sites = user.PlantationSites.Take(2).ToList();
+            if (sites.Count > 0) site1 = sites[0].Id;
+            if (sites.Count > 1) site2 = sites[1].Id;
+        }
     }
 
     private void CancelEditUser()
