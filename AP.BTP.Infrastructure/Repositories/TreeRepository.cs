@@ -58,7 +58,7 @@ namespace AP.BTP.Infrastructure.Repositories
 
             if (pageSize == 0) pageSize = trees.Count();  //  Avoid divide by 0 exception
 
-            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)(trees.Count() / (double) pageSize), Data = await trees.Take(pageSize).ToListAsync()};
+            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)Math.Ceiling(trees.Count() / (double) pageSize), Data = await trees.Take(pageSize).ToListAsync()};
         }
 
         public async Task<Tree?> GetById(int id)

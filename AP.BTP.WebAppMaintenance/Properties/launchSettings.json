@@ -5,7 +5,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Api__BaseUrl": "http://webapi/api/v1/",
+        "Api__BaseUrl": "http://localhost:8081/api/v1/",
         "TRAEFIK_CERT_PATH": "../traefik/certs",
         "API_CERT_PATH": "/certs/local.crt",
         "AUTH0__DOMAIN": "dev-cuuh7l6bib15n0af.eu.auth0.com",

@@ -114,7 +114,7 @@
         await LoadTrees();
     }
 
-    private async Task LoadTrees()
+    private async Task LoadTrees(int page = -1)
     {
         if (this.client == null) return;
 
@@ -122,12 +122,15 @@
         {
             Paged<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&search={SearchString}");
+            if (page == -1) page = this.Page;
+
+            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={page}&pageSize={PageSize}&search={SearchString}");
 
             if (response != null)
             {
                 this.errorMessage = "";
                 this.Trees = response.Data;
+                this.Page = page;
                 this.TotalPages = response.PageCount;
                 StateHasChanged();
             } else
@@ -166,10 +169,13 @@
         StateHasChanged();
     }
 
-    private void RemoveSearchString()
+    private async Task RemoveSearchString()
     {
         this.SearchString = "";
         this.SearchStringBind = "";
+
+        await this.LoadTrees();
+        StateHasChanged();
     }
 
     private async Task SearchTrees(string searchString)

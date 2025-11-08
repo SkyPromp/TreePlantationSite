@@ -34,7 +34,7 @@ namespace AP.BTP.Application.CQRS.Tree
         {
             Paged<Domain.Tree> trees = await uow.TreeRepository.GetAll(pageNr:request.Page, pageSize:request.PageSize, search:request.SearchString);
 
-            IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees);
+            IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees.Data);
 
             return new Paged<TreeDTO>() { PageNr = trees.PageNr, PageSize = trees.PageSize, PageCount = trees.PageCount, Data = treeDTOs };
         }

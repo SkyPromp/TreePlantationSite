@@ -32,7 +32,6 @@ namespace AP.BTP.WebAPI.Middleware
                         break;
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
-                        Console.WriteLine(response.Message);
 
                         break;
                 }
