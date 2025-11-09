@@ -1397,6 +1397,32 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasIndex("TaskListId");
 
                     b.ToTable("TaskItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Description 1",
+                            IsDeleted = false,
+                            TaskListId = 1,
+                            Title = "Task 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Description 2",
+                            IsDeleted = false,
+                            TaskListId = 1,
+                            Title = "Task 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Description 3",
+                            IsDeleted = false,
+                            TaskListId = 2,
+                            Title = "Task 3"
+                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
@@ -1421,6 +1447,29 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TaskList");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Date = new DateTime(2025, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Date = new DateTime(2025, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Date = new DateTime(2025, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.Tree", b =>
@@ -1472,6 +1521,24 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Auth0Id = "auth0|user1",
+                            Email = "alice@example.com",
+                            IsDeleted = false,
+                            Name = "Alice"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Auth0Id = "auth0|user2",
+                            Email = "bob@example.com",
+                            IsDeleted = false,
+                            Name = "Bob"
+                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.Zone", b =>

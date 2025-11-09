@@ -8,8 +8,8 @@ namespace AP.BTP.Domain
         public int Id { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public int TaskListId { get; set; }
-        [JsonIgnore] public required TaskList TaskList { get; set; }
+        public required int TaskListId { get; set; }
+        [JsonIgnore] public TaskList TaskList { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

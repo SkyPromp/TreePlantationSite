@@ -7,8 +7,8 @@ namespace AP.BTP.Domain
     {
         public int Id { get; set; }
         public required DateTime Date { get; set; }
-        public int UserId { get; set; }
-        public required User User { get; set; }
+        public required int UserId { get; set; }
+        public User User { get; set; }
         [JsonIgnore] public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
         public bool IsDeleted { get; set; }
     }
