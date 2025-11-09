@@ -1,0 +1,54 @@
+﻿@attribute [Authorize(Roles = "Manager")]
+@page "/manager/tree/{Id:int?}"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@using AP.BTP.Application.CQRS.Tree
+@using Microsoft.AspNetCore.Authorization
+
+@(Tree?.Species ?? "Tree not found")
+
+<PdfViewer Class="mb-3"
+           Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
+           OnDocumentLoaded="OnDocumentLoaded"
+           OnPageChanged="OnPageChanged" />
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    private string errorMessage = "";
+    private TreeDTO? Tree;
+
+    HttpClient? client;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = HttpClientFactory.CreateClient("BTPApi");
+
+        if (Id.HasValue) await LoadTree(Id.Value);
+    }
+
+    private async Task LoadTree(int id)
+    {
+        if (this.client == null)
+        {
+            this.errorMessage = "No httpclient found.";
+
+            return;
+        }
+
+        AP.BTP.Application.CQRS.Tree.TreeDTO? response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>($"Tree/{id}");
+
+        if (response != null) this.Tree = response;
+        else this.errorMessage = "Couldn't load tree";
+
+        StateHasChanged();
+    }
+
+    private void OnDocumentLoaded() { }
+    private void OnPageChanged() { }
+}
