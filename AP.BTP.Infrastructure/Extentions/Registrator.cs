@@ -18,6 +18,7 @@ namespace AP.BTP.Infrastructure.Extentions
             services.AddScoped<IAuth0ManagementService, Auth0ManagementService>();
             return services;
         }
+
         public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<BTPContext>(options =>
@@ -35,6 +36,7 @@ namespace AP.BTP.Infrastructure.Extentions
             services.AddScoped<ITreeRepository, TreeRepository>();
             services.AddScoped<IZoneRepository, ZoneRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
             return services;
         }
     }

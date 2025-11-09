@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.CQRS;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -49,9 +50,15 @@ namespace AP.BTP.Infrastructure.Repositories
             return await this.dbSet.Where(tree => !tree.IsDeleted).ToListAsync();
         }
 
-        public async Task<IEnumerable<Tree>> GetAll(int pageNr, int pageSize)
+        public async Task<Paged<Tree>> GetAll(int pageNr, int pageSize, string? search)
         {
-            return await this.dbSet.Where(tree => !tree.IsDeleted).Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
+            IQueryable<Tree> trees = this.dbSet
+                .Where(tree => !tree.IsDeleted)
+                .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true);  // This is delegated, 1 Where() is less readable than 2
+
+            if (pageSize == 0) pageSize = trees.Count();  //  Avoid divide by 0 exception
+
+            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)Math.Ceiling(trees.Count() / (double) pageSize), Data = await trees.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync()};
         }
 
         public async Task<Tree?> GetById(int id)
@@ -64,11 +71,6 @@ namespace AP.BTP.Infrastructure.Repositories
         public Tree Update(Tree modifiedItem)
         {
             return this.dbSet.Update(modifiedItem).Entity;
-        }
-
-        public async Task<int> GetTotalPages(int pageSize)
-        {
-            return (int)(await dbSet.CountAsync() / (double)pageSize);
         }
     }
 }
