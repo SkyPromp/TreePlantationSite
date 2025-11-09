@@ -62,6 +62,30 @@ namespace AP.BTP.Infrastructure.Repositories
             return (items, totalCount);
         }
 
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search)
+        {
+            IQueryable<User> query = dbSet
+                .Include(u => u.PlantationSites)
+                .Where(u => !u.IsDeleted && u.PlantationSites.Any())
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u =>
+                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<User> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<User?> GetById(int id)
         {
             User? user = await this.dbSet.Include(u => u.PlantationSites).FirstOrDefaultAsync(u => u.Id == id);
