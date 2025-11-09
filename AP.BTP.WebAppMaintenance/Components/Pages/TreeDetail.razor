@@ -8,10 +8,13 @@
 
 @(Tree?.Species ?? "Tree not found")
 
-<PdfViewer Class="mb-3"
-           Url="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-           OnDocumentLoaded="OnDocumentLoaded"
+@if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
+{
+    <PdfViewer Class="mb-3"
+               Url="@this.maintenancePlan"
+               OnDocumentLoaded="OnDocumentLoaded"
            OnPageChanged="OnPageChanged" />
+}
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -22,6 +25,7 @@
     [Parameter] public int? Id { get; set; }
     private string errorMessage = "";
     private TreeDTO? Tree;
+    string maintenancePlan = "";
 
     HttpClient? client;
 
@@ -43,10 +47,42 @@
 
         AP.BTP.Application.CQRS.Tree.TreeDTO? response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>($"Tree/{id}");
 
-        if (response != null) this.Tree = response;
-        else this.errorMessage = "Couldn't load tree";
+        if (response != null)
+        {
+            this.Tree = response;
+
+            if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
+            {
+                await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
+            }
+
+        } else
+            this.errorMessage = "Couldn't load tree";
 
         StateHasChanged();
+    }
+
+    private async Task LoadMaitenancePlan(string filename)
+    {
+        if (client == null || string.IsNullOrWhiteSpace(filename)) return;
+
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{filename}");
+            response.EnsureSuccessStatusCode();
+
+            byte[] pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+
+            string b64Pdf = Convert.ToBase64String(pdfBytes);
+            this.maintenancePlan = $"data:{contentType};base64,{b64Pdf}";
+        } catch
+        {
+            this.maintenancePlan = "";
+            this.errorMessage = "Something went wrong while loading the image";
+        }
+
     }
 
     private void OnDocumentLoaded() { }
