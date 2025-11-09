@@ -70,7 +70,8 @@
                                             Edit
                                         </Button>
                                         <Button title="Verwijder gebruiker"
-                                                Class="btn btn-danger btn-sm">
+                                                Class="btn btn-danger btn-sm"
+                                                @onclick="() => { this.showDeleteConfirmation = true; selectedUser = item; }">
                                             <Icon Name="IconName.Trash" />
                                         </Button>
                                     </div>
@@ -144,6 +145,33 @@
     </div>
 }
 
+@if (this.showDeleteConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Ben je zeker dat je deze <br /> gebruiker wil verwijderen?</h5>
+            @if (isLoading)
+            {
+
+                <div class="spinner-border align-self-center" role="status">
+                    <span class="visually-hidden">Laden...</span>
+                </div>
+            }
+            else
+            {
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="DeleteUser" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
 @if (this.showSuccessToast)
 {
     <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
@@ -182,6 +210,8 @@
     private bool showSuccessToast = false;
     private double toastOpacity = 1.0;
     private bool isLoading = false;
+
+    private bool showDeleteConfirmation = false;
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -310,6 +340,7 @@
         this.site1 = null;
         this.site2 = null;
         this.roleId = "";
+        this.showDeleteConfirmation = false;
     }
 
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
@@ -328,5 +359,35 @@
         await Task.Delay(500);
         showSuccessToast = false;
         StateHasChanged();
+    }
+
+    private async Task DeleteUser()
+    {
+        isLoading = true;
+        if (selectedUser == null)
+            return;
+
+        try
+        {
+            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/auth/{selectedUser!.Auth0Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                await client.DeleteAsync($"UserManagement/users/{selectedUser!.Id}");
+                await Task.Delay(500); // small delay to ensure auth0 has processed the change
+                await LoadPage(currentPage);
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = $"Kon gebruiker niet verwijderen: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij het verwijderen van gebruiker: {ex.Message}";
+        }
+        CancelEditUser();
+        isLoading = false;
     }
 }
