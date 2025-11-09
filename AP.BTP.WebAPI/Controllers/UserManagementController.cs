@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UserManagementController : APIv1Controller
@@ -21,6 +20,7 @@ namespace AP.BTP.WebAPI.Controllers
             _mediator = mediator;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("users/auth/{auth0Id}/approval")]
         public async Task<IActionResult> Approve(string auth0Id, [FromBody] ApproveUserDTO approveUserDTO)
         {
@@ -41,12 +41,14 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("pending")]
         public async Task<IActionResult> GetAllUnapprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("users/{userId}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
             int userId,
@@ -61,24 +63,28 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(user);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("roles")]
         public async Task<IActionResult> GetAllRoles()
         {
             return Ok(await _mediator.Send(new GetAllRolesQuery()));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<IActionResult> GetAllApprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet("users/operators")]
         public async Task<IActionResult> GetAllOperatorsPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await _mediator.Send(new GetAllOperatorsPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("users/auth/{auth0Id}")]
         public async Task<IActionResult> DeleteAuth0User(string auth0Id)
         {
@@ -97,6 +103,7 @@ namespace AP.BTP.WebAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> DeleteLocalUser(int userId)
         {
