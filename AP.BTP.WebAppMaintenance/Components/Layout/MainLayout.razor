@@ -1,17 +1,25 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (isAuthenticated)
 {
-<div class="page">
-    <main>
-        <NavBar></NavBar>
-        <section class="body">
-            @Body
-        </section>
-    </main>
-</div>
+    <div class="page">
+        <main>
+            @if (user.IsInRole("Admin"))
+            {
+                <AdminNavBar></AdminNavBar>
+            }
+            else if (user.IsInRole("Manager"))
+            {
+                <ManagerNavBar></ManagerNavBar>
+            }
+            <section class="body">
+                @Body
+            </section>
+        </main>
+    </div>
 }
 else
 {
@@ -26,10 +34,12 @@ else
 
 @code {
     private bool isAuthenticated;
+    private ClaimsPrincipal user;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
         isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
     }
 }
