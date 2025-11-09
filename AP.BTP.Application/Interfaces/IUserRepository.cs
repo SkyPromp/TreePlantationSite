@@ -6,6 +6,7 @@ namespace AP.BTP.Application.Interfaces
     {
         public Task<User?> GetUserByAuth0Id(string Auth0Id);
         Task<(IEnumerable<User> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search);
 
         public Task Delete(int id);
 
