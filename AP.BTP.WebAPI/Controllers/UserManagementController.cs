@@ -87,9 +87,15 @@ namespace AP.BTP.WebAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 return StatusCode(500, "An error occurred while deleting the Auth0 user.");
             }
+        }
+
+        [HttpDelete("users/{userId}")]
+        public async Task<IActionResult> DeleteLocalUser(int userId)
+        {
+            await _mediator.Send(new DeleteUserCommand() { Id = userId });
+            return NoContent();
         }
     }
 }

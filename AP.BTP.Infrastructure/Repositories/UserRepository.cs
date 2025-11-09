@@ -22,7 +22,15 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public void Delete(User item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
+        }
+
+        public async Task Delete(int id)
+        {
+            User? user = await this.dbSet.FindAsync(id);
+
+            if (user != null) Delete(user);
         }
 
         public Task<IEnumerable<User>> GetAll()
