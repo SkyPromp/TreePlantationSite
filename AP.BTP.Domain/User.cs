@@ -10,6 +10,7 @@ namespace AP.BTP.Domain
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         [JsonIgnore] public ICollection<PlantationSite> PlantationSites { get; set; } = new List<PlantationSite>();
+        [JsonIgnore] public ICollection<TaskList> TaskLists { get; set; } = new List<TaskList>();
         public bool IsDeleted { get; set; }
     }
 }
