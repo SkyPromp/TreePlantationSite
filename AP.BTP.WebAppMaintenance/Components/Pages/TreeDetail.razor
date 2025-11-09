@@ -6,7 +6,14 @@
 @using AP.BTP.Application.CQRS.Tree
 @using Microsoft.AspNetCore.Authorization
 
-@(Tree?.Species ?? "Tree not found")
+
+@if(!string.IsNullOrWhiteSpace(this.Tree?.Species))
+{
+    <h3>@($"{Tree.Species} overzicht")</h3>
+} else
+{
+    <h3>"Boom niet gevonden"</h3>
+}
 
 @if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
 {
