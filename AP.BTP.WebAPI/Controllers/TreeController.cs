@@ -48,6 +48,8 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTree(int id)
         {
+            Console.WriteLine($"Delete tree controller, delete: {id}");
+
             await mediator.Send(new DeleteTreeCommand() { Id = id });
 
             return NoContent();

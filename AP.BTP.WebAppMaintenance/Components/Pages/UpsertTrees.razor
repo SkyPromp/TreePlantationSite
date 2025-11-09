@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-4">
                             <div>
-                                <label class="form-label">Tree species</label>
+                                <label class="form-label">Boomsoorten</label>
                                 <TextInput @bind-Value="@Tree.Species"></TextInput>
                                 <ValidationMessage For="@(() => Tree.Species)" />
                             </div>
@@ -23,8 +23,8 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Cancel</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaar</Button>
                 </div>
             </EditForm>
         </Content>
@@ -37,18 +37,18 @@
                     <div class="row">
                         <div class="col-4">
                             <div>
-                                <label class="form-label">Maintenance</label>
+                                <label class="form-label">Onderhoud</label>
                                 <InputFile OnChange="HandleUploadMaintenancePlan" class="form-control mb-2" />
                             </div>
                         </div>
                         <div class="col-8 d-flex justify-content-center align-items-center">
-                            <p class="text-muted">No maintenance plans uploaded yet.</p>
+                            <p class="text-muted">Nog geen onderhoudsplan toegevoegd.</p>
                         </div>
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Cancel</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaar</Button>
                 </div>
             </EditForm>
         </Content>

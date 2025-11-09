@@ -56,15 +56,15 @@
 @if (this.ShowConfirm)
 {
     <div class="d-flex justify-content-center">
-        <div class="card position-absolute align-self-center p-4">
+        <div class="card position-absolute align-self-center p-4 z-3">
             <h1>Bevestig</h1>
             <p>Wenst u om te bevestigen?</p>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Annuleer</button>
+                    <button @onclick="() => this.ShowConfirm = false" class="btn btn-warning">Annuleer</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Bevestig</button>
+                    <button @onclick="() => this.DeleteTree(this.selectedTreeId)" class="btn btn-secondary">Bevestig</button>
                 </div>
             </div>
         </div>
@@ -84,25 +84,9 @@
     private int PageSize = 6;
     private int Page = 1;
     private int TotalPages = 1;
-    private int selectedTreeId;
-    private bool showConfirm;
-    private bool ShowConfirm {
-        get { return this.showConfirm; }
-        set {
-            this.IsConfirm = false;
-            this.showConfirm = value;
-        }
-    }
-    private bool isConfirm;
-    private bool IsConfirm
-    {
-        get { return this.isConfirm; }
-        set {
-            this.isConfirm = value;
-            this.showConfirm = false;
-            if(value) this.DeleteTree(selectedTreeId);
-        }
-    }
+    private int? selectedTreeId;
+    private bool ShowConfirm;
+
     private HttpClient? client;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -144,16 +128,23 @@
     private void ConfirmDeleteTree(int id)
     {
         this.selectedTreeId = id;
-        this.showConfirm = true;
+        this.ShowConfirm = true;
     }
 
-    private async void DeleteTree(int id)
+    private async void DeleteTree(int? id)
     {
-        HttpResponseMessage? response;
+        if (id == null)
+        {
+            this.errorMessage = "Tree id is null";
+            this.ShowConfirm = false;
+            StateHasChanged();
+
+            return;
+        }
 
         if (this.client != null)
         {
-            response = await this.client.DeleteAsync($"Tree?id={id}");
+            HttpResponseMessage? response = await this.client.DeleteAsync($"Tree?id={id}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -164,6 +155,8 @@
             }
         }
 
+        this.ShowConfirm = false;
+        this.selectedTreeId = null;
         await this.LoadTrees();
         StateHasChanged();
     }
