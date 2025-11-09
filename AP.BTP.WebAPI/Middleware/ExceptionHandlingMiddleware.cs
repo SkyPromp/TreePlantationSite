@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System;
-using FV = FluentValidation;
+﻿using System.Text.Json;
 using FluentValidation;
 
 namespace AP.BTP.WebAPI.Middleware
@@ -31,10 +27,12 @@ namespace AP.BTP.WebAPI.Middleware
                     case ValidationException validationException:
                         response.StatusCode = StatusCodes.Status400BadRequest;
                         response.Message = validationException.Message;
+                        Console.WriteLine(response.Message);
 
                         break;
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
+
                         break;
                 }
                 context.Response.StatusCode = response.StatusCode;

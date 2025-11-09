@@ -27,7 +27,7 @@ namespace AP.BTP.Application.CQRS.Tree
         
         public async Task Handle(DeleteTreeCommand request, CancellationToken cancellationToken)
         {
-            this.uow.TreeRepository.Delete(request.Id);
+            await this.uow.TreeRepository.Delete(request.Id);
             await this.uow.Commit();
         }
     }
