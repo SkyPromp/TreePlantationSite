@@ -26,7 +26,7 @@ namespace AP.BTP.Infrastructure.Seeding
                     IsDeleted = false,
                 });
             }
-            
+
             modelBuilder.HasData(sites);
         }
     }

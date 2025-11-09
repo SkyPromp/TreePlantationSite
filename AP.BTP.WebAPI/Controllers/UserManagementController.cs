@@ -77,11 +77,18 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet("users/operators")]
         public async Task<IActionResult> GetAllOperatorsPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
             return Ok(await _mediator.Send(new GetAllOperatorsPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+        }
+
+        [Authorize(Roles = "Admin, Manager")]
+        [HttpGet("users/{userId}")]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            return Ok(await _mediator.Send(new GetUserByIdQuery() { Id = userId }));
         }
 
         [Authorize(Roles = "Admin")]

@@ -88,14 +88,19 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public async Task<User?> GetById(int id)
         {
-            User? user = await this.dbSet.Include(u => u.PlantationSites).FirstOrDefaultAsync(u => u.Id == id);
+            User? user = await this.dbSet
+                .Include(u => u.PlantationSites.Where(p => !p.IsDeleted))
+                    .ThenInclude(p => p.Zones.Where(z => !z.IsDeleted))
+                .Include(u => u.TaskLists.Where(tl => !tl.IsDeleted))
+                    .ThenInclude(tl => tl.TaskItems.Where(t => !t.IsDeleted))
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return (user?.IsDeleted ?? true) ? null : user;
         }
 
         public async Task<User?> GetUserByAuth0Id(string Auth0Id)
         {
-            User? user = await this.dbSet.Include(u => u.PlantationSites).FirstOrDefaultAsync(u => u.Auth0Id == Auth0Id);
+            User? user = await this.dbSet.Include(u => u.PlantationSites.Where(p => !p.IsDeleted)).FirstOrDefaultAsync(u => u.Auth0Id == Auth0Id);
 
             return (user?.IsDeleted ?? true) ? null : user;
         }

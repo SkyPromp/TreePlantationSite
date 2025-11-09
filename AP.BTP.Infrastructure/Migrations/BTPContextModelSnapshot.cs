@@ -1586,6 +1586,18 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("PlantationSiteUser");
+
+                    b.HasData(
+                        new
+                        {
+                            PlantationSitesId = 1,
+                            UsersId = 1
+                        },
+                        new
+                        {
+                            PlantationSitesId = 2,
+                            UsersId = 1
+                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskItem", b =>
