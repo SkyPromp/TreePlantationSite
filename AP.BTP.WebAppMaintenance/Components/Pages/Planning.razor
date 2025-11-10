@@ -18,27 +18,33 @@
 else
 {
     <div class="d-flex">
-        <div class="">
-            <h2 class="">@user.Name</h2>
-
-            <p class="m-0">Kies de week</p>
-            <div class="d-flex items-center gap-2">
-                <button class="p-2 rounded bg-gray-200 hover:bg-gray-300" @onclick="PreviousWeek">←</button>
-                <span>@WeekRangeText</span>
-                <button class="p-2 rounded bg-gray-200 hover:bg-gray-300" @onclick="NextWeek">→</button>
+        <div class="p-4 mb-4 bg-white border" style="height: 80vh; border-radius: 15px 0 0 15px">
+            <div class="mb-3 text-center">
+                <h2 class="fw-bold border-bottom">@user.Name</h2>
             </div>
 
-            <p class="mt-3 mb-0">Kies de kweeksite van deze week</p>
-            <select class="form-select mb-3">
-                <option value=""></option>
-                @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
-                {
-                    <option value="@plantationSite.Id">@plantationSite.Name</option>
-                }
-            </select>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Kies de week</label>
+                <div class="d-flex justify-content-between align-items-center">
+                    <Button class="p-0" @onclick="PreviousWeek">←</Button>
+                    <span class="fw-medium border p-1 m-0" style="font-size: 0.9rem">@WeekRangeText</span>
+                    <Button class="p-0" @onclick="NextWeek">→</Button>
+                </div>
+            </div>
+
+            <div>
+                <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
+                <select class="form-select">
+                    <option value="">-- Selecteer --</option>
+                    @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                    {
+                        <option value="@plantationSite.Id">@plantationSite.Name</option>
+                    }
+                </select>
+            </div>
         </div>
 
-        <div class="d-flex bg-light p-4 w-100" style="height: 80vh">
+        <div class="d-flex bg-light p-4 w-100 border" style="height: 80vh; border-radius: 0 15px 15px 0">
             @foreach (DateTime day in WeekDays)
             {
                 <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 150px; min-width: 150px;">
