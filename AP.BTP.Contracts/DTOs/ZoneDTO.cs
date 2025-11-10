@@ -34,7 +34,7 @@
         /// Creates a shallow copy of the current <see cref="ZoneDTO"/>.
         /// </summary>
         /// <returns>A new <see cref="ZoneDTO"/> instance with the same property values as the original.</returns>
-        public ZoneDTO Clone() => new ZoneDTO() { 
+        public ZoneDTO CloneZone() => new ZoneDTO() { 
             Id = this.Id, 
             PlantationSiteId = this.PlantationSiteId,
             TreeId = this.TreeId,
