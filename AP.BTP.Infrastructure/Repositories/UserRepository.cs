@@ -92,7 +92,6 @@ namespace AP.BTP.Infrastructure.Repositories
                 .Include(u => u.PlantationSites.Where(p => !p.IsDeleted))
                     .ThenInclude(p => p.Zones.Where(z => !z.IsDeleted))
                 .Include(u => u.TaskLists.Where(tl => !tl.IsDeleted))
-                    .ThenInclude(tl => tl.TaskItems.Where(t => !t.IsDeleted))
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             return (user?.IsDeleted ?? true) ? null : user;
