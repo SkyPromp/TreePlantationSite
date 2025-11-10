@@ -4,7 +4,7 @@
 
 <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="/admin/dashboard">
-        <img src="/logo.png" alt="Logo" class="brand-logo">
+        <img src="logo.png" alt="Logo" class="brand-logo">
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
@@ -37,13 +37,11 @@
 </nav>
 
 @code {
-    private bool isAuthenticated;
     private ClaimsPrincipal? user;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
-        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
     }
 }
