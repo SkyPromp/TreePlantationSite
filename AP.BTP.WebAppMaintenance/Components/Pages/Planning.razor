@@ -95,16 +95,48 @@ else
 }
 
 @code {
+    /// <summary>
+    /// The ID of the user whose details and tasks are being displayed.  
+    /// This is passed as a parameter to the component.
+    /// </summary>
     [Parameter] public int userId { get; set; }
 
+    /// <summary>
+    /// The ID of the user whose details and tasks are being displayed.  
+    /// This is passed as a parameter to the component.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// HttpClient used to call the backend API.
+    /// </summary>
     private HttpClient client;
+
+    /// <summary>
+    /// The user details retrieved from the API.
+    /// </summary>
     private UserDTO? user;
 
+    /// <summary>
+    /// Start date (Monday) of the currently displayed week.
+    /// </summary>
     private DateTime currentWeekStart;
+
+    /// <summary>
+    /// List of all dates in the current week, from Monday to Sunday.
+    /// </summary>
     private List<DateTime> WeekDays = new();
+
+    /// <summary>
+    /// Dictionary mapping each day of the current week to its corresponding TaskListDTO.
+    /// </summary>
     private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDay = new();
 
+    /// <summary>
+    /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user, 
+    /// and sets up the current week and its task lists on the first render.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first render of the component.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -116,6 +148,10 @@ else
             await LoadTaskListsForWeek();
         }
     }
+
+    /// <summary>
+    /// Loads the user details from the API based on the <see cref="userId"/>.
+    /// </summary>
     private async Task LoadUser()
     {
         if (this.client == null) return;
@@ -140,10 +176,12 @@ else
         }
     }
 
+    /// <summary>
+    /// Loads the task lists for the current week for the selected user.
+    /// </summary>
     private async Task LoadTaskListsForWeek()
     {
-        if (this.client == null || this.user == null)
-            return;
+        if (this.client == null || this.user == null) return;
 
         try
         {
@@ -157,7 +195,7 @@ else
             {
                 // store current week's tasks
                 CurrentWeekTaskListsByDay = response
-                    .Where(t => t.Date != null)
+                    .Where(t => t.Date != null)  // TODO Read warning
                     .ToDictionary(t => t.Date.Date, t => t);
             }
             else
@@ -173,18 +211,29 @@ else
         }
     }
 
+    /// <summary>
+    /// Updates the <see cref="WeekDays"/> list based on <see cref="currentWeekStart"/>.
+    /// </summary>
     private void UpdateWeekDays()
     {
         WeekDays = Enumerable.Range(0, 7).Select(i => currentWeekStart.AddDays(i)).ToList();
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Returns the Monday of the week containing the specified date.
+    /// </summary>
+    /// <param name="date">The date to find the start of the week for.</param>
+    /// <returns>The date of the Monday of the week.</returns>
     private DateTime StartOfWeek(DateTime date)
     {
         int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
         return date.AddDays(-diff).Date;
     }
 
+    /// <summary>
+    /// Moves the displayed week one week earlier and reloads task lists.
+    /// </summary>
     private async Task PreviousWeek()
     {
         currentWeekStart = currentWeekStart.AddDays(-7);
@@ -192,6 +241,9 @@ else
         await LoadTaskListsForWeek();
     }
 
+    /// <summary>
+    /// Moves the displayed week one week later and reloads task lists.
+    /// </summary>
     private async Task NextWeek()
     {
         currentWeekStart = currentWeekStart.AddDays(7);
@@ -199,5 +251,8 @@ else
         await LoadTaskListsForWeek();
     }
 
+    /// <summary>
+    /// Returns a formatted string representing the current week's date range (Monday to Sunday).
+    /// </summary>
     private string WeekRangeText => $"{currentWeekStart:dd/MM} - {currentWeekStart.AddDays(6):dd/MM}";
 }
