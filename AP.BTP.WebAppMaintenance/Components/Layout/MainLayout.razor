@@ -36,6 +36,15 @@ else
     private bool isAuthenticated;
     private ClaimsPrincipal user;
 
+    /// <summary>
+    /// Asynchronously initializes the component and retrieves the current authentication state.
+    /// </summary>
+    /// <remarks>
+    /// This method obtains the <see cref="ClaimsPrincipal"/> representing the currently authenticated user
+    /// from the <see cref="AuthenticationStateProvider"/> and sets the <c>user</c> and <c>isAuthenticated</c>
+    /// fields accordingly.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

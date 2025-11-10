@@ -34,6 +34,14 @@ else
 @code {
     private bool isAuthenticated;
 
+    /// <summary>
+    /// Asynchronously initializes the component and checks the authentication state of the current user.
+    /// </summary>
+    /// <remarks>
+    /// This method retrieves the <see cref="AuthenticationState"/> from the <see cref="AuthenticationStateProvider"/>
+    /// and sets the <c>isAuthenticated</c> field to <c>true</c> if the user is authenticated, otherwise <c>false</c>.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

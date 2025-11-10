@@ -6,8 +6,34 @@ using System.Text.RegularExpressions;
 
 namespace AP.BTP.WebAppMaintenance.Auth0
 {
+    /// <summary>
+    /// Provides extension methods to configure Auth0 authentication and related endpoints for the application.
+    /// </summary>
     public static class Auth0Config
     {
+        /// <summary>
+        /// Configures Auth0 authentication for the application using OpenID Connect.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to which authentication services are added.</param>
+        /// <param name="config">The application configuration from which Auth0 settings are read.</param>
+        /// <returns>The updated <see cref="IServiceCollection"/> instance for chaining.</returns>
+        /// <remarks>
+        /// This method performs the following actions:
+        /// <list type="bullet">
+        /// <item>
+        /// <description>Sets up Auth0 domain, client ID, client secret, and callback path.</description>
+        /// </item>
+        /// <item>
+        /// <description>Handles remote failures by redirecting users to an access-denied page with a descriptive message.</description>
+        /// </item>
+        /// <item>
+        /// <description>Configures the access token audience for API calls.</description>
+        /// </item>
+        /// <item>
+        /// <description>Configures cookie authentication login and logout paths.</description>
+        /// </item>
+        /// </list>
+        /// </remarks>
         public static IServiceCollection AddAuth0Authentication(this IServiceCollection services, IConfiguration config)
         {
             services.AddAuth0WebAppAuthentication(options =>
@@ -22,14 +48,14 @@ namespace AP.BTP.WebAppMaintenance.Auth0
                     {
                         // Capture the Auth0 error
                         string? failureMessage = context.Failure?.Message;
-
                         string description = "You do not have access to this application.";
+
                         if (!string.IsNullOrEmpty(failureMessage))
                         {
                             // Attempt to extract error_description text
                             Match match = Regex.Match(failureMessage, @"error_description: '(.+?)'");
-                            if (match.Success)
-                                description = match.Groups[1].Value;
+
+                            if (match.Success) description = match.Groups[1].Value;
                         }
 
                         // Redirect to access denied page, passing the description as query parameter
@@ -38,6 +64,7 @@ namespace AP.BTP.WebAppMaintenance.Auth0
 
                         // Stop the exception from propagating
                         context.HandleResponse();
+
                         return Task.CompletedTask;
                     }
                 };
@@ -56,6 +83,18 @@ namespace AP.BTP.WebAppMaintenance.Auth0
             return services;
         }
 
+        /// <summary>
+        /// Maps Auth0 authentication-related endpoints for login, registration, and logout.
+        /// </summary>
+        /// <param name="app">The <see cref="WebApplication"/> instance to map endpoints onto.</param>
+        /// <remarks>
+        /// The mapped endpoints include:
+        /// <list type="bullet">
+        /// <item><description><c>/login</c> - Initiates Auth0 login challenge and optionally redirects after login.</description></item>
+        /// <item><description><c>/register</c> - Initiates Auth0 signup challenge and optionally redirects after registration.</description></item>
+        /// <item><description><c>/logout</c> - Signs out the user from Auth0 and the local cookie authentication scheme.</description></item>
+        /// </list>
+        /// </remarks>
         public static void MapAuth0Endpoints(this WebApplication app)
         {
             app.MapGet("/login", async (HttpContext context, string? redirectUri) =>
