@@ -20,7 +20,8 @@ public class PlantationSiteRepository: IPlantationSiteRepository
 
     public void Delete(PlantationSite item)
     {
-        throw new NotImplementedException();
+        item.IsDeleted = true;
+        Update(item);
     }
 
     public async Task<IEnumerable<PlantationSite>> GetAll()
