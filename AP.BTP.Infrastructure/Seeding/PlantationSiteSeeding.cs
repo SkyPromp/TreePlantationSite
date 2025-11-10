@@ -23,10 +23,10 @@ namespace AP.BTP.Infrastructure.Seeding
                     Country = "Belgium",
                     Size = 200.0,
                     GroundPlan = $"Groundplan Site{i}",
-                    IsDeleted = false
+                    IsDeleted = false,
                 });
             }
-            
+
             modelBuilder.HasData(sites);
         }
     }

@@ -59,11 +59,12 @@
                                         <CardText class="m-0">n.v.t.</CardText>
                                     }
                                     <div class="p-1">
-                                        <Button title="Selecteer gebruiker"
-                                                Class="btn btn-dark btn-sm px-3">
-                                                @* @onclick="() => OnEditUser(item)"> *@
-                                            Selecteer
-                                        </Button>
+                                        <a href="/manager/planning/user/@item.Id">
+                                            <Button title="Selecteer gebruiker"
+                                                    Class="btn btn-dark btn-sm px-3">
+                                                Selecteer
+                                            </Button>
+                                        </a>
                                     </div>
                                 </CardBody>
 
