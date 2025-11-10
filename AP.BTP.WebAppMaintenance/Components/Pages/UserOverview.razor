@@ -189,31 +189,115 @@
 }
 
 @code {
-    private string? searchText = null;
-    PagedResponse<UserDTO>? response;
+    /// <summary>
+    /// The text used to search users.
+    /// </summary>
+    private string? searchText;
+
+    /// <summary>
+    /// The paginated response containing the list of users.
+    /// </summary>
+    PagedResponse<UserDTO>? response;  // TODO IEnumerable<...> not pagedResponse...
+
+    /// <summary>
+    /// The current page number being viewed.
+    /// </summary>
     private int currentPage = 1;
+
+    /// <summary>
+    /// The number of user cards displayed per row.
+    /// </summary>
     private int cardsPerRow = 1;
+
+    /// <summary>
+    /// The maximum number of rows shown per page.
+    /// </summary>
     private int maxRows = 7;
+
+    /// <summary>
+    /// Calculates the total number of users per page based on layout configuration.
+    /// </summary>
     private int pageSize => cardsPerRow * maxRows;
+
+    /// <summary>
+    /// Gets the total number of pages based on API response.
+    /// </summary>
     private int totalPages => response?.TotalPages ?? 1;
+
+    /// <summary>
+    /// A timer used to debounce user search input.
+    /// </summary>
     private System.Timers.Timer? debounceTimer;
-    private HttpClient client;
+
+    /// <summary>
+    /// The HTTP client used to communicate with the backend API.
+    /// </summary>
+    private HttpClient client;  // TODO make nullable and check if null when used
+
+    /// <summary>
+    /// Stores an error message for display if something goes wrong.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// The number of pending user registration requests.
+    /// </summary>
     private int requestsCount = 0;
 
+    /// <summary>
+    /// Indicates whether the Edit User modal is currently shown.
+    /// </summary>
     private bool showEditUser;
+
+    /// <summary>
+    /// The list of plantation sites available for user assignment.
+    /// </summary>
     private IEnumerable<PlantationSiteDTO> plantationSites = new List<PlantationSiteDTO>();
+
+    /// <summary>
+    /// The first plantation site assigned to the user.
+    /// </summary>
     private int? site1;
+
+    /// <summary>
+    /// The second plantation site assigned to the user.
+    /// </summary>
     private int? site2;
+
+    /// <summary>
+    /// The role ID associated with a selected user.
+    /// </summary>
     private string roleId = "";
+
+    /// <summary>
+    /// The currently selected user being edited.
+    /// </summary>
     private UserDTO? selectedUser;
+
+    /// <summary>
+    /// Indicates whether a success toast message should be shown.
+    /// </summary>
     private bool showSuccessToast = false;
+
+    /// <summary>
+    /// The opacity of the success toast message for fade animation.
+    /// </summary>
     private double toastOpacity = 1.0;
+
+    /// <summary>
+    /// Indicates whether an API call or operation is in progress.
+    /// </summary>
     private bool isLoading = false;
 
+    /// <summary>
+    /// Indicates whether a delete confirmation modal should be displayed.
+    /// </summary>
     private bool showDeleteConfirmation = false;
 
-
+    /// <summary>
+    /// Initializes the component and loads initial data such as users,
+    /// pending requests, and plantation sites when the component first renders.
+    /// </summary>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -225,18 +309,25 @@
         }
     }
 
+    /// <summary>
+    /// Loads a specific page of user data from the API.
+    /// </summary>
+    /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
     {
         currentPage = page;
 
         string url = $"UserManagement/users?pageNr={page}&pageSize={pageSize}";
-        if (!string.IsNullOrWhiteSpace(searchText))
-            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponse<UserDTO>>(url);
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles search box input changes and reloads user data after a short debounce delay.
+    /// </summary>
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
@@ -257,12 +348,18 @@
         debounceTimer.Start();
     }
 
+    /// <summary>
+    /// Organizes users into row groups for display.
+    /// </summary>
     private IEnumerable<List<UserDTO>> Rows =>
-        (response?.Items ?? Enumerable.Empty<UserDTO>())
-            .Select((item, index) => new { item, index })
-            .GroupBy(x => x.index / cardsPerRow)
-            .Select(g => g.Select(x => x.item).ToList());
+    (response?.Items ?? Enumerable.Empty<UserDTO>())
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / cardsPerRow)
+        .Select(g => g.Select(x => x.item).ToList());
 
+    /// <summary>
+    /// Retrieves the number of pending user registration requests.
+    /// </summary>
     private async Task LoadRequestsCount()
     {
         PagedResponse<Auth0User>? response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>("UserManagement/pending");
@@ -270,6 +367,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Loads available plantation sites for assignment.
+    /// </summary>
     private async Task LoadPlantationSites()
     {
         if (this.client == null) return;
@@ -296,6 +396,9 @@
         }
     }
 
+    /// <summary>
+    /// Updates the plantation site assignments for the selected user.
+    /// </summary>
     private async Task UpdateUserSites()
     {
         isLoading = true;
@@ -315,6 +418,9 @@
         isLoading = false;
     }
 
+    /// <summary>
+    /// Opens the Edit User dialog for the specified user and pre-fills their plantation site assignments.
+    /// </summary>
     private void OnEditUser(UserDTO user)
     {
         selectedUser = user;
@@ -333,6 +439,9 @@
         }
     }
 
+    /// <summary>
+    /// Cancels the user editing process and resets related UI state.
+    /// </summary>
     private void CancelEditUser()
     {
         this.showEditUser = false;
@@ -343,8 +452,14 @@
         this.showDeleteConfirmation = false;
     }
 
+    /// <summary>
+    /// Determines whether a plantation site dropdown option should be disabled.
+    /// </summary>
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
+    /// <summary>
+    /// Displays a temporary success toast notification.
+    /// </summary>
     private async Task ShowSuccessToast()
     {
         showSuccessToast = true;
@@ -361,6 +476,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Deletes the selected user from both Auth0 and the internal database.
+    /// </summary>
     private async Task DeleteUser()
     {
         isLoading = true;

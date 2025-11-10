@@ -196,31 +196,122 @@
 }
 
 @code {
+    /// <summary>
+    /// The current search text entered by the user.
+    /// Used to filter pending users by name or email.
+    /// </summary>
     private string? searchText = null;
+
+    /// <summary>
+    /// Indicates whether a warning should be displayed when the search text is too short.
+    /// </summary>
     private bool showSearchWarning = false;
-    PagedResponse<Auth0User>? response;
+
+    /// <summary>
+    /// The paginated response containing pending users retrieved from the backend.
+    /// </summary>
+    PagedResponse<Auth0User>? response;  // TODO just use IEnumerable<...> not a respone
+
+    /// <summary>
+    /// The current page index of the user list being displayed.
+    /// </summary>
     private int currentPage = 1;
+
+    /// <summary>
+    /// The number of cards (user entries) displayed per row.
+    /// </summary>
     private int cardsPerRow = 1;
+
+    /// <summary>
+    /// The maximum number of rows of user cards displayed per page.
+    /// </summary>
     private int maxRows = 7;
+
+    /// <summary>
+    /// The calculated number of user cards displayed per page.
+    /// </summary>
     private int pageSize => cardsPerRow * maxRows;
+
+    /// <summary>
+    /// The total number of pages available based on the server response.
+    /// </summary>
     private int totalPages => response?.TotalPages ?? 1;
+
+    /// <summary>
+    /// A timer used to debounce the search input, preventing excessive API calls.
+    /// </summary>
     private System.Timers.Timer? debounceTimer;
-    HttpClient client;
+
+    /// <summary>
+    /// The HTTP client used for API communication. TODO: make optional and handle null cases.
+    /// </summary>
+    HttpClient client;  // TODO make optional and check if null
+
+    /// <summary>
+    /// Stores any error messages that occur during data fetching or API actions.
+    /// </summary>
     private string errorMessage = "";
 
+    /// <summary>
+    /// Flag indicating whether the edit user modal or section is visible.
+    /// </summary>
     private bool showEditUser;
+
+    /// <summary>
+    /// A collection of all plantation sites loaded from the API.
+    /// Used to assign users to one or more sites.
+    /// </summary>
     private IEnumerable<PlantationSiteDTO> plantationSites = new List<PlantationSiteDTO>();
+
+    /// <summary>
+    /// The first selected plantation site ID for the user being approved.
+    /// </summary>
     private int? site1;
+
+    /// <summary>
+    /// The second selected plantation site ID for the user being approved.
+    /// </summary>
     private int? site2;
+
+    /// <summary>
+    /// The selected role ID assigned to the user during approval.
+    /// </summary>
     private string roleId = "";
+
+    /// <summary>
+    /// The selected role ID assigned to the user during approval.
+    /// </summary>    private string roleId = "";
     private string selectedUserId = "";
+
+    /// <summary>
+    /// Indicates whether the success toast notification should be displayed.
+    /// </summary>
     private bool showSuccessToast = false;
+
+    /// <summary>
+    /// The opacity level of the success toast for fade-in/out animation.
+    /// </summary>
     private double toastOpacity = 1.0;
+
+    /// <summary>
+    /// A list of available Auth0 roles loaded from the API.
+    /// </summary>
     private IEnumerable<Auth0Role> roles = new List<Auth0Role>();
+
+    /// <summary>
+    /// Indicates whether the component is performing a background operation (e.g., approving a user).
+    /// </summary>
     private bool isLoading = false;
 
+    /// <summary>
+    /// Determines whether the delete confirmation dialog is currently displayed.
+    /// </summary>
     private bool showDeleteConfirmation = false;
 
+    /// <summary>
+    /// Called after the component is rendered for the first time.
+    /// Initializes the HTTP client and loads required data such as users, sites, and roles.
+    /// </summary>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -233,6 +324,11 @@
         }
     }
 
+    /// <summary>
+    /// Loads a specific page of pending users from the API.
+    /// Applies search filters if the search text length is valid (≥ 3 characters).
+    /// </summary>
+    /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
     {
         currentPage = page;
@@ -246,6 +342,10 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    /// <summary>
+    /// Approves a selected pending user by assigning a role and plantation sites.
+    /// Sends requests to update the user in Auth0 and link them to plantation sites.
+    /// </summary>
     private async Task ApproveUser()
     {
         isLoading = true;
@@ -272,9 +372,15 @@
 
             await ShowSuccessToast();
         }
+
         isLoading = false;
     }
 
+    /// <summary>
+    /// Handles user input in the search box.
+    /// Debounces input and triggers a filtered user search after a short delay.
+    /// </summary>
+    /// <param name="e">The change event containing the new search input value.</param>
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
@@ -296,12 +402,18 @@
         debounceTimer.Start();
     }
 
+    /// <summary>
+    /// Splits the list of users into rows for grid-based rendering in the UI.
+    /// </summary>
     private IEnumerable<List<Auth0User>> Rows =>
-        (response?.Items ?? Enumerable.Empty<Auth0User>())
-            .Select((item, index) => new { item, index })
-            .GroupBy(x => x.index / cardsPerRow)
-            .Select(g => g.Select(x => x.item).ToList());
+    (response?.Items ?? Enumerable.Empty<Auth0User>())
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / cardsPerRow)
+        .Select(g => g.Select(x => x.item).ToList());
 
+    /// <summary>
+    /// Loads the list of available plantation sites from the API.
+    /// </summary>
     private async Task LoadPlantationSites()
     {
         if (this.client == null) return;
@@ -328,6 +440,9 @@
         }
     }
 
+    /// <summary>
+    /// Loads the list of available roles from the API to be assigned to users during approval.
+    /// </summary>
     private async Task LoadRoles()
     {
         if (this.client == null) return;
@@ -354,6 +469,9 @@
         }
     }
 
+    /// <summary>
+    /// Cancels the current user edit or approval operation and resets form state.
+    /// </summary>
     private void CancelEditUser()
     {
         this.showEditUser = false;
@@ -364,8 +482,17 @@
         this.showDeleteConfirmation = false;
     }
 
+    /// <summary>
+    /// Disables a plantation site option if it has already been selected as another site for the same user.
+    /// </summary>
+    /// <param name="id">The ID of the plantation site.</param>
+    /// <param name="otherSite">The ID of the other selected site.</param>
+    /// <returns>True if the site should be disabled; otherwise, false.</returns>
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
+    /// <summary>
+    /// Displays a temporary success toast message with fade-in and fade-out animations.
+    /// </summary>
     private async Task ShowSuccessToast()
     {
         showSuccessToast = true;
@@ -382,6 +509,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Rejects a pending user by sending a deletion request to the API and Auth0.
+    /// Refreshes the user list afterward.
+    /// </summary>
     private async Task RejectUser()
     {
         isLoading = true;
@@ -407,6 +538,7 @@
         {
             errorMessage = $"Fout bij het afwijzen van gebruiker: {ex.Message}";
         }
+
         CancelEditUser();
         isLoading = false;
     }

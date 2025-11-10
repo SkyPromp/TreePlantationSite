@@ -56,16 +56,36 @@
 </Tabs>
 
 @code {
+    /// <summary>
+    /// The optional ID of the tree to edit. 
+    /// If no ID is provided, the component assumes creation mode.
+    /// </summary>
     [Parameter] public int? Id { get; set; }
+
+    /// <summary>
+    /// Stores any error messages encountered during operations.
+    /// Used to display feedback to the user.
+    /// </summary>
     string errorMessage = "";
+
+    /// <summary>
+    /// The HTTP client used to communicate with the backend API.
+    /// </summary>
     HttpClient? client;
 
+    /// <summary>
+    /// Represents the current tree being created or edited.
+    /// </summary>
     private TreeDTO Tree = new TreeDTO()
     {
         Id = 0,
         Species = ""
     };
 
+    /// <summary>
+    /// Called by the Blazor framework when the component is initialized.
+    /// Initializes the <see cref="HttpClient"/> and loads tree data if an ID is provided.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
@@ -73,6 +93,11 @@
         if (Id.HasValue) await LoadTree(Id.Value);
     }
 
+    /// <summary>
+    /// Loads a tree record from the backend API by its ID.
+    /// Updates the <see cref="Tree"/> property with the retrieved data.
+    /// </summary>
+    /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
         if (this.client == null)
@@ -90,11 +115,19 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Clears the form by resetting the <see cref="Tree.Species"/> field.
+    /// </summary>
     private void ClearForm()
     {
         this.Tree.Species = "";
     }
 
+    /// <summary>
+    /// Handles the form submission to create or update a tree record.
+    /// Performs input validation, sends the appropriate API request,
+    /// and navigates back to the tree list upon success.
+    /// </summary>
     private async Task Submit()
     {
         try
@@ -136,6 +169,10 @@
         }
     }
 
+    /// <summary>
+    /// Placeholder for a future implementation of tree maintenance plan upload functionality.
+    /// Currently sets an unimplemented feature message.
+    /// </summary>
     private void HandleUploadMaintenancePlan()
     {
         this.errorMessage = "Handle updload mentenance plan not implemented yet";
