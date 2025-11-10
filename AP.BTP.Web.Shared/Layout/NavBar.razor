@@ -1,9 +1,14 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="/admin/dashboard">
         <img src="/logo.png" alt="Logo" class="brand-logo">
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
+        @if(user != null && user.IsInRole("Admin")){
             <li class="nav-item">
                 <a class="nav-link" href="/admin/users">Users</a>
             </li>
@@ -13,6 +18,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="/admin/tree">Trees</a>
             </li>
+        }
+        else if(user != null && user.IsInRole("Manager")){
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/planning">Planning</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/tree">Bomen</a>
+            </li>
+        }
             <li class="nav-item d-flex align-items-center">
                 <Button Class="p-0 d-flex justify-content-center align-items-center border-0 shadow-none">
                     <Icon Name="IconName.PersonCircle" Class="fs-2"/>
@@ -21,3 +35,15 @@
         </ul>
     </div>
 </nav>
+
+@code {
+    private bool isAuthenticated;
+    private ClaimsPrincipal? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+}

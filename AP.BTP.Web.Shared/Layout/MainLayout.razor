@@ -7,13 +7,9 @@
 {
     <div class="page">
         <main>
-            @if (user.IsInRole("Admin"))
+            @if (user != null && (user.IsInRole("Admin") || user.IsInRole("Manager")))
             {
-                <AdminNavBar></AdminNavBar>
-            }
-            else if (user.IsInRole("Manager"))
-            {
-                <ManagerNavBar></ManagerNavBar>
+                <NavBar></NavBar>
             }
             <section class="body">
                 @Body
@@ -34,7 +30,7 @@ else
 
 @code {
     private bool isAuthenticated;
-    private ClaimsPrincipal user;
+    private ClaimsPrincipal? user;
 
     protected override async Task OnInitializedAsync()
     {

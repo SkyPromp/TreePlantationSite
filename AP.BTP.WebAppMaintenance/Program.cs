@@ -3,6 +3,7 @@ using AP.BTP.WebAppMaintenance.Components;
 using AP.BTP.Web.Authentication;
 using AP.BTP.WebAppMaintenance.Extentions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AP.BTP.Web.Shared.Components;
 
 namespace AP.BTP.WebAppMaintenance
 {
@@ -82,7 +83,8 @@ namespace AP.BTP.WebAppMaintenance
             app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+                .AddInteractiveServerRenderMode()
+                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);          
 
             app.Run();
         }
