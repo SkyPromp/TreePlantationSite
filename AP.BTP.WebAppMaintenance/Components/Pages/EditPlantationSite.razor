@@ -182,9 +182,19 @@
 }
 
 @code {
+    /// <summary>
+    /// The ID of the plantation site to load. This is a component parameter.
+    /// </summary>
     [Parameter] public int id { get; set; }
+
+    /// <summary>
+    /// The ID of the plantation site to load. This is a component parameter.
+    /// </summary>
     private string errorMessage = "";
 
+    /// <summary>
+    /// The ID of the plantation site to load. This is a component parameter.
+    /// </summary>
     PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
     {
         Id = 0,
@@ -200,6 +210,9 @@
         Zones = new List<ZoneDTO>()
     };
 
+    /// <summary>
+    /// Base64 representation of the ground plan image for preview.
+    /// </summary>
     string groundPlanPreview = string.Empty;
 
     private bool showTreeList;
@@ -210,7 +223,7 @@
             this.showTreeList = value;
         }
     }
-    private bool isZoneAdded;
+    private bool isZoneAdded;  // TODO rewrite
     private bool IsZoneAdded
     {
         get { return this.isZoneAdded; }
@@ -229,7 +242,7 @@
         }
     }
 
-    private bool showConfirmZoneDeletion;
+    private bool showConfirmZoneDeletion;  // TODO rewrite
     private bool ShowConfirmZoneDeletion {
         get { return this.showConfirmZoneDeletion; }
         set {
@@ -248,6 +261,9 @@
         }
     }
 
+    /// <summary>
+    /// Returns a new, empty zone DTO associated with the current plantation site.
+    /// </summary>
     private ZoneDTO EmptyZone {
         get
         {
@@ -260,13 +276,39 @@
         }
     }
 
+    /// <summary>
+    /// Temporary index used for newly added zones before they are saved to the backend.
+    /// </summary>
     private int tempAddedZoneIndex = -1;
-    private ZoneDTO SelectedZone;
-    private bool IsEditZone;
+
+    /// <summary>
+    /// Currently selected zone for editing or addition.
+    /// </summary>
+    private ZoneDTO SelectedZone;  // TODO read warning
+
+    /// <summary>
+    /// Flag to track if the current operation is editing an existing zone.
+    /// </summary>
+    private bool IsEditZone;  // TODO not needed, can be derrived from the index
+
+    /// <summary>
+    /// Holds the original zone before editing for restoration if editing is cancelled.
+    /// </summary>
     private ZoneDTO? OldZone;
+
+    /// <summary>
+    /// List of available trees for assignment to zones.
+    /// </summary>
     private IEnumerable<TreeDTO>? Trees;
+
+    /// <summary>
+    /// HttpClient instance for API calls.
+    /// </summary>
     HttpClient? client;
 
+    /// <summary>
+    /// Initializes the component, loads plantation site data if editing, loads trees and zones.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
@@ -289,6 +331,9 @@
         await this.LoadZones();
     }
 
+    /// <summary>
+    /// Loads zones for the current plantation site from the backend API.
+    /// </summary>
     private async Task LoadZones()
     {
         if (this.plantationSite == null || this.plantationSite.Id == 0) return;
@@ -316,6 +361,9 @@
         }
     }
 
+    /// <summary>
+    /// Loads all trees from the backend API.
+    /// </summary>
     private async Task LoadTrees()
     {
         if (this.client == null) return;
@@ -341,6 +389,9 @@
         }
     }
 
+    /// <summary>
+    /// Handles form submission for creating or updating a plantation site and its zones.
+    /// </summary>
     private async Task HandleValidSubmit(){
         try {
             if (this.client == null || this.plantationSite == null) return;
@@ -372,11 +423,18 @@
         }
     }
 
+    /// <summary>
+    /// Cancels the editing/creation and navigates back to the plantation site list.
+    /// </summary>
     private void Cancel()
     {
         Navigation.NavigateTo("/admin/plantation-site");
     }
 
+    /// <summary>
+    /// Uploads a ground plan file for the plantation site and generates a preview.
+    /// </summary>
+    /// <param name="e">The file change event containing the uploaded file.</param>
     private async Task HandleGroundPlanUpload(InputFileChangeEventArgs e)
     {
         IBrowserFile file = e.File;
@@ -405,11 +463,21 @@
         }
     }
 
+    /// <summary>
+    /// Finds a tree by its ID.
+    /// </summary>
+    /// <param name="id">Tree ID.</param>
+    /// <returns>The tree DTO or null if not found.</returns>
     private TreeDTO? findTree(int? id)
     {
         return id == null? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
     }
 
+    /// <summary>
+    /// Finds a zone by its ID within the current plantation site.
+    /// </summary>
+    /// <param name="id">Zone ID.</param>
+    /// <returns>The zone DTO or null if not found.</returns>
     private ZoneDTO? findZone(int? id)
     {
         if (this.plantationSite == null) return null;
@@ -417,15 +485,15 @@
         return id == null? null : this.plantationSite.Zones?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
     }
 
+    /// <summary>
+    /// Adds the currently selected zone to the plantation site, or updates it if editing.
+    /// </summary>
     private void AddZone()
     {
         if (this.SelectedZone == null) this.SelectedZone = EmptyZone;
         if (this.plantationSite == null) return;
-
         if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
-
         if (this.SelectedZone.TreeId == 0 || this.plantationSite == null) return;
-
         if (!this.IsEditZone)
         {
             this.SelectedZone.Id = this.tempAddedZoneIndex--;
@@ -436,6 +504,10 @@
         this.IsEditZone = false;
     }
 
+    /// <summary>
+    /// Begins editing the zone with the specified ID.
+    /// </summary>
+    /// <param name="id">Zone ID.</param>
     private void EditZone(int id)
     {
         this.IsEditZone = true;
@@ -450,12 +522,20 @@
         this.SelectedZone.TreeId = zone.TreeId;
     }
 
+    /// <summary>
+    /// Confirms deletion of a zone by ID.
+    /// </summary>
+    /// <param name="id">Zone ID.</param>
     private void ConfirmDeleteZone(int id)
     {
         this.SelectedZone.Id = id;
         this.ShowConfirmZoneDeletion = true;
     }
 
+    /// <summary>
+    /// Deletes a zone by ID, either from the backend or the local list if it hasn't been saved yet.
+    /// </summary>
+    /// <param name="id">Zone ID.</param>
     private async void DeleteZone(int id)
     {
         if (this.plantationSite == null || this.plantationSite.Zones == null) return;
@@ -488,6 +568,12 @@
         this.SelectedZone = EmptyZone;
         StateHasChanged();
     }
+
+    /// <summary>
+    /// Loads a ground plan image from the backend and generates a base64 preview string.
+    /// </summary>
+    /// <param name="client">The HTTP client for fetching the image.</param>
+    /// <param name="fileName">The filename of the ground plan image.</param>
 
     private async Task LoadImagePreview(HttpClient client, string fileName)
     {

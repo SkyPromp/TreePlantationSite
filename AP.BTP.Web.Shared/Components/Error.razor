@@ -26,12 +26,18 @@
 </p>
 
 @code{
-    [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    [CascadingParameter] private HttpContext? HttpContext { get; set; }
 
     private string? RequestId { get; set; }
     private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-    protected override void OnInitialized() =>
-        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+    /// <summary>
+    /// Initializes the component and sets the <see cref="RequestId"/> property.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="RequestId"/> is set to the current activity ID if available;
+    /// otherwise, it falls back to the HTTP context's trace identifier.
+    /// This is typically used for tracking requests in logs or error pages.
+    /// </remarks>
+    protected override void OnInitialized() => RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
 }

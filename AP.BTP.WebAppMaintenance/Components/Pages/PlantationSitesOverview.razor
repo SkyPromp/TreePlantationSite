@@ -59,35 +59,79 @@
 
 
 @code {
+    /// <summary>
+    /// Current search text entered by the user for filtering plantation sites.
+    /// </summary>
     private string? searchText = null;
-    PagedResponseDTO<PlantationSiteDTO>? response;
+
+    /// <summary>
+    /// Holds the paged response of plantation sites from the API.
+    /// </summary>
+    PagedResponseDTO<PlantationSiteDTO>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
+
+    /// <summary>
+    /// The current page number being displayed.
+    /// </summary>
     private int currentPage = 1;
+
+    /// <summary>
+    /// Number of cards to display per row in the UI.
+    /// </summary>
     private int cardsPerRow = 3;
+
+    /// <summary>
+    /// Maximum number of rows per page.
+    /// </summary>
     private int maxRows = 2;
+
+    /// <summary>
+    /// Number of items displayed per page, calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>.
+    /// </summary>
     private int pageSize => cardsPerRow * maxRows;
+
+    /// <summary>
+    /// Total number of pages available based on the API response.
+    /// Defaults to 1 if no response is loaded.
+    /// </summary>
     private int totalPages => response?.TotalPages ?? 1;
+
+    /// <summary>
+    /// Timer used to debounce the search input to avoid making too many API calls while typing.
+    /// </summary>
     private System.Timers.Timer? debounceTimer;
 
-
+    /// <summary>
+    /// Lifecycle method called when the component is initialized.
+    /// Loads the first page of plantation sites.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         await LoadPage(1);
     }
 
+    /// <summary>
+    /// Loads a specific page of plantation sites from the API, optionally filtered by <see cref="searchText"/>.
+    /// Updates <see cref="response"/> and refreshes the UI.
+    /// </summary>
+    /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
     {
         currentPage = page;
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
         string url = $"PlantationSite?pageNr={page}&pageSize={pageSize}";
-        if (!string.IsNullOrWhiteSpace(searchText))
-            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponseDTO<PlantationSiteDTO>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
 
+    /// <summary>
+    /// Handles changes in the search input field. Debounces the search by 300ms before reloading the first page.
+    /// </summary>
+    /// <param name="e">The change event containing the new search text.</param>
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
@@ -109,19 +153,30 @@
         debounceTimer.Start();
     }
 
+    /// <summary>
+    /// Navigates to the form for adding a new plantation site.
+    /// </summary>
     private void GoToAddForm()
     {
         Navigation.NavigateTo("/admin/plantation-site/edit");
-    }        
+    }
 
+    /// <summary>
+    /// Navigates to the form for editing an existing plantation site.
+    /// </summary>
+    /// <param name="id">The ID of the plantation site to edit.</param>
     private void GoToUpdateForm(int id)
     {
         Navigation.NavigateTo($"/admin/plantation-site/edit/{id}");
-    }     
+    }
 
+    /// <summary>
+    /// Groups the plantation sites into rows for display based on <see cref="cardsPerRow"/>.
+    /// Each row is represented as a list of <see cref="PlantationSiteDTO"/>.
+    /// </summary>
     private IEnumerable<List<PlantationSiteDTO>> Rows =>
-        (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
-            .Select((item, index) => new { item, index })
-            .GroupBy(x => x.index / cardsPerRow)
-            .Select(g => g.Select(x => x.item).ToList());        
+    (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / cardsPerRow)
+        .Select(g => g.Select(x => x.item).ToList());
 }

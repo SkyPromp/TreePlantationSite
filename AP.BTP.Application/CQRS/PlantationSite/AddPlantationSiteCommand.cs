@@ -1,4 +1,3 @@
-
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
@@ -7,13 +6,27 @@ using MediatR;
 
 namespace AP.BTP.Application.CQRS.PlantationSite
 {
+    /// <summary>
+    /// Represents a command to create a new plantation site in the system.
+    /// </summary>
     public class AddPlantationSiteCommand : IRequest<PlantationSiteDTO>
     {
+        /// <summary>
+        /// The data transfer object (DTO) containing the details of the plantation site to be created.
+        /// </summary>
         public required PlantationSiteDTO PlantationSite { get; set; }
     }
 
+    /// <summary>
+    /// Provides validation rules for the <see cref="AddPlantationSiteCommand"/>.
+    /// </summary>
     public class AddPlantationSiteCommandValidator : AbstractValidator<AddPlantationSiteCommand>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddPlantationSiteCommandValidator"/> class.
+        /// Defines validation rules for the <see cref="AddPlantationSiteCommand.PlantationSite"/> properties.
+        /// </summary>
+        /// <param name="uow">The unit of work used for potential data validation or lookup operations.</param>
         public AddPlantationSiteCommandValidator(IUnitOfWork uow)
         {
             RuleFor(command => command.PlantationSite.Id)
@@ -59,18 +72,32 @@ namespace AP.BTP.Application.CQRS.PlantationSite
                 .WithMessage("Plantation site cannot be created as 'deleted'."); 
         }
     }
-    
+
+    /// <summary>
+    /// Handles the <see cref="AddPlantationSiteCommand"/> by creating a new plantation site and returning its corresponding DTO.
+    /// </summary>
     public class AddPlantationSiteCOmmandHandler: IRequestHandler<AddPlantationSiteCommand, PlantationSiteDTO>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddPlantationSiteCommandHandler"/> class.
+        /// </summary>
+        /// <param name="uow">The unit of work used for database operations.</param>
+        /// <param name="mapper">The mapper used to convert between domain entities and DTOs.</param>
         public AddPlantationSiteCOmmandHandler(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
             this.mapper = mapper;
         }
 
+        /// <summary>
+        /// Handles the <see cref="AddPlantationSiteCommand"/> by adding a new plantation site to the database.
+        /// </summary>
+        /// <param name="request">The command containing the plantation site details to be created.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="PlantationSiteDTO"/> representing the newly created plantation site.</returns>
         public async Task<PlantationSiteDTO> Handle(AddPlantationSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite plantationSite = mapper.Map<Domain.PlantationSite>(request.PlantationSite);
