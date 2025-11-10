@@ -182,7 +182,7 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
-            List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0Role>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0RoleDTO>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
             return roles ?? new List<Auth0RoleDTO>();
         }

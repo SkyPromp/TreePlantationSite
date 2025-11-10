@@ -14,7 +14,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     /// <summary>
     /// Handles the <see cref="GetAllRolesQuery"/> by retrieving all roles from the Auth0 management service.
     /// </summary>
-    public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQuery, IEnumerable<Auth0Role>>
+    public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQuery, IEnumerable<Auth0RoleDTO>>
     {
         private readonly IAuth0ManagementService _auth0;
 
