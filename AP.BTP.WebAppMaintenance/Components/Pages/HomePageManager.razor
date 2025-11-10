@@ -22,6 +22,11 @@
 </div>
 
 @code {
+
+    /// <summary>
+    /// Navigates to the specified URL using the <see cref="Navigation"/> service.
+    /// </summary>
+    /// <param name="url">The relative or absolute URL to navigate to.</param>
     private List<DashboardCard> DashboardCards = new List<DashboardCard>
     {
         new DashboardCard
@@ -38,10 +43,23 @@
         },
     };
 
+    /// <summary>
+    /// Represents a card displayed on the dashboard with a title, description, and navigation URL.
+    /// </summary>
     private class DashboardCard
     {
+        /// <summary>
+        /// Gets or sets the title of the dashboard card.
+        /// </summary>
         public string Title { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the description of the dashboard card.
+        /// </summary>
         public string Description { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the URL to navigate to when the card is selected.
+        /// </summary>
         public string Url { get; set; } = string.Empty;
-    }
-}
+    }}

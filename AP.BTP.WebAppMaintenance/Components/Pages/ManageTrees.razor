@@ -77,18 +77,60 @@
 }
 
 @code {
+    /// <summary>
+    /// Bound search string for the UI input field.
+    /// </summary>
     private string SearchStringBind = "";
+
+    /// <summary>
+    /// Actual search string used in API queries.
+    /// </summary>
     private string SearchString = "";
-    private IEnumerable<TreeDTO> Trees;
+
+    /// <summary>
+    /// List of trees retrieved from the API.
+    /// </summary>
+    private IEnumerable<TreeDTO> Trees;  // TODO read warning
+
+    /// <summary>
+    /// Stores any error messages to display in the UI.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// Number of items to display per page.
+    /// </summary>
     private int PageSize = 6;
+
+    /// <summary>
+    /// Current page number in the pagination.
+    /// </summary>
     private int Page = 1;
+
+    /// <summary>
+    /// Total number of pages returned by the API.
+    /// </summary>
     private int TotalPages = 1;
+
+    /// <summary>
+    /// Stores the ID of the currently selected tree for deletion.
+    /// </summary>
     private int? selectedTreeId;
+
+    /// <summary>
+    /// Indicates whether the confirmation modal for deleting a tree is shown.
+    /// </summary>
     private bool ShowConfirm;
 
+    /// <summary>
+    /// HttpClient used to make API calls.
+    /// </summary>
     private HttpClient? client;
 
+    /// <summary>
+    /// Called after the component has been rendered. Initializes the HttpClient and loads trees on first render.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first render of the component.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
@@ -97,6 +139,10 @@
         await LoadTrees();
     }
 
+    /// <summary>
+    /// Loads trees from the API, optionally for a specific page.
+    /// </summary>
+    /// <param name="page">The page number to load. Defaults to -1, which means the current page.</param>
     private async Task LoadTrees(int page = -1)
     {
         if (this.client == null) return;
@@ -125,12 +171,20 @@
         }
     }
 
+    /// <summary>
+    /// Sets up the confirmation modal for deleting a tree.
+    /// </summary>
+    /// <param name="id">The ID of the tree to delete.</param>
     private void ConfirmDeleteTree(int id)
     {
         this.selectedTreeId = id;
         this.ShowConfirm = true;
     }
 
+    /// <summary>
+    /// Deletes a tree with the given ID by calling the API.
+    /// </summary>
+    /// <param name="id">The ID of the tree to delete.</param>
     private async void DeleteTree(int? id)
     {
         if (id == null)
@@ -161,6 +215,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Clears the search string and reloads the full tree list.
+    /// </summary>
     private async Task RemoveSearchString()
     {
         this.SearchString = "";
@@ -170,6 +227,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Updates the search string and reloads the tree list filtered by the given search term.
+    /// </summary>
+    /// <param name="searchString">The search string to filter the tree list.</param>
     private async Task SearchTrees(string searchString)
     {
         this.SearchString = searchString;
