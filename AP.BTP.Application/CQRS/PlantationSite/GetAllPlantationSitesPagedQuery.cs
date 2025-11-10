@@ -1,4 +1,5 @@
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using MediatR;
 
@@ -7,7 +8,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a query to retrieve a paginated list of plantation sites, optionally filtered by a search term.
     /// </summary>
-    public class GetAllPlantationSitesPagedQuery: IRequest<PagedResponse<PlantationSiteDTO>>
+    public class GetAllPlantationSitesPagedQuery: IRequest<PagedResponseDTO<PlantationSiteDTO>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -28,7 +29,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="GetAllPlantationSitesPagedQuery"/> by retrieving a paginated list of plantation sites from the database.
     /// </summary>
-    public class GetAllPlantationSitesPagedQueryHandler: IRequestHandler<GetAllPlantationSitesPagedQuery, PagedResponse<PlantationSiteDTO>>
+    public class GetAllPlantationSitesPagedQueryHandler: IRequestHandler<GetAllPlantationSitesPagedQuery, PagedResponseDTO<PlantationSiteDTO>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -52,13 +53,13 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// <returns>
         /// A <see cref="PagedResponse{T}"/> containing the paginated plantation sites and related pagination metadata.
         /// </returns>
-        public async Task<PagedResponse<PlantationSiteDTO>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDTO<PlantationSiteDTO>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             (IEnumerable<Domain.PlantationSite> items, int totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
 
-            return new PagedResponse<PlantationSiteDTO>
+            return new PagedResponseDTO<PlantationSiteDTO>
             {
                 Items = mapper.Map<IEnumerable<PlantationSiteDTO>>(items),
                 PageNumber = request.PageNr,

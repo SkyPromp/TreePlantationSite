@@ -1,9 +1,7 @@
 ﻿@attribute [Authorize(Roles = "Manager")]
 @page "/manager/tree"
-@using AP.BTP.Application.CQRS.Tree;
-@using AP.BTP.Application.CQRS;
+@using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
-@using AP.BTP.Application.CQRS.Auth0User
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 

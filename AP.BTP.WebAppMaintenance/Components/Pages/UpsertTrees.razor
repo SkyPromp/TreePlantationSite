@@ -3,7 +3,7 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Tree
+@using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
@@ -107,7 +107,7 @@
             return;
         }
 
-        AP.BTP.Application.CQRS.Tree.TreeDTO? response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>($"Tree/{id}");
+        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
 
         if (response != null) this.Tree = response;
         else this.errorMessage = "Couldn't load tree";
@@ -150,10 +150,10 @@
 
             if (this.Id == null)
             {
-                response = await this.client.PostAsJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>("Tree", this.Tree);
+                response = await this.client.PostAsJsonAsync<TreeDTO>("Tree", this.Tree);
             } else
             {
-                response = await this.client.PutAsJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>("Tree", this.Tree);
+                response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
             }
 
             if (response.IsSuccessStatusCode)

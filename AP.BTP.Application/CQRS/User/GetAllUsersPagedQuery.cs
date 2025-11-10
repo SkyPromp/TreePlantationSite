@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using MediatR;
 
@@ -7,7 +8,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a query to retrieve a paged list of all users with optional search functionality.
     /// </summary>
-    public class GetAllUsersPagedQuery: IRequest<PagedResponse<UserDTO>>
+    public class GetAllUsersPagedQuery: IRequest<PagedResponseDTO<UserDTO>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -29,7 +30,7 @@ namespace AP.BTP.Application.CQRS.User
     /// Handles the <see cref="GetAllUsersPagedQuery"/> by retrieving a paged list of users from the repository,
     /// mapping them to <see cref="UserDTO"/>, and enriching each user with Auth0 information.
     /// </summary>
-    public class GetAllUsersPagedQueryHandler : IRequestHandler<GetAllUsersPagedQuery, PagedResponse<UserDTO>>
+    public class GetAllUsersPagedQueryHandler : IRequestHandler<GetAllUsersPagedQuery, PagedResponseDTO<UserDTO>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -55,7 +56,7 @@ namespace AP.BTP.Application.CQRS.User
         /// <param name="request">The query containing page number, page size, and search string.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="PagedResponse{UserDTO}"/> containing the paged list of users with enriched Auth0 information.</returns>
-        public async Task<PagedResponse<UserDTO>> Handle(GetAllUsersPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllUsersPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
@@ -65,12 +66,12 @@ namespace AP.BTP.Application.CQRS.User
 
             foreach (UserDTO user in users)
             {
-                Auth0User.Auth0User? auth0user = await auth0.GetUserByIdAsync(user.Auth0Id);
+                Auth0UserDTO? auth0user = await auth0.GetUserByIdAsync(user.Auth0Id);
                 user.Name = auth0user?.username ?? string.Empty;
                 user.Email = auth0user?.email ?? string.Empty;
             }
 
-            return new PagedResponse<UserDTO>
+            return new PagedResponseDTO<UserDTO>
             {
                 Items = users,
                 PageNumber = request.PageNr,

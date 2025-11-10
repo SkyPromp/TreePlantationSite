@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using MediatR;
 
 namespace AP.BTP.Application.CQRS.Auth0User
@@ -6,7 +7,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     /// <summary>
     /// Represents a query to retrieve a paged list of unapproved users from Auth0, optionally filtered by a search term.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponse<Auth0User>>
+    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDTO<Auth0UserDTO>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -27,7 +28,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     /// <summary>
     /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged collection of unapproved Auth0 users.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponse<Auth0User>>
+    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponseDTO<Auth0UserDTO>>
     {
         private readonly IAuth0ManagementService _auth0;
 
@@ -48,13 +49,11 @@ namespace AP.BTP.Application.CQRS.Auth0User
         /// <returns>
         /// A <see cref="PagedResponse{T}"/> containing the unapproved users for the requested page and the total user count.
         /// </returns>
-        public async Task<PagedResponse<Auth0User>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDTO<Auth0UserDTO>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
-            if (request.Search == null) request.Search = "";
+            (IEnumerable<Auth0UserDTO> items, int totalCount) = await _auth0.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
 
-            (IEnumerable<Auth0User> items, int totalCount) = await _auth0.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
-
-            return new PagedResponse<Auth0User>
+            return new PagedResponseDTO<Auth0UserDTO>
             {
                 Items = items,
                 PageNumber = request.PageNr,

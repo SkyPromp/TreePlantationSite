@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AP.BTP.Domain\AP.BTP.Domain.csproj" />
+    <ProjectReference Include="..\AP.BTP.Contracts\AP.BTP.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

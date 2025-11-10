@@ -1,7 +1,6 @@
-﻿using AP.BTP.Application.CQRS.PlantationSite;
-using AP.BTP.Application.CQRS.Tree;
-using AP.BTP.Application.CQRS.Zone;
+﻿using AP.BTP.Application.CQRS.Zone;
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using FluentValidation.TestHelper;
 using Moq;
 

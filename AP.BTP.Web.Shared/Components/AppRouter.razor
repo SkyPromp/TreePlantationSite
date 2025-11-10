@@ -1,0 +1,25 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+
+<Router AppAssembly="@AppAssembly" AdditionalAssemblies="@AdditionalAssemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+
+    <NotFound>
+        <LayoutView Layout="@typeof(Layout.MainLayout)">
+            <p class="text-center mt-5">Sorry, that page could not be found.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    [Parameter]
+    public Assembly AppAssembly { get; set; } = typeof(AppRouter).Assembly;
+
+    [Parameter]
+    public Assembly[] AdditionalAssemblies { get; set; } = Array.Empty<Assembly>();
+}

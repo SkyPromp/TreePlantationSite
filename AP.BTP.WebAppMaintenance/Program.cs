@@ -1,9 +1,9 @@
 using System.Security.Cryptography.X509Certificates;
 using AP.BTP.WebAppMaintenance.Components;
-using AP.BTP.WebAppMaintenance.Auth0;
+using AP.BTP.Web.Authentication;
 using AP.BTP.WebAppMaintenance.Extentions;
-using AP.BTP.WebAppMaintenance.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AP.BTP.Web.Shared.Components;
 
 namespace AP.BTP.WebAppMaintenance
 {
@@ -103,7 +103,8 @@ namespace AP.BTP.WebAppMaintenance
             app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+                .AddInteractiveServerRenderMode()
+                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);          
 
             app.Run();
         }

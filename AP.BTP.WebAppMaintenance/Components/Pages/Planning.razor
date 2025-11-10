@@ -1,11 +1,8 @@
 ﻿@attribute [Authorize(Roles = "Admin, Manager")]
 @page "/manager/planning/user/{userId:int}"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.PlantationSite
-@using AP.BTP.Application.CQRS.TaskItem
-@using AP.BTP.Application.CQRS.TaskList
-@using AP.BTP.Application.CQRS.User
 @using System.Text.Json
+@using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 @using System.Globalization
 @inject NavigationManager Navigation

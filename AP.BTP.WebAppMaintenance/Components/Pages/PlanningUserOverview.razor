@@ -1,12 +1,10 @@
 ﻿@attribute [Authorize(Roles = "Admin, Manager")]
 @page "/manager/planning"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Auth0User
 @using System.Drawing
 @using System.Text.Json
-@using AP.BTP.Application.CQRS.PlantationSite
 @using System.Text.Encodings.Web
-@using AP.BTP.Application.CQRS.User
+@using AP.BTP.Contracts.DTOs
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Planning gebruikersselectie</PageTitle>
 
@@ -106,7 +104,7 @@
     /// <summary>
     /// Holds the paged response containing operator users from the API.
     /// </summary>
-    PagedResponse<UserDTO>? response;  // TODO why is this here? shouldn't be global or has a bad name
+    PagedResponseDTO<UserDTO>? response;  // TODO why is this here? shouldn't be global or has a bad name
 
     /// <summary>
     /// The current page number being displayed.
@@ -181,7 +179,7 @@
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponse<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
         StateHasChanged();
     }
 

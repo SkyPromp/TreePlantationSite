@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using MediatR;
 
 namespace AP.BTP.Application.CQRS.Auth0User
@@ -6,7 +7,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     /// <summary>
     /// Represents a query to retrieve all roles from Auth0.
     /// </summary>
-    public class GetAllRolesQuery : IRequest<IEnumerable<Auth0Role>>
+    public class GetAllRolesQuery : IRequest<IEnumerable<Auth0RoleDTO>>
     {
     }
 
@@ -32,7 +33,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
         /// <param name="request">The query request (contains no parameters).</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A collection of <see cref="Auth0Role"/> objects retrieved from Auth0.</returns>
-        public async Task<IEnumerable<Auth0Role>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Auth0RoleDTO>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
             return await _auth0.GetRoles();
         }

@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.CQRS.User;
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -47,6 +48,16 @@ namespace AP.BTP.Unittests.User
                 Id = 1,
                 Auth0Id = "auth0|test",
                 PlantationSites = new List<Domain.PlantationSite>()
+            });
+
+            userRepoMock
+            .Setup(r => r.GetById(It.IsAny<int>()))
+            .ReturnsAsync(new Domain.User
+            {
+                Id = 1,
+                Auth0Id = "test",
+                PlantationSites = new List<Domain.PlantationSite>(),
+                IsDeleted = false
             });
         }
 

@@ -1,5 +1,5 @@
-﻿using AP.BTP.Application.CQRS.User;
-using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using MediatR;
 

@@ -1,12 +1,10 @@
 ﻿@attribute [Authorize(Roles = "Admin")]
 @page "/admin/users"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Auth0User
 @using System.Drawing
 @using System.Text.Json
-@using AP.BTP.Application.CQRS.PlantationSite
 @using System.Text.Encodings.Web
-@using AP.BTP.Application.CQRS.User
+@using AP.BTP.Contracts.DTOs
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Gebruikers</PageTitle>
 
@@ -197,7 +195,7 @@
     /// <summary>
     /// The paginated response containing the list of users.
     /// </summary>
-    PagedResponse<UserDTO>? response;  // TODO IEnumerable<...> not pagedResponse...
+    PagedResponseDTO<UserDTO>? response;  // TODO IEnumerable<...> not pagedResponse...
 
     /// <summary>
     /// The current page number being viewed.
@@ -321,7 +319,7 @@
 
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponse<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
         StateHasChanged();
     }
 
@@ -362,7 +360,7 @@
     /// </summary>
     private async Task LoadRequestsCount()
     {
-        PagedResponse<Auth0User>? response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>("UserManagement/pending");
+        PagedResponseDTO<Auth0UserDTO>? response = await client.GetFromJsonAsync<PagedResponseDTO<Auth0UserDTO>>("UserManagement/pending");
         requestsCount = response?.TotalItems ?? 0;
         StateHasChanged();
     }
@@ -376,9 +374,9 @@
 
         try
         {
-            PagedResponse<PlantationSiteDTO>? response;
+            PagedResponseDTO<PlantationSiteDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>("PlantationSite");
+            response = await this.client.GetFromJsonAsync<PagedResponseDTO<PlantationSiteDTO>>("PlantationSite");
 
             if (response != null)
             {
@@ -409,7 +407,7 @@
         if (site2.HasValue)
             selectedSites.Add(site2.Value);
 
-        await client.PutAsJsonAsync($"UserManagement/users/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
+        await client.PutAsJsonAsync($"UserManagement/users/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
 
         CancelEditUser();
 

@@ -1,4 +1,4 @@
-﻿using AP.BTP.Application.CQRS.Auth0User;
+﻿using AP.BTP.Contracts.DTOs;
 
 namespace AP.BTP.Application.Interfaces
 {
@@ -29,20 +29,20 @@ namespace AP.BTP.Application.Interfaces
         /// <item><description>The total count of matching unapproved users.</description></item>
         /// </list>
         /// </returns>
-        Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<Auth0UserDTO> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search);
 
         /// <summary>
         /// Retrieves all roles available in Auth0.
         /// </summary>
         /// <returns>A task that returns an enumerable of <see cref="Auth0Role"/>.</returns>
-        Task<IEnumerable<Auth0Role>> GetRoles();
+        Task<IEnumerable<Auth0RoleDTO>> GetRoles();
 
         /// <summary>
         /// Retrieves a specific user from Auth0 by their unique Auth0 identifier.
         /// </summary>
         /// <param name="auth0Id">The unique Auth0 identifier of the user.</param>
         /// <returns>A task that returns the <see cref="Auth0User"/> if found; otherwise, null.</returns>
-        Task<Auth0User?> GetUserByIdAsync(string auth0Id);
+        Task<Auth0UserDTO?> GetUserByIdAsync(string auth0Id);
 
         /// <summary>
         /// Deletes a user from Auth0.

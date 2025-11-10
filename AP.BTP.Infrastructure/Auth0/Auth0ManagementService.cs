@@ -1,5 +1,5 @@
-﻿using AP.BTP.Application.CQRS.Auth0User;
-using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System.Net;
@@ -105,7 +105,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="search">Optional search string for filtering users by email.</param>
         /// <returns>A <see cref="Task{Tuple}"/> containing the list of unapproved users and the total count.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the request fails.</exception>
-        public async Task<(IEnumerable<Auth0User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
+        public async Task<(IEnumerable<Auth0UserDTO> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
         {
             string token = await GetManagementTokenAsync();
             string baseUrl = $"https://{_domain}/api/v2/users";
@@ -132,7 +132,7 @@ namespace AP.BTP.Infrastructure.Auth0
             JsonElement usersElement = doc.RootElement.GetProperty("users");
             int totalCount = doc.RootElement.GetProperty("total").GetInt32();
 
-            List<Auth0User> users = JsonSerializer.Deserialize<List<Auth0User>>(usersElement.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            List<Auth0UserDTO> users = JsonSerializer.Deserialize<List<Auth0UserDTO>>(usersElement.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
             return (users, totalCount);
         }
@@ -166,7 +166,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// </summary>
         /// <returns>A <see cref="Task{IEnumerable{Auth0Role}}"/> containing the list of roles.</returns>
         /// <exception cref="InvalidOperationException">Thrown if retrieving roles fails.</exception>
-        public async Task<IEnumerable<Auth0Role>> GetRoles()
+        public async Task<IEnumerable<Auth0RoleDTO>> GetRoles()
         {
             string token = await GetManagementTokenAsync();
             RestClient client = new RestClient($"https://{_domain}/api/v2/roles");
@@ -182,9 +182,9 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
-            List<Auth0Role>? roles = JsonSerializer.Deserialize<List<Auth0Role>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0Role>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
-            return roles ?? new List<Auth0Role>();
+            return roles ?? new List<Auth0RoleDTO>();
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="userId">The Auth0 user ID.</param>
         /// <returns>A <see cref="Task{Auth0User}"/> representing the user, or null if not found.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the request fails for other reasons.</exception>
-        public async Task<Auth0User?> GetUserByIdAsync(string userId)
+        public async Task<Auth0UserDTO?> GetUserByIdAsync(string userId)
         {
             string token = await GetManagementTokenAsync();
 
@@ -215,7 +215,7 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get user: {response.StatusCode} - {response.Content}");
             }
 
-            Auth0User? user = JsonSerializer.Deserialize<Auth0User>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            Auth0UserDTO? user = JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return user;
         }
