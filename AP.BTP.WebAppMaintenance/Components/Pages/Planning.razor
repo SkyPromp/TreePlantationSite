@@ -1,0 +1,197 @@
+﻿@attribute [Authorize(Roles = "Admin, Manager")]
+@page "/manager/planning/user/{userId:int}"
+@rendermode InteractiveServer
+@using AP.BTP.Application.CQRS.PlantationSite
+@using AP.BTP.Application.CQRS.TaskItem
+@using AP.BTP.Application.CQRS.TaskList
+@using AP.BTP.Application.CQRS.User
+@using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
+@using System.Globalization
+@inject NavigationManager Navigation
+@inject IHttpClientFactory HttpClientFactory
+
+@if (user == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="d-flex">
+        <div class="">
+            <h2 class="">@user.Name</h2>
+
+            <p class="m-0">Kies de week</p>
+            <div class="d-flex items-center gap-2">
+                <button class="p-2 rounded bg-gray-200 hover:bg-gray-300" @onclick="PreviousWeek">←</button>
+                <span>@WeekRangeText</span>
+                <button class="p-2 rounded bg-gray-200 hover:bg-gray-300" @onclick="NextWeek">→</button>
+            </div>
+
+            <p class="mt-3 mb-0">Kies de kweeksite van deze week</p>
+            <select class="form-select mb-3">
+                <option value=""></option>
+                @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                {
+                    <option value="@plantationSite.Id">@plantationSite.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="d-flex bg-light p-4 w-100" style="height: 80vh">
+            @foreach (DateTime day in WeekDays)
+            {
+                <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 150px; min-width: 150px;">
+                    <div class="text-center fw-bold p-3" style="background-color: #E3E3E3">
+                        @day.ToString("ddd dd")
+                    </div>
+
+                    <div class="overflow-auto flex-grow-1" style="min-height: 0;">
+                        @if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList)
+                                        && taskList?.TaskItems?.Any() == true)
+                        {
+                            @foreach (TaskItemDTO taskItem in taskList.TaskItems)
+                            {
+                                <div class="p-1 m-2 border border-dark rounded"
+                                     style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
+                                    <div class="d-flex justify-content-end">
+                                        <Button class="p-0 me-1">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </Button>
+                                        <Button class="p-0">
+                                            <i class="bi bi-trash"></i>
+                                        </Button>
+                                    </div>
+                                    <div class="fw-normal text-truncate-multiline-2" title="@taskItem.Title">@taskItem.Title</div>
+                                    <div class="text-muted small text-truncate-multiline-3" title="@taskItem.Description">@taskItem.Description</div>
+                                </div>
+                            }
+                        }
+
+                        <Button class="p-0 m-2">
+                            <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
+                                 style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
+                                <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
+                                <div class="fw-normal" style="color: #5FC66D">Taak toevoegen</div>
+                            </div>
+                        </Button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    [Parameter] public int userId { get; set; }
+
+    private string errorMessage = "";
+    private HttpClient client;
+    private UserDTO? user;
+
+    private DateTime currentWeekStart;
+    private List<DateTime> WeekDays = new();
+    private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDay = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            client = HttpClientFactory.CreateClient("BTPApi");
+            await LoadUser();
+            currentWeekStart = StartOfWeek(DateTime.Today);
+            UpdateWeekDays();
+            await LoadTaskListsForWeek();
+        }
+    }
+    private async Task LoadUser()
+    {
+        if (this.client == null) return;
+
+        try
+        {
+            UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"usermanagement/users/{this.userId}");
+
+            if (response != null)
+            {
+                this.user = response;
+                StateHasChanged();
+            }
+            else
+            {
+                this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de gebruiker.";
+            }
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    private async Task LoadTaskListsForWeek()
+    {
+        if (this.client == null || this.user == null)
+            return;
+
+        try
+        {
+            int year = ISOWeek.GetYear(currentWeekStart);
+            int weekNumber = ISOWeek.GetWeekOfYear(currentWeekStart);
+
+            IEnumerable<TaskListDTO>? response = await client.GetFromJsonAsync<IEnumerable<TaskListDTO>>(
+                $"tasklist?userId={userId}&year={year}&weekNumber={weekNumber}");
+
+            if (response != null)
+            {
+                // store current week's tasks
+                CurrentWeekTaskListsByDay = response
+                    .Where(t => t.Date != null)
+                    .ToDictionary(t => t.Date.Date, t => t);
+            }
+            else
+            {
+                CurrentWeekTaskListsByDay.Clear();
+            }
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij ophalen van taken: {ex.Message}";
+        }
+    }
+
+    private void UpdateWeekDays()
+    {
+        WeekDays = Enumerable.Range(0, 7).Select(i => currentWeekStart.AddDays(i)).ToList();
+        StateHasChanged();
+    }
+
+    private DateTime StartOfWeek(DateTime date)
+    {
+        int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+        return date.AddDays(-diff).Date;
+    }
+
+    private async Task PreviousWeek()
+    {
+        currentWeekStart = currentWeekStart.AddDays(-7);
+        UpdateWeekDays();
+        await LoadTaskListsForWeek();
+    }
+
+    private async Task NextWeek()
+    {
+        currentWeekStart = currentWeekStart.AddDays(7);
+        UpdateWeekDays();
+        await LoadTaskListsForWeek();
+    }
+
+    private string WeekRangeText => $"{currentWeekStart:dd/MM} - {currentWeekStart.AddDays(6):dd/MM}";
+}
