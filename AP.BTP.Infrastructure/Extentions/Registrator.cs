@@ -36,6 +36,8 @@ namespace AP.BTP.Infrastructure.Extentions
             services.AddScoped<ITreeRepository, TreeRepository>();
             services.AddScoped<IZoneRepository, ZoneRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITaskListRepository, TaskListRepository>();
+            services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 
             return services;
         }

@@ -1,4 +1,4 @@
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin, Manager")]
 @page "/admin/dashboard"
 @page "/manager/dashboard"
 @using Microsoft.AspNetCore.Components.Authorization
@@ -57,7 +57,7 @@
                 }
             };
         } else if (user.IsInRole("Manager")) {
-            new List<DashboardCard>
+            DashboardCards = new List<DashboardCard>
             {
                 new DashboardCard
                 {
