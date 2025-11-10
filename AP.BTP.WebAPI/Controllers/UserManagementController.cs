@@ -1,25 +1,39 @@
 ﻿using AP.BTP.Application.CQRS.Auth0User;
-using AP.BTP.Application.CQRS.PlantationSite;
 using AP.BTP.Application.CQRS.User;
-using AP.BTP.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for managing users, including approval, role assignment, and linking to plantation sites.
+    /// </summary>
+    /// <remarks>
+    /// Provides endpoints under "api/v1/usermanagement" for operations related to user management.
+    /// Inherits from <see cref="APIv1Controller"/> and uses <see cref="IMediator"/> to handle commands and queries.
+    /// </remarks>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UserManagementController : APIv1Controller
     {
         private readonly IMediator _mediator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserManagementController"/> class.
+        /// </summary>
+        /// <param name="mediator">The mediator used to send commands and queries.</param>
         public UserManagementController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Approves a user in Auth0 and assigns a role.
+        /// </summary>
+        /// <param name="auth0Id">The Auth0 ID of the user to approve.</param>
+        /// <param name="approveUserDTO">DTO containing the role to assign.</param>
+        /// <returns>The approved <see cref="UserDTO"/> or NotFound if the user does not exist.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost("users/auth/{auth0Id}/approval")]
         public async Task<IActionResult> Approve(string auth0Id, [FromBody] ApproveUserDTO approveUserDTO)
@@ -28,19 +42,26 @@ namespace AP.BTP.WebAPI.Controllers
             {
                 Console.WriteLine($"auth0id: {auth0Id}, approveUserDTO: {approveUserDTO.Role}");
                 UserDTO? user = await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = approveUserDTO.Role });
-                if (user == null)
-                    return NotFound();
+
+                if (user == null) return NotFound();
+
                 return Ok(user);
             }
             catch (Exception e)
             {
-
                 Console.WriteLine(e.Message);
             }
 
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves a paged list of all unapproved users.
+        /// </summary>
+        /// <param name="pageNr">Page number (default 1).</param>
+        /// <param name="pageSize">Page size (default 6).</param>
+        /// <param name="search">Optional search filter.</param>
+        /// <returns>Paged list of unapproved users.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("pending")]
         public async Task<IActionResult> GetAllUnapprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
@@ -48,6 +69,11 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        /// Links a local user to multiple plantation sites.
+        /// </summary>
+        /// <param name="userId">The ID of the user to link.</param>
+        /// <param name="linkUserToPlantationSitesDto">DTO containing plantation site IDs to link.</param>
+        /// <returns>The updated <see cref="UserDTO"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("users/{userId}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
@@ -63,6 +89,10 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Retrieves all roles defined in Auth0.
+        /// </summary>
+        /// <returns>List of roles.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("roles")]
         public async Task<IActionResult> GetAllRoles()
@@ -70,6 +100,13 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllRolesQuery()));
         }
 
+        /// <summary>
+        /// Retrieves a paged list of all approved users.
+        /// </summary>
+        /// <param name="pageNr">Page number (default 1).</param>
+        /// <param name="pageSize">Page size (default 6).</param>
+        /// <param name="search">Optional search filter.</param>
+        /// <returns>Paged list of approved users.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<IActionResult> GetAllApprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
@@ -77,6 +114,13 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        /// <summary>
+        /// Retrieves a paged list of all operator users.
+        /// </summary>
+        /// <param name="pageNr">Page number (default 1).</param>
+        /// <param name="pageSize">Page size (default 6).</param>
+        /// <param name="search">Optional search filter.</param>
+        /// <returns>Paged list of operators.</returns>
         [Authorize(Roles = "Admin, Manager")]
         [HttpGet("users/operators")]
         public async Task<IActionResult> GetAllOperatorsPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
@@ -84,6 +128,11 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetAllOperatorsPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
+        /// <summary>
+        /// Retrieves a single user by their local ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to retrieve.</param>
+        /// <returns>The <see cref="UserDTO"/> or NotFound if the user does not exist.</returns>
         [Authorize(Roles = "Admin, Manager")]
         [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetUserById(int userId)
@@ -91,6 +140,11 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new GetUserByIdQuery() { Id = userId }));
         }
 
+        /// <summary>
+        /// Deletes a user from Auth0 by their Auth0 ID.
+        /// </summary>
+        /// <param name="auth0Id">The Auth0 ID of the user to delete.</param>
+        /// <returns>No content on success, NotFound if the user does not exist, or 500 on error.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("users/auth/{auth0Id}")]
         public async Task<IActionResult> DeleteAuth0User(string auth0Id)
@@ -110,6 +164,11 @@ namespace AP.BTP.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a local user by their ID.
+        /// </summary>
+        /// <param name="userId">The ID of the user to delete.</param>
+        /// <returns>No content on success.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> DeleteLocalUser(int userId)
