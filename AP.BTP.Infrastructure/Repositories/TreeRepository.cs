@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Application.CQRS;
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;

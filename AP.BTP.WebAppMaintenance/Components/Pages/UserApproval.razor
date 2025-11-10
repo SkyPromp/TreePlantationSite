@@ -1,12 +1,10 @@
 ﻿@attribute [Authorize(Roles = "Admin")]
 @page "/admin/users/approve"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Auth0User
+@using AP.BTP.Contracts.DTOs
 @using System.Drawing
 @using System.Text.Json
-@using AP.BTP.Application.CQRS.PlantationSite
 @using System.Text.Encodings.Web
-@using AP.BTP.Application.CQRS.User
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Wachtende gebruikers</PageTitle>
 
@@ -44,10 +42,10 @@
             <div class="text-center">Goedkeuring</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
-            @foreach (List<Auth0User> row in Rows)
+            @foreach (List<Auth0UserDTO> row in Rows)
             {
                 <div class="row">
-                    @foreach (Auth0User item in row)
+                    @foreach (Auth0UserDTO item in row)
                     {
                         <div class="p-2">
                             <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
@@ -104,7 +102,7 @@
         <div class="card position-absolute align-self-center p-4">
             <h5>Selecteer de rol die aan deze gebruiker moet worden toegewezen</h5>
             <select @bind="this.roleId" class="form-select mb-3">
-                @foreach (Auth0Role auth0Role in this.roles)
+                @foreach (Auth0RoleDTO auth0Role in this.roles)
                 {
                     <option value="@auth0Role.Id">@auth0Role.Name</option>
                 }
@@ -198,7 +196,7 @@
 @code {
     private string? searchText = null;
     private bool showSearchWarning = false;
-    PagedResponse<Auth0User>? response;
+    PagedResponseDTO<Auth0UserDTO>? response;
     private int currentPage = 1;
     private int cardsPerRow = 1;
     private int maxRows = 7;
@@ -216,7 +214,7 @@
     private string selectedUserId = "";
     private bool showSuccessToast = false;
     private double toastOpacity = 1.0;
-    private IEnumerable<Auth0Role> roles = new List<Auth0Role>();
+    private IEnumerable<Auth0RoleDTO> roles = new List<Auth0RoleDTO>();
     private bool isLoading = false;
 
     private bool showDeleteConfirmation = false;
@@ -241,7 +239,7 @@
         if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponse<Auth0User>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDTO<Auth0UserDTO>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
@@ -266,7 +264,8 @@
 
             UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
 
-            await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
+            await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
+            Console.WriteLine("UserManagement/users/{user.Id}/sitesUserManagement/users/{user.Id}/sites");
 
             CancelEditUser();
 
@@ -296,8 +295,8 @@
         debounceTimer.Start();
     }
 
-    private IEnumerable<List<Auth0User>> Rows =>
-        (response?.Items ?? Enumerable.Empty<Auth0User>())
+    private IEnumerable<List<Auth0UserDTO>> Rows =>
+        (response?.Items ?? Enumerable.Empty<Auth0UserDTO>())
             .Select((item, index) => new { item, index })
             .GroupBy(x => x.index / cardsPerRow)
             .Select(g => g.Select(x => x.item).ToList());
@@ -308,9 +307,9 @@
 
         try
         {
-            PagedResponse<PlantationSiteDTO>? response;
+            PagedResponseDTO<PlantationSiteDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<PagedResponse<PlantationSiteDTO>>("PlantationSite");
+            response = await this.client.GetFromJsonAsync<PagedResponseDTO<PlantationSiteDTO>>("PlantationSite");
 
             if (response != null)
             {
@@ -334,9 +333,9 @@
 
         try
         {
-            IEnumerable<Auth0Role>? response;
+            IEnumerable<Auth0RoleDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<Auth0Role>>("UserManagement/Roles");
+            response = await this.client.GetFromJsonAsync<IEnumerable<Auth0RoleDTO>>("UserManagement/Roles");
 
             if (response != null)
             {

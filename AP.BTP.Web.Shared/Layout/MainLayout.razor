@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using AP.BTP.Web.Shared.Components
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (isAuthenticated)
+{
+    <div class="page">
+        <main>
+            @if (user != null && (user.IsInRole("Admin") || user.IsInRole("Manager")))
+            {
+                <NavBar></NavBar>
+            }
+            <section class="body">
+                @Body
+            </section>
+        </main>
+    </div>
+}
+else
+{
+    @Body
+}
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+    private bool isAuthenticated;
+    private ClaimsPrincipal? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+}

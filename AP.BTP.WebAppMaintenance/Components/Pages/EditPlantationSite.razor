@@ -2,9 +2,7 @@
 @page "/admin/plantation-site/edit"
 @page "/admin/plantation-site/edit/{id:int}"
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.PlantationSite
-@using AP.BTP.Application.CQRS.Zone
-@using AP.BTP.Application.CQRS.Tree
+@using AP.BTP.Contracts.DTOs
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
 @inject NavigationManager Navigation
@@ -448,7 +446,7 @@
         if (zone == null) return;
 
         this.SelectedZone = zone;
-        this.OldZone = this.SelectedZone.Clone();
+        this.OldZone = this.SelectedZone.CloneZone();
         this.SelectedZone.TreeId = zone.TreeId;
     }
 

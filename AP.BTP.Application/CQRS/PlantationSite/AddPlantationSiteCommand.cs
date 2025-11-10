@@ -1,5 +1,6 @@
 
 using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
 using MediatR;

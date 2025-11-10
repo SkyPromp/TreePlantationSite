@@ -1,4 +1,4 @@
-﻿using AP.BTP.Application.CQRS;
+﻿using AP.BTP.Contracts.DTOs;
 using AP.BTP.Domain;
 
 namespace AP.BTP.Application.Interfaces

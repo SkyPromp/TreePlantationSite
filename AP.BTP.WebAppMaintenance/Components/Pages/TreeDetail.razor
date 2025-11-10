@@ -3,7 +3,7 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
-@using AP.BTP.Application.CQRS.Tree
+@using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 
@@ -52,7 +52,7 @@
             return;
         }
 
-        AP.BTP.Application.CQRS.Tree.TreeDTO? response = await this.client.GetFromJsonAsync<AP.BTP.Application.CQRS.Tree.TreeDTO>($"Tree/{id}");
+        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
 
         if (response != null)
         {

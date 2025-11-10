@@ -1,8 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
-using AP.BTP.WebApp.Auth0;
-using AP.BTP.WebApp.Authentication;
+using AP.BTP.Web.Authentication;
 using AP.BTP.WebApp.Components;
 using AP.BTP.WebApp.Extentions;
+using AP.BTP.Web.Shared.Components;
 
 namespace AP.BTP.WebApp
 {
@@ -73,7 +73,8 @@ namespace AP.BTP.WebApp
             app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+                .AddInteractiveServerRenderMode()
+                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);  ;
 
             app.Run();
         }

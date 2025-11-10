@@ -1,0 +1,83 @@
+@attribute [Authorize(Roles = "Admin, Manager")]
+@page "/admin/dashboard"
+@page "/manager/dashboard"
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+
+<div class="d-flex justify-content-center mt-5" style="font-size: 5vw">Welcome! 🌱</div>
+<div class="d-flex justify-content-center" style="font-size: 2vw">What would you like to do today?</div>
+
+<div class="d-flex justify-content-between" style="margin-top: 10vh">
+    @if(DashboardCards != null){
+        @foreach (DashboardCard card in DashboardCards)
+        {
+            <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 4vh; width: 30%;">
+                <CardBody Class="p-0 m-0">
+                    <CardTitle Style="font-weight: bold; margin-bottom: 2vh; font-size: 2.25vw;">@card.Title</CardTitle>
+                    <CardText Style="font-size:1vw; margin-bottom: 2vh;">@card.Description</CardText>
+                    <a href=@card.Url><Button Color="ButtonColor.Dark" Style="height: 5vh; width:100%">Go to</Button></a>
+                </CardBody>
+            </Card>
+        }
+    }
+</div>
+
+@code {
+    private bool isAuthenticated;
+    private ClaimsPrincipal? user;
+    private List<DashboardCard>? DashboardCards;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        if(user.IsInRole("Admin")) {
+            DashboardCards = new List<DashboardCard>
+            {
+                new DashboardCard
+                {
+                    Title = "Manage users",
+                    Description = "Approve or disapprove user accounts, review user activity, and manage permissions.",
+                    Url = "/admin/users"
+                },
+                new DashboardCard
+                {
+                    Title = "Manage sites",
+                    Description = "Add, update, delete, or search plantation sites. Keep site information up-to-date.",
+                    Url = "/admin/plantation-site"
+                },
+                new DashboardCard
+                {
+                    Title = "Manage trees",
+                    Description = "Add, update, delete, or search trees. Monitor tree health and track growth across your sites.",
+                    Url = "/admin/tree"
+                }
+            };
+        } else if (user.IsInRole("Manager")) {
+            DashboardCards = new List<DashboardCard>
+            {
+                new DashboardCard
+                {
+                    Title = "Beheer de planning",
+                    Description = "Bekijk de medewerkers en maak hun planning.",
+                    Url = "/manager/planning"
+                },
+                new DashboardCard
+                {
+                    Title = "Bekijk de bomen",
+                    Description = "bekijk de bomen en hun details zoals de qr code, foto's en beschrijving.",
+                    Url = "/manager/tree"
+                },
+            };
+        }
+    }
+    private class DashboardCard
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+    }
+}

@@ -4,6 +4,7 @@ WORKDIR /src
 
 # Copy project files for restore
 COPY ["AP.BTP.sln", "./"]
+COPY ["AP.BTP.Contracts/AP.BTP.Contracts.csproj", "AP.BTP.Contracts/"]
 COPY ["AP.BTP.Domain/AP.BTP.Domain.csproj", "AP.BTP.Domain/"]
 COPY ["AP.BTP.Application/AP.BTP.Application.csproj", "AP.BTP.Application/"]
 COPY ["AP.BTP.Infrastructure/AP.BTP.Infrastructure.csproj", "AP.BTP.Infrastructure/"]
@@ -13,6 +14,7 @@ COPY ["AP.BTP.WebAPI/AP.BTP.WebAPI.csproj", "AP.BTP.WebAPI/"]
 RUN dotnet restore "AP.BTP.WebAPI/AP.BTP.WebAPI.csproj"
 
 # Copy rest and build
+COPY AP.BTP.Contracts/ AP.BTP.Contracts/
 COPY AP.BTP.Domain/ AP.BTP.Domain/
 COPY AP.BTP.Application/ AP.BTP.Application/
 COPY AP.BTP.Infrastructure/ AP.BTP.Infrastructure/
