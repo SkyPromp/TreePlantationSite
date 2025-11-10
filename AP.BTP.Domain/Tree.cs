@@ -8,6 +8,7 @@ namespace AP.BTP.Domain
         public int Id { get; set; }
         public required String Species { get; set; }
         [JsonIgnore] public IEnumerable<Zone>? Zones { get; set; }
+        public String? MaintenancePlan { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

@@ -22,7 +22,15 @@ namespace AP.BTP.Infrastructure.Repositories
 
         public void Delete(User item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
+        }
+
+        public async Task Delete(int id)
+        {
+            User? user = await this.dbSet.FindAsync(id);
+
+            if (user != null) Delete(user);
         }
 
         public Task<IEnumerable<User>> GetAll()
@@ -30,9 +38,57 @@ namespace AP.BTP.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
+        {
+            IQueryable<User> query = dbSet
+                .Include(u => u.PlantationSites)
+                .Where(u => !u.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u =>
+                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<User> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search)
+        {
+            IQueryable<User> query = dbSet
+                .Include(u => u.PlantationSites)
+                .Where(u => !u.IsDeleted && u.PlantationSites.Any())
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u =>
+                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<User> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<User?> GetById(int id)
         {
-            User? user = await this.dbSet.FindAsync(id);
+            User? user = await this.dbSet.Include(u => u.PlantationSites).FirstOrDefaultAsync(u => u.Id == id);
 
             return (user?.IsDeleted ?? true) ? null : user;
         }

@@ -8,23 +8,14 @@
 <div class="container">
     <div class="row mb-2">
         <div class="col-4">
-            <div class="card rounded-4">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-11">
-                            <input type="text" @bind="SearchString" placeholder="Search" class="form-control border-0"/>
-                        </div>
-                        <div class="col-1 d-flex justify-content-center">
-                            <p @onclick="RemoveSearchString" class="my-1">X</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-11 input-group">
+                <input type="text" @bind="SearchStringBind" @oninput="(e) => SearchTrees(e.Value?.ToString() ?? String.Empty)" placeholder="Search" class="form-control border-0" />
+                <button @onclick="RemoveSearchString" class="form-control border-0" style="flex: 0 0 auto; width: 3rem">X</button>
             </div>
         </div>
-
         <div class="col">
             <NavLink href="/admin/tree/edit">
-                <button class="btn btn-secondary">+ Add new</button>
+                <button class="btn btn-secondary">+ Toevoegen</button>
             </NavLink>
         </div>
     </div>
@@ -37,7 +28,7 @@
                     <div class="row align-items-center">
                         <div class="col-10">
                             <a href="@($"/admin/tree/edit/{tree.Id}")" class="btn btn-secondary w-100">
-                                Edit
+                                Bewerk
                             </a>
                         </div>
                         <div class="col-1">
@@ -48,30 +39,31 @@
             </div>
         }
     </div>
-    <div class="row d-flex justify-content-center">
-        @for(int i = 1; i <= @TotalPages; i++)
-        {
-            <div class="col">
-                <a href="@($"/admin/tree?page={i}")" class="btn btn-secondary px-3">
-                    @i
-                </a>
-            </div>
-        }
-    </div>
+
+     <Pagination Class="justify-content-center"
+                    Style="margin-top: 2vh"
+                    ActivePageNumber="@Page"
+                    TotalPages="@TotalPages"
+                    PageChanged="LoadTrees"
+                    FirstLinkIcon="IconName.ChevronDoubleLeft"
+                    PreviousLinkIcon="IconName.ChevronLeft"
+                    NextLinkIcon="IconName.ChevronRight"
+                    LastLinkIcon="IconName.ChevronDoubleRight">
+        </Pagination>
 </div>
 
 @if (this.ShowConfirm)
 {
     <div class="d-flex justify-content-center">
-        <div class="card position-absolute align-self-center p-4">
-            <h1>Confirm</h1>
-            <p>Do you wish to confirm?</p>
+        <div class="card position-absolute align-self-center p-4 z-3">
+            <h1>Bevestig</h1>
+            <p>Wenst u om te bevestigen?</p>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = false" class="btn btn-warning">Cancel</button>
+                    <button @onclick="() => this.ShowConfirm = false" class="btn btn-warning">Annuleer</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsConfirm = true" class="btn btn-secondary">Confirm</button>
+                    <button @onclick="() => this.DeleteTree(this.selectedTreeId)" class="btn btn-secondary">Bevestig</button>
                 </div>
             </div>
         </div>
@@ -84,40 +76,27 @@
 }
 
 @code {
+    private string SearchStringBind = "";
     private string SearchString = "";
     private IEnumerable<TreeDTO> Trees;
     private string errorMessage = "";
     private int PageSize = 6;
     private int Page = 1;
     private int TotalPages = 1;
-    private int selectedTreeId;
-    private bool showConfirm;
-    private bool ShowConfirm {
-        get { return this.showConfirm; }
-        set {
-            this.IsConfirm = false;
-            this.showConfirm = value;
-        }
-    }
-    private bool isConfirm;
-    private bool IsConfirm
-    {
-        get { return this.isConfirm; }
-        set {
-            this.isConfirm = value;
-            this.showConfirm = false;
-            if(value) this.DeleteTree(selectedTreeId);
-        }
-    }
+    private int? selectedTreeId;
+    private bool ShowConfirm;
+
     private HttpClient? client;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+
         client = HttpClientFactory.CreateClient("BTPApi");
         await LoadTrees();
     }
 
-    private async Task LoadTrees()
+    private async Task LoadTrees(int page = -1)
     {
         if (this.client == null) return;
 
@@ -125,13 +104,17 @@
         {
             Paged<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={Page}&pageSize={PageSize}&searchString={SearchString}");
+            if (page == -1) page = this.Page;
+
+            response = await this.client.GetFromJsonAsync<Paged<TreeDTO>>($"Tree?page={page}&pageSize={PageSize}&search={SearchString}");
 
             if (response != null)
             {
                 this.errorMessage = "";
                 this.Trees = response.Data;
+                this.Page = page;
                 this.TotalPages = response.PageCount;
+                StateHasChanged();
             } else
                 this.errorMessage = "No content found!";
         }
@@ -144,16 +127,23 @@
     private void ConfirmDeleteTree(int id)
     {
         this.selectedTreeId = id;
-        this.showConfirm = true;
+        this.ShowConfirm = true;
     }
 
-    private async void DeleteTree(int id)
+    private async void DeleteTree(int? id)
     {
-        HttpResponseMessage? response;
+        if (id == null)
+        {
+            this.errorMessage = "Tree id is null";
+            this.ShowConfirm = false;
+            StateHasChanged();
+
+            return;
+        }
 
         if (this.client != null)
         {
-            response = await this.client.DeleteAsync($"Tree?id={id}");
+            HttpResponseMessage? response = await this.client.DeleteAsync($"Tree?id={id}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -164,12 +154,28 @@
             }
         }
 
+        this.ShowConfirm = false;
+        this.selectedTreeId = null;
         await this.LoadTrees();
         StateHasChanged();
     }
 
-    private void RemoveSearchString()
+    private async Task RemoveSearchString()
     {
         this.SearchString = "";
+        this.SearchStringBind = "";
+
+        await this.LoadTrees();
+        StateHasChanged();
+    }
+
+    private async Task SearchTrees(string searchString)
+    {
+        this.SearchString = searchString;
+
+        if (this.SearchString == null) return;
+
+        this.Page = 1;
+        await this.LoadTrees();
     }
 }

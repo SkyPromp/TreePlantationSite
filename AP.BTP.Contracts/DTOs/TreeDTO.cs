@@ -4,5 +4,6 @@
     {
         public int Id { get; set; }
         public required string Species { get; set; }
+        public string? MaintenancePlan { get; set; }
     }
 }

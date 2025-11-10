@@ -17,15 +17,20 @@ namespace AP.BTP.Application.CQRS.User
         public LinkUserToPlantationSitesCommandValidator(IUnitOfWork uow)
         {
             RuleFor(x => x.UserId)
-                .MustAsync(async (userId, cancellation) => {
+                .MustAsync(async (userId, cancellation) =>
+                {
                     Domain.User? user = await uow.UserRepository.GetById(userId);
                     return user != null;
                 })
                 .WithMessage("User with the given Id does not exist.");
 
             RuleFor(x => x.PlantationSiteIds)
-              .Must(list => list.Count <= 2)
-              .WithMessage("Users can only have a maximum of 2 plantation sites.");
+                .Must(ids => ids.Count <= 2)
+                .WithMessage("Users can only have a maximum of 2 plantation sites.");
+
+            RuleFor(x => x.PlantationSiteIds)
+                .Must(ids => ids.Distinct().Count() == ids.Count)
+                .WithMessage("The 2 plantation sites cannot have the same id");
 
             RuleForEach(command => command.PlantationSiteIds)
                 .MustAsync(async (plantationSiteId, cancellation) =>

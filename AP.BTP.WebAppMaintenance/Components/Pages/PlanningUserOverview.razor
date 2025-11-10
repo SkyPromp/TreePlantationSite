@@ -1,0 +1,157 @@
+﻿@attribute [Authorize(Roles = "Admin, Manager")]
+@page "/manager/planning"
+@rendermode InteractiveServer
+@using System.Drawing
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using AP.BTP.Contracts.DTOs
+@inject IHttpClientFactory HttpClientFactory
+<PageTitle>Planning gebruikersselectie</PageTitle>
+
+<h3 class="text-center">Planning gebruikersselectie</h3>
+
+<div class="d-flex justify-content-end px-3">
+    <div class="d-flex flex-column align-items-end">
+        <TextInput @bind-Value="@searchText"
+                   @oninput="OnSearchChanged"
+                   TextAlignment="Alignment.Start"
+                   Placeholder="Search e-mail"
+                   class="mb-3"
+                   style="width: 15vw; border-width: 2px;" />
+    </div>
+</div>
+<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
+    @if (response?.Items != null)
+    {
+        <div class="d-grid p-1 fw-bold"
+             style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
+            <div>Naam</div>
+            <div>E-mail</div>
+            <div>Gsm-number</div>
+            <div>plantagelocaties</div>
+            <div class="text-center">Beheer</div>
+        </div>
+        <div style="overflow-x:hidden; max-height: 55vh;">
+            @foreach (List<UserDTO> row in Rows)
+            {
+                <div class="row">
+                    @foreach (UserDTO item in row)
+                    {
+                        <div class="p-2">
+                            <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
+                                <CardBody Class="p-0 d-grid align-items-center"
+                                          Style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem;">
+                                    <CardText class="m-0">@item.Name</CardText>
+                                    <CardText class="m-0">
+                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                                            @item.Email
+                                        </a>
+                                    </CardText>
+                                    <CardText class="m-0">123456456789</CardText>
+                                    @if (item.PlantationSites != null)
+                                    {
+                                        <CardText class="m-0">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
+                                    }
+                                    else
+                                    {
+                                        <CardText class="m-0">n.v.t.</CardText>
+                                    }
+                                    <div class="p-1">
+                                        <Button title="Selecteer gebruiker"
+                                                Class="btn btn-dark btn-sm px-3">
+                                                @* @onclick="() => OnEditUser(item)"> *@
+                                            Selecteer
+                                        </Button>
+                                    </div>
+                                </CardBody>
+
+                            </Card>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center mt-4">Geen resultaten gevonden.</p>
+    }
+</div>
+
+<Pagination Class="justify-content-center"
+            Style="margin-top: 10px"
+            ActivePageNumber="@currentPage"
+            TotalPages="@totalPages"
+            PageChanged="LoadPage"
+            FirstLinkIcon="IconName.ChevronDoubleLeft"
+            PreviousLinkIcon="IconName.ChevronLeft"
+            NextLinkIcon="IconName.ChevronRight"
+            LastLinkIcon="IconName.ChevronDoubleRight">
+</Pagination>
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    private string? searchText = null;
+    PagedResponseDTO<UserDTO>? response;
+    private int currentPage = 1;
+    private int cardsPerRow = 1;
+    private int maxRows = 7;
+    private int pageSize => cardsPerRow * maxRows;
+    private int totalPages => response?.TotalPages ?? 1;
+    private System.Timers.Timer? debounceTimer;
+    private HttpClient client;
+    private string errorMessage = "";
+    private int requestsCount = 0;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            client = HttpClientFactory.CreateClient("BTPApi");
+            await LoadPage(1);
+        }
+    }
+
+    private async Task LoadPage(int page)
+    {
+        currentPage = page;
+
+        string url = $"UserManagement/users/operators?pageNr={page}&pageSize={pageSize}";
+        if (!string.IsNullOrWhiteSpace(searchText))
+            url += $"&search={Uri.EscapeDataString(searchText)}";
+
+        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
+        StateHasChanged();
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString()?.Trim();
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadPage(1);
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
+    }
+
+    private IEnumerable<List<UserDTO>> Rows =>
+        (response?.Items ?? Enumerable.Empty<UserDTO>())
+            .Select((item, index) => new { item, index })
+            .GroupBy(x => x.index / cardsPerRow)
+            .Select(g => g.Select(x => x.item).ToList());
+}

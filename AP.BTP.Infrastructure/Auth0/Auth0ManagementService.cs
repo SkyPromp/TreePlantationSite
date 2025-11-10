@@ -51,7 +51,7 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get Auth0 management token: {response.StatusCode}");
             }
 
-            JsonDocument json = JsonDocument.Parse(response.Content);
+            JsonDocument json = JsonDocument.Parse(response.Content!);
             string token = json.RootElement.GetProperty("access_token").GetString()!;
 
             _cachedToken = token;
@@ -158,6 +158,52 @@ namespace AP.BTP.Infrastructure.Auth0
             List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0RoleDTO>>(response.Content!, 
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
             return roles ?? new List<Auth0RoleDTO>();
+        }
+
+        public async Task<Auth0UserDTO?> GetUserByIdAsync(string userId)
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Get;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (!response.IsSuccessful)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                throw new InvalidOperationException($"Failed to get user: {response.StatusCode} - {response.Content}");
+            }
+
+            Auth0UserDTO? user = JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return user;
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Delete;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                throw new InvalidOperationException($"Failed to delete user: {response.StatusCode} - {response.Content}");
+            }
+            return;
         }
     }
 }

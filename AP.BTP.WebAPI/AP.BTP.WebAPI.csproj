@@ -21,4 +21,8 @@
     <ProjectReference Include="..\AP.BTP.Infrastructure\AP.BTP.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

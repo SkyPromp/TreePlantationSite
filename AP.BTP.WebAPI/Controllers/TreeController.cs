@@ -24,10 +24,11 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTrees([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? searchString = null)
+        public async Task<IActionResult> GetTrees([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? search = null)
         {
-            if(page != null && pageSize != null) return Ok(await mediator.Send(new GetTreeQuery() { Page=page.Value, PageSize=pageSize.Value, SearchString=searchString }));
-            return Ok(await mediator.Send(new GetAllTreeQuery() { }));  // Make this for admins only
+            if(page != null && pageSize != null) return Ok(await mediator.Send(new GetTreeQuery() { Page=page.Value, PageSize=pageSize.Value, SearchString=search }));
+
+            return Ok(await mediator.Send(new GetAllTreeQuery() { }));
         }
         
         [Authorize(Roles = "Admin")]
@@ -48,6 +49,8 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTree(int id)
         {
+            Console.WriteLine($"Delete tree controller, delete: {id}");
+
             await mediator.Send(new DeleteTreeCommand() { Id = id });
 
             return NoContent();

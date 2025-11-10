@@ -1,0 +1,97 @@
+﻿@attribute [Authorize(Roles = "Manager")]
+@page "/manager/tree/{Id:int?}"
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@using AP.BTP.Contracts.DTOs
+@using Microsoft.AspNetCore.Authorization
+
+
+@if(!string.IsNullOrWhiteSpace(this.Tree?.Species))
+{
+    <h3>@($"{Tree.Species} overzicht")</h3>
+} else
+{
+    <h3>"Boom niet gevonden"</h3>
+}
+
+@if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
+{
+    <PdfViewer Class="mb-3"
+               Url="@this.maintenancePlan"
+               OnDocumentLoaded="OnDocumentLoaded"
+           OnPageChanged="OnPageChanged" />
+}
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    private string errorMessage = "";
+    private TreeDTO? Tree;
+    string maintenancePlan = "";
+
+    HttpClient? client;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = HttpClientFactory.CreateClient("BTPApi");
+
+        if (Id.HasValue) await LoadTree(Id.Value);
+    }
+
+    private async Task LoadTree(int id)
+    {
+        if (this.client == null)
+        {
+            this.errorMessage = "No httpclient found.";
+
+            return;
+        }
+
+        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
+
+        if (response != null)
+        {
+            this.Tree = response;
+
+            if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
+            {
+                await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
+            }
+
+        } else
+            this.errorMessage = "Couldn't load tree";
+
+        StateHasChanged();
+    }
+
+    private async Task LoadMaitenancePlan(string filename)
+    {
+        if (client == null || string.IsNullOrWhiteSpace(filename)) return;
+
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{filename}");
+            response.EnsureSuccessStatusCode();
+
+            byte[] pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+
+            string b64Pdf = Convert.ToBase64String(pdfBytes);
+            this.maintenancePlan = $"data:{contentType};base64,{b64Pdf}";
+        } catch
+        {
+            this.maintenancePlan = "";
+            this.errorMessage = "Something went wrong while loading the image";
+        }
+
+    }
+
+    private void OnDocumentLoaded() { }
+    private void OnPageChanged() { }
+}
