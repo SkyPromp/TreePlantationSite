@@ -206,7 +206,6 @@
         PostalCode = 0,
         Size = 0.0,
         GroundPlan = "",
-        IsDeleted = false,
         Zones = new List<ZoneDTO>()
     };
 
@@ -342,9 +341,9 @@
 
         try
         {
-            IEnumerable<ZoneDTO>? response;
+            ICollection<ZoneDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
+            response = await this.client.GetFromJsonAsync<ICollection<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
 
             if (response != null)
             {
@@ -497,7 +496,7 @@
         if (!this.IsEditZone)
         {
             this.SelectedZone.Id = this.tempAddedZoneIndex--;
-            this.plantationSite.Zones = this.plantationSite.Zones.Append(this.SelectedZone);
+            this.plantationSite.Zones.Add(this.SelectedZone);
         }
 
         this.OldZone = null;

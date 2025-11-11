@@ -14,7 +14,7 @@ namespace AP.BTP.Application.Interfaces
         /// </summary>
         /// <param name="plantationSiteId">The unique identifier of the plantation site.</param>
         /// <returns>A task that returns an enumerable of <see cref="Zone"/> entities.</returns>
-        Task<IEnumerable<Zone>> GetAllByPlantationSiteId(int plantationSiteId);
+        Task<ICollection<Zone>> GetAllByPlantationSiteId(int plantationSiteId);
 
         /// <summary>
         /// Retrieves a paginated list of <see cref="Zone"/> entities.
@@ -22,7 +22,7 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <returns>A task that returns an enumerable of <see cref="Zone"/> entities for the requested page.</returns>
-        Task<IEnumerable<Zone>> GetAll(int pageNr, int pageSize);
+        Task<ICollection<Zone>> GetAll(int pageNr, int pageSize);
 
         /// <summary>
         /// Soft deletes a <see cref="Zone"/> by its unique identifier.

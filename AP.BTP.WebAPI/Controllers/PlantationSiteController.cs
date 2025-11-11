@@ -66,7 +66,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
         {
-            IEnumerable<ZoneDTO>? zones = plantationSiteDTO.Zones;
+            ICollection<ZoneDTO>? zones = plantationSiteDTO.Zones;
             plantationSiteDTO.Zones = null; // avoid duplicated instances in database
 
             PlantationSiteDTO newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
@@ -103,13 +103,21 @@ namespace AP.BTP.WebAPI.Controllers
 
             PlantationSiteDTO newPlantationSite = await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO });
 
-            foreach (ZoneDTO zone in zones ?? []) 
+            foreach (ZoneDTO zone in zones ?? [])
             {
-                if(zone.Id == 0) await mediator.Send(new AddZoneCommand() { Zone = zone });
+                if (zone.Id == 0) await mediator.Send(new AddZoneCommand() { Zone = zone });
                 else await mediator.Send(new UpdateZoneCommand() { Zone = zone });
             }
 
             return Ok(newPlantationSite);
-        }        
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePlantationSite(int id)
+        {
+            await mediator.Send(new DeletePlantationSiteCommand() { Id = id });
+            return NoContent();
+        }     
     }
 }

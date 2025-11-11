@@ -66,10 +66,6 @@ namespace AP.BTP.Application.CQRS.PlantationSite
             RuleFor(command => command.PlantationSite.GroundPlan)
                 .NotEmpty()
                 .WithMessage("Groundplan cannot be empty.");
-
-            RuleFor(command => command.PlantationSite.IsDeleted)
-                .Equal(false)
-                .WithMessage("Plantation site cannot be created as 'deleted'."); 
         }
     }
 

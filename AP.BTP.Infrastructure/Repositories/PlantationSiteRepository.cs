@@ -39,7 +39,8 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
     /// <param name="item">The <see cref="PlantationSite"/> to delete.</param>
     public void Delete(PlantationSite item)
     {
-        throw new NotImplementedException();
+        item.IsDeleted = true;
+        Update(item);
     }
 
     /// <summary>
@@ -87,11 +88,11 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
     /// <param name="id">The ID of the <see cref="PlantationSite"/>.</param>
     /// <returns>The <see cref="PlantationSite"/> with the specified ID.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
-    public async Task<PlantationSite> GetById(int id) // TODO read warning
+    public async Task<PlantationSite?> GetById(int id)
     {
         PlantationSite? site = await dbSet
-            .Where(ps => !ps.IsDeleted)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .Include(p => p.Zones)
+            .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
         if (site == null) throw new KeyNotFoundException($"PlantationSite with ID {id} not found.");
 
