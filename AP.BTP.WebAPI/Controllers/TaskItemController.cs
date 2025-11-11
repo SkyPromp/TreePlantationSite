@@ -33,7 +33,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The ID of the task item to delete.</param>
         /// <returns>No content on successful deletion.</returns>
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpDelete]
         public async Task<IActionResult> DeleteTaskById(int id)
         {
