@@ -24,13 +24,20 @@ namespace AP.BTP.Infrastructure.Context
         /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.Entity<Tree>();
+
+            modelBuilder.Entity<PlantationSite>()
+                .HasMany(p => p.Zones)
+                .WithOne(z => z.PlantationSite)
+                .HasForeignKey(z => z.PlantationSiteId);
+            
             modelBuilder.Entity<PlantationSite>().Seed();
-            modelBuilder.Entity<Zone>();
             modelBuilder.Entity<User>().Seed();
             modelBuilder.Entity<TaskList>().Seed();
             modelBuilder.Entity<TaskItem>().Seed();
+            
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 1 },
                 new { PlantationSitesId = 2, UsersId = 1 }

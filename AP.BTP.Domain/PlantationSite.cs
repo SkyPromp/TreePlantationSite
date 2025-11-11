@@ -58,7 +58,7 @@ namespace AP.BTP.Domain
         /// Gets or sets the zones associated with the plantation site.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public IEnumerable<Zone>? Zones { get; set; }
+        [JsonIgnore] public ICollection<Zone> Zones { get; set; } = new List<Zone>();
 
         /// <summary>
         /// Gets or sets the users associated with the plantation site.

@@ -78,7 +78,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// </summary>
         /// <param name="plantationSiteId">The ID of the plantation site to filter by.</param>
         /// <returns>A collection of <see cref="Zone"/> entities associated with the plantation site.</returns>
-        public async Task<IEnumerable<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
+        public async Task<ICollection<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
         {
             return await this.dbSet.Where(zone => !zone.IsDeleted && zone.PlantationSite.Id == plantationSiteId).ToListAsync();
         }
@@ -98,7 +98,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageNr">The page number (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <returns>A paginated collection of non-deleted <see cref="Zone"/> entities.</returns>
-        public async Task<IEnumerable<Zone>> GetAll(int pageNr, int pageSize)
+        public async Task<ICollection<Zone>> GetAll(int pageNr, int pageSize)
         {
             return await this.dbSet.Where(zone => !zone.IsDeleted).Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync();
         }

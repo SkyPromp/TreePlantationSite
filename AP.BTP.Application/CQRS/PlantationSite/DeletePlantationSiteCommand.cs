@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using AP.BTP.Application.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -31,14 +30,15 @@ namespace AP.BTP.Application.CQRS.PlantationSite
             Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(request.Id);
 
             if(plantationSite != null)
-            {
-                if (plantationSite.Zones != null)
+            { 
+                Console.WriteLine("Deleting plantation site");
+
+                foreach (Domain.Zone zone in plantationSite.Zones)
                 {
-                    foreach (Domain.Zone zone in plantationSite.Zones)
-                    {
-                        uow.ZoneRepository.Delete(zone);
-                    }
+                    Console.WriteLine("Deleting plantation zones");
+                    await uow.ZoneRepository.Delete(zone.Id);
                 }
+                
                 uow.PlantationSiteRepository.Delete(plantationSite);     
             }
 

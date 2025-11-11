@@ -66,11 +66,6 @@ namespace AP.BTP.Contracts.DTOs
         /// <summary>
         /// The collection of zones associated with the plantation site.
         /// </summary>
-        public IEnumerable<ZoneDTO>? Zones { get; set; }
-
-        /// <summary>
-        /// Indicates whether the plantation site has been marked as deleted.
-        /// </summary>
-        public bool IsDeleted { get; set; } = false;  // TODO: Delete the frontend should not see this flag
+        public ICollection<ZoneDTO>? Zones { get; set; }
     }
 }

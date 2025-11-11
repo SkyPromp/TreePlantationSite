@@ -23,7 +23,7 @@ namespace AP.BTP.Domain
         /// Gets or sets the collection of zones where this tree is planted.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public IEnumerable<Zone>? Zones { get; set; }
+        [JsonIgnore] public ICollection<Zone>? Zones { get; set; }
 
         /// <summary>
         /// Gets or sets the maintenance plan associated with the tree, if any.
