@@ -29,7 +29,7 @@
                                 <CardText Style="margin-bottom: 3vh;">@item.Country</CardText>
                                 <div class="card-buttons d-flex justify-content-between">
                                     <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Edit</Button>
-                                    <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
+                                    <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.showDeleteConfirmation = true; selectedPlantationSite = item; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
                                 </div>
                             </CardBody>
                             
@@ -57,8 +57,49 @@
     </Pagination>
 </div>
 
+@if (this.showDeleteConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
+            @if (isLoading)
+            {
+
+                <div class="spinner-border align-self-center" role="status">
+                    <span class="visually-hidden">Laden...</span>
+                </div>
+            }
+            else
+            {
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelDeletePlantationSite" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="DeletePlantationSite" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
 
 @code {
+    /// <summary>
+    /// Indicates whether an API call or operation is in progress.
+    /// </summary>
+    private bool isLoading = false;
+
+    /// <summary>
+    /// Indicates whether a delete confirmation modal should be displayed.
+    /// </summary>
+    private bool showDeleteConfirmation = false;
+
+    /// <summary>
+    /// The currently selected plantation site being deleted.
+    /// </summary>
+    private PlantationSiteDTO? selectedPlantationSite;
+
     /// <summary>
     /// Current search text entered by the user for filtering plantation sites.
     /// </summary>
@@ -179,4 +220,41 @@
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
+
+    /// <summary>
+    /// Deletes the selected plantation site from the internal database.
+    /// </summary>
+    private async Task DeletePlantationSite()
+    {
+        isLoading = true;
+        if (selectedPlantationSite == null)
+            return;
+
+        try
+        {   
+            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+            HttpResponseMessage response = await client.DeleteAsync($"PlantationSite/{selectedPlantationSite.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadPage(currentPage);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fout bij het verwijderen van gebruiker: {ex.Message}");
+        }
+        CancelDeletePlantationSite();
+        isLoading = false;
+    }
+
+    /// <summary>
+    /// Cancels the plantation site deletion process and resets related UI state.
+    /// </summary>
+    private void CancelDeletePlantationSite()
+    {
+        this.showDeleteConfirmation = false;
+        this.selectedPlantationSite = null;
+    }        
 }

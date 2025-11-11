@@ -112,6 +112,11 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(newPlantationSite);
         }
 
+        /// <summary>
+        /// Deletes a specific plantation site and all its associated zones.
+        /// </summary>
+        /// <param name="id">The ID of the plantation site to delete.</param>
+        /// <returns>No content on successful deletion.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlantationSite(int id)

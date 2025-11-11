@@ -13,7 +13,7 @@ namespace AP.BTP.Application.Interfaces
         /// Retrieves all <see cref="Zone"/> entities associated with a specific plantation site.
         /// </summary>
         /// <param name="plantationSiteId">The unique identifier of the plantation site.</param>
-        /// <returns>A task that returns an enumerable of <see cref="Zone"/> entities.</returns>
+        /// <returns>A task that returns a collection of <see cref="Zone"/> entities.</returns>
         Task<ICollection<Zone>> GetAllByPlantationSiteId(int plantationSiteId);
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace AP.BTP.Application.Interfaces
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
-        /// <returns>A task that returns an enumerable of <see cref="Zone"/> entities for the requested page.</returns>
+        /// <returns>A task that returns a collection of <see cref="Zone"/> entities for the requested page.</returns>
         Task<ICollection<Zone>> GetAll(int pageNr, int pageSize);
 
         /// <summary>
