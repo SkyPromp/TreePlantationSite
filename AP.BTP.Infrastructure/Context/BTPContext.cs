@@ -5,12 +5,23 @@ using AP.BTP.Infrastructure.Seeding;
 
 namespace AP.BTP.Infrastructure.Context
 {
+    /// <summary>
+    /// Represents the Entity Framework Core database context for the BTP application.
+    /// </summary>
     public class BTPContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BTPContext"/> class using the specified options.
+        /// </summary>
+        /// <param name="options">The options to configure the database context.</param>
         public BTPContext(DbContextOptions<BTPContext> options) : base(options)
         {
         }
 
+        /// <summary>
+        /// Configures the entity mappings and seeds initial data into the database.
+        /// </summary>
+        /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

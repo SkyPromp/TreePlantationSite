@@ -29,6 +29,14 @@
     [SupplyParameterFromQuery(Name = "description")]
     public string? Message { get; set; }
 
+    /// <summary>
+    /// Initializes the component and ensures that the <see cref="Message"/> property has a default value.
+    /// </summary>
+    /// <remarks>
+    /// If <see cref="Message"/> is <c>null</c>, empty, or consists only of white-space characters,
+    /// it is set to the default message: "You do not have access to this application."
+    /// This method is called synchronously when the component is initialized.
+    /// </remarks>
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(Message))

@@ -96,19 +96,67 @@
 }
 
 @code {
+    /// <summary>
+    /// The current search text entered by the user. Used for filtering operators.
+    /// </summary>
     private string? searchText = null;
-    PagedResponseDTO<UserDTO>? response;
+
+    /// <summary>
+    /// Holds the paged response containing operator users from the API.
+    /// </summary>
+    PagedResponseDTO<UserDTO>? response;  // TODO why is this here? shouldn't be global or has a bad name
+
+    /// <summary>
+    /// The current page number being displayed.
+    /// </summary>
     private int currentPage = 1;
+
+    /// <summary>
+    /// Number of cards to display per row in the UI.
+    /// </summary>
     private int cardsPerRow = 1;
+
+    /// <summary>
+    /// Maximum number of rows to display per page.
+    /// </summary>
     private int maxRows = 7;
+
+    /// <summary>
+    /// Number of users to display per page (calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>).
+    /// </summary>
     private int pageSize => cardsPerRow * maxRows;
+
+    /// <summary>
+    /// Total number of pages available based on the API response.
+    /// Defaults to 1 if no response is loaded.
+    /// </summary>
     private int totalPages => response?.TotalPages ?? 1;
+
+    /// <summary>
+    /// Timer used to debounce the search input, to avoid excessive API calls while typing.
+    /// </summary>
     private System.Timers.Timer? debounceTimer;
-    private HttpClient client;
+
+    /// <summary>
+    /// HttpClient used to call the backend API.
+    /// </summary>
+    private HttpClient client;  // TODO should be nullable and checks to see if it's null
+
+    /// <summary>
+    /// Stores any error messages encountered during API calls.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// Tracks the number of API requests made (optional, for debugging or monitoring purposes).
+    /// </summary>
     private int requestsCount = 0;
 
-
+    /// <summary>
+    /// Lifecycle method called after the component has rendered.
+    /// Initializes the HttpClient and loads the first page of operators on first render.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first render of the component.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -118,6 +166,11 @@
         }
     }
 
+    /// <summary>
+    /// Loads a specific page of operator users from the API, optionally filtered by <see cref="searchText"/>.
+    /// Updates <see cref="response"/> and triggers UI refresh.
+    /// </summary>
+    /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
     {
         currentPage = page;
@@ -130,6 +183,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles changes in the search input field. Debounces API calls by 300ms.
+    /// </summary>
+    /// <param name="e">The change event containing the new search text.</param>
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
@@ -150,9 +207,13 @@
         debounceTimer.Start();
     }
 
+    /// <summary>
+    /// Groups the operator users into rows for display based on <see cref="cardsPerRow"/>.
+    /// Each row is represented as a list of <see cref="UserDTO"/>.
+    /// </summary>
     private IEnumerable<List<UserDTO>> Rows =>
-        (response?.Items ?? Enumerable.Empty<UserDTO>())
-            .Select((item, index) => new { item, index })
-            .GroupBy(x => x.index / cardsPerRow)
-            .Select(g => g.Select(x => x.item).ToList());
+    (response?.Items ?? Enumerable.Empty<UserDTO>())
+        .Select((item, index) => new { item, index })
+        .GroupBy(x => x.index / cardsPerRow)
+        .Select(g => g.Select(x => x.item).ToList());
 }

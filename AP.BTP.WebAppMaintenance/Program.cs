@@ -7,8 +7,28 @@ using AP.BTP.Web.Shared.Components;
 
 namespace AP.BTP.WebAppMaintenance
 {
+    /// <summary>
+    /// Entry point and startup configuration for the Blazor Server application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main entry point of the application. Configures and runs the web application host.
+        /// </summary>
+        /// <param name="args">Command-line arguments passed to the application.</param>
+        /// <remarks>
+        /// This method performs the following steps:
+        /// <list type="number">
+        /// <item><description>Builds the <see cref="WebApplication"/> host using <see cref="WebApplication.CreateBuilder"/>.</description></item>
+        /// <item><description>Registers services such as Razor Components, Blazor Bootstrap, and HTTP clients.</description></item>
+        /// <item><description>Configures an HTTP client named <c>BTPApi</c> for communicating with the backend API, 
+        /// optionally trusting a custom SSL certificate defined via the <c>API_CERT_PATH</c> configuration setting.</description></item>
+        /// <item><description>Adds Auth0 authentication and configures JWT role claim mapping.</description></item>
+        /// <item><description>Sets up middleware for authentication, authorization, static file handling, and error management.</description></item>
+        /// <item><description>Applies a custom middleware that redirects unauthenticated users to the <c>/welcome</c> page.</description></item>
+        /// <item><description>Maps and runs the Blazor components that define the application UI.</description></item>
+        /// </list>
+        /// </remarks>
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

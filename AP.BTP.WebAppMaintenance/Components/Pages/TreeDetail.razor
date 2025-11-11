@@ -20,7 +20,7 @@
     <PdfViewer Class="mb-3"
                Url="@this.maintenancePlan"
                OnDocumentLoaded="OnDocumentLoaded"
-           OnPageChanged="OnPageChanged" />
+               OnPageChanged="OnPageChanged" />
 }
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
@@ -29,13 +29,36 @@
 }
 
 @code {
+    /// <summary>
+    /// Optional parameter representing the ID of the tree to display. 
+    /// If null, no tree will be loaded initially.
+    /// </summary>
     [Parameter] public int? Id { get; set; }
+
+    /// <summary>
+    /// Holds error messages for display if something goes wrong during API calls.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// Holds the details of the currently loaded tree.
+    /// </summary>
     private TreeDTO? Tree;
+
+    /// <summary>
+    /// Base64-encoded maintenance plan PDF data to display in the UI.
+    /// </summary>
     string maintenancePlan = "";
 
+    /// <summary>
+    /// HTTP client used to call the backend API.
+    /// </summary>
     HttpClient? client;
 
+    /// <summary>
+    /// Lifecycle method called when the component is initialized.
+    /// Creates an HTTP client and loads the tree if <see cref="Id"/> is provided.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
@@ -43,6 +66,10 @@
         if (Id.HasValue) await LoadTree(Id.Value);
     }
 
+    /// <summary>
+    /// Loads a tree by its ID from the backend API and fetches its maintenance plan if available.
+    /// </summary>
+    /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
         if (this.client == null)
@@ -63,12 +90,15 @@
                 await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
             }
 
-        } else
-            this.errorMessage = "Couldn't load tree";
+        } else this.errorMessage = "Couldn't load tree";
 
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Loads a maintenance plan file from the API, converts it to a base64 string for display in the UI.
+    /// </summary>
+    /// <param name="filename">The filename of the maintenance plan PDF to load.</param>
     private async Task LoadMaitenancePlan(string filename)
     {
         if (client == null || string.IsNullOrWhiteSpace(filename)) return;
@@ -89,7 +119,6 @@
             this.maintenancePlan = "";
             this.errorMessage = "Something went wrong while loading the image";
         }
-
     }
 
     private void OnDocumentLoaded() { }

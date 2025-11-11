@@ -6,13 +6,27 @@ using MediatR;
 
 namespace AP.BTP.Application.CQRS.PlantationSite
 {
+    /// <summary>
+    /// Represents a command to update an existing plantation site in the system.
+    /// </summary>
     public class UpdatePlantationSiteCommand : IRequest<PlantationSiteDTO>
     {
+        /// <summary>
+        /// The DTO containing the updated details of the plantation site.
+        /// </summary>
         public required PlantationSiteDTO UpdatedSite { get; set; }
     }
-    
+
+    /// <summary>
+    /// Provides validation rules for the <see cref="UpdatePlantationSiteCommand"/>.
+    /// Ensures that all required fields are populated and have valid values.
+    /// </summary>
     public class UpdatePlantationSiteCommandValidator : AbstractValidator<UpdatePlantationSiteCommand>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdatePlantationSiteCommandValidator"/> class.
+        /// </summary>
+        /// <param name="uow">The unit of work, available for potential data validation.</param>
         public UpdatePlantationSiteCommandValidator(IUnitOfWork uow)
         {
             RuleFor(command => command.UpdatedSite.Name)
@@ -53,19 +67,33 @@ namespace AP.BTP.Application.CQRS.PlantationSite
                 .Equal(false)
                 .WithMessage("Plantation site cannot be updated as 'deleted'."); 
         }
-    }    
+    }
 
+    /// <summary>
+    /// Handles the <see cref="UpdatePlantationSiteCommand"/> by updating the plantation site in the database and returning the updated DTO.
+    /// </summary>
     public class UpdatePlantationSitesQueryHandler: IRequestHandler<UpdatePlantationSiteCommand, PlantationSiteDTO>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdatePlantationSitesQueryHandler"/> class.
+        /// </summary>
+        /// <param name="uow">The unit of work used for database operations.</param>
+        /// <param name="mapper">The mapper used to convert between DTOs and domain entities.</param>
         public UpdatePlantationSitesQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
             this.mapper = mapper;
         }
 
+        /// <summary>
+        /// Handles the <see cref="UpdatePlantationSiteCommand"/> by updating the plantation site in the repository and committing the changes.
+        /// </summary>
+        /// <param name="request">The command containing the updated plantation site details.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>The updated <see cref="PlantationSiteDTO"/>.</returns>
         public async Task<PlantationSiteDTO> Handle(UpdatePlantationSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite plantationSite = mapper.Map<Domain.PlantationSite>(request.UpdatedSite);

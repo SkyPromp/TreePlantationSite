@@ -50,15 +50,50 @@
 }
 
 @code {
+    /// <summary>
+    /// Bound input string for searching trees. This value is two-way bound to the UI input.
+    /// </summary>
     private string SearchStringBind = "";
+
+    /// <summary>
+    /// Internal search string used to filter tree results during API calls.
+    /// </summary>
     private string SearchString = "";
-    private IEnumerable<TreeDTO> Trees;
+
+    /// <summary>
+    /// Collection of <see cref="TreeDTO"/> objects currently displayed in the component.
+    /// </summary>
+    private IEnumerable<TreeDTO> Trees;  // TODO read warning
+
+    /// <summary>
+    /// Stores any error message encountered during data retrieval or API calls.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// Number of tree items to display per page.
+    /// </summary>
     private int PageSize = 6;
+
+    /// <summary>
+    /// Current page number for paginated tree data.
+    /// </summary>
     private int Page = 1;
+
+    /// <summary>
+    /// Total number of pages available for the current search results.
+    /// </summary>
     private int TotalPages = 1;
+
+    /// <summary>
+    /// HttpClient used to make API requests to the backend.
+    /// </summary>
     private HttpClient? client;
 
+    /// <summary>
+    /// Executes after the component has rendered. On the first render, it initializes the <see cref="HttpClient"/> and loads the initial tree data.
+    /// </summary>
+    /// <param name="firstRender">Indicates if this is the first time the component has rendered.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
@@ -67,6 +102,11 @@
         await LoadTrees();
     }
 
+    /// <summary>
+    /// Loads a page of trees from the API, optionally specifying the page number.
+    /// Updates the <see cref="Trees"/>, <see cref="Page"/>, <see cref="TotalPages"/>, and <see cref="errorMessage"/> properties.
+    /// </summary>
+    /// <param name="page">The page number to load. If -1, loads the current <see cref="Page"/>.</param>
     private async Task LoadTrees(int page = -1)
     {
         if (this.client == null) return;
@@ -86,8 +126,7 @@
                 this.Page = page;
                 this.TotalPages = response.PageCount;
                 StateHasChanged();
-            } else
-                this.errorMessage = "No content found!";
+            } else this.errorMessage = "No content found!";
         }
         catch (Exception e)
         {
@@ -95,6 +134,10 @@
         }
     }
 
+    /// <summary>
+    /// Sets the search string and reloads the first page of trees matching the search.
+    /// </summary>
+    /// <param name="searchString">The search term entered by the user.</param>
     private async Task SearchTrees(string searchString)
     {
         this.SearchString = searchString;
@@ -105,6 +148,9 @@
         await this.LoadTrees();
     }
 
+    /// <summary>
+    /// Clears the current search string and reloads all tree data.
+    /// </summary>
     private async Task RemoveSearchString()
     {
         this.SearchString = "";

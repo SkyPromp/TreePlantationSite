@@ -10,8 +10,17 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AP.BTP.WebAPI
 {
+    /// <summary>
+    /// The main entry point of the application.
+    /// Configures services, middleware, authentication, authorization, database migrations, and runs the web application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main method invoked at application startup.
+        /// Sets up dependency injection, controllers, Swagger, JWT authentication, and applies database migrations.
+        /// </summary>
+        /// <param name="args">Command-line arguments passed to the application.</param>
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

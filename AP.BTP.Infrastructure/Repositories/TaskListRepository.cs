@@ -6,28 +6,61 @@ using System.Globalization;
 
 namespace AP.BTP.Infrastructure.Repositories
 {
-    public class TaskListRepository : ITaskListRepository
+    /// <summary>
+    /// Repository for managing <see cref="TaskList"/> entities in the database.
+    /// Implements <see cref="ITaskListRepository"/>.
+    /// </summary>
+    public class TaskListRepository: ITaskListRepository
     {
         private readonly DbSet<TaskList> dbSet;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskListRepository"/> class.
+        /// </summary>
+        /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
         public TaskListRepository(BTPContext context)
         {
             dbSet = context.Set<TaskList>();
         }
+
+        /// <summary>
+        /// Creates a new <see cref="TaskList"/> in the database.
+        /// </summary>
+        /// <param name="item">The <see cref="TaskList"/> to create.</param>
+        /// <returns>The created <see cref="TaskList"/> entity.</returns>
+        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public Task<TaskList> Create(TaskList item)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Deletes a <see cref="TaskList"/> from the database.
+        /// </summary>
+        /// <param name="item">The <see cref="TaskList"/> to delete.</param>
+        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public void Delete(TaskList item)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Retrieves all <see cref="TaskList"/> entities from the database.
+        /// </summary>
+        /// <returns>A collection of <see cref="TaskList"/> entities.</returns>
+        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public Task<IEnumerable<TaskList>> GetAll()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Retrieves all <see cref="TaskList"/> entities for a specific user in a specific ISO week and year.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="year">The year of the ISO week.</param>
+        /// <param name="weekNumber">The ISO week number.</param>
+        /// <returns>A collection of <see cref="TaskList"/> entities for the specified user and week.</returns>
         public async Task<IEnumerable<TaskList>> GetAllByUserIdAndWeek(int userId, int year, int weekNumber)
         {
             DateTime calendar = ISOWeek.ToDateTime(year, weekNumber, DayOfWeek.Monday);
@@ -44,11 +77,23 @@ namespace AP.BTP.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a <see cref="TaskList"/> by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
+        /// <returns>The <see cref="TaskList"/> entity, or <c>null</c> if not found.</returns>
+        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public Task<TaskList?> GetById(int id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Updates an existing <see cref="TaskList"/> entity in the database.
+        /// </summary>
+        /// <param name="modifiedItem">The modified <see cref="TaskList"/> entity.</param>
+        /// <returns>The updated <see cref="TaskList"/> entity.</returns>
+        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public TaskList Update(TaskList modifiedItem)
         {
             throw new NotImplementedException();
