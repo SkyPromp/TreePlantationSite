@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
 
 <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="/admin/dashboard">
@@ -27,10 +28,18 @@
                 <a class="nav-link" href="/manager/tree">Bomen</a>
             </li>
         }
-            <li class="nav-item d-flex align-items-center">
-                <Button Class="p-0 d-flex justify-content-center align-items-center border-0 shadow-none">
+            <li class="nav-item position-relative">
+                <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" onclick="ToggleProfileMenu()">
                     <Icon Name="IconName.PersonCircle" Class="fs-2"/>
-                </Button>
+                </button>
+
+                @if(showProfileMenu)
+                {
+                    <div class="profile-dropdown shadow-sm bg-white rounded">
+                        <p>@user.Identity.Name</p>
+                        <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                    </div>
+                }
             </li>
         </ul>
     </div>
@@ -38,10 +47,17 @@
 
 @code {
     private ClaimsPrincipal? user;
+    private bool showProfileMenu = true;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
+    }
+
+    
+    private void ToggleProfileMenu()
+    {
+        showProfileMenu = !showProfileMenu;
     }
 }
