@@ -19,5 +19,10 @@
         /// A detailed description of the task item.
         /// </summary>
         public required string Description { get; set; }
+
+        /// <summary>
+        /// The task list id associated with this task item.
+        /// </summary>
+        public required int TaskListId { get; set; }
     }
 }

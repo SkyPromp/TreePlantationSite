@@ -162,7 +162,7 @@
                 this.Tree.Species = "";
                 NavigationManager.NavigateTo("/admin/tree");
             } else
-                this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+                this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
         {
             this.errorMessage = e.Message;

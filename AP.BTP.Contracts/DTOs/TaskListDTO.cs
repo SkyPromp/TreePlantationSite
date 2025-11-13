@@ -20,5 +20,10 @@
         /// May be <c>null</c> if there are no tasks.
         /// </summary>
         public ICollection<TaskItemDTO>? TaskItems { get; set; }
+
+        /// <summary>
+        /// The ID of the user associated with this task list.
+        /// </summary>
+        public required int UserId { get; set; }
     }
 }

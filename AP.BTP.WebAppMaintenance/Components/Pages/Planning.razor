@@ -32,7 +32,7 @@
                 <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
                 <select class="form-select">
                     <option value="">-- Selecteer --</option>
-                    @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                    @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)  // TODO read warning
                     {
                         <option value="@plantationSite.Id">@plantationSite.Name</option>
                     }
@@ -50,7 +50,7 @@
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
                         @if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList)
-                                       && taskList?.TaskItems?.Any() == true)
+                                     && taskList?.TaskItems?.Any() == true)
                         {
                             @foreach (TaskItemDTO taskItem in taskList.TaskItems)
                             {
@@ -70,7 +70,7 @@
                             }
                         }
 
-                        <Button class="p-0 m-2">
+                        <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)">
                             <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
                                  style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
                                 <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
@@ -84,23 +84,39 @@
     </div>
 }
 
-@if (this.ShowConfirm)
+@if (this.ShowAddTaskItem)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="() => this.ShowConfirm = false" class="btn btn-warning">Annuleer</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestig</button>
-                    </div>
+            <h5>Taak toevoegen</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelAddTask" class="btn btn-warning">Annuleer</button>
                 </div>
+                <div class="col">
+                    <button @onclick="SubmitTaskItem" class="btn btn-danger">Opslaan</button>
+                </div>
+            </div>
         </div>
     </div>
 }
 
+@if (this.ShowDeleteConfirm)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="this.CancelRemoveTask" class="btn btn-warning">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -146,14 +162,18 @@
     private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDay = new();
 
     /// <summary>
-    /// Indicates whether the confirmation modal for deleting a tree is shown.
+    /// Indicates whether the confirmation modal for deleting a task item is shown.
     /// </summary>
-    private bool ShowConfirm;
+    private bool ShowDeleteConfirm;
 
     /// <summary>
     /// Stores the ID of the currently selected task item for deletion.
     /// </summary>
     private int? selectedTaskItemId;
+
+    private bool ShowAddTaskItem;
+    private TaskItemDTO? taskToBeAdded;
+    private DateTime taskToBeAddedDate;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -247,6 +267,7 @@
     private DateTime StartOfWeek(DateTime date)
     {
         int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+
         return date.AddDays(-diff).Date;
     }
 
@@ -284,7 +305,7 @@
         if (id == null || id == 0)
         {
             this.errorMessage = "Task item id is 0";
-            this.ShowConfirm = false;
+            this.ShowDeleteConfirm = false;
             // TODO remove out of tasklist
             StateHasChanged();
 
@@ -305,7 +326,7 @@
             }
         }
 
-        this.ShowConfirm = false;
+        this.ShowDeleteConfirm = false;
         StateHasChanged();
     }
 
@@ -314,12 +335,137 @@
     /// </summary>
     /// <param name="task">The <see cref="TaskItemDTO"/> representing the task to be deleted.</param>
     /// <remarks>
-    /// This method sets <c>ShowConfirm</c> to <c>true</c> to display a confirmation prompt,
+    /// This method sets <c>ShowDeleteConfirm</c> to <c>true</c> to display a confirmation prompt,
     /// and stores the task's ID in <c>selectedTaskItemId</c> for reference during deletion.
     /// </remarks>
     private void ConfirmDeletion(TaskItemDTO task)
     {
-        this.ShowConfirm = true;
+        this.ShowDeleteConfirm = true;
         this.selectedTaskItemId = task.Id;
+    }
+
+    private async Task<TaskListDTO?> AddTaskList(DateTime day)
+    {
+        try
+        {
+            if (this.client == null)
+            {
+                this.errorMessage = "No httpclient found.";
+
+                return null;
+            }
+
+            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", new TaskListDTO() { Id = 0, Date = day, UserId=this.userId });
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+
+                return await response.Content.ReadFromJsonAsync<TaskListDTO>();
+            } else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+
+        return null;
+    }
+
+    private async Task AddTaskItemConfirm(DateTime day)
+    {
+        this.taskToBeAddedDate = day;
+        this.ShowAddTaskItem = true;
+
+        await this.AddTaskItem();
+    }
+
+    private async Task AddTaskItem()
+    {
+        DateTime day = this.taskToBeAddedDate;
+
+        TaskListDTO? taskList;
+
+        if (!CurrentWeekTaskListsByDay.ContainsKey(day.Date))
+        {
+            taskList = await this.AddTaskList(day.Date);
+        } else
+        {
+            taskList = CurrentWeekTaskListsByDay[day.Date];
+        }
+
+        if (taskList == null)
+        {
+            this.errorMessage = "tasklist could not be created";
+
+            return;
+        }
+
+        // TODO use user input
+        if (this.taskToBeAdded == null)
+            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "Test Description", Title = "Test Title", TaskListId = taskList.Id };
+    }
+
+    private async Task SubmitTaskItem()
+    {
+        try
+        {
+            if (this.client == null)
+            {
+                this.errorMessage = "No httpclient found.";
+
+                return;
+            }
+
+            if (this.taskToBeAdded == null)
+            {
+                this.errorMessage = "The tasklist has not been saved yet";
+
+                return;
+            }
+
+            if (this.taskToBeAdded?.Id == 0)
+            {
+                this.errorMessage = "The tasklist has not been saved yet";
+            }
+
+            if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
+            {
+                this.errorMessage = "The task description or task title is empty";
+
+                return;
+            }
+
+            HttpResponseMessage? response;
+
+            if (this.taskToBeAdded?.Id == null || this.taskToBeAdded.Id == 0)
+            {
+                response = await this.client.PostAsJsonAsync<TaskItemDTO>($"TaskItem", this.taskToBeAdded!);
+            } else
+            {
+                response = await this.client.PutAsJsonAsync<TaskItemDTO>("TaskItem", this.taskToBeAdded);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                this.taskToBeAdded = null;
+            } else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    private void CancelAddTask()
+    {
+        this.ShowAddTaskItem = false;
+    }
+
+    private void CancelRemoveTask()
+    {
+        this.ShowDeleteConfirm = false;
+        this.selectedTaskItemId = null;
     }
 }
