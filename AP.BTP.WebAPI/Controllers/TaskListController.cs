@@ -46,6 +46,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)
         {
+            Console.WriteLine("ADD TASK LIST CONTROLLER");
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
     }

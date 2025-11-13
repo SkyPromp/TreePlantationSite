@@ -59,10 +59,13 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// <returns>The <see cref="TaskListDTO"/> representing the newly added task list.</returns>
         public async Task<TaskListDTO> Handle(AddTaskListCommand request, CancellationToken cancellationToken)
         {
+            Console.WriteLine("ADD TASK LIST COMMAND");
             Domain.TaskList taskList = mapper.Map<Domain.TaskList>(request.TaskList);
+            Console.WriteLine(taskList.TaskItems.Count);
 
             await uow.TaskListRepository.Create(taskList);
             await uow.Commit();
+            Console.WriteLine(taskList.Id);
 
             return mapper.Map<TaskListDTO>(taskList);
         }

@@ -461,6 +461,7 @@
         }
 
         this.ShowAddTaskItem = false;
+        await this.LoadTaskListsForWeek();
         StateHasChanged();
     }
 
