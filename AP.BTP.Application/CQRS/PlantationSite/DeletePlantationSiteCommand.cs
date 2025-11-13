@@ -59,11 +59,8 @@ namespace AP.BTP.Application.CQRS.PlantationSite
 
             if (plantationSite != null)
             {
-                Console.WriteLine("Deleting plantation site");
-
                 foreach (Domain.Zone zone in plantationSite.Zones)
                 {
-                    Console.WriteLine("Deleting plantation zones");
                     await uow.ZoneRepository.Delete(zone.Id);
                 }
 

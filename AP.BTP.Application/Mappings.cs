@@ -26,6 +26,7 @@ namespace AP.BTP.Application
             CreateMap<PlantationSite, PlantationSiteDTO>().ReverseMap();
             CreateMap<Zone, ZoneDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<TreePicture, TreePictureDTO>().ReverseMap();
             CreateMap<TaskList, TaskListDTO>();
             CreateMap<TaskItem, TaskItemDTO>();
         }

@@ -36,6 +36,8 @@
         /// </summary>
         ITaskItemRepository TaskItemRepository { get; }
 
+        ITreePictureRepository TreePictureRepository { get; }
+
         /// <summary>
         /// Commits all changes made through the repositories to the underlying data store.
         /// </summary>
