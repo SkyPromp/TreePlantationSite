@@ -15,7 +15,7 @@ namespace AP.BTP.Application
     /// <item><description><see cref="Zone"/> <-> <see cref="ZoneDTO"/> (bi-directional)</description></item>
     /// <item><description><see cref="User"/> <-> <see cref="UserDTO"/> (bi-directional)</description></item>
     /// <item><description><see cref="TaskList"/> -> <see cref="TaskListDTO"/></description></item>
-    /// <item><description><see cref="TaskItem"/> -> <see cref="TaskItemDTO"/></description></item>
+    /// <item><description><see cref="TaskItem"/> -> <see cref="TaskItemDTO"/> (bi-directional)</description></item>
     /// </list>
     /// </remarks>
     internal class Mappings : Profile
@@ -26,8 +26,8 @@ namespace AP.BTP.Application
             CreateMap<PlantationSite, PlantationSiteDTO>().ReverseMap();
             CreateMap<Zone, ZoneDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<TaskList, TaskListDTO>();
-            CreateMap<TaskItem, TaskItemDTO>();
+            CreateMap<TaskList, TaskListDTO>().ReverseMap();
+            CreateMap<TaskItem, TaskItemDTO>().ReverseMap();
         }
     }
 }

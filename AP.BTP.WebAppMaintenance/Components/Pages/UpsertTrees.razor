@@ -57,7 +57,7 @@
 
 @code {
     /// <summary>
-    /// The optional ID of the tree to edit. 
+    /// The optional ID of the tree to edit.
     /// If no ID is provided, the component assumes creation mode.
     /// </summary>
     [Parameter] public int? Id { get; set; }
@@ -90,7 +90,8 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
 
-        if (Id.HasValue) await LoadTree(Id.Value);
+        if (Id.HasValue)
+            await LoadTree(Id.Value);
     }
 
     /// <summary>
@@ -109,8 +110,10 @@
 
         TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
 
-        if (response != null) this.Tree = response;
-        else this.errorMessage = "Couldn't load tree";
+        if (response != null)
+            this.Tree = response;
+        else
+            this.errorMessage = "Couldn't load tree";
 
         StateHasChanged();
     }
@@ -162,7 +165,7 @@
                 this.Tree.Species = "";
                 NavigationManager.NavigateTo("/admin/tree");
             } else
-                this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+                this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
         {
             this.errorMessage = e.Message;

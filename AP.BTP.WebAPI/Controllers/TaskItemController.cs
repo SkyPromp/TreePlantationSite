@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.CQRS.TaskItem;
+using AP.BTP.Contracts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,15 @@ namespace AP.BTP.WebAPI.Controllers
             await mediator.Send(new DeleteTaskItemCommand() { Id = id });
 
             return NoContent();
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        public async Task<IActionResult> AddTaskItem([FromBody] TaskItemDTO taskItem)
+        {
+            TaskItemDTO newTaskItem = await mediator.Send(new AddTaskItemCommand() { TaskItem=taskItem });
+
+            return Ok(newTaskItem);
         }
     }
 }

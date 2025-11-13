@@ -27,9 +27,11 @@ namespace AP.BTP.Infrastructure.Repositories
         /// </summary>
         /// <param name="item">The <see cref="TaskItem"/> to create.</param>
         /// <returns>The created <see cref="TaskItem"/> entity.</returns>
-        public Task<TaskItem> Create(TaskItem item)
+        public async Task<TaskItem> Create(TaskItem item)
         {
-            throw new NotImplementedException();
+            await this.dbSet.AddAsync(item);
+
+            return item;
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
 ﻿using AP.BTP.Application.CQRS.TaskList;
+using AP.BTP.Contracts.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AP.BTP.WebAPI.Controllers
@@ -38,6 +40,14 @@ namespace AP.BTP.WebAPI.Controllers
         public async Task<IActionResult> GetByUserAndWeek([FromQuery] int userId, [FromQuery] int year, [FromQuery] int weekNumber)
         {
             return Ok(await mediator.Send(new GetAllTaskListsByUserIdAndWeekQuery { UserId = userId, Year = year, WeekNumber = weekNumber }));
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)
+        {
+            Console.WriteLine("ADD TASK LIST CONTROLLER");
+            return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
     }
 }
