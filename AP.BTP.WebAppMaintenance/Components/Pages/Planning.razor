@@ -11,8 +11,7 @@
 @if (user == null)
 {
     <p>Loading...</p>
-}
-else
+} else
 {
     <div class="d-flex">
         <div class="p-4 mb-4 bg-white border" style="height: 80vh; border-radius: 15px 0 0 15px">
@@ -51,7 +50,7 @@ else
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
                         @if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList)
-                                        && taskList?.TaskItems?.Any() == true)
+                                       && taskList?.TaskItems?.Any() == true)
                         {
                             @foreach (TaskItemDTO taskItem in taskList.TaskItems)
                             {
@@ -61,7 +60,7 @@ else
                                         <Button class="p-0 me-1">
                                             <i class="bi bi-pencil-square"></i>
                                         </Button>
-                                        <Button @onclick="() => DeleteTaskItem(taskItem)" class="p-0">
+                                        <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
                                             <i class="bi bi-trash"></i>
                                         </Button>
                                     </div>
@@ -85,6 +84,23 @@ else
     </div>
 }
 
+@if (this.ShowConfirm)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="() => this.ShowConfirm = false" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+}
+
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -93,13 +109,13 @@ else
 
 @code {
     /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.  
+    /// The ID of the user whose details and tasks are being displayed.
     /// This is passed as a parameter to the component.
     /// </summary>
     [Parameter] public int userId { get; set; }
 
     /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.  
+    /// The ID of the user whose details and tasks are being displayed.
     /// This is passed as a parameter to the component.
     /// </summary>
     private string errorMessage = "";
@@ -130,7 +146,17 @@ else
     private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDay = new();
 
     /// <summary>
-    /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user, 
+    /// Indicates whether the confirmation modal for deleting a tree is shown.
+    /// </summary>
+    private bool ShowConfirm;
+
+    /// <summary>
+    /// Stores the ID of the currently selected task item for deletion.
+    /// </summary>
+    private int? selectedTaskItemId;
+
+    /// <summary>
+    /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
     /// and sets up the current week and its task lists on the first render.
     /// </summary>
     /// <param name="firstRender">True if this is the first render of the component.</param>
@@ -151,7 +177,8 @@ else
     /// </summary>
     private async Task LoadUser()
     {
-        if (this.client == null) return;
+        if (this.client == null)
+            return;
 
         try
         {
@@ -161,13 +188,11 @@ else
             {
                 this.user = response;
                 StateHasChanged();
-            }
-            else
+            } else
             {
                 this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de gebruiker.";
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
@@ -178,7 +203,8 @@ else
     /// </summary>
     private async Task LoadTaskListsForWeek()
     {
-        if (this.client == null || this.user == null) return;
+        if (this.client == null || this.user == null)
+            return;
 
         try
         {
@@ -191,18 +217,14 @@ else
             if (response != null)
             {
                 // store current week's tasks
-                CurrentWeekTaskListsByDay = response
-                    .Where(t => t.Date != null)  // TODO Read warning
-                    .ToDictionary(t => t.Date.Date, t => t);
-            }
-            else
+                CurrentWeekTaskListsByDay = response.ToDictionary(t => t.Date.Date, t => t);
+            } else
             {
                 CurrentWeekTaskListsByDay.Clear();
             }
 
             StateHasChanged();
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             errorMessage = $"Fout bij ophalen van taken: {ex.Message}";
         }
@@ -257,14 +279,12 @@ else
     /// Deletes a task item with the given ID by calling the API.
     /// </summary>
     /// <param name="taskItem">The taskItem to be deleted.</param>
-    private async Task DeleteTaskItem(TaskItemDTO taskItem)  // TODO add confirmation message
+    private async Task DeleteTaskItem(int? id)  // TODO add confirmation message
     {
-        int id = taskItem.Id;
-
-        if (id == 0)
+        if (id == null || id == 0)
         {
             this.errorMessage = "Task item id is 0";
-            //this.ShowConfirm = false;
+            this.ShowConfirm = false;
             // TODO remove out of tasklist
             StateHasChanged();
 
@@ -281,12 +301,17 @@ else
             } else
             {
                 this.errorMessage = $"{id} has been sucessfully deleted";
+                await this.LoadTaskListsForWeek();
             }
         }
 
-        //this.ShowConfirm = false;
-        // await this.LoadTrees();
+        this.ShowConfirm = false;
         StateHasChanged();
+    }
 
+    private void ConfirmDeletion(TaskItemDTO task)
+    {
+        this.ShowConfirm = true;
+        this.selectedTaskItemId = task.Id;
     }
 }
