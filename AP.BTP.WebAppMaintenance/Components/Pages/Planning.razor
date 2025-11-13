@@ -84,11 +84,17 @@
     </div>
 }
 
-@if (this.ShowAddTaskItem)
+@if (this.ShowAddTaskItem && taskToBeAdded != null)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
             <h5>Taak toevoegen</h5>
+            <div class="input-group mb-3">
+                <input @bind="taskToBeAdded!.Title" placeholder="Task title" class="form-control"/>
+            </div>
+            <div class="input-group mb-3">
+                <textarea @bind="taskToBeAdded!.Description" placeholder="Task description" class="form-control"></textarea>
+            </div>
             <div class="row gap-3">
                 <div class="col">
                     <button @onclick="CancelAddTask" class="btn btn-warning">Annuleer</button>
@@ -172,7 +178,7 @@
     private int? selectedTaskItemId;
 
     private bool ShowAddTaskItem;
-    private TaskItemDTO? taskToBeAdded;
+    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
     private DateTime taskToBeAddedDate;
 
     /// <summary>
@@ -189,6 +195,8 @@
             currentWeekStart = StartOfWeek(DateTime.Today);
             UpdateWeekDays();
             await LoadTaskListsForWeek();
+
+            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
         }
     }
 
@@ -375,9 +383,9 @@
     private async Task AddTaskItemConfirm(DateTime day)
     {
         this.taskToBeAddedDate = day;
-        this.ShowAddTaskItem = true;
-
         await this.AddTaskItem();
+        this.ShowAddTaskItem = true;
+        StateHasChanged();
     }
 
     private async Task AddTaskItem()
@@ -401,9 +409,7 @@
             return;
         }
 
-        // TODO use user input
-        if (this.taskToBeAdded == null)
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "Test Description", Title = "Test Title", TaskListId = taskList.Id };
+        if (this.taskToBeAdded.TaskListId == 0) this.taskToBeAdded.TaskListId = taskList.Id ;
     }
 
     private async Task SubmitTaskItem()
@@ -413,18 +419,13 @@
             if (this.client == null)
             {
                 this.errorMessage = "No httpclient found.";
-
+                this.ShowAddTaskItem = false;
+                StateHasChanged();
+                
                 return;
             }
 
-            if (this.taskToBeAdded == null)
-            {
-                this.errorMessage = "The tasklist has not been saved yet";
-
-                return;
-            }
-
-            if (this.taskToBeAdded?.Id == 0)
+            if (this.taskToBeAdded.Id == 0)
             {
                 this.errorMessage = "The tasklist has not been saved yet";
             }
@@ -432,6 +433,8 @@
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
                 this.errorMessage = "The task description or task title is empty";
+                this.ShowAddTaskItem = false;
+                StateHasChanged();
 
                 return;
             }
@@ -449,13 +452,16 @@
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
-                this.taskToBeAdded = null;
+                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
+
+        this.ShowAddTaskItem = false;
+        StateHasChanged();
     }
 
     private void CancelAddTask()

@@ -43,7 +43,7 @@ namespace AP.BTP.WebAPI.Controllers
             return NoContent();
         }
 
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> AddTaskItem([FromBody] TaskItemDTO taskItem)
         {

@@ -7,7 +7,7 @@ using MediatR;
 namespace AP.BTP.Application.CQRS.TaskItem
 {
     /// <summary>
-    /// Represents a command to add a new tree to the system.
+    /// Represents a command to add a new task item to the system.
     /// </summary>
     public class AddTaskItemCommand: IRequest<TaskItemDTO>
     {
@@ -54,7 +54,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// <summary>
         /// Handles the <see cref="AddTaskItemCommand"/> by mapping the provided DTO to a domain entity, saving it to the repository, and returning the resulting DTO.
         /// </summary>
-        /// <param name="request">The command containing the tree details to add.</param>
+        /// <param name="request">The command containing the task item details to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>The <see cref="TaskItemDTO"/> representing the newly added task item.</returns>
         public async Task<TaskItemDTO> Handle(AddTaskItemCommand request, CancellationToken cancellationToken)
