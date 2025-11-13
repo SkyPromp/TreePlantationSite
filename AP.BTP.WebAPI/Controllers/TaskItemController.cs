@@ -43,11 +43,42 @@ namespace AP.BTP.WebAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Adds a new task item to the system.
+        /// </summary>
+        /// <param name="taskItem">The <see cref="TaskItemDTO"/> object containing the details of the task item to add.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing the created <see cref="TaskItemDTO"/> if successful.
+        /// Returns HTTP 200 (OK) with the created task item.
+        /// </returns>
+        /// <remarks>
+        /// Only users with the <c>Manager</c> role are authorized to perform this action.
+        /// </remarks>
         [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> AddTaskItem([FromBody] TaskItemDTO taskItem)
         {
             TaskItemDTO newTaskItem = await mediator.Send(new AddTaskItemCommand() { TaskItem=taskItem });
+
+            return Ok(newTaskItem);
+        }
+
+        /// <summary>
+        /// Updates an existing task item.
+        /// </summary>
+        /// <param name="taskItem">The <see cref="TaskItemDTO"/> object containing the updated task details.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> containing the updated <see cref="TaskItemDTO"/> if successful.
+        /// Returns HTTP 200 (OK) with the updated task item.
+        /// </returns>
+        /// <remarks>
+        /// Only users with the <c>Manager</c> role are authorized to perform this action.
+        /// </remarks>
+        [Authorize(Roles = "Manager")]
+        [HttpPut]
+        public async Task<IActionResult> EditTaskItem([FromBody] TaskItemDTO taskItem)
+        {
+            TaskItemDTO newTaskItem = await mediator.Send(new EditTaskItemCommand() { TaskItem=taskItem });
 
             return Ok(newTaskItem);
         }
