@@ -73,7 +73,7 @@ namespace AP.BTP.Infrastructure.Repositories
                     tl.UserId == userId &&
                     tl.Date >= startOfWeek &&
                     tl.Date < endOfWeek)
-                .Include(tl => tl.TaskItems)
+                .Include(tl => tl.TaskItems.Where(item => !item.IsDeleted))
                 .ToListAsync();
         }
 

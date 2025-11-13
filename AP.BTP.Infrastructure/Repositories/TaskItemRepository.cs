@@ -38,16 +38,31 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="item">The <see cref="TaskItem"/> to delete.</param>
         public void Delete(TaskItem item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
+        }
+
+        /// <summary>
+        /// Deletes a <see cref="TaskItem"/> from the database.
+        /// </summary>
+        /// <param name="id">The unique identifier of the task item to delete.</param>
+        public async Task Delete(int id)
+        {
+            TaskItem? taskItem = await this.dbSet.FindAsync(id);
+
+            if (taskItem != null) this.Delete(taskItem);
         }
 
         /// <summary>
         /// Retrieves all <see cref="TaskItem"/> entities from the database.
         /// </summary>
         /// <returns>A collection of <see cref="TaskItem"/> entities.</returns>
-        public Task<IEnumerable<TaskItem>> GetAll()
+        public async Task<IEnumerable<TaskItem>> GetAll()
         {
-            throw new NotImplementedException();
+            IQueryable<TaskItem> tasks = this.dbSet
+                .Where(task => !task.IsDeleted);
+
+            return await tasks.ToListAsync();
         }
 
         /// <summary>
@@ -55,9 +70,11 @@ namespace AP.BTP.Infrastructure.Repositories
         /// </summary>
         /// <param name="id">The ID of the <see cref="TaskItem"/>.</param>
         /// <returns>The <see cref="TaskItem"/> entity, or <c>null</c> if not found.</returns>
-        public Task<TaskItem?> GetById(int id)
+        public async Task<TaskItem?> GetById(int id)
         {
-            throw new NotImplementedException();
+            TaskItem? taskItem = await this.dbSet.FindAsync(id);
+
+            return (taskItem?.IsDeleted ?? true) ? null : taskItem;
         }
 
         /// <summary>
@@ -67,7 +84,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>The updated <see cref="TaskItem"/> entity.</returns>
         public TaskItem Update(TaskItem modifiedItem)
         {
-            throw new NotImplementedException();
+            return this.dbSet.Update(modifiedItem).Entity;
         }
     }
 }

@@ -8,5 +8,11 @@ namespace AP.BTP.Application.Interfaces
     /// </summary>
     public interface ITaskItemRepository : IGenericRepository<TaskItem>
     {
+        /// <summary>
+        /// Soft deletes a <see cref="TaskItem"/> by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the tree to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task Delete(int id);
     }
 }
