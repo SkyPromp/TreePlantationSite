@@ -309,6 +309,14 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Prepares the UI to confirm the deletion of a specified task item.
+    /// </summary>
+    /// <param name="task">The <see cref="TaskItemDTO"/> representing the task to be deleted.</param>
+    /// <remarks>
+    /// This method sets <c>ShowConfirm</c> to <c>true</c> to display a confirmation prompt,
+    /// and stores the task's ID in <c>selectedTaskItemId</c> for reference during deletion.
+    /// </remarks>
     private void ConfirmDeletion(TaskItemDTO task)
     {
         this.ShowConfirm = true;
