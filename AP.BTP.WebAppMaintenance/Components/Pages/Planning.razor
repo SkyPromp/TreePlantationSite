@@ -177,8 +177,21 @@
     /// </summary>
     private int? selectedTaskItemId;
 
+    /// <summary>
+    /// Indicates whether the "Add Task Item" dialog is currently visible.
+    /// </summary>
     private bool ShowAddTaskItem;
+
+    /// <summary>
+    /// Represents the task item currently being added or edited.
+    /// Initialized with default values for a new task.
+    /// </summary>
     private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+
+    /// <summary>
+    /// Stores the date associated with the task item being added.
+    /// This is used to link the task to the correct task list by day.
+    /// </summary>
     private DateTime taskToBeAddedDate;
 
     /// <summary>
@@ -352,12 +365,21 @@
         this.selectedTaskItemId = task.Id;
     }
 
+    /// <summary>
+    /// Opens the edit dialog for an existing task item.
+    /// </summary>
+    /// <param name="task">The task item to edit.</param>
     private void EditTaskItem(TaskItemDTO task)
     {
         this.taskToBeAdded = task;
         this.ShowAddTaskItem = true;
     }
 
+    /// <summary>
+    /// Creates a new task list for the specified day by making a POST request to the backend API.
+    /// </summary>
+    /// <param name="day">The date for which the task list should be created.</param>
+    /// <returns>The created <see cref="TaskListDTO"/> if successful; otherwise, null.</returns>
     private async Task<TaskListDTO?> AddTaskList(DateTime day)
     {
         try
@@ -386,6 +408,10 @@
         return null;
     }
 
+    /// <summary>
+    /// Prepares to add a new task item for the specified day and opens the add task dialog.
+    /// </summary>
+    /// <param name="day">The date the task item should be associated with.</param>
     private async Task AddTaskItemConfirm(DateTime day)
     {
         this.taskToBeAddedDate = day;
@@ -394,6 +420,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Ensures a task list exists for the given date and associates the current task item with it.
+    /// </summary>
     private async Task AddTaskItem()
     {
         DateTime day = this.taskToBeAddedDate;
@@ -418,6 +447,10 @@
         if (this.taskToBeAdded.TaskListId == 0) this.taskToBeAdded.TaskListId = taskList.Id ;
     }
 
+    /// <summary>
+    /// Submits the current task item to the backend API. 
+    /// If the task item is new, it is created; otherwise, it is updated.
+    /// </summary>
     private async Task SubmitTaskItem()
     {
         try
@@ -427,7 +460,7 @@
                 this.errorMessage = "No httpclient found.";
                 this.ShowAddTaskItem = false;
                 StateHasChanged();
-                
+
                 return;
             }
 
@@ -471,11 +504,17 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Cancels the add task operation and hides the add task dialog.
+    /// </summary>
     private void CancelAddTask()
     {
         this.ShowAddTaskItem = false;
     }
 
+    /// <summary>
+    /// Cancels the remove task operation and hides the delete confirmation dialog.
+    /// </summary>
     private void CancelRemoveTask()
     {
         this.ShowDeleteConfirm = false;
