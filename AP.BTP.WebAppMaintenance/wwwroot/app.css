@@ -31,6 +31,16 @@ html, body {
     margin: 0 1.25vw;
 }
 
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 15vw;
+    padding: 1rem;
+    z-index: 1000;
+}
+
 a.nav-link {
     font-size: 1.5rem;
 }

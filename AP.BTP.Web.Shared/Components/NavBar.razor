@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
 
 <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="/admin/dashboard">
@@ -27,10 +28,21 @@
                 <a class="nav-link" href="/manager/tree">Bomen</a>
             </li>
         }
-            <li class="nav-item d-flex align-items-center">
-                <Button Class="p-0 d-flex justify-content-center align-items-center border-0 shadow-none">
+            <li class="nav-item position-relative">
+                <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" @onclick="ToggleProfileMenu">
                     <Icon Name="IconName.PersonCircle" Class="fs-2"/>
-                </Button>
+                </button>
+
+                @if(showProfileMenu)
+                {
+                    <OutsideClickDetector MethodToCallOnClick="@ToggleProfileMenu" LowestInsideComponentZIndex="1000" />
+                    <div class="profile-dropdown bg-white shadow-sm rounded">
+                        <p>@user?.Identity?.Name</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                        </div>
+                    </div>
+                }
             </li>
         </ul>
     </div>
@@ -38,10 +50,17 @@
 
 @code {
     private ClaimsPrincipal? user;
+    private bool showProfileMenu = false;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
+    }
+
+    
+    private void ToggleProfileMenu()
+    {
+        showProfileMenu = !showProfileMenu;
     }
 }
