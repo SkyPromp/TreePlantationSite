@@ -29,6 +29,9 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// <param name="uow">The unit of work, available for potential data validation checks.</param>
         public AddTaskItemCommandValidator(IUnitOfWork uow)
         {
+            RuleFor(command => command.TaskItem.Id)
+                .Equal(0)
+                .WithMessage("Id should be zero when adding a task item.");
         }
     }
 

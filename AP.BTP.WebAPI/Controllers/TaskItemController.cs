@@ -51,5 +51,14 @@ namespace AP.BTP.WebAPI.Controllers
 
             return Ok(newTaskItem);
         }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPut]
+        public async Task<IActionResult> EditTaskItem([FromBody] TaskItemDTO taskItem)
+        {
+            TaskItemDTO newTaskItem = await mediator.Send(new EditTaskItemCommand() { TaskItem=taskItem });
+
+            return Ok(newTaskItem);
+        }
     }
 }
