@@ -1,7 +1,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="/admin/dashboard">
@@ -29,15 +29,18 @@
             </li>
         }
             <li class="nav-item position-relative">
-                <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" onclick="ToggleProfileMenu()">
+                <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" @onclick="ToggleProfileMenu">
                     <Icon Name="IconName.PersonCircle" Class="fs-2"/>
                 </button>
 
                 @if(showProfileMenu)
                 {
-                    <div class="profile-dropdown shadow-sm bg-white rounded">
-                        <p>@user.Identity.Name</p>
-                        <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                    <OutsideClickDetector MethodToCallOnClick="@ToggleProfileMenu" LowestInsideComponentZIndex="1000" />
+                    <div class="profile-dropdown bg-white shadow-sm rounded">
+                        <p>@user?.Identity?.Name</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                        </div>
                     </div>
                 }
             </li>
@@ -47,7 +50,7 @@
 
 @code {
     private ClaimsPrincipal? user;
-    private bool showProfileMenu = true;
+    private bool showProfileMenu = false;
 
     protected override async Task OnInitializedAsync()
     {
