@@ -40,6 +40,6 @@ namespace AP.BTP.Application.Interfaces
         /// <returns>
         /// A task that returns a <see cref="Paged{Tree}"/> containing the requested page of tree entities.
         /// </returns>
-        Task<Paged<Tree>> GetAll(int pageNr, int pageSize, string? search);
+        Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search);
     }
 }

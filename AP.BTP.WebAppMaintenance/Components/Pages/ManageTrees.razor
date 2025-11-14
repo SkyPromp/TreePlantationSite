@@ -1,4 +1,4 @@
-﻿@attribute [Authorize(Roles = "Admin")]
+﻿@* @attribute [Authorize(Roles = "Admin")]
 @page "/admin/tree"
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -239,4 +239,4 @@
         this.Page = 1;
         await this.LoadTrees();
     }
-}
+} *@

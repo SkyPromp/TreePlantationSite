@@ -59,6 +59,7 @@ namespace AP.BTP.Infrastructure.Extentions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITaskListRepository, TaskListRepository>();
             services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+            services.AddScoped<ITreePictureRepository, TreePictureRepository>();
 
             return services;
         }

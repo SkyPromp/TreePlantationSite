@@ -89,16 +89,20 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageNr">The page number (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by species name.</param>
-        /// <returns>A <see cref="Paged{Tree}"/> object containing the requested page of trees.</returns>
-        public async Task<Paged<Tree>> GetAll(int pageNr, int pageSize, string? search)
+        /// <returns>A tuple containing the collection of <see cref="Tree"/> items and the total count.</returns>        
+        public async Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search)
         {
-            IQueryable<Tree> trees = this.dbSet
+            IQueryable<Tree> query = dbSet
                 .Where(tree => !tree.IsDeleted)
                 .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true);  // This is delegated, 1 Where() is less readable than 2
 
-            if (pageSize == 0) pageSize = trees.Count();  //  Avoid divide by 0 exception
+            int totalCount = await query.CountAsync();
 
-            return new Paged<Tree> { PageNr=pageNr, PageSize=pageSize, PageCount=(int)Math.Ceiling(trees.Count() / (double) pageSize), Data = await trees.Skip((pageNr - 1) * pageSize).Take(pageSize).ToListAsync()};
+            List<Tree> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+                                
+            return (items, totalCount);
         }
 
         /// <summary>
