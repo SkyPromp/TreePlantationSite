@@ -5,6 +5,7 @@
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Site details">
@@ -19,6 +20,10 @@
                                 <TextInput @bind-Value="@Tree.Species"></TextInput>
                                 <ValidationMessage For="@(() => Tree.Species)" />
                             </div>
+                            <div>
+                                <label class="form-label">Picture upload</label>
+                                <InputFile OnChange="HandlePictureUpload" class="form-control mb-2" />
+                            </div>                            
                         </div>
                     </div>
                 </div>
@@ -38,7 +43,7 @@
                         <div class="col-4">
                             <div>
                                 <label class="form-label">Onderhoud</label>
-                                <InputFile OnChange="HandleUploadMaintenancePlan" class="form-control mb-2" />
+                                <InputFile class="form-control mb-2" />
                             </div>
                         </div>
                         <div class="col-8 d-flex justify-content-center align-items-center">
@@ -72,6 +77,9 @@
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
     HttpClient? client;
+
+    private Dictionary<string, string?> uploadedPictures = new();
+    private Dictionary<string, string> previews = new();
 
     /// <summary>
     /// Represents the current tree being created or edited.
@@ -169,12 +177,74 @@
         }
     }
 
+
     /// <summary>
-    /// Placeholder for a future implementation of tree maintenance plan upload functionality.
-    /// Currently sets an unimplemented feature message.
+    /// Handles uploading one or more images for the tree.
     /// </summary>
-    private void HandleUploadMaintenancePlan()
+    private async Task HandlePictureUpload(InputFileChangeEventArgs e)
     {
-        this.errorMessage = "Handle updload mentenance plan not implemented yet";
+        foreach (IBrowserFile file in e.GetMultipleFiles())
+        {
+            string tempKey = Guid.NewGuid().ToString();
+
+            uploadedPictures[tempKey] = null;
+
+            await UploadFile(tempKey, file);
+
+            if (uploadedPictures[tempKey] != null)
+                await GeneratePreview(tempKey, uploadedPictures[tempKey]!);
+        }
     }
+
+    /// <summary>
+    /// Uploads a single file to the backend.
+    /// </summary>
+    private async Task UploadFile(string key, IBrowserFile file)
+    {
+        using MultipartFormDataContent content = new();
+        using Stream stream = file.OpenReadStream(10_000_000);
+
+        content.Add(new StreamContent(stream), "file", file.Name);
+
+        HttpResponseMessage response = await client!.PostAsync("File/upload", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+            return;
+        }
+
+        JsonElement json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        string fileName = json.GetProperty("fileName").GetString()!;
+
+        uploadedPictures[key] = fileName;
+    }
+
+    private async Task GeneratePreview(string key, string fileName)
+    {
+        HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+
+        if(!response.IsSuccessStatusCode) return;
+
+        byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+        string type = response.Content.Headers.ContentType?.MediaType!;    
+
+        previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+
+        StateHasChanged();
+    }
+
+    @* private async Task LoadExistingPictures()
+    {
+        if (Tree.Pictures == null)
+            return;
+
+        foreach (var pic in Tree.Pictures)
+        {
+            string key = Guid.NewGuid().ToString();
+            uploadedPictures[key] = pic.Path;
+
+            await GeneratePreview(key, pic.Path);
+        }
+    } *@
 }
