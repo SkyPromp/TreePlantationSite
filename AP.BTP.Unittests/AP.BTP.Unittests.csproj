@@ -20,6 +20,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.12.6" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="1.4.3" />
@@ -32,6 +35,7 @@
     <ProjectReference Include="..\AP.BTP.Domain\AP.BTP.Domain.csproj" />
     <ProjectReference Include="..\AP.BTP.Infrastructure\AP.BTP.Infrastructure.csproj" />
     <ProjectReference Include="..\AP.BTP.Contracts\AP.BTP.Contracts.csproj" />
+    <ProjectReference Include="..\AP.BTP.WebAPI\AP.BTP.WebAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
