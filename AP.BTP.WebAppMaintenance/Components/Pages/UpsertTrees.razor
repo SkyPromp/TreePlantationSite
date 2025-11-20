@@ -35,10 +35,10 @@
                                     else
                                     {
                                         <div class="d-flex flex-wrap">
-                                            @foreach (var kvp in previews)
+                                            @foreach (KeyValuePair<string, string> kvp in previews)
                                             {
                                                 <div class="position-relative p-1" style="flex: 0 0 50%; height: 200px;">
-                                                    <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; left: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
+                                                    <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; right: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
                                                         <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
                                                     </Button>
                                                     <img src="@kvp.Value" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: contain;" />
@@ -117,8 +117,8 @@
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
     HttpClient? client;
-
-    private Dictionary<string, string?> uploadedPictures = new();
+    private Dictionary<string, (IBrowserFile file, byte[] data)> newPictures = new();
+    private Dictionary<int, string> existingPictures = new();
     private Dictionary<string, string> previews = new();
     private string? selectedImage = null; 
     private bool showDeleteConfirmation = false;
@@ -140,7 +140,10 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
 
-        if (Id.HasValue) await LoadTree(Id.Value);
+        if (Id.HasValue){
+            await LoadTree(Id.Value);
+            await LoadExistingPictures(Id.Value);
+        }
     }
 
     /// <summary>
@@ -163,14 +166,6 @@
         else this.errorMessage = "Couldn't load tree";
 
         StateHasChanged();
-    }
-
-    /// <summary>
-    /// Clears the form by resetting the <see cref="Tree.Species"/> field.
-    /// </summary>
-    private void ClearForm()
-    {
-        this.Tree.Species = "";
     }
 
     /// <summary>
@@ -206,13 +201,72 @@
                 response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
             }
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                this.errorMessage = "";
-                this.Tree.Species = "";
-                NavigationManager.NavigateTo("/admin/tree");
-            } else
-                this.errorMessage = this.errorMessage = await response.Content.ReadAsStringAsync();
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+                return;
+            }
+
+            TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
+            if (savedTree == null || savedTree.Id == 0)
+            {
+                this.errorMessage = "Failed to get saved tree id.";
+                return;
+            }
+
+            this.Tree = savedTree;
+            this.Id = this.Tree.Id;
+
+            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();  
+            newPictures.Clear();   
+
+            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
+            {
+                string tempKey = kvp.Key;
+                var (file, data) = kvp.Value;
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new ByteArrayContent(data), "file", file.Name);
+
+                string? fileName = null;
+                HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
+                if (fileResponse.IsSuccessStatusCode)
+                {
+                    JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
+                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
+                }
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    this.errorMessage = $"Failed to upload file {file.Name}";
+                    continue;
+                }
+
+                TreePictureDTO treePicture = new TreePictureDTO
+                {
+                    TreeId = this.Tree.Id,
+                    Path = fileName,
+                    IsFavourite = false
+                };
+
+                HttpResponseMessage addResponse = await client.PostAsJsonAsync("TreePicture", treePicture);
+                if (!addResponse.IsSuccessStatusCode)
+                {
+                    this.errorMessage = await addResponse.Content.ReadAsStringAsync();
+                    continue;
+                }
+
+                TreePictureDTO? created = await addResponse.Content.ReadFromJsonAsync<TreePictureDTO>();
+                if (created != null)
+                {
+                    existingPictures[created.Id] = created.Path;
+
+                    previews.Remove(tempKey);
+                    await GeneratePreview(created.Id.ToString(), created.Path);
+                }
+            }
+            this.errorMessage = "";
+
         } catch (Exception e)
         {
             this.errorMessage = e.Message;
@@ -227,39 +281,17 @@
     {
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
-            string tempKey = Guid.NewGuid().ToString();
+            string key = Guid.NewGuid().ToString();
 
-            uploadedPictures[tempKey] = null;
+            using MemoryStream ms = new MemoryStream();
+            await file.OpenReadStream(10_000_000).CopyToAsync(ms);
 
-            await UploadFile(tempKey, file);
+            newPictures[key] = (file, ms.ToArray());
 
-            if (uploadedPictures[tempKey] != null)
-                await GeneratePreview(tempKey, uploadedPictures[tempKey]!);
-        }
-    }
-
-    /// <summary>
-    /// Uploads a single file to the backend.
-    /// </summary>
-    private async Task UploadFile(string key, IBrowserFile file)
-    {
-        using MultipartFormDataContent content = new();
-        using Stream stream = file.OpenReadStream(10_000_000);
-
-        content.Add(new StreamContent(stream), "file", file.Name);
-
-        HttpResponseMessage response = await client!.PostAsync("File/upload", content);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            errorMessage = await response.Content.ReadAsStringAsync();
-            return;
+            previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
         }
 
-        JsonElement json = await response.Content.ReadFromJsonAsync<JsonElement>();
-        string fileName = json.GetProperty("fileName").GetString()!;
-
-        uploadedPictures[key] = fileName;
+        StateHasChanged();
     }
 
     private async Task GeneratePreview(string key, string fileName)
@@ -276,19 +308,20 @@
         StateHasChanged();
     }
 
-    @* private async Task LoadExistingPictures()
+    private async Task LoadExistingPictures(int treeId)
     {
-        if (Tree.Pictures == null)
-            return;
-
-        foreach (var pic in Tree.Pictures)
+        List<TreePictureDTO>? response = await client!.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{treeId}");
+        if (response != null)
         {
-            string key = Guid.NewGuid().ToString();
-            uploadedPictures[key] = pic.Path;
-
-            await GeneratePreview(key, pic.Path);
+            existingPictures.Clear();
+            previews.Clear();
+            foreach (TreePictureDTO pic in response)
+            {        
+                existingPictures[pic.Id] = pic.Path;
+                await GeneratePreview(pic.Id.ToString(), pic.Path);
+            }
         }
-    } *@
+    }
 
     private void CancelDeletePicture()
     {
@@ -296,13 +329,25 @@
         this.selectedImage = null;
     }
 
-    private void DeletePicture()
+    private async void DeletePicture()
     {
-        if (selectedImage != null)
+        if (int.TryParse(selectedImage, out int picId))
         {
+            HttpResponseMessage res = await client!.DeleteAsync($"TreePicture?id={picId}");
+            if (res.IsSuccessStatusCode)
+            {
+                existingPictures.Remove(picId);
+                previews.Remove(selectedImage);
+            }
+            else
+            {
+                errorMessage = await res.Content.ReadAsStringAsync();
+            }
+        }
+        else
+        {
+            newPictures.Remove(selectedImage);
             previews.Remove(selectedImage);
-
-            uploadedPictures.Remove(selectedImage);
         }
 
         selectedImage = null;
