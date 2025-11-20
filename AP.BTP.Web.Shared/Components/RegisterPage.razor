@@ -1,0 +1,97 @@
+﻿@page "/register"
+@rendermode InteractiveServer
+@using AP.BTP.Contracts.DTOs
+@using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager Navigation
+
+<PageTitle>Registreer</PageTitle>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 ">
+            <div class="card shadow-lg p-4">
+                <h2 class="text-center mb-3">Account aanmaken</h2>
+                <p class="text-muted text-center mb-4">Vul je gegevens in om een account aan te maken.</p>
+
+                <EditForm Model="newUser" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="firstName">Voornaam</label>
+                        <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" />
+                        <ValidationMessage For="@(() => newUser.FirstName)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="lastName">Achternaam</label>
+                        <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" />
+                        <ValidationMessage For="@(() => newUser.LastName)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="email">E-mail</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="newUser.Email" />
+                        <ValidationMessage For="@(() => newUser.Email)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label" for="password">Wachtwoord</label>
+                        <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" />
+                        <div class="mt-2">
+                            <small class="form-text">
+                                <span class="@GetClass(HasMinLength)">• Minimaal 8 tekens</span><br />
+                                <span class="@GetClass(HasUpperCase)">• Minimaal 1 hoofdletter</span><br />
+                                <span class="@GetClass(HasLowerCase)">• Minimaal 1 kleine letter</span><br />
+                                <span class="@GetClass(HasNumber)">• Minimaal 1 nummer</span><br />
+                                <span class="@GetClass(HasSpecialChar)">• Minimaal 1 speciaal teken</span>
+                            </small>
+                        </div>
+                        <ValidationMessage For="@(() => newUser.Password)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label" for="confirmPassword">Bevestig wachtwoord</label>
+                        <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" />
+                        <ValidationMessage For="@(() => newUser.ConfirmPassword)" class="text-danger" />
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" @onclick="Cancel">
+                            Ga terug
+                        </button>
+
+                        <button type="submit" class="btn btn-success">
+                            Registreer
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterUserDTO newUser = new RegisterUserDTO();
+
+    private bool HasMinLength => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Length >= 8;
+    private bool HasUpperCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsUpper);
+    private bool HasLowerCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsLower);
+    private bool HasNumber => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsDigit);
+    private bool HasSpecialChar => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(c => !char.IsLetterOrDigit(c));
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        throw new NotImplementedException("HandleValidSubmit not implemented");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/welcome");
+    }
+    private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+}
