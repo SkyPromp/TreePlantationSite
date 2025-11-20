@@ -1,6 +1,7 @@
 using AP.BTP.Application.CQRS.TreePicture;
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
+using AP.BTP.Infrastructure.Migrations;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -37,7 +38,7 @@ namespace AP.BTP.Unittests.TreePicture
                 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.TreePicture.Path)
                 .WithErrorMessage("Picture path cannot be empty.");
@@ -56,7 +57,7 @@ namespace AP.BTP.Unittests.TreePicture
                 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.TreePicture.TreeId)
                 .WithErrorMessage("Invalid TreeId.");
@@ -78,7 +79,7 @@ namespace AP.BTP.Unittests.TreePicture
                 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.TreePicture.TreeId)
                 .WithErrorMessage("Tree does not exist.");
@@ -100,7 +101,7 @@ namespace AP.BTP.Unittests.TreePicture
                 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.TreePicture.Path)
                 .WithErrorMessage("Unsupported image file type.");
@@ -122,7 +123,7 @@ namespace AP.BTP.Unittests.TreePicture
                 }
             };
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }

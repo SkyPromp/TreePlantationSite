@@ -22,10 +22,10 @@
 <div class="container-fluid m-0">
     @if (response?.Items != null)
     {
-        @foreach (var row in Rows)
+        @foreach (List<TreeDTO> row in Rows)
         {
             <div class="row">
-                @foreach (var item in row)
+                @foreach (TreeDTO item in row)
                 {
                     <div class="col-md-4" style="padding: 2vh">
                         <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 4vh">

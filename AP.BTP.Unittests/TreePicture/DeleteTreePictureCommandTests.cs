@@ -32,7 +32,7 @@ namespace AP.BTP.Unittests.TreePicture
 
             treePictureRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync((Domain.TreePicture?)null);
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<DeleteTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.Id)
                 .WithErrorMessage("Invalid picture Id.");
@@ -45,7 +45,7 @@ namespace AP.BTP.Unittests.TreePicture
 
             treePictureRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync((Domain.TreePicture?)null);
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<DeleteTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.Id)
                 .WithErrorMessage("Tree picture does not exist.");
@@ -59,7 +59,7 @@ namespace AP.BTP.Unittests.TreePicture
             treePictureRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(new Domain.TreePicture { Id = 1, Path = "test.jpg", TreeId = 1 , Tree = new Domain.Tree(){Id = 1, Species = "Test" , IsDeleted = false}});
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<DeleteTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
@@ -67,10 +67,10 @@ namespace AP.BTP.Unittests.TreePicture
         [TestMethod]
         public async Task Handler_Should_Delete_Picture_When_Exists()
         {
-            var picture = new Domain.TreePicture { Id = 1, Path = "test.jpg", TreeId = 1, Tree = new Domain.Tree(){Id = 1, Species = "Test" , IsDeleted = false}};
+            Domain.TreePicture picture = new Domain.TreePicture { Id = 1, Path = "test.jpg", TreeId = 1, Tree = new Domain.Tree(){Id = 1, Species = "Test" , IsDeleted = false}};
             treePictureRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(picture);
 
-            var handler = new DeleteTreePictureCommandHandler(uowMock.Object);
+            DeleteTreePictureCommandHandler handler = new DeleteTreePictureCommandHandler(uowMock.Object);
 
             await handler.Handle(new DeleteTreePictureCommand { Id = 1 }, default);
 
@@ -83,7 +83,7 @@ namespace AP.BTP.Unittests.TreePicture
         {
             treePictureRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync((Domain.TreePicture?)null);
 
-            var handler = new DeleteTreePictureCommandHandler(uowMock.Object);
+            DeleteTreePictureCommandHandler handler = new DeleteTreePictureCommandHandler(uowMock.Object);
 
             await handler.Handle(new DeleteTreePictureCommand { Id = 1 }, default);
 

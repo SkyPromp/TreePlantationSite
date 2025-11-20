@@ -248,7 +248,7 @@
             foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
             {
                 string tempKey = kvp.Key;
-                var (file, data) = kvp.Value;
+                (IBrowserFile file, byte[] data) = kvp.Value;
 
                 using MultipartFormDataContent content = new MultipartFormDataContent();
                 content.Add(new ByteArrayContent(data), "file", file.Name);
