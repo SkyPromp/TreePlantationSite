@@ -193,6 +193,16 @@
     private string errorMessage = "";
 
     /// <summary>
+    /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
+    /// </summary>
+    readonly string[] allowedGroundplanFileTypes = {
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/bmp"
+    };
+
+    /// <summary>
     /// The ID of the plantation site to load. This is a component parameter.
     /// </summary>
     PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
@@ -438,11 +448,25 @@
     {
         IBrowserFile file = e.File;
 
+        if (this.client == null)
+        {
+            this.errorMessage = "The http client was not instantiated!";
+
+            return;
+        }
+
+        if (!this.allowedGroundplanFileTypes.Contains(file.ContentType))
+        {
+            this.errorMessage = "This filetype is not permitted!";
+
+            return;
+        }
+
         using MultipartFormDataContent content = new MultipartFormDataContent();
         using Stream stream = file.OpenReadStream();
         content.Add(new StreamContent(stream), "file", file.Name);
 
-        HttpResponseMessage response = await client.PostAsync("File/upload", content);
+        HttpResponseMessage response = await this.client.PostAsync("File/upload", content);
 
         if (response.IsSuccessStatusCode)
         {
