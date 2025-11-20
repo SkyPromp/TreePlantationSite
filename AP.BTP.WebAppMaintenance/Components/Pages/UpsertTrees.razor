@@ -14,7 +14,7 @@
                 <DataAnnotationsValidator />
                 <div class="form-content">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 pe-3">
                             <div>
                                 <label class="form-label">Boomsoorten</label>
                                 <TextInput @bind-Value="@Tree.Species"></TextInput>
@@ -22,9 +22,29 @@
                             </div>
                             <div>
                                 <label class="form-label">Picture upload</label>
-                                <InputFile OnChange="HandlePictureUpload" class="form-control mb-2" />
+                                <InputFile OnChange="HandlePictureUpload" multiple class="form-control mb-2" />
                             </div>                            
                         </div>
+                            <div class="col-8">
+                                <label class="form-label">Previews</label>
+                                <div class="border rounded p-2" style="height: 80%; overflow-y: auto;">
+                                    @if (previews.Count == 0)
+                                    {
+                                        <p class="text-muted">No images uploaded yet.</p>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex flex-wrap">
+                                            @foreach (var kvp in previews)
+                                            {
+                                                <div class="p-1" style="flex: 0 0 50%; height: 200px;">
+                                                    <img src="@kvp.Value" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: contain;" />
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
