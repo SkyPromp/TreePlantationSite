@@ -15,6 +15,21 @@ namespace AP.BTP.Application.CQRS.TreePicture
     {
         public AddTreePictureCommandValidator(IUnitOfWork uow)
         {
+            RuleFor(x => x.TreePicture.Path)
+                .NotEmpty().WithMessage("Picture path cannot be empty.");
+
+            RuleFor(x => x.TreePicture.TreeId)
+                .GreaterThan(0).WithMessage("Invalid TreeId.")
+                .MustAsync(async (id, _) => await uow.TreeRepository.GetById(id) != null)
+                .WithMessage("Tree does not exist.");
+
+            RuleFor(x => x.TreePicture.Path)
+                .Must(path =>
+                {
+                    string ext = Path.GetExtension(path).ToLower();
+                    return new[] { ".jpg", ".jpeg", ".png", ".webp", ".bmp" }.Contains(ext);
+                })
+                .WithMessage("Unsupported image file type.");
         }
     }
     

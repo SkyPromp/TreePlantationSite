@@ -8,7 +8,7 @@
 @using System.Text.Json
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
-    <Tab Title="Site details">
+    <Tab Title="Algemene informatie">
         <Content>
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
@@ -21,16 +21,16 @@
                                 <ValidationMessage For="@(() => Tree.Species)" />
                             </div>
                             <div>
-                                <label class="form-label">Picture upload</label>
-                                <InputFile OnChange="HandlePictureUpload" multiple class="form-control mb-2" />
+                                <label class="form-label">Foto selectie</label>
+                                <InputFile OnChange="HandlePictureUpload" multiple class="form-control mb-2"/>
                             </div>                            
                         </div>
                             <div class="col-8">
-                                <label class="form-label">Previews</label>
+                                <label class="form-label">Overzicht</label>
                                 <div class="border rounded p-2" style="height: 80%; overflow-y: auto;">
                                     @if (previews.Count == 0)
                                     {
-                                        <p class="text-muted">No images uploaded yet.</p>
+                                        <p class="text-muted">Nog geen afbeeldingen geselecteerd.</p>
                                     }
                                     else
                                     {
@@ -57,7 +57,7 @@
             </EditForm>
         </Content>
     </Tab>
-    <Tab Title="Maintenance">
+    <Tab Title="Onderhoudsplannen">
         <Content>
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
@@ -281,6 +281,18 @@
     {
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
+            if (!ImageFileTypes.Contains(file.ContentType))
+            {
+                errorMessage = $"File type '{file.ContentType}' is not permitted!";
+                continue;
+            }
+
+            if (file.Size > 10_000_000)
+            {
+                errorMessage = $"File '{file.Name}' exceeds the 10MB file size limit!";
+                continue;
+            }
+
             string key = Guid.NewGuid().ToString();
 
             using MemoryStream ms = new MemoryStream();
@@ -329,11 +341,17 @@
         this.selectedImage = null;
     }
 
-    private async void DeletePicture()
+    private async Task DeletePicture()
     {
+        if (selectedImage == null)
+        {
+            showDeleteConfirmation = false;
+            return;
+        }
+
         if (int.TryParse(selectedImage, out int picId))
         {
-            HttpResponseMessage res = await client!.DeleteAsync($"TreePicture?id={picId}");
+            HttpResponseMessage res = await client!.DeleteAsync($"TreePicture/{picId}");
             if (res.IsSuccessStatusCode)
             {
                 existingPictures.Remove(picId);
@@ -352,5 +370,16 @@
 
         selectedImage = null;
         showDeleteConfirmation = false;
+        StateHasChanged();
     }
+
+    /// <summary>
+    /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
+    /// </summary>
+    readonly string[] ImageFileTypes = {
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/bmp"
+    };
 }

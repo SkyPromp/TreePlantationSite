@@ -13,6 +13,12 @@ namespace AP.BTP.Application.CQRS.TreePicture
     {
         public DeleteTreePictureCommandValidator(IUnitOfWork uow)
         {
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("Invalid picture Id.")
+                .MustAsync(async (id, _) => 
+                    await uow.TreePictureRepository.GetById(id) != null
+                )
+                .WithMessage("Tree picture does not exist.");
         }
     }
 
