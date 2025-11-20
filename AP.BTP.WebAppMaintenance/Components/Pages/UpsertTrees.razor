@@ -37,7 +37,10 @@
                                         <div class="d-flex flex-wrap">
                                             @foreach (var kvp in previews)
                                             {
-                                                <div class="p-1" style="flex: 0 0 50%; height: 200px;">
+                                                <div class="position-relative p-1" style="flex: 0 0 50%; height: 200px;">
+                                                    <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; left: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
+                                                        <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
+                                                    </Button>
                                                     <img src="@kvp.Value" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: contain;" />
                                                 </div>
                                             }
@@ -80,6 +83,23 @@
     </Tab>
 </Tabs>
 
+@if (this.showDeleteConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     /// <summary>
     /// The optional ID of the tree to edit. 
@@ -100,6 +120,8 @@
 
     private Dictionary<string, string?> uploadedPictures = new();
     private Dictionary<string, string> previews = new();
+    private string? selectedImage = null; 
+    private bool showDeleteConfirmation = false;
 
     /// <summary>
     /// Represents the current tree being created or edited.
@@ -267,4 +289,23 @@
             await GeneratePreview(key, pic.Path);
         }
     } *@
+
+    private void CancelDeletePicture()
+    {
+        this.showDeleteConfirmation = false;
+        this.selectedImage = null;
+    }
+
+    private void DeletePicture()
+    {
+        if (selectedImage != null)
+        {
+            previews.Remove(selectedImage);
+
+            uploadedPictures.Remove(selectedImage);
+        }
+
+        selectedImage = null;
+        showDeleteConfirmation = false;
+    }
 }
