@@ -30,6 +30,13 @@
                     </div>
 
                     <div class="form-group mb-3">
+                        <label class="form-label" for="phoneNumber">Telefoonnummer</label>
+                        <InputText id="phoneNumber" type="tel" class="form-control"
+                                   @bind-Value="newUser.PhoneNumber" />
+                        <ValidationMessage For="@(() => newUser.PhoneNumber)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
                         <label class="form-label" for="email">E-mail</label>
                         <InputText id="email" type="email" class="form-control" @bind-Value="newUser.Email" />
                         <ValidationMessage For="@(() => newUser.Email)" class="text-danger" />

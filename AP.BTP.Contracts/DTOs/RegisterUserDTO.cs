@@ -27,6 +27,13 @@ namespace AP.BTP.Contracts.DTOs
         public string LastName { get; set; }
 
         /// <summary>
+        /// The phone number of the user. Must be a valid phone format
+        /// </summary>
+        [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
+        [Phone(ErrorMessage = "Ongeldig telefoonnummer.")]
+        public string PhoneNumber { get; set; }
+
+        /// <summary>
         /// The email address of the user. Must be a valid email format.
         /// </summary>
         [Required(ErrorMessage = "E-mail is verplicht")]
