@@ -16,6 +16,17 @@ namespace AP.BTP.WebAPI.Controllers
         private readonly string mediaPath;
 
         /// <summary>
+        /// The allowed filetypes that can be uploaded.
+        /// </summary>
+        readonly string[] allowedFileTypes = {
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/bmp",
+            "application/pdf"
+        };
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FileController"/> class.
         /// Ensures that the media folder exists.
         /// </summary>
@@ -36,9 +47,12 @@ namespace AP.BTP.WebAPI.Controllers
         /// or <see cref="OkObjectResult"/> containing the generated file name on success.
         /// </returns>
         [HttpPost("upload")]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)  // TODO move to CQRS
         {
+            
             if (file == null || file.Length == 0) return BadRequest("No file uploaded");
+
+            if (!this.allowedFileTypes.Contains(file.ContentType)) return StatusCode(StatusCodes.Status415UnsupportedMediaType);
 
             string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             string filePath = Path.Combine(mediaPath, fileName);

@@ -29,9 +29,11 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="item">The <see cref="TaskList"/> to create.</param>
         /// <returns>The created <see cref="TaskList"/> entity.</returns>
         /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
-        public Task<TaskList> Create(TaskList item)
+        public async Task<TaskList> Create(TaskList item)
         {
-            throw new NotImplementedException();
+            await this.dbSet.AddAsync(item);
+
+            return item;
         }
 
         /// <summary>
