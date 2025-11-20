@@ -38,7 +38,7 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">An optional search string to filter trees by species or other properties.</param>
         /// <returns>
-        /// A task that returns a <see cref="Paged{Tree}"/> containing the requested page of tree entities.
+        /// A task that returns a paginated list of trees containing total count.
         /// </returns>
         Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search);
     }

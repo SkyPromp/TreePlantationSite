@@ -78,6 +78,9 @@ namespace AP.BTP.Infrastructure.UOW
         /// </summary>
         public ITaskItemRepository TaskItemRepository => taskItemRepo;
 
+        /// <summary>
+        /// Gets the repository for <see cref="TreePicture"/> entities.
+        /// </summary>
         public ITreePictureRepository TreePictureRepository => treePictureRepo;
 
         /// <summary>

@@ -36,6 +36,9 @@
         /// </summary>
         ITaskItemRepository TaskItemRepository { get; }
 
+        /// <summary>
+        /// Gets the repository for managing <see cref="TreePicture"/> entities.
+        /// </summary>
         ITreePictureRepository TreePictureRepository { get; }
 
         /// <summary>

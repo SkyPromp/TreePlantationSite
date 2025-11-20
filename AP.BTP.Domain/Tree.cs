@@ -35,6 +35,10 @@ namespace AP.BTP.Domain
         /// </summary>
         public bool IsDeleted { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of tree pictures for the tree.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
         [JsonIgnore] public ICollection<TreePicture> TreePictures = new List<TreePicture>();
     }
 }

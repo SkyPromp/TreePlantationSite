@@ -117,10 +117,33 @@
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
     HttpClient? client;
+
+    /// <summary>
+    /// Stores newly selected images that have not yet been uploaded.
+    /// Key is a temporary GUID, value is a tuple of the file and its byte content.
+    /// </summary>
     private Dictionary<string, (IBrowserFile file, byte[] data)> newPictures = new();
+
+    /// <summary>
+    /// Stores existing images for the tree.
+    /// Key is the picture ID, value is the filename/path.
+    /// </summary>
     private Dictionary<int, string> existingPictures = new();
+
+    /// <summary>
+    /// Stores image previews to display in the UI.
+    /// Key is either the temporary GUID (for new images) or ID (for existing images), value is a base64 data URI.
+    /// </summary>
     private Dictionary<string, string> previews = new();
+
+    /// <summary>
+    /// Holds the currently selected image for deletion.
+    /// </summary>
     private string? selectedImage = null; 
+
+    /// <summary>
+    /// Indicates whether the delete confirmation modal should be shown.
+    /// </summary>
     private bool showDeleteConfirmation = false;
 
     /// <summary>
@@ -171,7 +194,7 @@
     /// <summary>
     /// Handles the form submission to create or update a tree record.
     /// Performs input validation, sends the appropriate API request,
-    /// and navigates back to the tree list upon success.
+    /// and uploads pictures.
     /// </summary>
     private async Task Submit()
     {
@@ -276,7 +299,9 @@
 
     /// <summary>
     /// Handles uploading one or more images for the tree.
+    /// Validates file type and size before storing them in <see cref="newPictures"/> and generating previews.
     /// </summary>
+    /// <param name="e">The <see cref="InputFileChangeEventArgs"/> containing selected files.</param>
     private async Task HandlePictureUpload(InputFileChangeEventArgs e)
     {
         foreach (IBrowserFile file in e.GetMultipleFiles())
@@ -306,6 +331,12 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Generates a base64 preview for the image specified by <paramref name="fileName"/>.
+    /// Updates <see cref="previews"/> with the resulting data URI.
+    /// </summary>
+    /// <param name="key">The key to associate with the preview.</param>
+    /// <param name="fileName">The server file name of the image.</param>
     private async Task GeneratePreview(string key, string fileName)
     {
         HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
@@ -320,6 +351,11 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Loads all existing pictures for the given tree from the API.
+    /// Updates <see cref="existingPictures"/> and <see cref="previews"/>.
+    /// </summary>
+    /// <param name="treeId">The ID of the tree whose pictures to load.</param>
     private async Task LoadExistingPictures(int treeId)
     {
         List<TreePictureDTO>? response = await client!.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{treeId}");
@@ -335,12 +371,20 @@
         }
     }
 
+    /// <summary>
+    /// Cancels the delete picture operation.
+    /// Hides the confirmation modal and clears the selected image.
+    /// </summary>
     private void CancelDeletePicture()
     {
         this.showDeleteConfirmation = false;
         this.selectedImage = null;
     }
 
+    /// <summary>
+    /// Deletes the currently selected picture.
+    /// Removes it from <see cref="existingPictures"/> or <see cref="newPictures"/> and updates <see cref="previews"/>.
+    /// </summary>
     private async Task DeletePicture()
     {
         if (selectedImage == null)
