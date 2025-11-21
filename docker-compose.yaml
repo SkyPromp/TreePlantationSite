@@ -22,6 +22,7 @@ services:
     build:
       context: .
       dockerfile: AP.BTP.WebAPI/Dockerfile
+      network: host
     container_name: apbtp-webapi
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
@@ -49,6 +50,7 @@ services:
     build:
       context: .
       dockerfile: AP.BTP.WebApp/Dockerfile
+      network: host
     container_name: apbtp-webapp
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
@@ -76,6 +78,7 @@ services:
     build:
       context: .
       dockerfile: AP.BTP.WebAppMaintenance/Dockerfile
+      network: host
     container_name: apbtp-webapp-maintenance
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}

@@ -45,13 +45,11 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="page">The page number for paged results (optional).</param>
         /// <param name="pageSize">The number of items per page (optional).</param>
         /// <param name="search">Optional search string to filter trees by species.</param>
-        /// <returns>A list of <see cref="TreeDTO"/> objects.</returns>
+        /// <returns>A paginated list of trees.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetTrees([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? search = null)
+        public async Task<IActionResult> GetAllTreesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
-            if(page != null && pageSize != null) return Ok(await mediator.Send(new GetTreeQuery() { Page=page.Value, PageSize=pageSize.Value, SearchString=search }));
-
-            return Ok(await mediator.Send(new GetAllTreeQuery() { }));
+            return Ok(await mediator.Send(new GetAllTreesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
         /// <summary>

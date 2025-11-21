@@ -23,7 +23,7 @@ namespace AP.BTP.Domain
         /// Gets or sets the collection of zones where this tree is planted.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public ICollection<Zone>? Zones { get; set; }
+        [JsonIgnore] public ICollection<Zone> Zones { get; set; } = new List<Zone>();
 
         /// <summary>
         /// Gets or sets the maintenance plan associated with the tree, if any.
@@ -34,5 +34,11 @@ namespace AP.BTP.Domain
         /// Gets or sets a value indicating whether the tree is considered deleted (soft deletion).
         /// </summary>
         public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of tree pictures for the tree.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
+        [JsonIgnore] public ICollection<TreePicture> TreePictures = new List<TreePicture>();
     }
 }
