@@ -1483,7 +1483,16 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MaintenancePlan")
+                    b.Property<string>("MaintenancePlanAutumn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanSpring")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanSummer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanWinter")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Species")

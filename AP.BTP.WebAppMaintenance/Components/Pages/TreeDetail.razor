@@ -85,10 +85,10 @@
         {
             this.Tree = response;
 
-            if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
+            @* if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
             {
                 await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
-            }
+            } *@
 
         } else this.errorMessage = "Couldn't load tree";
 
