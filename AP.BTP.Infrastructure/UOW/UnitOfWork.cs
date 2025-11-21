@@ -16,6 +16,7 @@ namespace AP.BTP.Infrastructure.UOW
         private readonly IUserRepository userRepo;
         private readonly ITaskListRepository taskListRepo;
         private readonly ITaskItemRepository taskItemRepo;
+        private readonly ITreePictureRepository treePictureRepo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class with all required repositories and the database context.
@@ -34,7 +35,8 @@ namespace AP.BTP.Infrastructure.UOW
             IZoneRepository zoneRepo,
             IUserRepository userRepo,
             ITaskListRepository taskListRepo,
-            ITaskItemRepository taskItemRepo
+            ITaskItemRepository taskItemRepo,
+            ITreePictureRepository treePictureRepo
         ) {
             this.ctxt = ctxt;
             this.plantationSiteRepo = plantationSiteRepo;
@@ -43,6 +45,7 @@ namespace AP.BTP.Infrastructure.UOW
             this.userRepo = userRepo;
             this.taskListRepo = taskListRepo;
             this.taskItemRepo = taskItemRepo;
+            this.treePictureRepo = treePictureRepo;
         }
 
         /// <summary>
@@ -74,6 +77,11 @@ namespace AP.BTP.Infrastructure.UOW
         /// Gets the repository for <see cref="TaskItem"/> entities.
         /// </summary>
         public ITaskItemRepository TaskItemRepository => taskItemRepo;
+
+        /// <summary>
+        /// Gets the repository for <see cref="TreePicture"/> entities.
+        /// </summary>
+        public ITreePictureRepository TreePictureRepository => treePictureRepo;
 
         /// <summary>
         /// Persists all changes made in the repositories to the database asynchronously.

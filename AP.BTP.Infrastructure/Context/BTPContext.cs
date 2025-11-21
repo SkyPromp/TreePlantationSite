@@ -28,12 +28,20 @@ namespace AP.BTP.Infrastructure.Context
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            // Relations
             modelBuilder.Entity<PlantationSite>()
                 .HasMany(p => p.Zones)
                 .WithOne(z => z.PlantationSite)
                 .HasForeignKey(z => z.PlantationSiteId);
-            
+
+            modelBuilder.Entity<Tree>()
+                .HasMany(tp => tp.TreePictures)
+                .WithOne(t => t.Tree)
+                .HasForeignKey(t => t.TreeId);
+
+            // Seeding
             modelBuilder.Entity<PlantationSite>().Seed();
+            modelBuilder.Entity<Tree>().Seed();
             modelBuilder.Entity<User>().Seed();
             modelBuilder.Entity<TaskList>().Seed();
             modelBuilder.Entity<TaskItem>().Seed();
