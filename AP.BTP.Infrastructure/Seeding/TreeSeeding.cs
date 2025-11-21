@@ -33,7 +33,10 @@ namespace AP.BTP.Infrastructure.Seeding
                 {
                     Id = i,
                     Species = $"Tree {i}",
-                    MaintenancePlan = $"Maintenance plan {i}",
+                    MaintenancePlanSpring = $"",
+                    MaintenancePlanSummer = $"",
+                    MaintenancePlanAutumn = $"",
+                    MaintenancePlanWinter = $"",
                     IsDeleted = false
                 });
             }

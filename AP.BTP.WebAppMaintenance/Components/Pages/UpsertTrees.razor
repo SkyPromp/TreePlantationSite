@@ -22,7 +22,7 @@
                             </div>
                             <div>
                                 <label class="form-label">Foto selectie</label>
-                                <InputFile OnChange="HandlePictureUpload" multiple class="form-control mb-2"/>
+                                <InputFile OnChange="e => HandleFileUpload(e, FileType.Picture, null)" multiple class="form-control mb-2"/>
                             </div>                            
                         </div>
                             <div class="col-8">
@@ -62,15 +62,113 @@
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
                 <div class="form-content">
-                    <div class="row">
-                        <div class="col-4">
-                            <div>
-                                <label class="form-label">Onderhoud</label>
-                                <InputFile class="form-control mb-2" />
+                    <div class="row row-cols-2 d-flex align-items-center justify-content-center">
+                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                            <div class="input-container d-flex flex-column w-100">
+                                <label class="form-label">Lente</label>
+                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Spring)" />
+                            </div>
+                            <div class="preview text-center mt-2">
+                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)){
+                                    string fileKey = Tree.MaintenancePlanSpring;
+                                    string? previewData = maintenancePreviews[fileKey];
+                                    string filename = maintenanceFileNames[fileKey];
+
+                                    if (filename.Contains(".pdf"))
+                                    {
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                    }
+                                } else {
+                                    <p>No preview yet.</p>
+                                }
                             </div>
                         </div>
-                        <div class="col-8 d-flex justify-content-center align-items-center">
-                            <p class="text-muted">Nog geen onderhoudsplan toegevoegd.</p>
+
+                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                            <div class="input-container d-flex flex-column w-100">
+                                <label class="form-label">Zomer</label>
+                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Summer)" />
+                            </div>
+                            <div class="preview text-center mt-2">
+                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)){
+                                    string fileKey = Tree.MaintenancePlanSummer;
+                                    string? previewData = maintenancePreviews[fileKey];
+                                    string filename = maintenanceFileNames[fileKey];
+
+                                    if (filename.Contains(".pdf"))
+                                    {
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                    }
+                                } else {
+                                    <p>No preview yet.</p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                            <div class="input-container d-flex flex-column w-100">
+                                <label class="form-label">Herfst</label>
+                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Autumn)" />
+                            </div>
+                            <div class="preview text-center mt-2">
+                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)){
+                                    string fileKey = Tree.MaintenancePlanAutumn;
+                                    string? previewData = maintenancePreviews[fileKey];
+                                    string filename = maintenanceFileNames[fileKey];
+
+                                    if (filename.Contains(".pdf"))
+                                    {
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                    }
+                                } else {
+                                    <p>No preview yet.</p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                            <div class="input-container d-flex flex-column w-100">
+                                <label class="form-label">Winter</label>
+                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Winter)" />
+                            </div>
+                            <div class="preview text-center mt-2">
+                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)){
+                                    string fileKey = Tree.MaintenancePlanWinter!;
+                                    string? previewData = maintenancePreviews[fileKey];
+                                    string filename = maintenanceFileNames[fileKey];
+
+                                    if (filename.Contains(".pdf"))
+                                    {
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                    }
+                                } else {
+                                    <p>No preview yet.</p>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -118,6 +216,20 @@
     /// </summary>
     HttpClient? client;
 
+    public enum FileType
+    {
+        Picture,
+        Maintenance
+    }
+
+    public enum Season{
+        Spring,
+        Summer,
+        Autumn,
+        Winter
+    }
+
+
     /// <summary>
     /// Stores newly selected images that have not yet been uploaded.
     /// Key is a temporary GUID, value is a tuple of the file and its byte content.
@@ -135,6 +247,11 @@
     /// Key is either the temporary GUID (for new images) or ID (for existing images), value is a base64 data URI.
     /// </summary>
     private Dictionary<string, string> previews = new();
+
+    private Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
+    private Dictionary<int, string> existingMaintenanceFiles = new();
+    private Dictionary<string, string> maintenancePreviews = new();
+    private Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
     /// Holds the currently selected image for deletion.
@@ -287,9 +404,38 @@
                     existingPictures[created.Id] = created.Path;
 
                     previews.Remove(tempKey);
-                    await GeneratePreview(created.Id.ToString(), created.Path);
+                    await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
                 }
             }
+            
+            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> maintenanceToUpload = newMaintenanceFiles.ToList();
+            newMaintenanceFiles.Clear();
+
+            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceToUpload)
+            {
+                string key = kvp.Key;
+                (IBrowserFile file, byte[] data) = kvp.Value;
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new ByteArrayContent(data), "file", file.Name);
+
+                string? fileName = null;
+                HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
+                if (fileResponse.IsSuccessStatusCode)
+                {
+                    JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
+                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
+                }
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    errorMessage = $"Failed to upload maintenance file {file.Name}";
+                    continue;
+                }
+
+                await GeneratePreview(key, fileName, FileType.Maintenance);
+            }
+            
             this.errorMessage = "";
 
         } catch (Exception e)
@@ -304,13 +450,19 @@
     /// Validates file type and size before storing them in <see cref="newPictures"/> and generating previews.
     /// </summary>
     /// <param name="e">The <see cref="InputFileChangeEventArgs"/> containing selected files.</param>
-    private async Task HandlePictureUpload(InputFileChangeEventArgs e)
+    private async Task HandleFileUpload(InputFileChangeEventArgs e, FileType type, Season? season)
     {
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
-            if (!ImageFileTypes.Contains(file.ContentType))
+            if (type == FileType.Picture && !ImageFileTypes.Contains(file.ContentType))
             {
                 errorMessage = $"File type '{file.ContentType}' is not permitted!";
+                continue;
+            }
+
+            if (type == FileType.Maintenance && !AllowedMaintenanceFileTypes.Contains(file.ContentType))
+            {
+                errorMessage = $"File type '{file.ContentType}' is not permitted for maintenance plans!";
                 continue;
             }
 
@@ -321,13 +473,30 @@
             }
 
             string key = Guid.NewGuid().ToString();
-
             using MemoryStream ms = new MemoryStream();
             await file.OpenReadStream(10_000_000).CopyToAsync(ms);
 
-            newPictures[key] = (file, ms.ToArray());
+            if (type == FileType.Picture)
+            {
+                Console.WriteLine("Uploading picture");
+                newPictures[key] = (file, ms.ToArray());
+                previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+            }
+            else if (type == FileType.Maintenance)
+            {
+                Console.WriteLine("Uploading plan");
+                newMaintenanceFiles[key] = (file, ms.ToArray());
+                maintenancePreviews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+                maintenanceFileNames[key] = file.Name;
 
-            previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+                switch (season)
+                {
+                    case Season.Spring: Tree.MaintenancePlanSpring = key; break;
+                    case Season.Summer: Tree.MaintenancePlanSummer = key; break;
+                    case Season.Autumn: Tree.MaintenancePlanAutumn = key; break;
+                    case Season.Winter: Tree.MaintenancePlanWinter = key; break;
+                }
+            }
         }
 
         StateHasChanged();
@@ -339,7 +508,7 @@
     /// </summary>
     /// <param name="key">The key to associate with the preview.</param>
     /// <param name="fileName">The server file name of the image.</param>
-    private async Task GeneratePreview(string key, string fileName)
+    private async Task GeneratePreview(string key, string fileName, FileType fileType)
     {
         HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
 
@@ -348,7 +517,15 @@
         byte[] bytes = await response.Content.ReadAsByteArrayAsync();
         string type = response.Content.Headers.ContentType?.MediaType!;    
 
-        previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+        if(fileType == FileType.Picture){
+            Console.WriteLine("Generating picture preview");
+            previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+        }
+        else if(fileType == FileType.Maintenance){
+            Console.WriteLine("Generating maintenance preview");
+            maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+            maintenanceFileNames[key] = fileName;
+        }
 
         StateHasChanged();
     }
@@ -366,9 +543,10 @@
             existingPictures.Clear();
             previews.Clear();
             foreach (TreePictureDTO pic in response)
-            {        
+            {
+                Console.WriteLine("Setting picture path");        
                 existingPictures[pic.Id] = pic.Path;
-                await GeneratePreview(pic.Id.ToString(), pic.Path);
+                await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
             }
         }
     }
@@ -427,5 +605,12 @@
         "image/png",
         "image/webp",
         "image/bmp"
+    };
+    
+    readonly string[] AllowedMaintenanceFileTypes = {
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp"
     };
 }
