@@ -19,13 +19,16 @@
             <li class="nav-item">
                 <a class="nav-link" href="/admin/tree">Trees</a>
             </li>
-        }
-        else if(user != null && user.IsInRole("Manager")){
+        } else if(user != null && user.IsInRole("Manager")){
             <li class="nav-item">
                 <a class="nav-link" href="/manager/planning">Planning</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/manager/tree">Bomen</a>
+            </li>
+        } else if(user != null && user.IsInRole("Operator")){
+            <li class="nav-item">
+                <a class="nav-link" href="/planning">Planning</a>
             </li>
         }
             <li class="nav-item position-relative">

@@ -1,0 +1,94 @@
+﻿@attribute [Authorize(Roles = "Operator")]
+@page "/planning"
+@rendermode InteractiveServer
+@using AP.BTP.Contracts.DTOs
+@using Microsoft.AspNetCore.Authorization
+@using System.Globalization
+@inject NavigationManager Navigation
+@inject IHttpClientFactory HttpClientFactory
+
+<h3>@todayTasks.</h3>
+<div class="card">
+    <div class="p-3 gap-3">
+        @foreach(TaskItemDTO task in todayTasks?.TaskItems ?? [])
+        {
+            <div class="card">
+                <div>
+                    <p>@task.Title</p>
+                    <p>@task.Description</p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button class="btn">Start</button>
+                    <small>Time spent doing task</small>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    /// <summary>
+    /// The ID of the user whose details and tasks are being displayed.
+    /// This is passed as a parameter to the component.
+    /// </summary>
+    private string errorMessage = "";
+
+    /// <summary>
+    /// HttpClient used to call the backend API.
+    /// </summary>
+    private HttpClient? client;
+
+    private DateTime selectedDate;
+
+    private TaskListDTO? todayTasks;
+
+    /// <summary>
+    /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
+    /// and sets up the current week and its task lists on the first render.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first render of the component.</param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        this.client = HttpClientFactory.CreateClient("BTPApi");
+        this.selectedDate = DateTime.Now.Date;
+
+        await this.LoadUser();
+    }
+
+    /// <summary>
+    /// Loads the user details from the API based on the <see cref="userId"/>.
+    /// </summary>
+    private async Task LoadUser()
+    {
+        if (this.client == null)
+        {
+            this.errorMessage = "Client is null";
+
+            return;
+        }
+
+        try
+        {
+            TaskListDTO? response = await this.client.GetFromJsonAsync<TaskListDTO>($"tasklist?date={this.selectedDate}");
+
+            if (response != null)
+            {
+                this.todayTasks = response;
+                StateHasChanged();
+            } else
+            {
+                this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de takenlijst.";
+            }
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+}

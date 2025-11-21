@@ -3,6 +3,7 @@ using AP.BTP.Contracts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AP.BTP.WebAPI.Controllers
 {
@@ -36,12 +37,31 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="year">The year to filter the task lists.</param>
         /// <param name="weekNumber">The ISO week number to filter the task lists.</param>
         /// <returns>A list of <see cref="TaskListDTO"/> objects for the specified user and week.</returns>
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet]
         public async Task<IActionResult> GetByUserAndWeek([FromQuery] int userId, [FromQuery] int year, [FromQuery] int weekNumber)
         {
             return Ok(await mediator.Send(new GetAllTaskListsByUserIdAndWeekQuery { UserId = userId, Year = year, WeekNumber = weekNumber }));
         }
 
+        /*
+        [Authorize(Roles = "Operator")]
+        [HttpGet]
+        public async Task<IActionResult> GetByDay([FromQuery] DateTime date)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Console.WriteLine("START --------------------------");
+            Console.WriteLine(date.ToString());
+            Console.WriteLine(userId);
+            Console.WriteLine("END --------------------------");
+
+            return BadRequest();
+            //return Ok(await mediator.Send());
+        }
+        */
+
+        // TODO add docu comment
         [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)
