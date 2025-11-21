@@ -193,7 +193,7 @@ namespace AP.BTP.Unittests.Zone
         }
 
         [TestMethod]
-        public async Task Should_Not_Have_Error_Without_Duplicate_Zone_Name()
+        public async Task Should_Have_Error_Without_Duplicate_Zone_Name()
         {
             PlantationSiteDTO plantationSite = PlantationSite;
             List<Domain.Zone> zones = new List<Domain.Zone>();
