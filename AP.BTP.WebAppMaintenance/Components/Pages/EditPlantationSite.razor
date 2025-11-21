@@ -5,6 +5,7 @@
 @using AP.BTP.Contracts.DTOs
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Headers
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -464,7 +465,11 @@
 
         using MultipartFormDataContent content = new MultipartFormDataContent();
         using Stream stream = file.OpenReadStream();
-        content.Add(new StreamContent(stream), "file", file.Name);
+
+        StreamContent fileContent = new StreamContent(stream);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+        content.Add(fileContent, "file", file.Name);
 
         HttpResponseMessage response = await this.client.PostAsync("File/upload", content);
 

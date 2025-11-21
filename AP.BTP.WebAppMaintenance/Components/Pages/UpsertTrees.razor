@@ -6,6 +6,7 @@
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 @using System.Text.Json
+@using System.Net.Http.Headers
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Algemene informatie">
@@ -368,7 +369,11 @@
                 (IBrowserFile file, byte[] data) = kvp.Value;
 
                 using MultipartFormDataContent content = new MultipartFormDataContent();
-                content.Add(new ByteArrayContent(data), "file", file.Name);
+
+                ByteArrayContent fileContent = new ByteArrayContent(data);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "file", file.Name);
+
 
                 string? fileName = null;
                 HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
@@ -417,7 +422,10 @@
                 (IBrowserFile file, byte[] data) = kvp.Value;
 
                 using MultipartFormDataContent content = new MultipartFormDataContent();
-                content.Add(new ByteArrayContent(data), "file", file.Name);
+
+                ByteArrayContent fileContent = new ByteArrayContent(data);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "file", file.Name);
 
                 string? fileName = null;
                 HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
