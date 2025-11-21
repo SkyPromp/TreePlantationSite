@@ -284,6 +284,7 @@
         if (Id.HasValue){
             await LoadTree(Id.Value);
             await LoadExistingPictures(Id.Value);
+            await LoadExistingMaintenanceFiles();
         }
     }
 
@@ -332,6 +333,55 @@
                 this.errorMessage = "The tree name is empty";
 
                 return;
+            }
+
+            if (newMaintenanceFiles.Count > 0) 
+            {
+                List<KeyValuePair<string, (IBrowserFile file, byte[] data)>>? maintenanceFilesToUpload = newMaintenanceFiles.ToList();
+                newMaintenanceFiles.Clear();
+
+                foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceFilesToUpload)
+                {
+                    string key = kvp.Key;
+                    (IBrowserFile file, byte[] data) = kvp.Value;
+
+                    using MultipartFormDataContent content = new MultipartFormDataContent();
+                    ByteArrayContent fileContent = new ByteArrayContent(data);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                    content.Add(fileContent, "file", file.Name);
+
+                    HttpResponseMessage uploadResponse = await client.PostAsync("File/upload", content);
+
+                    if (!uploadResponse.IsSuccessStatusCode)
+                    {
+                        this.errorMessage = $"Failed to upload maintenance file {file.Name}.";
+                        continue;
+                    }
+
+                    string? fileName = null;
+                    JsonElement json = await uploadResponse.Content.ReadFromJsonAsync<JsonElement>();
+                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
+                    if (string.IsNullOrEmpty(fileName))
+                    {
+                        errorMessage = $"Upload succeeded but no fileName returned for {file.Name}";
+                        continue;
+                    }
+
+                    Console.WriteLine($"File name: {file.Name}");
+
+                    if (Tree.MaintenancePlanSpring == key)
+                        Tree.MaintenancePlanSpring = fileName;
+                    if (Tree.MaintenancePlanSummer == key)
+                        Tree.MaintenancePlanSummer = fileName;
+                    if (Tree.MaintenancePlanAutumn == key)
+                        Tree.MaintenancePlanAutumn = fileName;
+                    if (Tree.MaintenancePlanWinter == key)
+                        Tree.MaintenancePlanWinter = fileName;
+
+                    maintenancePreviews.Remove(key);
+
+                    await GeneratePreview(fileName, fileName, FileType.Maintenance);
+                }
             }
 
             HttpResponseMessage response;
@@ -411,37 +461,6 @@
                     previews.Remove(tempKey);
                     await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
                 }
-            }
-            
-            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> maintenanceToUpload = newMaintenanceFiles.ToList();
-            newMaintenanceFiles.Clear();
-
-            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceToUpload)
-            {
-                string key = kvp.Key;
-                (IBrowserFile file, byte[] data) = kvp.Value;
-
-                using MultipartFormDataContent content = new MultipartFormDataContent();
-
-                ByteArrayContent fileContent = new ByteArrayContent(data);
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                content.Add(fileContent, "file", file.Name);
-
-                string? fileName = null;
-                HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
-                if (fileResponse.IsSuccessStatusCode)
-                {
-                    JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
-                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
-                }
-
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    errorMessage = $"Failed to upload maintenance file {file.Name}";
-                    continue;
-                }
-
-                await GeneratePreview(key, fileName, FileType.Maintenance);
             }
             
             this.errorMessage = "";
@@ -557,6 +576,25 @@
                 await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
             }
         }
+    }
+
+    private async Task LoadExistingMaintenanceFiles()
+    {
+        maintenancePreviews.Clear();
+        maintenanceFileNames.Clear();
+
+        async Task LoadOne(string? fileKey)
+        {
+            if (string.IsNullOrWhiteSpace(fileKey))
+                return;
+
+            await GeneratePreview(fileKey, fileKey, FileType.Maintenance);
+        }
+
+        await LoadOne(Tree.MaintenancePlanSpring);
+        await LoadOne(Tree.MaintenancePlanSummer);
+        await LoadOne(Tree.MaintenancePlanAutumn);
+        await LoadOne(Tree.MaintenancePlanWinter);
     }
 
     /// <summary>
