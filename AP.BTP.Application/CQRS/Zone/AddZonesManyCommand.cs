@@ -48,15 +48,15 @@ namespace AP.BTP.Application.CQRS.Zone
 
                     foreach (ZoneDTO zone in zones)
                     {
-                        var plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+                        Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
 
-                        if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone!");
+                        if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
                         if(plantationSite.Zones.Count(z => z.Name == zone.Name) != 0) return false;
                     }
 
                     return true;
                 })
-                .WithMessage("The zone name must be unique within a plantationsite");
+                .WithMessage("The zone name must be unique within a plantationsite.");
 
         }
     }

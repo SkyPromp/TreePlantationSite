@@ -224,7 +224,7 @@ namespace AP.BTP.Unittests.Zone
             TestValidationResult<AddZonesManyCommand> result2 = await validator.TestValidateAsync(command2);
 
             result.ShouldNotHaveAnyValidationErrors();
-            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite") != null);
+            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite.") != null);
         }
 
         [TestMethod]
@@ -262,7 +262,7 @@ namespace AP.BTP.Unittests.Zone
 
             TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
 
-            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite") != null);
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite.") != null);
         }
 
         [TestMethod]

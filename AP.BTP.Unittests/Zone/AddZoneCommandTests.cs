@@ -189,11 +189,11 @@ namespace AP.BTP.Unittests.Zone
             TestValidationResult<AddZoneCommand> result2 = await validator.TestValidateAsync(command2);
 
             result.ShouldNotHaveAnyValidationErrors();
-            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Zone).WithErrorMessage("The zone name must be unique within a plantationsite") != null);
+            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Zone).WithErrorMessage("The zone name must be unique within a plantationsite.") != null);
         }
 
         [TestMethod]
-        public async Task Should_Have_Error_Without_Duplicate_Zone_Name()
+        public async Task Should_Not_Have_Error_Without_Duplicate_Zone_Name()
         {
             PlantationSiteDTO plantationSite = PlantationSite;
             List<Domain.Zone> zones = new List<Domain.Zone>();
