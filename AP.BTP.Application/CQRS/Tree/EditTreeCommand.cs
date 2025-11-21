@@ -36,6 +36,17 @@ namespace AP.BTP.Application.CQRS.Tree
             RuleFor(command => command.Tree.Id)
                 .NotEqual(0)
                 .WithMessage("Id should not be zero when editing a tree.");
+
+            RuleFor(command => command.Tree)
+                .MustAsync(async (tree, cancellation) =>
+                {
+                    IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll();
+
+                    if (trees == null) return true;
+
+                    return trees.Count(t => (t.Id != tree.Id) && (t.Species == tree.Species)) == 0;
+                })
+                .WithMessage("The tree species must be unique.");
         }
     }
 
