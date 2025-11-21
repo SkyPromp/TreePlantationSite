@@ -44,7 +44,7 @@ namespace AP.BTP.Application.CQRS.Zone
             RuleFor(command => command.Zone)
                 .MustAsync(async (zone, cancellation) =>
                 {
-                    var plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+                    Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
 
                     if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone!");
 
