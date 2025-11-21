@@ -43,16 +43,35 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task Should_Have_Error_When_Id_Not_Zero()
         {
-            List<ZoneDTO> Zones = new List<ZoneDTO>();
+            List<ZoneDTO> zonesDTO = new List<ZoneDTO>();
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = PlantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
+
             for(int i = 1; i < 4; i++)
             {
                 ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSite.Id, TreeId=Tree.Id};
-                Zones.Add(zone);
+                zonesDTO.Add(zone);
             }
 
             AddZonesManyCommand command = new AddZonesManyCommand
             {
-                Zones = Zones
+                Zones = zonesDTO
             };
 
             TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
@@ -64,6 +83,25 @@ namespace AP.BTP.Unittests.Zone
         public async Task Should_Have_Error_When_PlantationSiteId_Zero()
         {
             List<ZoneDTO> Zones = new List<ZoneDTO>();
+
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = PlantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
 
             for(int i = 1; i < 4; i++)
             {
@@ -86,6 +124,25 @@ namespace AP.BTP.Unittests.Zone
         {
             List<ZoneDTO> Zones = new List<ZoneDTO>();
 
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = PlantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
+
             for(int i = 1; i < 4; i++)
             {
                 ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSite.Id, TreeId=0};
@@ -100,6 +157,201 @@ namespace AP.BTP.Unittests.Zone
             TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zones.All(zone => zone.TreeId != 0)).WithErrorMessage("All trees must already exist.") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_With_Duplicate_Zone_Name_In_Db()
+        {
+            PlantationSiteDTO plantationSite = PlantationSite;
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
+
+
+            AddZonesManyCommand command = new AddZonesManyCommand()
+            {
+                Zones = new List<ZoneDTO>()
+                {
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                }
+            };
+
+            TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
+
+            zones.Add(new Domain.Zone() 
+                {
+                    Id = 1,
+                    Name = "Zone1",
+                    Tree = new Domain.Tree() { Id = 1,
+                    Species = "Oak"
+                },
+                PlantationSite = new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                }
+            });
+
+            AddZonesManyCommand command2 = new AddZonesManyCommand()
+            {
+                Zones = new List<ZoneDTO>()
+                {
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                }
+            };
+
+            TestValidationResult<AddZonesManyCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_With_Duplicate_Zone_Name_In_List()
+        {
+            PlantationSiteDTO plantationSite = PlantationSite;
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
+
+
+            AddZonesManyCommand command = new AddZonesManyCommand()
+            {
+                Zones = new List<ZoneDTO>()
+                {
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                }
+            };
+
+            TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zones).WithErrorMessage("The zone name must be unique within a plantationsite") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_Without_Duplicate_Zone_Name()
+        {
+            PlantationSiteDTO plantationSite = PlantationSite;
+            List<Domain.Zone> zones = new List<Domain.Zone>();
+
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
+                .ReturnsAsync(new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                });
+
+
+            AddZonesManyCommand command = new AddZonesManyCommand()
+            {
+                Zones = new List<ZoneDTO>()
+                {
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                    new ZoneDTO() { Id = 0, Name = "Zone2", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                }
+            };
+
+            TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
+
+            zones.Add(new Domain.Zone() 
+                {
+                    Id = 1,
+                    Name = "Zone1",
+                    Tree = new Domain.Tree() { Id = 1,
+                    Species = "Oak"
+                },
+                PlantationSite = new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                }
+            });
+
+            zones.Add(new Domain.Zone() 
+                {
+                    Id = 2,
+                    Name = "Zone2",
+                    Tree = new Domain.Tree() { Id = 1,
+                    Species = "Oak"
+                },
+                PlantationSite = new Domain.PlantationSite()
+                {
+                    Id = plantationSite.Id,
+                    Zones = zones,
+                    Street = "Street",
+                    Name = "Name",
+                    HouseNumber = "1",
+                    GroundPlan = "",
+                    Country = "Country",
+                    City = "City"
+                }
+            });
+
+            AddZonesManyCommand command2 = new AddZonesManyCommand()
+            {
+                Zones = new List<ZoneDTO>()
+                {
+                    new ZoneDTO() { Id = 0, Name = "Zone3", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                }
+            };
+
+            TestValidationResult<AddZonesManyCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            result2.ShouldNotHaveAnyValidationErrors();
         }
     }
 }

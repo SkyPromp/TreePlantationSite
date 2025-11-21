@@ -40,6 +40,24 @@ namespace AP.BTP.Application.CQRS.Zone
             RuleFor(command => command.Zones.All(zone => zone.TreeId != 0))
                 .Equal(true)
                 .WithMessage("All trees must already exist.");
+
+            RuleFor(command => command.Zones)
+                .MustAsync(async (zones, cancellation) =>
+                {
+                    if (zones.GroupBy(z => z.Name).Any(zoneNames => zoneNames.Count() != 1)) return false;
+
+                    foreach (ZoneDTO zone in zones)
+                    {
+                        var plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+
+                        if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone!");
+                        if(plantationSite.Zones.Count(z => z.Name == zone.Name) != 0) return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage("The zone name must be unique within a plantationsite");
+
         }
     }
 
