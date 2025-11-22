@@ -20,9 +20,19 @@ namespace AP.BTP.Domain
         public required string Auth0Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the user.
+        /// Gets or sets the first name of the user.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the last name of the user.
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the phone number of the user.
+        /// </summary>
+        public string PhoneNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the email address of the user.

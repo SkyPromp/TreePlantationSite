@@ -67,7 +67,7 @@ namespace AP.BTP.Application.CQRS.User
             foreach (UserDTO user in users)
             {
                 Auth0UserDTO? auth0user = await auth0.GetUserByIdAsync(user.Auth0Id);
-                user.Name = auth0user?.username ?? string.Empty;
+                user.FirstName = auth0user?.username ?? string.Empty;
                 user.Email = auth0user?.email ?? string.Empty;
             }
 

@@ -2,6 +2,8 @@
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json;
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Navigation
 
 <PageTitle>Registreer</PageTitle>
@@ -78,8 +80,21 @@
     </div>
 </div>
 
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
 @code {
     private RegisterUserDTO newUser = new RegisterUserDTO();
+
+    private HttpClient? client;
+
+    /// <summary>
+    /// Stores any error messages encountered during operations.
+    /// Used to display feedback to the user.
+    /// </summary>
+    string errorMessage = "";
 
     private bool HasMinLength => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Length >= 8;
     private bool HasUpperCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsUpper);
@@ -87,13 +102,36 @@
     private bool HasNumber => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsDigit);
     private bool HasSpecialChar => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(c => !char.IsLetterOrDigit(c));
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
+        client = HttpClientFactory.CreateClient("BTPApi");
     }
 
     private async Task HandleValidSubmit()
     {
-        throw new NotImplementedException("HandleValidSubmit not implemented");
+        try
+        {
+            if (this.client == null)
+            {
+                this.errorMessage = "No httpclient found.";
+
+                return;
+            }
+
+            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user", this.newUser);
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                Navigation.NavigateTo("/login");
+            }
+            else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
     }
 
     private void Cancel()

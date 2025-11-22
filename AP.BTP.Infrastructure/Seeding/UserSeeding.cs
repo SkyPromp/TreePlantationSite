@@ -15,8 +15,8 @@ namespace AP.BTP.Infrastructure.Seeding
         /// <remarks>
         /// This method creates two sample <see cref="User"/> records:
         /// <list type="bullet">
-        /// <item><description>User with Id = 1, Auth0Id = "auth0|user1", Name = "Alice", Email = "alice@example.com"</description></item>
-        /// <item><description>User with Id = 2, Auth0Id = "auth0|user2", Name = "Bob", Email = "bob@example.com"</description></item>
+        /// <item><description>User with Id = 1, Auth0Id = "auth0|user1", FirstName = "Alice", Email = "alice@example.com"</description></item>
+        /// <item><description>User with Id = 2, Auth0Id = "auth0|user2", FirstName = "Bob", Email = "bob@example.com"</description></item>
         /// </list>
         /// Both users have <see cref="User.IsDeleted"/> set to <c>false</c>.
         /// Uses <see cref="HasData(IEnumerable{T})"/> to insert data during EF Core migrations or database creation.
@@ -25,8 +25,8 @@ namespace AP.BTP.Infrastructure.Seeding
         {
             List<User> users = new List<User>
             {
-                new User { Id = 1, Auth0Id = "auth0|user1", Name = "Alice", Email = "alice@example.com", IsDeleted = false },
-                new User { Id = 2, Auth0Id = "auth0|user2", Name = "Bob", Email = "bob@example.com", IsDeleted = false }
+                new User { Id = 1, Auth0Id = "auth0|user1", FirstName = "Alice", Email = "alice@example.com", IsDeleted = false },
+                new User { Id = 2, Auth0Id = "auth0|user2", FirstName = "Bob", Email = "bob@example.com", IsDeleted = false }
             };
 
             builder.HasData(users);

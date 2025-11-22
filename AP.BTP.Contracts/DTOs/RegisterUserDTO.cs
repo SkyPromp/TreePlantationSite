@@ -10,11 +10,6 @@ namespace AP.BTP.Contracts.DTOs
     public class RegisterUserDTO
     {
         /// <summary>
-        /// The unique identifier of the user.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// The first name of the user.
         /// </summary>
         [Required(ErrorMessage = "Voornaam is verplicht")]
