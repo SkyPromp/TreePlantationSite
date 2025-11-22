@@ -136,5 +136,101 @@ namespace AP.BTP.Unittests.Tree
 
             property.SetValue(tree, value);
         }        
+
+        [TestMethod]
+        public async Task Should_Have_Error_With_Duplicate_Tree_Species_With_Unique_Id()
+        {
+            List<Domain.Tree> trees = new List<Domain.Tree>();
+
+            treeRepoMock.Setup(r => r.GetAll()).ReturnsAsync(trees);
+
+            EditTreeCommand command = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+            };
+
+            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
+
+            trees.Add(new Domain.Tree() 
+                {
+                    Id = 1,
+                    Species = "Oak"
+                }
+            );
+
+            EditTreeCommand command2 = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 2, Species = "Oak" }
+            };
+
+            TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Tree).WithErrorMessage("The tree species must be unique.") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_With_Duplicate_Tree_Species_If_Id_Matches()
+        {
+            List<Domain.Tree> trees = new List<Domain.Tree>();
+
+            treeRepoMock.Setup(r => r.GetAll()).ReturnsAsync(trees);
+
+            EditTreeCommand command = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+            };
+
+            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
+
+            trees.Add(new Domain.Tree() 
+                {
+                    Id = 1,
+                    Species = "Oak"
+                }
+            );
+
+            EditTreeCommand command2 = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+            };
+
+            TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            result2.ShouldNotHaveAnyValidationErrors();
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_Without_Duplicate_Tree_Species_If_Id_Matches()
+        {
+            List<Domain.Tree> trees = new List<Domain.Tree>();
+            
+            treeRepoMock.Setup(r => r.GetAll()).ReturnsAsync(trees);
+
+            EditTreeCommand command = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+            };
+
+            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
+
+            trees.Add(new Domain.Tree() 
+                {
+                    Id = 1,
+                    Species = "Oak"
+                }
+            );
+
+            EditTreeCommand command2 = new EditTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 1, Species = "Birch" }
+            };
+
+            TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            result2.ShouldNotHaveAnyValidationErrors();
+        }
     }
 }

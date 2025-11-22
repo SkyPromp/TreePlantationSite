@@ -78,6 +78,70 @@ namespace AP.BTP.Unittests.Tree
         }
 
         [TestMethod]
+        public async Task Should_Have_Error_With_Duplicate_Tree_Species()
+        {
+            List<Domain.Tree> trees = new List<Domain.Tree>();
+
+            treeRepoMock.Setup(r => r.GetAll()).ReturnsAsync(trees);
+
+            AddTreeCommand command = new AddTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+            };
+
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
+
+            trees.Add(new Domain.Tree() 
+                {
+                    Id = 1,
+                    Species = "Oak"
+                }
+            );
+
+            AddTreeCommand command2 = new AddTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+            };
+
+            TestValidationResult<AddTreeCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            Assert.IsTrue(result2.ShouldHaveValidationErrorFor(command => command.Tree).WithErrorMessage("The tree species must be unique.") != null);
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_Without_Duplicate_Tree_Species()
+        {
+            List<Domain.Tree> trees = new List<Domain.Tree>();
+            
+            treeRepoMock.Setup(r => r.GetAll()).ReturnsAsync(trees);
+
+            AddTreeCommand command = new AddTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+            };
+
+            TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
+
+            trees.Add(new Domain.Tree() 
+                {
+                    Id = 1,
+                    Species = "Oak"
+                }
+            );
+
+            AddTreeCommand command2 = new AddTreeCommand
+            {
+                Tree = new TreeDTO() { Id = 0, Species = "Birch" }
+            };
+
+            TestValidationResult<AddTreeCommand> result2 = await validator.TestValidateAsync(command2);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            result2.ShouldNotHaveAnyValidationErrors();
+        }
+
+        [TestMethod]
         [DataRow("MaintenancePlanSpring")]
         [DataRow("MaintenancePlanSummer")]
         [DataRow("MaintenancePlanAutumn")]
