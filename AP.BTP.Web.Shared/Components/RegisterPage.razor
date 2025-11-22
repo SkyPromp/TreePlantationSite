@@ -86,27 +86,58 @@
 }
 
 @code {
+    /// <summary>
+    /// Holds the data entered by the user for registration.
+    /// </summary>
     private RegisterUserDTO newUser = new RegisterUserDTO();
 
+    /// <summary>
+    /// The HTTP client used to communicate with the backend API.
+    /// </summary>
     private HttpClient? client;
 
     /// <summary>
     /// Stores any error messages encountered during operations.
-    /// Used to display feedback to the user.
     /// </summary>
     string errorMessage = "";
 
+    /// <summary>
+    /// Indicates whether the password meets minimum length requirements.
+    /// </summary>
     private bool HasMinLength => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Length >= 8;
+
+    /// <summary>
+    /// Checks for at least one uppercase letter.
+    /// </summary>
     private bool HasUpperCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsUpper);
+
+    /// <summary>
+    /// Checks for at least one lowercase letter.
+    /// </summary>
     private bool HasLowerCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsLower);
+
+    /// <summary>
+    /// Checks whether the password includes a numeric digit.
+    /// </summary>
     private bool HasNumber => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsDigit);
+
+    /// <summary>
+    /// Checks whether the password includes any special (non-alphanumeric) character.
+    /// </summary>
     private bool HasSpecialChar => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(c => !char.IsLetterOrDigit(c));
 
+    /// <summary>
+    /// Initializes the HTTP client.
+    /// </summary>
     protected override void OnInitialized()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
     }
 
+    /// <summary>
+    /// Handles form submission when all fields are valid.
+    /// Sends the registration request to the backend and redirects on success.
+    /// </summary>
     private async Task HandleValidSubmit()
     {
         try
@@ -114,7 +145,6 @@
             if (this.client == null)
             {
                 this.errorMessage = "No httpclient found.";
-
                 return;
             }
 
@@ -134,9 +164,17 @@
         }
     }
 
+    /// <summary>
+    /// Navigates the user back to the welcome page.
+    /// </summary>
     private void Cancel()
     {
         Navigation.NavigateTo("/welcome");
     }
+
+    /// <summary>
+    /// Helper method that determines which CSS class to apply to password rule indicators.
+    /// </summary>
+    /// <param name="condition">Whether the rule is met.</param>
     private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
 }
