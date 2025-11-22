@@ -5,21 +5,49 @@
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
-    <Tab Title="Site details">
+    <Tab Title="Algemene informatie">
         <Content>
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
                 <div class="form-content">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 pe-3">
                             <div>
                                 <label class="form-label">Boomsoorten</label>
                                 <TextInput @bind-Value="@Tree.Species"></TextInput>
                                 <ValidationMessage For="@(() => Tree.Species)" />
                             </div>
+                            <div>
+                                <label class="form-label">Foto selectie</label>
+                                <InputFile OnChange="HandlePictureUpload" multiple class="form-control mb-2"/>
+                            </div>                            
                         </div>
+                            <div class="col-8">
+                                <label class="form-label">Overzicht</label>
+                                <div class="border rounded p-2" style="height: 80%; overflow-y: auto;">
+                                    @if (previews.Count == 0)
+                                    {
+                                        <p class="text-muted">Nog geen afbeeldingen geselecteerd.</p>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex flex-wrap">
+                                            @foreach (KeyValuePair<string, string> kvp in previews)
+                                            {
+                                                <div class="position-relative p-1" style="flex: 0 0 50%; height: 200px;">
+                                                    <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; right: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
+                                                        <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
+                                                    </Button>
+                                                    <img src="@kvp.Value" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: contain;" />
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
@@ -29,7 +57,7 @@
             </EditForm>
         </Content>
     </Tab>
-    <Tab Title="Maintenance">
+    <Tab Title="Onderhoudsplannen">
         <Content>
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
@@ -38,7 +66,7 @@
                         <div class="col-4">
                             <div>
                                 <label class="form-label">Onderhoud</label>
-                                <InputFile OnChange="HandleUploadMaintenancePlan" class="form-control mb-2" />
+                                <InputFile class="form-control mb-2" />
                             </div>
                         </div>
                         <div class="col-8 d-flex justify-content-center align-items-center">
@@ -54,6 +82,23 @@
         </Content>
     </Tab>
 </Tabs>
+
+@if (this.showDeleteConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     /// <summary>
@@ -74,6 +119,34 @@
     HttpClient? client;
 
     /// <summary>
+    /// Stores newly selected images that have not yet been uploaded.
+    /// Key is a temporary GUID, value is a tuple of the file and its byte content.
+    /// </summary>
+    private Dictionary<string, (IBrowserFile file, byte[] data)> newPictures = new();
+
+    /// <summary>
+    /// Stores existing images for the tree.
+    /// Key is the picture ID, value is the filename/path.
+    /// </summary>
+    private Dictionary<int, string> existingPictures = new();
+
+    /// <summary>
+    /// Stores image previews to display in the UI.
+    /// Key is either the temporary GUID (for new images) or ID (for existing images), value is a base64 data URI.
+    /// </summary>
+    private Dictionary<string, string> previews = new();
+
+    /// <summary>
+    /// Holds the currently selected image for deletion.
+    /// </summary>
+    private string? selectedImage = null; 
+
+    /// <summary>
+    /// Indicates whether the delete confirmation modal should be shown.
+    /// </summary>
+    private bool showDeleteConfirmation = false;
+
+    /// <summary>
     /// Represents the current tree being created or edited.
     /// </summary>
     private TreeDTO Tree = new TreeDTO()
@@ -90,8 +163,10 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
 
-        if (Id.HasValue)
+        if (Id.HasValue){
             await LoadTree(Id.Value);
+            await LoadExistingPictures(Id.Value);
+        }
     }
 
     /// <summary>
@@ -119,17 +194,9 @@
     }
 
     /// <summary>
-    /// Clears the form by resetting the <see cref="Tree.Species"/> field.
-    /// </summary>
-    private void ClearForm()
-    {
-        this.Tree.Species = "";
-    }
-
-    /// <summary>
     /// Handles the form submission to create or update a tree record.
     /// Performs input validation, sends the appropriate API request,
-    /// and navigates back to the tree list upon success.
+    /// and uploads pictures.
     /// </summary>
     private async Task Submit()
     {
@@ -159,26 +226,206 @@
                 response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
             }
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                this.errorMessage = "";
-                this.Tree.Species = "";
-                NavigationManager.NavigateTo("/admin/tree");
-            } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
+                return;
+            }
+
+            TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
+            if (savedTree == null || savedTree.Id == 0)
+            {
+                this.errorMessage = "Failed to get saved tree id.";
+                return;
+            }
+
+            this.Tree = savedTree;
+            this.Id = this.Tree.Id;
+
+            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();  
+            newPictures.Clear();   
+
+            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
+            {
+                string tempKey = kvp.Key;
+                (IBrowserFile file, byte[] data) = kvp.Value;
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new ByteArrayContent(data), "file", file.Name);
+
+                string? fileName = null;
+                HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
+                if (fileResponse.IsSuccessStatusCode)
+                {
+                    JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
+                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
+                }
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    this.errorMessage = $"Failed to upload file {file.Name}";
+                    continue;
+                }
+
+                TreePictureDTO treePicture = new TreePictureDTO
+                {
+                    TreeId = this.Tree.Id,
+                    Path = fileName,
+                    IsFavourite = false
+                };
+
+                HttpResponseMessage addResponse = await client.PostAsJsonAsync("TreePicture", treePicture);
+                if (!addResponse.IsSuccessStatusCode)
+                {
+                    this.errorMessage = await addResponse.Content.ReadAsStringAsync();
+                    continue;
+                }
+
+                TreePictureDTO? created = await addResponse.Content.ReadFromJsonAsync<TreePictureDTO>();
+                if (created != null)
+                {
+                    existingPictures[created.Id] = created.Path;
+
+                    previews.Remove(tempKey);
+                    await GeneratePreview(created.Id.ToString(), created.Path);
+                }
+            }
+            this.errorMessage = "";
+
         } catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
     }
 
-    /// <summary>
-    /// Placeholder for a future implementation of tree maintenance plan upload functionality.
-    /// Currently sets an unimplemented feature message.
-    /// </summary>
-    private void HandleUploadMaintenancePlan()
-    {
 
-        this.errorMessage = "Handle updload mentenance plan not implemented yet";
+    /// <summary>
+    /// Handles uploading one or more images for the tree.
+    /// Validates file type and size before storing them in <see cref="newPictures"/> and generating previews.
+    /// </summary>
+    /// <param name="e">The <see cref="InputFileChangeEventArgs"/> containing selected files.</param>
+    private async Task HandlePictureUpload(InputFileChangeEventArgs e)
+    {
+        foreach (IBrowserFile file in e.GetMultipleFiles())
+        {
+            if (!ImageFileTypes.Contains(file.ContentType))
+            {
+                errorMessage = $"File type '{file.ContentType}' is not permitted!";
+                continue;
+            }
+
+            if (file.Size > 10_000_000)
+            {
+                errorMessage = $"File '{file.Name}' exceeds the 10MB file size limit!";
+                continue;
+            }
+
+            string key = Guid.NewGuid().ToString();
+
+            using MemoryStream ms = new MemoryStream();
+            await file.OpenReadStream(10_000_000).CopyToAsync(ms);
+
+            newPictures[key] = (file, ms.ToArray());
+
+            previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        }
+
+        StateHasChanged();
     }
+
+    /// <summary>
+    /// Generates a base64 preview for the image specified by <paramref name="fileName"/>.
+    /// Updates <see cref="previews"/> with the resulting data URI.
+    /// </summary>
+    /// <param name="key">The key to associate with the preview.</param>
+    /// <param name="fileName">The server file name of the image.</param>
+    private async Task GeneratePreview(string key, string fileName)
+    {
+        HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+
+        if(!response.IsSuccessStatusCode) return;
+
+        byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+        string type = response.Content.Headers.ContentType?.MediaType!;    
+
+        previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Loads all existing pictures for the given tree from the API.
+    /// Updates <see cref="existingPictures"/> and <see cref="previews"/>.
+    /// </summary>
+    /// <param name="treeId">The ID of the tree whose pictures to load.</param>
+    private async Task LoadExistingPictures(int treeId)
+    {
+        List<TreePictureDTO>? response = await client!.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{treeId}");
+        if (response != null)
+        {
+            existingPictures.Clear();
+            previews.Clear();
+            foreach (TreePictureDTO pic in response)
+            {        
+                existingPictures[pic.Id] = pic.Path;
+                await GeneratePreview(pic.Id.ToString(), pic.Path);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Cancels the delete picture operation.
+    /// Hides the confirmation modal and clears the selected image.
+    /// </summary>
+    private void CancelDeletePicture()
+    {
+        this.showDeleteConfirmation = false;
+        this.selectedImage = null;
+    }
+
+    /// <summary>
+    /// Deletes the currently selected picture.
+    /// Removes it from <see cref="existingPictures"/> or <see cref="newPictures"/> and updates <see cref="previews"/>.
+    /// </summary>
+    private async Task DeletePicture()
+    {
+        if (selectedImage == null)
+        {
+            showDeleteConfirmation = false;
+            return;
+        }
+
+        if (int.TryParse(selectedImage, out int picId))
+        {
+            HttpResponseMessage res = await client!.DeleteAsync($"TreePicture/{picId}");
+            if (res.IsSuccessStatusCode)
+            {
+                existingPictures.Remove(picId);
+                previews.Remove(selectedImage);
+            }
+            else
+            {
+                errorMessage = await res.Content.ReadAsStringAsync();
+            }
+        }
+        else
+        {
+            newPictures.Remove(selectedImage);
+            previews.Remove(selectedImage);
+        }
+
+        selectedImage = null;
+        showDeleteConfirmation = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
+    /// </summary>
+    readonly string[] ImageFileTypes = {
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/bmp"
+    };
 }

@@ -37,6 +37,11 @@
         ITaskItemRepository TaskItemRepository { get; }
 
         /// <summary>
+        /// Gets the repository for managing <see cref="TreePicture"/> entities.
+        /// </summary>
+        ITreePictureRepository TreePictureRepository { get; }
+
+        /// <summary>
         /// Commits all changes made through the repositories to the underlying data store.
         /// </summary>
         /// <returns>A task representing the asynchronous commit operation.</returns>
