@@ -32,14 +32,15 @@ namespace AP.BTP.Application.Interfaces
         Task HardDelete(Tree item);
 
         /// <summary>
-        /// Retrieves a paginated list of <see cref="Tree"/> entities, optionally filtered by a search string.
+        /// Retrieves a paginated list of <see cref="Tree"/> entities, optionally filtered by a search string or sorted by name.
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">An optional search string to filter trees by species or other properties.</param>
+        /// <param name="sortAscending">An optional sorting bool to sort trees by species.</param>
         /// <returns>
         /// A task that returns a paginated list of trees containing total count.
         /// </returns>
-        Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search);
+        Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search, bool sortAscending);
     }
 }
