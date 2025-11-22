@@ -2050,10 +2050,18 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2067,16 +2075,20 @@ namespace AP.BTP.Infrastructure.Migrations
                             Id = 1,
                             Auth0Id = "auth0|user1",
                             Email = "alice@example.com",
+                            FirstName = "Alice",
                             IsDeleted = false,
-                            Name = "Alice"
+                            LastName = "",
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 2,
                             Auth0Id = "auth0|user2",
                             Email = "bob@example.com",
+                            FirstName = "Bob",
                             IsDeleted = false,
-                            Name = "Bob"
+                            LastName = "",
+                            PhoneNumber = ""
                         });
                 });
 

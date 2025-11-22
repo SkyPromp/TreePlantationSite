@@ -243,5 +243,46 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to delete user: {response.StatusCode} - {response.Content}");
             }
         }
+
+        /// <summary>
+        /// Creates a new user in Auth0.
+        /// </summary>
+        /// <param name="username">The user's name</param>
+        /// <param name="email">The user's email.</param>
+        /// <param name="password">The user's password.</param>
+        /// <returns>A <see cref="Task{Auth0UserDTO}"/> containing the created user.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if user creation fails.</exception>
+        public async Task<Auth0UserDTO?> CreateUserAsync(
+            string username,
+            string email,
+            string password)
+        {
+            string token = await GetManagementTokenAsync();
+
+            RestClient client = new RestClient($"https://{_domain}/api/v2/users");
+            RestRequest request = new RestRequest();
+            request.Method = Method.Post;
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("content-type", "application/json");
+
+
+            request.AddJsonBody(new
+            {
+                username = username,
+                email = email,
+                password = password,
+                connection = "Username-Password-Authentication"
+            });
+
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                throw new InvalidOperationException(
+                    $"Failed to create user: {response.StatusCode} - {response.Content}");
+            }
+
+            return JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
     }
 }

@@ -1,0 +1,180 @@
+﻿@page "/register"
+@rendermode InteractiveServer
+@using AP.BTP.Contracts.DTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json;
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
+<PageTitle>Registreer</PageTitle>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 ">
+            <div class="card shadow-lg p-4">
+                <h2 class="text-center mb-3">Account aanmaken</h2>
+                <p class="text-muted text-center mb-4">Vul je gegevens in om een account aan te maken.</p>
+
+                <EditForm Model="newUser" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="firstName">Voornaam</label>
+                        <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" />
+                        <ValidationMessage For="@(() => newUser.FirstName)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="lastName">Achternaam</label>
+                        <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" />
+                        <ValidationMessage For="@(() => newUser.LastName)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="phoneNumber">Telefoonnummer</label>
+                        <InputText id="phoneNumber" type="tel" class="form-control"
+                                   @bind-Value="newUser.PhoneNumber" />
+                        <ValidationMessage For="@(() => newUser.PhoneNumber)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="email">E-mail</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="newUser.Email" />
+                        <ValidationMessage For="@(() => newUser.Email)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label" for="password">Wachtwoord</label>
+                        <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" />
+                        <div class="mt-2">
+                            <small class="form-text">
+                                <span class="@GetClass(HasMinLength)">• Minimaal 8 tekens</span><br />
+                                <span class="@GetClass(HasUpperCase)">• Minimaal 1 hoofdletter</span><br />
+                                <span class="@GetClass(HasLowerCase)">• Minimaal 1 kleine letter</span><br />
+                                <span class="@GetClass(HasNumber)">• Minimaal 1 nummer</span><br />
+                                <span class="@GetClass(HasSpecialChar)">• Minimaal 1 speciaal teken</span>
+                            </small>
+                        </div>
+                        <ValidationMessage For="@(() => newUser.Password)" class="text-danger" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label" for="confirmPassword">Bevestig wachtwoord</label>
+                        <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" />
+                        <ValidationMessage For="@(() => newUser.ConfirmPassword)" class="text-danger" />
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" @onclick="Cancel">
+                            Ga terug
+                        </button>
+
+                        <button type="submit" class="btn btn-success">
+                            Registreer
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(this.errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+@code {
+    /// <summary>
+    /// Holds the data entered by the user for registration.
+    /// </summary>
+    private RegisterUserDTO newUser = new RegisterUserDTO();
+
+    /// <summary>
+    /// The HTTP client used to communicate with the backend API.
+    /// </summary>
+    private HttpClient? client;
+
+    /// <summary>
+    /// Stores any error messages encountered during operations.
+    /// </summary>
+    string errorMessage = "";
+
+    /// <summary>
+    /// Indicates whether the password meets minimum length requirements.
+    /// </summary>
+    private bool HasMinLength => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Length >= 8;
+
+    /// <summary>
+    /// Checks for at least one uppercase letter.
+    /// </summary>
+    private bool HasUpperCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsUpper);
+
+    /// <summary>
+    /// Checks for at least one lowercase letter.
+    /// </summary>
+    private bool HasLowerCase => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsLower);
+
+    /// <summary>
+    /// Checks whether the password includes a numeric digit.
+    /// </summary>
+    private bool HasNumber => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(char.IsDigit);
+
+    /// <summary>
+    /// Checks whether the password includes any special (non-alphanumeric) character.
+    /// </summary>
+    private bool HasSpecialChar => !string.IsNullOrEmpty(newUser.Password) && newUser.Password.Any(c => !char.IsLetterOrDigit(c));
+
+    /// <summary>
+    /// Initializes the HTTP client.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        client = HttpClientFactory.CreateClient("BTPApi");
+    }
+
+    /// <summary>
+    /// Handles form submission when all fields are valid.
+    /// Sends the registration request to the backend and redirects on success.
+    /// </summary>
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            if (this.client == null)
+            {
+                this.errorMessage = "No httpclient found.";
+                return;
+            }
+
+            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user", this.newUser);
+
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                Navigation.NavigateTo("/login");
+            }
+            else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+    }
+
+    /// <summary>
+    /// Navigates the user back to the welcome page.
+    /// </summary>
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/welcome");
+    }
+
+    /// <summary>
+    /// Helper method that determines which CSS class to apply to password rule indicators.
+    /// </summary>
+    /// <param name="condition">Whether the rule is met.</param>
+    private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+}

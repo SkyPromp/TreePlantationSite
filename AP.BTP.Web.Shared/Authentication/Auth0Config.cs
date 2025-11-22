@@ -89,22 +89,6 @@ namespace AP.BTP.Web.Authentication
                 await context.ChallengeAsync(Auth0Constants.AuthenticationScheme, authProps);
             });
 
-            /// <summary>
-            /// Initiates the registration process via Auth0 and redirects the user after signup.
-            /// </summary>
-            app.MapGet("/register", async (HttpContext context, string? redirectUri) =>
-            {
-                AuthenticationProperties authProps = new LoginAuthenticationPropertiesBuilder()
-                    .WithRedirectUri(redirectUri ?? "/")
-                    .WithParameter("screen_hint", "signup")
-                    .Build();
-
-                await context.ChallengeAsync(Auth0Constants.AuthenticationScheme, authProps);
-            });
-
-            /// <summary>
-            /// Logs out the user from both Auth0 and the local cookie-based session.
-            /// </summary>
             app.MapGet("/logout", async (HttpContext context) =>
             {
                 AuthenticationProperties authProps = new LogoutAuthenticationPropertiesBuilder()

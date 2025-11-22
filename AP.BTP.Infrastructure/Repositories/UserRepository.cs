@@ -83,7 +83,7 @@ namespace AP.BTP.Infrastructure.Repositories
                 search = search.ToLower();
 
                 query = query.Where(u =>
-                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
             }
 
             int totalCount = await query.CountAsync();
@@ -114,7 +114,7 @@ namespace AP.BTP.Infrastructure.Repositories
                 search = search.ToLower();
 
                 query = query.Where(u =>
-                    u.Name.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
             }
 
             int totalCount = await query.CountAsync();
