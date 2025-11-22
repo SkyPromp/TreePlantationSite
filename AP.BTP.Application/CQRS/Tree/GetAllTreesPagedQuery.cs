@@ -25,6 +25,11 @@ namespace AP.BTP.Application.CQRS.Tree
         /// An optional search string to filter trees by relevant fields (e.g., species name).
         /// </summary>
         public string? Search { get; set; }
+
+        /// <summary>
+        /// An optional sorting bool to sort trees by species.
+        /// </summary>
+        public bool SortAscending { get; set; }
     }
 
     /// <summary>
@@ -69,7 +74,7 @@ namespace AP.BTP.Application.CQRS.Tree
         /// <returns>A <see cref="PagedResponseDTO{TreeDTO}"/> object containing the requested page of trees.</returns>
         public async Task<PagedResponseDTO<TreeDTO>> Handle(GetAllTreesPagedQuery request, CancellationToken cancellationToken)
         {
-            (IEnumerable<Domain.Tree> items, int totalCount) = await uow.TreeRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Domain.Tree> items, int totalCount) = await uow.TreeRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search, request.SortAscending);
 
             return new PagedResponseDTO<TreeDTO>
             {
