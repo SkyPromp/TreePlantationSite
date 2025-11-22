@@ -13,8 +13,23 @@
         public required string Species { get; set; }
 
         /// <summary>
-        /// An optional maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
+        /// An optional spring maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
         /// </summary>
-        public string? MaintenancePlan { get; set; }
+        public string? MaintenancePlanSpring { get; set; }
+
+        /// <summary>
+        /// An optional summer maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
+        /// </summary>
+        public string? MaintenancePlanSummer { get; set; }
+
+        /// <summary>
+        /// An optional autumn maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
+        /// </summary>
+        public string? MaintenancePlanAutumn { get; set; }
+
+        /// <summary>
+        /// An optional winter maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
+        /// </summary>
+        public string? MaintenancePlanWinter { get; set; }                        
     }
 }
