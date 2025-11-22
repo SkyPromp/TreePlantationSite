@@ -38,10 +38,10 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_FirstName_Empty()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.FirstName = "";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.FirstName)
                 .WithErrorMessage("Voornaam is verplicht.");
@@ -50,10 +50,10 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_LastName_Empty()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.LastName = "";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.LastName)
                 .WithErrorMessage("Achternaam is verplicht.");
@@ -62,10 +62,10 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_Email_Invalid()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.Email = "invalid-email";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.Email)
                 .WithErrorMessage("Ongeldig e-mailadres.");
@@ -74,10 +74,10 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_PhoneNumber_Invalid()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.PhoneNumber = "abc123";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.PhoneNumber)
                 .WithErrorMessage("Ongeldig telefoonnummer.");
@@ -86,11 +86,11 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_Password_Missing_Uppercase()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.Password = "password1!";
             command.User.ConfirmPassword = "password1!";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.Password)
                 .WithErrorMessage("Wachtwoord moet minimaal 1 hoofdletter bevatten.");
@@ -99,11 +99,11 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_Password_Missing_Lowercase()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.Password = "PASSWORD1!";
             command.User.ConfirmPassword = "PASSWORD1!";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.Password)
                 .WithErrorMessage("Wachtwoord moet minimaal 1 kleine letter bevatten.");
@@ -112,11 +112,11 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_Password_Missing_Number()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.Password = "Password!";
             command.User.ConfirmPassword = "Password!";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.Password)
                 .WithErrorMessage("Wachtwoord moet minimaal 1 nummer bevatten.");
@@ -125,11 +125,11 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_Password_Missing_Special_Char()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.Password = "Password1";
             command.User.ConfirmPassword = "Password1";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.Password)
                 .WithErrorMessage("Wachtwoord moet minimaal 1 speciaal teken bevatten.");
@@ -138,10 +138,10 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Have_Error_When_ConfirmPassword_Does_Not_Match()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
             command.User.ConfirmPassword = "Different1!";
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(x => x.User.ConfirmPassword)
                 .WithErrorMessage("Wachtwoorden komen niet overeen.");
@@ -150,9 +150,9 @@ namespace AP.BTP.Unittests.User
         [TestMethod]
         public async Task Should_Not_Have_Error_When_Command_Is_Valid()
         {
-            var command = CreateValidCommand();
+            AddUserCommand command = CreateValidCommand();
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
