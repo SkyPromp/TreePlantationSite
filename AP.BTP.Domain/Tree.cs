@@ -26,9 +26,24 @@ namespace AP.BTP.Domain
         [JsonIgnore] public ICollection<Zone> Zones { get; set; } = new List<Zone>();
 
         /// <summary>
-        /// Gets or sets the maintenance plan associated with the tree, if any.
+        /// Gets or sets the spring maintenance plan associated with the tree, if any.
         /// </summary>
-        public string? MaintenancePlan { get; set; }
+        public string? MaintenancePlanSpring { get; set; }
+
+        /// <summary>
+        /// Gets or sets the summer maintenance plan associated with the tree, if any.
+        /// </summary>
+        public string? MaintenancePlanSummer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the autumn maintenance plan associated with the tree, if any.
+        /// </summary>
+        public string? MaintenancePlanAutumn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the winter maintenance plan associated with the tree, if any.
+        /// </summary>
+        public string? MaintenancePlanWinter { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the tree is considered deleted (soft deletion).
