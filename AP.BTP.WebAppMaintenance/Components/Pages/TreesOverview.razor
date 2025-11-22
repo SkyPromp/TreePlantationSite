@@ -283,6 +283,11 @@
         this.selectedTree = null;
     }
 
+    /// <summary>
+    /// Handles changes to the sort order dropdown.  
+    /// Converts the selected value to a boolean and reloads the first page of the tree list.
+    /// </summary>
+    /// <param name="e">The <see cref="ChangeEventArgs"/> containing the selected value from the dropdown.</param>
     private async Task OnSortOrderChanged(ChangeEventArgs e)
     {
         if (bool.TryParse(e.Value?.ToString(), out bool value))

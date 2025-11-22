@@ -40,9 +40,9 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>A paginated list of plantation sites.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAllPlantationSitesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
+        public async Task<IActionResult> GetAllPlantationSitesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "", bool sortAscending = true)
         {
-            return Ok(await mediator.Send(new GetAllPlantationSitesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+            return Ok(await mediator.Send(new GetAllPlantationSitesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search, SortAscending = sortAscending }));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>The requested <see cref="PlantationSiteDTO"/> if found.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAllPlantationSitesPaged(int id)
+        public async Task<IActionResult> GetPlantationSiteById(int id)
         {
             return Ok(await mediator.Send(new GetPlantationSiteByIdQuery() { Id = id }));
         }

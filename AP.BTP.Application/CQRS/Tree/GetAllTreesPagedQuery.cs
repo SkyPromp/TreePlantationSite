@@ -27,9 +27,9 @@ namespace AP.BTP.Application.CQRS.Tree
         public string? Search { get; set; }
 
         /// <summary>
-        /// An optional sorting bool to sort trees by species. Defaults to sort ascending.
+        /// An optional sorting bool to sort trees by species.
         /// </summary>
-        public bool SortAscending { get; set; } = true;
+        public bool SortAscending { get; set; }
     }
 
     /// <summary>
