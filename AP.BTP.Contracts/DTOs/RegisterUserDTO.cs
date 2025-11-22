@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace AP.BTP.Contracts.DTOs
 {
@@ -39,9 +40,7 @@ namespace AP.BTP.Contracts.DTOs
         /// The password for the user account. Must contain at least one lowercase letter, 
         /// one uppercase letter, one digit, and one special character.
         /// </summary>
-        [Required(ErrorMessage = "Wachtwoord is verplicht.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$",
-            ErrorMessage = "Wachtwoord voldoet niet aan de eisen")]
+        [PasswordRequirements]
         public string Password { get; set; }
 
         /// <summary>
@@ -50,5 +49,30 @@ namespace AP.BTP.Contracts.DTOs
         [Required(ErrorMessage = "Bevestig je wachtwoord.")]
         [Compare("Password", ErrorMessage = "Wachtwoorden komen niet overeen.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class PasswordRequirementsAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var password = value as string;
+
+            if (string.IsNullOrWhiteSpace(password))
+                return new ValidationResult("Wachtwoord is verplicht.");
+
+            if (!Regex.IsMatch(password, @"[a-z]"))
+                return new ValidationResult("Wachtwoord moet minimaal 1 kleine letter bevatten.");
+
+            if (!Regex.IsMatch(password, @"[A-Z]"))
+                return new ValidationResult("Wachtwoord moet minimaal 1 hoofdletter bevatten.");
+
+            if (!Regex.IsMatch(password, @"\d"))
+                return new ValidationResult("Wachtwoord moet minimaal 1 nummer bevatten.");
+
+            if (!Regex.IsMatch(password, @"[\W_]"))
+                return new ValidationResult("Wachtwoord moet minimaal 1 speciaal teken bevatten.");
+
+            return ValidationResult.Success;
+        }
     }
 }
