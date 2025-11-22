@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.CQRS.Tree;
+﻿using System.Reflection;
+using AP.BTP.Application.CQRS.Tree;
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using FluentValidation.TestHelper;
@@ -75,5 +76,65 @@ namespace AP.BTP.Unittests.Tree
 
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Id).WithErrorMessage("Id should not be zero when editing a tree.") != null);
         }
+
+        [TestMethod]
+        [DataRow("MaintenancePlanSpring")]
+        [DataRow("MaintenancePlanSummer")]
+        [DataRow("MaintenancePlanAutumn")]
+        [DataRow("MaintenancePlanWinter")]
+        public async Task Should_Have_Error_When_Unsupported_File_Type(string propertyName)
+        {
+            // Arrange
+            EditTreeCommand command = new EditTreeCommand
+            {
+                Tree = new TreeDTO
+                {
+                    Id = 0,
+                    Species = "Oak"
+                }
+            };
+
+            SetProperty(command.Tree, propertyName, "file.exe");
+
+            // Act
+            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor($"Tree.{propertyName}");
+        }
+
+        [TestMethod]
+        [DataRow("MaintenancePlanSpring")]
+        [DataRow("MaintenancePlanSummer")]
+        [DataRow("MaintenancePlanAutumn")]
+        [DataRow("MaintenancePlanWinter")]
+        public async Task Should_Not_Have_Error_When_Supported_File_Type(string propertyName)
+        {
+            // Arrange
+            EditTreeCommand command = new EditTreeCommand
+            {
+                Tree = new TreeDTO
+                {
+                    Id = 0,
+                    Species = "Oak"
+                }
+            };
+
+            SetProperty(command.Tree, propertyName, "document.pdf");
+
+            // Act
+            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor($"Tree.{propertyName}");
+        }
+
+        private static void SetProperty(TreeDTO tree, string propertyName, string value)
+        {
+            PropertyInfo property = typeof(TreeDTO).GetProperty(propertyName)
+                ?? throw new ArgumentException($"Property {propertyName} not found on TreeDTO");
+
+            property.SetValue(tree, value);
+        }        
     }
 }

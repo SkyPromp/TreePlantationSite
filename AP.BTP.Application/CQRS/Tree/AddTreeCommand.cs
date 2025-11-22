@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using System.Linq.Expressions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
@@ -23,6 +24,8 @@ namespace AP.BTP.Application.CQRS.Tree
     /// </summary>
     public class AddTreeCommandValidator: AbstractValidator<AddTreeCommand>
     {
+        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".pdf" };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AddTreeCommandValidator"/> class.
         /// </summary>
@@ -36,6 +39,25 @@ namespace AP.BTP.Application.CQRS.Tree
             RuleFor(command => command.Tree.Id)
                 .Equal(0)
                 .WithMessage("Id should be zero when adding a tree.");
+
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanSpring, "spring");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanSummer, "summer");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanAutumn, "autumn");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanWinter, "winter");
+        }
+
+        private void ValidateMaintenancePlan(Expression<Func<AddTreeCommand, string?>> selector, string season)
+        {
+            RuleFor(selector)
+                .Must(path =>
+                {
+                    if (string.IsNullOrWhiteSpace(path))
+                        return true;
+
+                    string ext = Path.GetExtension(path).ToLower();
+                    return AllowedExtensions.Contains(ext);
+                })
+                .WithMessage($"Unsupported {season} maintenance plan file type.");
         }
     }
 
