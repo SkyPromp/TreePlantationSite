@@ -8,10 +8,10 @@
 @using System.Text.Json
 @using System.Net.Http.Headers
 
-<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Algemene informatie">
         <Content>
-            <EditForm Model="Tree" OnValidSubmit="Submit">
+            <EditForm Model="Tree" OnValidSubmit="ShowSecondTabAsync">
                 <DataAnnotationsValidator />
                 <div class="form-content">
                     <div class="row">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
                     <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaar</Button>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Volgende</Button>
                 </div>
             </EditForm>
         </Content>
@@ -62,14 +62,14 @@
         <Content>
             <EditForm Model="Tree" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
-                <div class="form-content">
-                    <div class="row row-cols-2 d-flex align-items-center justify-content-center">
-                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                <div class="form-content d-flex align-items-center justify-content-center">
+                    <div class="row row-cols-2 g-5 d-flex w-100 d-flex justify-content-around">
+                        <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Lente</label>
                                 <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Spring)" />
                             </div>
-                            <div class="preview text-center mt-2">
+                            <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-center mt-2">
                                 @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)){
                                     string fileKey = Tree.MaintenancePlanSpring;
                                     string? previewData = maintenancePreviews[fileKey];
@@ -91,12 +91,12 @@
                             </div>
                         </div>
 
-                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Zomer</label>
                                 <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Summer)" />
                             </div>
-                            <div class="preview text-center mt-2">
+                            <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-center mt-2">
                                 @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)){
                                     string fileKey = Tree.MaintenancePlanSummer;
                                     string? previewData = maintenancePreviews[fileKey];
@@ -118,12 +118,12 @@
                             </div>
                         </div>
 
-                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Herfst</label>
                                 <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Autumn)" />
                             </div>
-                            <div class="preview text-center mt-2">
+                            <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-center mt-2">
                                 @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)){
                                     string fileKey = Tree.MaintenancePlanAutumn;
                                     string? previewData = maintenancePreviews[fileKey];
@@ -145,12 +145,12 @@
                             </div>
                         </div>
 
-                        <div class="col border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Winter</label>
                                 <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Winter)" />
                             </div>
-                            <div class="preview text-center mt-2">
+                            <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-center mt-2">
                                 @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)){
                                     string fileKey = Tree.MaintenancePlanWinter!;
                                     string? previewData = maintenancePreviews[fileKey];
@@ -200,6 +200,10 @@
 }
 
 @code {
+    private Tabs tabs = default!;
+    private bool activeInfoTab = true;
+    private bool activeMaintenanceTab = false;
+
     /// <summary>
     /// The optional ID of the tree to edit.
     /// If no ID is provided, the component assumes creation mode.
@@ -659,4 +663,10 @@
         "image/png",
         "image/webp"
     };
+
+    private async Task ShowSecondTabAsync()
+    {
+        Console.WriteLine("Switching tabs");
+        await tabs.ShowTabByIndexAsync(1);
+    }
 }
