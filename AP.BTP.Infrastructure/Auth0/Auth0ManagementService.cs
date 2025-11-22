@@ -265,15 +265,14 @@ namespace AP.BTP.Infrastructure.Auth0
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddHeader("content-type", "application/json");
 
-            var body = new
+
+            request.AddJsonBody(new
             {
                 username = username,
                 email = email,
                 password = password,
                 connection = "Username-Password-Authentication"
-            };
-
-            request.AddJsonBody(body);
+            });
 
             RestResponse response = await client.ExecuteAsync(request);
 
