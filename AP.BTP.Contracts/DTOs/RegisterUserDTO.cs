@@ -55,7 +55,7 @@ namespace AP.BTP.Contracts.DTOs
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var password = value as string;
+            string? password = value as string;
 
             if (string.IsNullOrWhiteSpace(password))
                 return new ValidationResult("Wachtwoord is verplicht.");
