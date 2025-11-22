@@ -15,13 +15,13 @@
     <h3>"Boom niet gevonden"</h3>
 }
 
-@if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
+@* @if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
 {
     <PdfViewer Class="mb-3"
                Url="@this.maintenancePlan"
                OnDocumentLoaded="OnDocumentLoaded"
                OnPageChanged="OnPageChanged" />
-}
+} *@
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -45,10 +45,10 @@
     /// </summary>
     private TreeDTO? Tree;
 
-    /// <summary>
+    @* /// <summary>
     /// Base64-encoded maintenance plan PDF data to display in the UI.
     /// </summary>
-    string maintenancePlan = "";
+    string maintenancePlan = ""; *@
 
     /// <summary>
     /// HTTP client used to call the backend API.
@@ -113,10 +113,10 @@
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
 
             string b64Pdf = Convert.ToBase64String(pdfBytes);
-            this.maintenancePlan = $"data:{contentType};base64,{b64Pdf}";
+            @* this.maintenancePlan = $"data:{contentType};base64,{b64Pdf}"; *@
         } catch
         {
-            this.maintenancePlan = "";
+            @* this.maintenancePlan = ""; *@
             this.errorMessage = "Something went wrong while loading the image";
         }
     }

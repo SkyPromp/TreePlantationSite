@@ -200,9 +200,10 @@
 }
 
 @code {
+    /// <summary>
+    /// Reference to the tab component for switching between tabs.
+    /// </summary>    
     private Tabs tabs = default!;
-    private bool activeInfoTab = true;
-    private bool activeMaintenanceTab = false;
 
     /// <summary>
     /// The optional ID of the tree to edit.
@@ -221,12 +222,18 @@
     /// </summary>
     HttpClient? client;
 
+    /// <summary>
+    /// Specifies the type of file being uploaded.
+    /// </summary>
     public enum FileType
     {
         Picture,
         Maintenance
     }
 
+    /// <summary>
+    /// Represents the seasons of the year for maintenance plans.
+    /// </summary>
     public enum Season{
         Spring,
         Summer,
@@ -253,9 +260,28 @@
     /// </summary>
     private Dictionary<string, string> previews = new();
 
+    /// <summary>
+    /// Newly selected maintenance files that have not yet been uploaded.
+    /// Key is a temporary GUID, value is a tuple containing the file and its byte content.
+    /// </summary>
     private Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
+
+    /// <summary>
+    /// Existing maintenance files associated with the tree.
+    /// Key is the file ID, value is the filename/path.
+    /// </summary>    
     private Dictionary<int, string> existingMaintenanceFiles = new();
+
+    /// <summary>
+    /// Previews for maintenance files.
+    /// Key is the temporary GUID or filename, value is a base64 data URI.
+    /// </summary>    
     private Dictionary<string, string> maintenancePreviews = new();
+
+    /// <summary>
+    /// Stores the original filenames for uploaded maintenance files.
+    /// Key is the temporary GUID or server filename, value is the original filename.
+    /// </summary>    
     private Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
@@ -278,8 +304,28 @@
     };
 
     /// <summary>
-    /// Called by the Blazor framework when the component is initialized.
-    /// Initializes the <see cref="HttpClient"/> and loads tree data if an ID is provided.
+    /// The allowed content types for picture uploads.
+    /// </summary>
+    readonly string[] ImageFileTypes = {
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/bmp"
+    };
+    
+    /// <summary>
+    /// The allowed content types for maintenance plan uploads.
+    /// </summary>    
+    readonly string[] AllowedMaintenanceFileTypes = {
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    };    
+
+    /// <summary>
+    /// Called when the component is initialized.
+    /// Loads the tree and its associated images/maintenance files if <see cref="Id"/> is set.
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
@@ -317,9 +363,8 @@
     }
 
     /// <summary>
-    /// Handles the form submission to create or update a tree record.
-    /// Performs input validation, sends the appropriate API request,
-    /// and uploads pictures.
+    /// Submits the tree creation or update request.
+    /// Handles uploading of pictures and maintenance files.
     /// </summary>
     private async Task Submit()
     {
@@ -370,8 +415,6 @@
                         errorMessage = $"Upload succeeded but no fileName returned for {file.Name}";
                         continue;
                     }
-
-                    Console.WriteLine($"File name: {file.Name}");
 
                     if (Tree.MaintenancePlanSpring == key)
                         Tree.MaintenancePlanSpring = fileName;
@@ -477,10 +520,12 @@
 
 
     /// <summary>
-    /// Handles uploading one or more images for the tree.
-    /// Validates file type and size before storing them in <see cref="newPictures"/> and generating previews.
+    /// Handles uploading selected files for pictures or maintenance plans.
+    /// Generates previews and stores files in the appropriate dictionaries.
     /// </summary>
-    /// <param name="e">The <see cref="InputFileChangeEventArgs"/> containing selected files.</param>
+    /// <param name="e">The file change event arguments containing selected files.</param>
+    /// <param name="type">The type of file being uploaded.</param>
+    /// <param name="season">Optional season for maintenance files.</param>
     private async Task HandleFileUpload(InputFileChangeEventArgs e, FileType type, Season? season)
     {
         foreach (IBrowserFile file in e.GetMultipleFiles())
@@ -509,13 +554,11 @@
 
             if (type == FileType.Picture)
             {
-                Console.WriteLine("Uploading picture");
                 newPictures[key] = (file, ms.ToArray());
                 previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
             }
             else if (type == FileType.Maintenance)
             {
-                Console.WriteLine("Uploading plan");
                 newMaintenanceFiles[key] = (file, ms.ToArray());
                 maintenancePreviews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
                 maintenanceFileNames[key] = file.Name;
@@ -534,11 +577,11 @@
     }
 
     /// <summary>
-    /// Generates a base64 preview for the image specified by <paramref name="fileName"/>.
-    /// Updates <see cref="previews"/> with the resulting data URI.
+    /// Generates a base64 preview for an uploaded file and updates the corresponding preview dictionary.
     /// </summary>
     /// <param name="key">The key to associate with the preview.</param>
-    /// <param name="fileName">The server file name of the image.</param>
+    /// <param name="fileName">The server file name of the image or maintenance file.</param>
+    /// <param name="fileType">The type of file being previewed.</param>
     private async Task GeneratePreview(string key, string fileName, FileType fileType)
     {
         HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
@@ -549,11 +592,9 @@
         string type = response.Content.Headers.ContentType?.MediaType!;    
 
         if(fileType == FileType.Picture){
-            Console.WriteLine("Generating picture preview");
             previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
         }
         else if(fileType == FileType.Maintenance){
-            Console.WriteLine("Generating maintenance preview");
             maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
             maintenanceFileNames[key] = fileName;
         }
@@ -562,10 +603,9 @@
     }
 
     /// <summary>
-    /// Loads all existing pictures for the given tree from the API.
-    /// Updates <see cref="existingPictures"/> and <see cref="previews"/>.
+    /// Loads all existing pictures for the specified tree and generates previews.
     /// </summary>
-    /// <param name="treeId">The ID of the tree whose pictures to load.</param>
+    /// <param name="treeId">The tree ID.</param>
     private async Task LoadExistingPictures(int treeId)
     {
         List<TreePictureDTO>? response = await client!.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{treeId}");
@@ -574,14 +614,16 @@
             existingPictures.Clear();
             previews.Clear();
             foreach (TreePictureDTO pic in response)
-            {
-                Console.WriteLine("Setting picture path");        
+            {      
                 existingPictures[pic.Id] = pic.Path;
                 await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
             }
         }
     }
 
+    /// <summary>
+    /// Loads existing maintenance plan files for the current tree and generates previews.
+    /// </summary>
     private async Task LoadExistingMaintenanceFiles()
     {
         maintenancePreviews.Clear();
@@ -648,25 +690,10 @@
     }
 
     /// <summary>
-    /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
+    /// Switches the UI to display the second tab.
     /// </summary>
-    readonly string[] ImageFileTypes = {
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/bmp"
-    };
-    
-    readonly string[] AllowedMaintenanceFileTypes = {
-        "application/pdf",
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    };
-
     private async Task ShowSecondTabAsync()
     {
-        Console.WriteLine("Switching tabs");
         await tabs.ShowTabByIndexAsync(1);
     }
 }
