@@ -130,7 +130,13 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>The updated <see cref="Tree"/> entity.</returns>
         public Tree Update(Tree modifiedItem)
         {
-            return this.dbSet.Update(modifiedItem).Entity;
+            Tree? existingEntity = dbSet.Find(modifiedItem.Id);
+
+            if (existingEntity == null) throw new KeyNotFoundException($"Tree with ID {modifiedItem.Id} not found.");
+
+            dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+            return existingEntity;
         }
     }
 }
