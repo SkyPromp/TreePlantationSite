@@ -136,11 +136,6 @@
     </div>
 }
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
-
 @code {
     /// <summary>
     /// The ID of the user whose details and tasks are being displayed.
@@ -370,6 +365,7 @@
             {
                 this.errorMessage = $"{id} has been sucessfully deleted";
                 await this.LoadTaskListsForWeek();
+                await ClearPlantationSiteIfNoTasks();
             }
         }
 
@@ -575,11 +571,8 @@
             }
 
             foreach (TaskListDTO taskList in CurrentWeekTaskListsByDay.Values)
-            {
-                taskList.PlantationSiteId = newSiteId;
-                
-                HttpResponseMessage response = await client.PutAsJsonAsync($"TaskList/{taskList.Id}", taskList);
-                
+            {                
+                HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/plantation-site", newSiteId);
                 if (!response.IsSuccessStatusCode)
                 {
                     errorMessage = $"Failed to update task list for {taskList.Date:dd/MM}";
@@ -594,6 +587,39 @@
         catch (Exception ex)
         {
             errorMessage = $"Fout bij bijwerken van kweeksite: {ex.Message}";
+        }
+    }
+
+    private async Task ClearPlantationSiteIfNoTasks()
+    {
+        if (this.client == null)
+            return;
+
+        try
+        {
+            bool hasAnyTasks = CurrentWeekTaskListsByDay.Values
+                .Any(tl => tl.TaskItems != null && tl.TaskItems.Any());
+
+            if (!hasAnyTasks && selectedPlantationSiteId.HasValue)
+            {
+                foreach (TaskListDTO taskList in CurrentWeekTaskListsByDay.Values)
+                {
+                    HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/plantation-site", (int?)null);
+                    
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errorMessage = $"Failed to clear plantation site for {taskList.Date:dd/MM}";
+                        return;
+                    }
+                }
+
+                selectedPlantationSiteId = null;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij wissen van kweeksite: {ex.Message}";
         }
     }
 }
