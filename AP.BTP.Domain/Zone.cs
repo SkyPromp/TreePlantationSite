@@ -47,6 +47,12 @@ namespace AP.BTP.Domain
         [JsonIgnore] public required Tree Tree { get; set; }
 
         /// <summary>
+        /// Gets or sets the collection of task items in this zone.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
+        [JsonIgnore] public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
+
+        /// <summary>
         /// Gets or sets a value indicating whether the zone is considered deleted (soft deletion).
         /// </summary>
         public bool IsDeleted { get; set; }

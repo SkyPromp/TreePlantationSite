@@ -1392,9 +1392,14 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ZoneId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TaskListId");
+
+                    b.HasIndex("ZoneId");
 
                     b.ToTable("TaskItem");
                 });
@@ -2115,7 +2120,15 @@ namespace AP.BTP.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AP.BTP.Domain.Zone", "Zone")
+                        .WithMany("TaskItems")
+                        .HasForeignKey("ZoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("TaskList");
+
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
@@ -2203,6 +2216,11 @@ namespace AP.BTP.Infrastructure.Migrations
             modelBuilder.Entity("AP.BTP.Domain.User", b =>
                 {
                     b.Navigation("TaskLists");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
+                {
+                    b.Navigation("TaskItems");
                 });
 #pragma warning restore 612, 618
         }

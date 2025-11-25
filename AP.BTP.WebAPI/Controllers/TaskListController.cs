@@ -50,6 +50,7 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPatch("{id}/plantation-site")]
         public async Task<ActionResult<TaskListDTO>> PatchTaskListPlantationSite(int id, [FromBody] int? plantationSiteId)
         {

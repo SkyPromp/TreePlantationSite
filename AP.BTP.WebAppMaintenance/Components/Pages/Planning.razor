@@ -234,7 +234,7 @@
     /// Represents the task item currently being added or edited.
     /// Initialized with default values for a new task.
     /// </summary>
-    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0 };
 
     /// <summary>
     /// Stores the date associated with the task item being added.
@@ -257,7 +257,7 @@
             UpdateWeekDays();
             await LoadTaskListsForWeek();
 
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0};
         }
     }
 
@@ -557,7 +557,7 @@
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
-                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0 };
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
