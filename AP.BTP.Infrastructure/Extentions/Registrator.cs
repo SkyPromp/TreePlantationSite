@@ -25,6 +25,7 @@ namespace AP.BTP.Infrastructure.Extentions
             services.RegisterDbContext(configuration);
             services.RegisterRepositories();
             services.AddScoped<IAuth0ManagementService, Auth0ManagementService>();
+            services.AddScoped<IAuth0PasswordGrantService, Auth0PasswordGrantService>();
 
             return services;
         }
