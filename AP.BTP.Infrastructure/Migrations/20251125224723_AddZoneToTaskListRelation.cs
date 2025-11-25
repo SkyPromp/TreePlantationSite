@@ -5,46 +5,44 @@
 namespace AP.BTP.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddZoneToTaskItemRelation : Migration
+    public partial class AddZoneToTaskListRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
                 name: "ZoneId",
-                table: "TaskItem",
+                table: "TaskList",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskItem_ZoneId",
-                table: "TaskItem",
+                name: "IX_TaskList_ZoneId",
+                table: "TaskList",
                 column: "ZoneId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_TaskItem_Zone_ZoneId",
-                table: "TaskItem",
+                name: "FK_TaskList_Zone_ZoneId",
+                table: "TaskList",
                 column: "ZoneId",
                 principalTable: "Zone",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_TaskItem_Zone_ZoneId",
-                table: "TaskItem");
+                name: "FK_TaskList_Zone_ZoneId",
+                table: "TaskList");
 
             migrationBuilder.DropIndex(
-                name: "IX_TaskItem_ZoneId",
-                table: "TaskItem");
+                name: "IX_TaskList_ZoneId",
+                table: "TaskList");
 
             migrationBuilder.DropColumn(
                 name: "ZoneId",
-                table: "TaskItem");
+                table: "TaskList");
         }
     }
 }

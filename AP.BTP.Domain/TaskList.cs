@@ -33,6 +33,17 @@ namespace AP.BTP.Domain
         public PlantationSite? PlantationSite { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the zone that this task item belongs to.
+        /// </summary>
+        public int? ZoneId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the zone associated with this task item.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
+        [JsonIgnore] public Zone? Zone { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of task items in this task list.
         /// This property is ignored during JSON serialization.
         /// </summary>

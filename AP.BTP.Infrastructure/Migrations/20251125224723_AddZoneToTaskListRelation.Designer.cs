@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AP.BTP.Infrastructure.Migrations
 {
     [DbContext(typeof(BTPContext))]
-    [Migration("20251125222152_AddZoneToTaskItemRelation")]
-    partial class AddZoneToTaskItemRelation
+    [Migration("20251125224723_AddZoneToTaskListRelation")]
+    partial class AddZoneToTaskListRelation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1395,14 +1395,9 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ZoneId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TaskListId");
-
-                    b.HasIndex("ZoneId");
 
                     b.ToTable("TaskItem");
                 });
@@ -1427,11 +1422,16 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ZoneId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PlantationSiteId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("ZoneId");
 
                     b.ToTable("TaskList");
                 });
@@ -2123,15 +2123,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AP.BTP.Domain.Zone", "Zone")
-                        .WithMany("TaskItems")
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("TaskList");
-
-                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
@@ -2147,9 +2139,15 @@ namespace AP.BTP.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AP.BTP.Domain.Zone", "Zone")
+                        .WithMany("TaskLists")
+                        .HasForeignKey("ZoneId");
+
                     b.Navigation("PlantationSite");
 
                     b.Navigation("User");
+
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TreePicture", b =>
@@ -2223,7 +2221,7 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
                 {
-                    b.Navigation("TaskItems");
+                    b.Navigation("TaskLists");
                 });
 #pragma warning restore 612, 618
         }

@@ -27,5 +27,10 @@
         /// The ID of the user associated with this task list.
         /// </summary>
         public required int UserId { get; set; }
+
+        /// <summary>
+        /// The zone id associated with this task item.
+        /// </summary>
+        public int? ZoneId { get; set; }
     }
 }

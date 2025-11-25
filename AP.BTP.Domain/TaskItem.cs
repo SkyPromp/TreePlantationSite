@@ -36,17 +36,6 @@ namespace AP.BTP.Domain
         [JsonIgnore] public required TaskList TaskList { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of the zone that this task item belongs to.
-        /// </summary>
-        public required int ZoneId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the zone associated with this task item.
-        /// This property is ignored during JSON serialization.
-        /// </summary>
-        [JsonIgnore] public required Zone Zone { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the task item is considered deleted (soft deletion).
         /// </summary>
         public bool IsDeleted { get; set; }

@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Represents a command to partially update a task list (e.g., updating only the PlantationSiteId).
     /// </summary>
-    public class PatchTaskListCommand : IRequest<TaskListDTO>
+    public class PatchTaskListSiteCommand : IRequest<TaskListDTO>
     {
         /// <summary>
         /// The ID of the task list to update.
@@ -23,15 +23,15 @@ namespace AP.BTP.Application.CQRS.TaskList
     }
 
     /// <summary>
-    /// Provides validation rules for the <see cref="PatchTaskListCommand"/>.
+    /// Provides validation rules for the <see cref="PatchTaskListSiteCommand"/>.
     /// </summary>
-    public class PatchTaskListCommandValidator : AbstractValidator<PatchTaskListCommand>
+    public class PatchTaskListSiteCommandValidator : AbstractValidator<PatchTaskListSiteCommand>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PatchTaskListCommandValidator"/> class.
+        /// Initializes a new instance of the <see cref="PatchTaskListSiteCommandValidator"/> class.
         /// </summary>
         /// <param name="uow">The unit of work for data validation.</param>
-        public PatchTaskListCommandValidator(IUnitOfWork uow)
+        public PatchTaskListSiteCommandValidator(IUnitOfWork uow)
         {
             RuleFor(x => x.TaskListId)
                 .GreaterThan(0)
@@ -59,31 +59,31 @@ namespace AP.BTP.Application.CQRS.TaskList
     }
 
     /// <summary>
-    /// Handles the <see cref="PatchTaskListCommand"/> by partially updating the task list in the database.
+    /// Handles the <see cref="PatchTaskListSiteCommand"/> by partially updating the task list in the database.
     /// </summary>
-    public class PatchTaskListCommandHandler : IRequestHandler<PatchTaskListCommand, TaskListDTO>
+    public class PatchTaskListSiteCommandHandler : IRequestHandler<PatchTaskListSiteCommand, TaskListDTO>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PatchTaskListCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="PatchTaskListSiteCommandHandler"/> class.
         /// </summary>
         /// <param name="uow">The unit of work used for database operations.</param>
         /// <param name="mapper">The mapper used to convert between DTOs and domain entities.</param>
-        public PatchTaskListCommandHandler(IUnitOfWork uow, IMapper mapper)
+        public PatchTaskListSiteCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
             this.mapper = mapper;
         }
 
         /// <summary>
-        /// Handles the <see cref="PatchTaskListCommand"/> by updating only the specified fields.
+        /// Handles the <see cref="PatchTaskListSiteCommand"/> by updating only the specified fields.
         /// </summary>
         /// <param name="request">The command containing the task list ID and fields to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>The updated <see cref="TaskListDTO"/>.</returns>
-        public async Task<TaskListDTO> Handle(PatchTaskListCommand request, CancellationToken cancellationToken)
+        public async Task<TaskListDTO> Handle(PatchTaskListSiteCommand request, CancellationToken cancellationToken)
         {
             var taskList = await uow.TaskListRepository.GetById(request.TaskListId);
             
@@ -91,6 +91,8 @@ namespace AP.BTP.Application.CQRS.TaskList
                 throw new KeyNotFoundException($"Task list with ID {request.TaskListId} not found");
 
             taskList.PlantationSiteId = request.PlantationSiteId;
+            taskList.Zone = null;
+            taskList.ZoneId = null;
 
             uow.TaskListRepository.Update(taskList);
             await uow.Commit();

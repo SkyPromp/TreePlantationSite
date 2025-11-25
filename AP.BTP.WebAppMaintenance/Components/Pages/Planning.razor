@@ -5,6 +5,7 @@
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 @using System.Globalization
+@using System.Runtime.InteropServices
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
@@ -14,7 +15,7 @@
 } else
 {
     <div class="d-flex">
-        <div class="p-4 mb-4 bg-white border" style="height: 80vh; border-radius: 15px 0 0 15px">
+        <div class="p-4 mb-4 bg-white border" style="height: 80vh; border-radius: 15px 0 0 15px; width: 15vw; min-width: 15vw; max-width: 15vw;">
             <div class="mb-3 text-center">
                 <h2 class="fw-bold border-bottom">@user.FirstName</h2>
             </div>
@@ -32,7 +33,7 @@
                 @if(user != null && user.PlantationSites != null){
                     <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
                     <select class="form-select" value="@selectedPlantationSiteId" @onchange="OnPlantationSiteChanged" disabled="@isPlantationSiteSelectionDisabled">
-                        <option value="">-- Selecteer --</option>
+                        <option value="" disabled selected hidden>--- Site ---</option>
                             @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
                             {
                                 <option value="@plantationSite.Id">@plantationSite.Name</option>
@@ -45,8 +46,8 @@
                         </small>
                     }
                 } else {
-                    <small class="text-muted d-block mt-1">
-                        Geen kweeksite(s) gevonden gelinkt aan deze gebruiker.
+                    <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                     </small>
                 }
             </div>
@@ -66,9 +67,23 @@
             
             @foreach (DateTime day in WeekDays)
             {
-                <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 150px; min-width: 150px; font-size: 0.90rem; @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")">
+                <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 14%; min-width: 14%; font-size: 0.90rem; @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")">
                     <div class="text-center fw-bold p-3" style="background-color: #E3E3E3">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
+                    </div>
+
+                    <div class="p-2" style="background-color: #F5F5F5; border-bottom: 1px solid #dee2e6;">
+                        @if (selectedPlantationSiteId.HasValue)
+                        {
+                            int? zoneId = GetZoneForDay(day);
+                            <select class="form-select form-select-sm" value="@zoneId" @onchange="(e) => OnZoneChangedForDay(day, e)" disabled="@(!selectedPlantationSiteId.HasValue)">
+                                <option value="" disabled selected hidden>--- Zone ---</option>
+                                @foreach (ZoneDTO zone in availableZones)
+                                {
+                                    <option value="@zone.Id">@zone.Name</option>
+                                }
+                            </select>
+                        }
                     </div>
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
@@ -191,6 +206,11 @@
     }
 
     /// <summary>
+    /// Dictionary mapping each day to its selected zone ID.
+    /// </summary>
+    private Dictionary<DateTime, int?> zonesByDay = new(); 
+
+    /// <summary>
     /// List of zones available for the currently selected plantation site.
     /// </summary>
     private List<ZoneDTO> availableZones = new();
@@ -234,7 +254,7 @@
     /// Represents the task item currently being added or edited.
     /// Initialized with default values for a new task.
     /// </summary>
-    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0 };
+    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
 
     /// <summary>
     /// Stores the date associated with the task item being added.
@@ -257,7 +277,7 @@
             UpdateWeekDays();
             await LoadTaskListsForWeek();
 
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0};
+            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
         }
     }
 
@@ -309,6 +329,11 @@
                 CurrentWeekTaskListsByDay = response.ToDictionary(t => t.Date.Date, t => t);
                 TaskListDTO? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
                 selectedPlantationSiteId = firstTaskListWithSite?.PlantationSiteId;
+
+                if (selectedPlantationSiteId.HasValue)
+                {
+                    await LoadZonesForPlantationSite(selectedPlantationSiteId.Value);
+                }
             } else
             {
                 CurrentWeekTaskListsByDay.Clear();
@@ -432,7 +457,7 @@
     /// </summary>
     /// <param name="day">The date for which the task list should be created.</param>
     /// <returns>The created <see cref="TaskListDTO"/> if successful; otherwise, null.</returns>
-    private async Task<TaskListDTO?> AddTaskList(DateTime day)
+    private async Task<TaskListDTO?> AddTaskList(DateTime day, int? zoneId = null)
     {
         try
         {
@@ -447,7 +472,8 @@
                 Id = 0, 
                 Date = day, 
                 UserId = this.userId,
-                PlantationSiteId = selectedPlantationSiteId
+                PlantationSiteId = selectedPlantationSiteId,
+                ZoneId = zoneId
             };            
 
             HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", newTaskList);
@@ -475,6 +501,14 @@
         if (!selectedPlantationSiteId.HasValue)
         {
             errorMessage = "Selecteer eerst een kweeksite voordat u taken toevoegt.";
+            StateHasChanged();
+            return;
+        }
+
+        if (!GetZoneForDay(day).HasValue && GetZoneForDay(day) == null)
+        {
+            errorMessage = "Selecteer eerst een zone voor deze dag voordat u taken toevoegt.";
+            Console.WriteLine("Selecteer eerst een zone voor deze dag voordat u taken toevoegt.");
             StateHasChanged();
             return;
         }
@@ -557,7 +591,7 @@
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
-                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0, ZoneId = 0 };
+                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
@@ -694,4 +728,89 @@
             availableZones.Clear();
         }
     }
+
+    /// <summary>
+    /// Gets the zone ID assigned to a specific day.
+    /// </summary>
+    private int? GetZoneForDay(DateTime day)
+    {
+        if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList))
+        {
+            return taskList.ZoneId;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Handles zone selection change for a specific day.
+    /// </summary>
+    private async Task OnZoneChangedForDay(DateTime day, ChangeEventArgs e)
+    {
+        Console.WriteLine($"Zone changed for day {day}");
+        if (e.Value == null)
+        {
+            return;
+        }
+
+        string valueStr = e.Value.ToString()!;
+        
+        if (string.IsNullOrEmpty(valueStr) || valueStr == "0" || !int.TryParse(valueStr, out int zoneId))
+        {
+            return;
+        }
+
+        Console.WriteLine($"Trying to make tasklist with zone {zoneId}");
+        
+        try
+        {
+            if (client == null)
+            {
+                errorMessage = "No httpclient found.";
+                return;
+            }
+
+            TaskListDTO? taskList;
+            if (!CurrentWeekTaskListsByDay.ContainsKey(day.Date))
+            {
+                taskList = await AddTaskList(day.Date, zoneId);
+                if (taskList != null)
+                {
+                    CurrentWeekTaskListsByDay[day.Date] = taskList;
+                    Console.WriteLine($"Created new TaskList with ZoneId {taskList.ZoneId}");
+                    errorMessage = "";
+                    StateHasChanged();
+                    return;
+                }
+            }
+            else
+            {
+                taskList = CurrentWeekTaskListsByDay[day.Date];
+            }
+
+            if (taskList == null)
+            {
+                errorMessage = "Could not create or find task list for this day.";
+                return;
+            }
+
+            Console.WriteLine($"Patching existing TaskList {taskList.Id} with zone {zoneId}");
+            HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/zone", zoneId);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                taskList.ZoneId = zoneId;
+                errorMessage = "";
+            }
+            else
+            {
+                errorMessage = $"Failed to update zone for {day:dd/MM}";
+            }
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij bijwerken van zone: {ex.Message}";
+        }
+    }      
 }
