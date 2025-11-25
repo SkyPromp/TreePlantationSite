@@ -29,8 +29,8 @@ namespace AP.BTP.Domain
         /// </summary>
         public required User User { get; set; }
 
-        public int PlantationSiteId { get; set; }
-        public required PlantationSite PlantationSite { get; set; }
+        public int? PlantationSiteId { get; set; }
+        public PlantationSite? PlantationSite { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of task items in this task list.

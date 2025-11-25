@@ -49,5 +49,18 @@ namespace AP.BTP.WebAPI.Controllers
             Console.WriteLine("ADD TASK LIST CONTROLLER");
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
+
+        [HttpPatch("{id}/plantation-site")]
+        public async Task<ActionResult<TaskListDTO>> PatchTaskListPlantationSite(int id, [FromBody] int? plantationSiteId)
+        {
+            PatchTaskListCommand command = new PatchTaskListCommand 
+            { 
+                TaskListId = id, 
+                PlantationSiteId = plantationSiteId 
+            };
+            
+            TaskListDTO result = await mediator.Send(command);
+            return Ok(result);
+        }
     }
 }

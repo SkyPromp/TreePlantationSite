@@ -1413,7 +1413,7 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PlantationSiteId")
+                    b.Property<int?>("PlantationSiteId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -2121,10 +2121,9 @@ namespace AP.BTP.Infrastructure.Migrations
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
                 {
                     b.HasOne("AP.BTP.Domain.PlantationSite", "PlantationSite")
-                        .WithMany()
+                        .WithMany("TaskLists")
                         .HasForeignKey("PlantationSiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("AP.BTP.Domain.User", "User")
                         .WithMany("TaskLists")
@@ -2184,6 +2183,8 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
                 {
+                    b.Navigation("TaskLists");
+
                     b.Navigation("Zones");
                 });
 
