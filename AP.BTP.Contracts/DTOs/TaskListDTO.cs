@@ -15,6 +15,8 @@
         /// </summary>
         public required DateTime Date { get; set; }
 
+        public int? PlantationSiteId { get; set; }
+
         /// <summary>
         /// The collection of task items associated with this task list.
         /// May be <c>null</c> if there are no tasks.

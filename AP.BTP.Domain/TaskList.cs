@@ -27,7 +27,10 @@ namespace AP.BTP.Domain
         /// <summary>
         /// Gets or sets the user associated with this task list.
         /// </summary>
-        public User User { get; set; }  // TODO make required or nullable
+        public required User User { get; set; }
+
+        public int PlantationSiteId { get; set; }
+        public required PlantationSite PlantationSite { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of task items in this task list.

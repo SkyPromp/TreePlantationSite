@@ -29,14 +29,26 @@
             </div>
 
             <div>
-                <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
-                <select class="form-select">
-                    <option value="">-- Selecteer --</option>
-                    @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)  // TODO read warning
+                @if(user != null && user.PlantationSites != null){
+                    <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
+                    <select class="form-select" value="@selectedPlantationSiteId" @onchange="OnPlantationSiteChanged" disabled="@isPlantationSiteSelectionDisabled">
+                        <option value="">-- Selecteer --</option>
+                            @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                            {
+                                <option value="@plantationSite.Id">@plantationSite.Name</option>
+                            }
+                    </select>
+                    @if (isPlantationSiteSelectionDisabled && selectedPlantationSiteId.HasValue)
                     {
-                        <option value="@plantationSite.Id">@plantationSite.Name</option>
+                        <small class="text-muted d-block mt-1">
+                            Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
+                        </small>
                     }
-                </select>
+                } else {
+                    <small class="text-muted d-block mt-1">
+                        Geen kweeksite(s) gevonden gelinkt aan deze gebruiker.
+                    </small>
+                }
             </div>
         </div>
 
@@ -145,12 +157,23 @@
     /// <summary>
     /// HttpClient used to call the backend API.
     /// </summary>
-    private HttpClient client;
+    private HttpClient? client;
 
     /// <summary>
     /// The user details retrieved from the API.
     /// </summary>
     private UserDTO? user;
+
+    /// <summary>
+    /// The currently selected plantation site ID for the current week.
+    /// Null if no site has been selected yet.
+    /// </summary>
+    private int? selectedPlantationSiteId;
+
+    /// <summary>
+    /// Indicates whether the plantation site selection is disabled because a site was already selected for this week.
+    /// </summary>
+    private bool isPlantationSiteSelectionDisabled => selectedPlantationSiteId.HasValue;
 
     /// <summary>
     /// Start date (Monday) of the currently displayed week.
@@ -259,9 +282,12 @@
             {
                 // store current week's tasks
                 CurrentWeekTaskListsByDay = response.ToDictionary(t => t.Date.Date, t => t);
+                TaskListDTO? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
+                selectedPlantationSiteId = firstTaskListWithSite?.PlantationSiteId;
             } else
             {
                 CurrentWeekTaskListsByDay.Clear();
+                selectedPlantationSiteId = null;
             }
 
             StateHasChanged();
@@ -387,16 +413,22 @@
             if (this.client == null)
             {
                 this.errorMessage = "No httpclient found.";
-
                 return null;
             }
 
-            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", new TaskListDTO() { Id = 0, Date = day, UserId=this.userId });
+            TaskListDTO newTaskList = new TaskListDTO() 
+            { 
+                Id = 0, 
+                Date = day, 
+                UserId = this.userId,
+                PlantationSiteId = selectedPlantationSiteId
+            };            
+
+            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", newTaskList);
 
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
-
                 return await response.Content.ReadFromJsonAsync<TaskListDTO>();
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
@@ -519,5 +551,49 @@
     {
         this.ShowDeleteConfirm = false;
         this.selectedTaskItemId = null;
+    }
+
+    /// <summary>
+    /// Handles the plantation site selection change event.
+    /// Updates all task lists for the current week with the selected plantation site.
+    /// </summary>
+    private async Task OnPlantationSiteChanged(ChangeEventArgs e)
+    {
+        if (e.Value == null || string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            return;
+        }
+
+        int newSiteId = int.Parse(e.Value.ToString()!);
+        
+        try
+        {
+            if (client == null)
+            {
+                errorMessage = "No httpclient found.";
+                return;
+            }
+
+            foreach (TaskListDTO taskList in CurrentWeekTaskListsByDay.Values)
+            {
+                taskList.PlantationSiteId = newSiteId;
+                
+                HttpResponseMessage response = await client.PutAsJsonAsync($"TaskList/{taskList.Id}", taskList);
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    errorMessage = $"Failed to update task list for {taskList.Date:dd/MM}";
+                    return;
+                }
+            }
+
+            selectedPlantationSiteId = newSiteId;
+            errorMessage = "";
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fout bij bijwerken van kweeksite: {ex.Message}";
+        }
     }
 }
