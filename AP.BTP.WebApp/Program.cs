@@ -1,65 +1,56 @@
-using System.Security.Cryptography.X509Certificates;
+using AP.BTP.Contracts.DTOs;
 using AP.BTP.Web.Authentication;
+using AP.BTP.Web.Shared.Components;
 using AP.BTP.WebApp.Components;
 using AP.BTP.WebApp.Extentions;
-using AP.BTP.Web.Shared.Components;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
-namespace AP.BTP.WebApp
+namespace AP.BTP.WebAppMaintenance
 {
     /// <summary>
-    /// The entry point for the Blazor client application.
-    /// Configures services, HTTP clients, authentication, and middleware, then starts the web application.
+    /// Entry point and startup configuration for the Blazor Server application.
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// Application entry point. Builds and runs the Blazor WebAssembly server-side application.
+        /// Main entry point of the application. Configures and runs the web application host.
         /// </summary>
         /// <param name="args">Command-line arguments passed to the application.</param>
         /// <remarks>
-        /// This method performs the following actions:
-        /// <list type="bullet">
-        /// <item>
-        /// <description>Adds Razor Components services and server-side interactive components.</description>
-        /// </item>
-        /// <item>
-        /// <description>Registers <see cref="IHttpContextAccessor"/> to access HTTP context in services.</description>
-        /// </item>
-        /// <item>
-        /// <description>Configures an HTTP client named "BTPApi" with base URL from configuration, optionally trusting a custom certificate, and attaches a custom <see cref="AuthTokenHandler"/> to include access tokens in requests.</description>
-        /// </item>
-        /// <item>
-        /// <description>Adds Auth0 authentication services with configuration options from the app settings.</description>
-        /// </item>
-        /// <item>
-        /// <description>Builds the <see cref="WebApplication"/> and configures the HTTP request pipeline, including authentication, authorization, static files, antiforgery, and custom middleware for redirecting unauthenticated users.</description>
-        /// </item>
-        /// <item>
-        /// <description>Maps Auth0 login, register, and logout endpoints.</description>
-        /// </item>
-        /// <item>
-        /// <description>Maps Razor Components to the root App component and enables interactive server rendering.</description>
-        /// </item>
-        /// <item>
-        /// <description>Runs the web application.</description>
-        /// </item>
+        /// This method performs the following steps:
+        /// <list type="number">
+        /// <item><description>Builds the <see cref="WebApplication"/> host using <see cref="WebApplication.CreateBuilder"/>.</description></item>
+        /// <item><description>Registers services such as Razor Components, Blazor Bootstrap, and HTTP clients.</description></item>
+        /// <item><description>Configures an HTTP client named <c>BTPApi</c> for communicating with the backend API, 
+        /// optionally trusting a custom SSL certificate defined via the <c>API_CERT_PATH</c> configuration setting.</description></item>
+        /// <item><description>Adds Auth0 authentication and configures JWT role claim mapping.</description></item>
+        /// <item><description>Sets up middleware for authentication, authorization, static file handling, and error management.</description></item>
+        /// <item><description>Applies a custom middleware that redirects unauthenticated users to the <c>/welcome</c> page.</description></item>
+        /// <item><description>Maps and runs the Blazor components that define the application UI.</description></item>
         /// </list>
         /// </remarks>
-        /// <example>
-        /// <code>
-        /// dotnet run
-        /// </code>
-        /// Starts the Blazor client app with server-side components and authentication configured.
-        /// </example>
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddBlazorBootstrap();
+
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddHttpClient("BTPApi", client =>
             {
@@ -78,7 +69,7 @@ namespace AP.BTP.WebApp
                     store.Add(trustedCert);
                     store.Close();
 
-                    handler.ServerCertificateCustomValidationCallback = 
+                    handler.ServerCertificateCustomValidationCallback =
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                     Console.WriteLine($"Using trusted certificate at {certPath}");
                 }
@@ -90,16 +81,27 @@ namespace AP.BTP.WebApp
                 return handler;
             }).AddHttpMessageHandler(provider =>
             {
-                // Custom handler to add the access token as Bearer token
                 return new AuthTokenHandler(provider.GetRequiredService<IHttpContextAccessor>());
             });
 
-            builder.Services.AddAuth0Authentication(builder.Configuration);
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.LoginPath = "/login";
+            });
 
+            builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                };
+            });
 
             WebApplication app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
@@ -111,13 +113,81 @@ namespace AP.BTP.WebApp
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapAuth0Endpoints();
+            // TODO login callback endpoint in apparte file steken (en ook andere auth configuraties)
+            app.MapGet("/auth/login-callback", async (HttpContext context, [FromServices] IMemoryCache cache) =>
+            {
+                string key = context.Request.Query["key"].ToString();
+                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<TokenResponseDTO>(key, out TokenResponseDTO? token))
+                {
+                    return Results.BadRequest("Invalid or expired key.");
+                }
+
+                cache.Remove(key);
+
+                if (string.IsNullOrEmpty(token.id_token))
+                {
+                    return Results.Unauthorized();
+                }
+
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+                string authority = $"https://{builder.Configuration["AUTH0:DOMAIN"]}/";
+                string? audience = builder.Configuration["AUTH0:CLIENT_ID"];
+
+                ConfigurationManager<OpenIdConnectConfiguration> configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    $"{authority}.well-known/openid-configuration",
+                    new OpenIdConnectConfigurationRetriever()
+                );
+
+                OpenIdConnectConfiguration openIdConfig = await configManager.GetConfigurationAsync(CancellationToken.None);
+
+                TokenValidationParameters validationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = authority,
+                    ValidAudience = audience,
+                    IssuerSigningKeys = openIdConfig.SigningKeys,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(2)
+                };
+
+                try
+                {
+                    ClaimsPrincipal principal = handler.ValidateToken(token.id_token, validationParameters, out SecurityToken? validatedToken);
+
+                    List<Claim> claims = principal.Claims.Select(c =>
+                    {
+                        if (c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                        {
+                            return c.Value.Split(',').Select(r => new Claim(ClaimTypes.Role, r.Trim()));
+                        }
+                        return [new Claim(c.Type, c.Value)];
+                    }).SelectMany(c => c).ToList();
+
+                    claims.Add(new Claim("access_token", token.access_token));
+                    claims.Add(new Claim("id_token", token.id_token));
+
+                    ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal cookiePrincipal = new ClaimsPrincipal(identity);
+
+                    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cookiePrincipal);
+
+                    return Results.Redirect("/");
+                }
+                catch (SecurityTokenValidationException)
+                {
+                    return Results.Unauthorized();
+                }
+            });
+
+
+            // TODO: logout fixen en endpoint toevoegen
 
             app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
-                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);  ;
+                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);
 
             app.Run();
         }
