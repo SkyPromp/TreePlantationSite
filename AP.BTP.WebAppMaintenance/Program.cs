@@ -186,7 +186,12 @@ namespace AP.BTP.WebAppMaintenance
             });
 
 
-            // TODO: logout fixen en endpoint toevoegen
+            app.MapGet("/logout", async (HttpContext context) =>
+            {
+                await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                context.Response.Cookies.Delete(".AspNetCore.Cookies");
+                return Results.Redirect("/");
+            });
 
             app.UseRedirectToWelcomeWhenUnautenticated();
 
