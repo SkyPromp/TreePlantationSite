@@ -1397,32 +1397,6 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasIndex("TaskListId");
 
                     b.ToTable("TaskItem");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description 1",
-                            IsDeleted = false,
-                            TaskListId = 1,
-                            Title = "Task 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description 2",
-                            IsDeleted = false,
-                            TaskListId = 1,
-                            Title = "Task 2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Description 3",
-                            IsDeleted = false,
-                            TaskListId = 2,
-                            Title = "Task 3"
-                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
@@ -1439,37 +1413,24 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PlantationSiteId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ZoneId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlantationSiteId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("TaskList");
+                    b.HasIndex("ZoneId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(2025, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(2025, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(2025, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 1
-                        });
+                    b.ToTable("TaskList");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.Tree", b =>
@@ -2164,13 +2125,26 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
                 {
+                    b.HasOne("AP.BTP.Domain.PlantationSite", "PlantationSite")
+                        .WithMany("TaskLists")
+                        .HasForeignKey("PlantationSiteId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("AP.BTP.Domain.User", "User")
                         .WithMany("TaskLists")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AP.BTP.Domain.Zone", "Zone")
+                        .WithMany("TaskLists")
+                        .HasForeignKey("ZoneId");
+
+                    b.Navigation("PlantationSite");
+
                     b.Navigation("User");
+
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TreePicture", b =>
@@ -2220,6 +2194,8 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
                 {
+                    b.Navigation("TaskLists");
+
                     b.Navigation("Zones");
                 });
 
@@ -2236,6 +2212,11 @@ namespace AP.BTP.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.User", b =>
+                {
+                    b.Navigation("TaskLists");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
                 {
                     b.Navigation("TaskLists");
                 });

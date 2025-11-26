@@ -39,12 +39,21 @@ namespace AP.BTP.Infrastructure.Context
                 .WithOne(t => t.Tree)
                 .HasForeignKey(t => t.TreeId);
 
+            modelBuilder.Entity<TaskList>()
+                .HasOne(ps => ps.PlantationSite)
+                .WithMany(tl => tl.TaskLists)
+                .HasForeignKey(p => p.PlantationSiteId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<TaskList>()
+                .HasOne(zo => zo.Zone)
+                .WithMany(ti => ti.TaskLists)
+                .HasForeignKey(zo => zo.ZoneId);
+
             // Seeding
             modelBuilder.Entity<PlantationSite>().Seed();
             modelBuilder.Entity<Tree>().Seed();
             modelBuilder.Entity<User>().Seed();
-            modelBuilder.Entity<TaskList>().Seed();
-            modelBuilder.Entity<TaskItem>().Seed();
             
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 1 },

@@ -42,12 +42,72 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new GetAllTaskListsByUserIdAndWeekQuery { UserId = userId, Year = year, WeekNumber = weekNumber }));
         }
 
+        /// <summary>
+        /// Adds a new task list.
+        /// </summary>
+        /// <param name="taskList">The <see cref="TaskListDTO"/> object containing task list data to add.</param>
+        /// <returns>
+        /// Returns an <see cref="IActionResult"/> containing the added <see cref="TaskListDTO"/>.
+        /// </returns>
+        /// <remarks>
+        /// This endpoint requires the caller to have the "Manager" role.
+        /// </remarks>
         [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)
         {
-            Console.WriteLine("ADD TASK LIST CONTROLLER");
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
+        }
+
+
+        /// <summary>
+        /// Updates the plantation site associated with a specific task list.
+        /// </summary>
+        /// <param name="id">The ID of the task list to update.</param>
+        /// <param name="plantationSiteId">The ID of the plantation site to associate with the task list, or null to remove it.</param>
+        /// <returns>
+        /// Returns an <see cref="ActionResult{TaskListDTO}"/> containing the updated task list.
+        /// </returns>
+        /// <remarks>
+        /// This endpoint requires the caller to have the "Manager" role.
+        /// </remarks>
+        [Authorize(Roles = "Manager")]
+        [HttpPatch("{id}/plantation-site")]
+        public async Task<ActionResult<TaskListDTO>> PatchTaskListPlantationSite(int id, [FromBody] int? plantationSiteId)
+        {
+            PatchTaskListSiteCommand command = new PatchTaskListSiteCommand 
+            { 
+                TaskListId = id, 
+                PlantationSiteId = plantationSiteId 
+            };
+            
+            TaskListDTO result = await mediator.Send(command);
+            return Ok(result);
+        }
+        
+        /// <summary>
+        /// Updates the zone associated with a specific task list.
+        /// </summary>
+        /// <param name="id">The ID of the task list to update.</param>
+        /// <param name="zoneId">The ID of the zone to associate with the task list, or null to remove it.</param>
+        /// <returns>
+        /// Returns an <see cref="ActionResult{TaskListDTO}"/> containing the updated task list.
+        /// </returns>
+        /// <remarks>
+        /// This endpoint requires the caller to have the "Manager" role.
+        /// </remarks>
+        [Authorize(Roles = "Manager")]
+        [HttpPatch("{id}/zone")]
+        public async Task<ActionResult<TaskListDTO>> PatchTaskListZone(int id, [FromBody] int? zoneId)
+        {
+            PatchTaskListZoneCommand command = new PatchTaskListZoneCommand 
+            { 
+                TaskListId = id, 
+                ZoneId = zoneId 
+            };
+            
+            TaskListDTO result = await mediator.Send(command);
+            return Ok(result);
         }
     }
 }

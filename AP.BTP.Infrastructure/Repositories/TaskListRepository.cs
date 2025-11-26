@@ -83,11 +83,16 @@ namespace AP.BTP.Infrastructure.Repositories
         /// Retrieves a <see cref="TaskList"/> by its ID.
         /// </summary>
         /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
-        /// <returns>The <see cref="TaskList"/> entity, or <c>null</c> if not found.</returns>
-        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
-        public Task<TaskList?> GetById(int id)
+        /// <returns>The <see cref="TaskList"/> with the specified ID.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
+        public async Task<TaskList?> GetById(int id)
         {
-            throw new NotImplementedException();
+            TaskList? site = await dbSet
+            .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
+
+            if (site == null) throw new KeyNotFoundException($"TaskList with ID {id} not found.");
+
+            return site;
         }
 
         /// <summary>
@@ -95,10 +100,16 @@ namespace AP.BTP.Infrastructure.Repositories
         /// </summary>
         /// <param name="modifiedItem">The modified <see cref="TaskList"/> entity.</param>
         /// <returns>The updated <see cref="TaskList"/> entity.</returns>
-        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity to update is not found.</exception>
         public TaskList Update(TaskList modifiedItem)
         {
-            throw new NotImplementedException();
+            TaskList? existingEntity = dbSet.Find(modifiedItem.Id);
+
+            if (existingEntity == null) throw new KeyNotFoundException($"TaskList with ID {modifiedItem.Id} not found.");
+
+            dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+            return existingEntity;
         }
     }
 }
