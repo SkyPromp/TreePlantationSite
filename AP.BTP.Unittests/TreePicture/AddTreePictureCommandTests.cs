@@ -1,7 +1,6 @@
 using AP.BTP.Application.CQRS.TreePicture;
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
-using AP.BTP.Infrastructure.Migrations;
 using FluentValidation.TestHelper;
 using Moq;
 
