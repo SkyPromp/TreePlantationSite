@@ -49,7 +49,6 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(IFormFile file)  // TODO move to CQRS
         {
-            
             if (file == null || file.Length == 0) return BadRequest("No file uploaded");
 
             if (!this.allowedFileTypes.Contains(file.ContentType)) return StatusCode(StatusCodes.Status415UnsupportedMediaType);

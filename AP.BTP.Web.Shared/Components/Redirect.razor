@@ -19,7 +19,11 @@
             else if (user.IsInRole("Manager"))
             {
                 Navigation.NavigateTo("/manager/dashboard", true);
-            } 
+            }
+            else if (user.IsInRole("Operator"))
+            {
+                Navigation.NavigateTo("/operator/dashboard", true);
+            }
         }
         else
         {
