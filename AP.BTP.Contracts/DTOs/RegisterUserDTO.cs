@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace AP.BTP.Contracts.DTOs
@@ -37,9 +35,10 @@ namespace AP.BTP.Contracts.DTOs
         public string Email { get; set; }
 
         /// <summary>
-        /// The password for the user account. Must contain at least one lowercase letter, 
-        /// one uppercase letter, one digit, and one special character.
+        /// The password for the user account.
         /// </summary>
+        /// <remarks>The password must comply with the constraints defined by the <see
+        /// cref="PasswordRequirements"/>.</remarks>
         [PasswordRequirements]
         public string Password { get; set; }
 
@@ -51,6 +50,14 @@ namespace AP.BTP.Contracts.DTOs
         public string ConfirmPassword { get; set; }
     }
 
+    /// <summary>
+    /// Specifies password requirements for a data field.
+    /// </summary>
+    /// <remarks>This attribute validates that a password meets certain complexity requirements, including:
+    /// <list type="bullet"> <item><description>At least one lowercase letter.</description></item>
+    /// <item><description>At least one uppercase letter.</description></item> <item><description>At least one numeric
+    /// digit.</description></item> <item><description>At least one special character.</description></item> </list> If
+    /// the password does not meet these requirements, a validation error message is returned.</remarks>
     public class PasswordRequirementsAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)

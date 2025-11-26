@@ -17,7 +17,9 @@
             "/logout",
             "/_framework",
             "/_content",
-            "/css"
+            "/css",
+            "/_blazor",
+            "/auth/login-callback"
         };
 
         /// <summary>
