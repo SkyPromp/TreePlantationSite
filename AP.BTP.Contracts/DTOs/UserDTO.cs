@@ -44,9 +44,9 @@ namespace AP.BTP.Contracts.DTOs
         public bool IsApproved { get; set; } = false;
 
         /// <summary>
-        /// the user's role.
+        /// the user's role. Defaults to null if not set
         /// </summary>
-        public UserRole Role { get; set; }
+        public UserRole? Role { get; set; } = null;
 
         /// <summary>
         /// A collection of plantation sites associated with the user. Can be <c>null</c> if none exist.

@@ -46,9 +46,9 @@ namespace AP.BTP.Domain
         public bool IsApproved { get; set; } = false;
 
         /// <summary>
-        /// gets or sets the role of the user.
+        /// gets or sets the role of the user. default is null
         /// </summary>
-        public UserRole Role { get; set; }
+        public UserRole? Role { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the collection of plantation sites associated with the user.
