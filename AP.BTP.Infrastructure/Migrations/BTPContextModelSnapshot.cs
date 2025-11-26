@@ -2015,6 +2015,9 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2026,6 +2029,10 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("User");
@@ -2034,22 +2041,38 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Auth0Id = "auth0|user1",
-                            Email = "alice@example.com",
-                            FirstName = "Alice",
+                            Auth0Id = "auth0|68f5f3c8fa9e243c35508427",
+                            Email = "admin123@admin.admin",
+                            FirstName = "Admin1",
+                            IsApproved = true,
                             IsDeleted = false,
-                            LastName = "",
-                            PhoneNumber = ""
+                            LastName = "Lastname",
+                            PhoneNumber = "0123456789",
+                            Role = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            Auth0Id = "auth0|user2",
-                            Email = "bob@example.com",
-                            FirstName = "Bob",
+                            Auth0Id = "auth0|690db2550eb8c001baeaeb22",
+                            Email = "manager123@manager.manager",
+                            FirstName = "Manager1",
+                            IsApproved = true,
                             IsDeleted = false,
-                            LastName = "",
-                            PhoneNumber = ""
+                            LastName = "Lastname",
+                            PhoneNumber = "0123456789",
+                            Role = "Manager"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Auth0Id = "auth0|68f7f831f5bc833fc99fca15",
+                            Email = "operator123@operator.operator",
+                            FirstName = "Operator1",
+                            IsApproved = true,
+                            IsDeleted = false,
+                            LastName = "Lastname",
+                            PhoneNumber = "0123456789",
+                            Role = "Operator"
                         });
                 });
 
@@ -2103,12 +2126,12 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             PlantationSitesId = 1,
-                            UsersId = 1
+                            UsersId = 3
                         },
                         new
                         {
                             PlantationSitesId = 2,
-                            UsersId = 1
+                            UsersId = 3
                         });
                 });
 
