@@ -44,7 +44,15 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new GetAllTaskListsByUserIdAndWeekQuery { UserId = userId, Year = year, WeekNumber = weekNumber }));
         }
 
-        [Authorize(Roles = "Operator, Manager")] // TODO make only Operator
+        /// <summary>
+        /// Gets the task list for a specific day for the authenticated user.
+        /// </summary>
+        /// <param name="date">The date to retrieve the task list for.</param>
+        /// <returns>
+        /// Returns the task list for the specified day if found, 
+        /// otherwise returns 404 Not Found or 400 Bad Request if the user is not found.
+        /// </returns>
+        [Authorize(Roles = "Operator")]
         [HttpGet("day")]
         public async Task<IActionResult> GetByDay([FromQuery] DateTime date)
         {
@@ -59,7 +67,14 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(tasklist);
         }
 
-        // TODO add docu comment
+        /// <summary>
+        /// Adds a new task list.
+        /// </summary>
+        /// <param name="taskList">The task list object to add.</param>
+        /// <returns>
+        /// Returns the result of the task list creation.
+        /// Only accessible to users in the "Manager" role.
+        /// </returns>
         [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)

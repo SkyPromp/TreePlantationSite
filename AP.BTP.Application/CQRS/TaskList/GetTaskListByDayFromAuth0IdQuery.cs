@@ -66,7 +66,7 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// </returns>
         public async Task<TaskListDTO?> Handle(GetTaskListByDayFromAuth0IdQuery request, CancellationToken cancellationToken)
         {
-            Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);  // TODO Use this
+            Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);
 
             if (user == null) throw new Exception("The user could not be found!");
 
