@@ -131,7 +131,7 @@ namespace AP.BTP.WebAppMaintenance
 
                 JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
-                string authority = $"https://{builder.Configuration["AUTH0:DOMAIN"]}/"; // e.g. https://yourtenant.auth0.com/
+                string authority = $"https://{builder.Configuration["AUTH0:DOMAIN"]}/";
                 string? audience = builder.Configuration["AUTH0:CLIENT_ID"];
 
                 ConfigurationManager<OpenIdConnectConfiguration> configManager = new ConfigurationManager<OpenIdConnectConfiguration>(

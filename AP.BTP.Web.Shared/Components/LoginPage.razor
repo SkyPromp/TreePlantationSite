@@ -80,7 +80,7 @@
 
     /// <summary>
     /// Handles form submission when all fields are valid.
-    /// Sends the login request to the backend and sends the response tokens to the /auth/login-callback to be saved.
+    /// Sends the login request to the backend and saves the response tokens in the cache to be used in the /auth/login-callback endpoint.
     /// </summary>
     private async Task HandleValidSubmit()
     {
