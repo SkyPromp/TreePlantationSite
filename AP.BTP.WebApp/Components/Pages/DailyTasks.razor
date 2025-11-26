@@ -4,11 +4,19 @@
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
-@using System.Globalization
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
-<h3 class="text-center">Today's tasks</h3>
+@*
+<h3 class="text-center">Tasks of @($"{this.selectedDate:yyyy-MM-dd}")</h3>
+*@
+
+<div class="d-flex justify-content-between align-items-center">
+    <Button class="p-0" @onclick="() => UpdateDate(-1)">←</Button>
+    <h3 class="text-center">Tasks of @($"{this.selectedDate:yyyy-MM-dd}")</h3>
+    <Button class="p-0" @onclick="() => UpdateDate(1)">→</Button>
+</div>
+
 <div class="card border-0">
     <div class="p-3 d-flex flex-column gap-2">
         @foreach(TaskItemDTO task in todayTasks?.TaskItems ?? [])
@@ -83,19 +91,29 @@
         try
         {
             TaskListDTO? response = await this.client.GetFromJsonAsync<TaskListDTO>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
+            this.todayTasks = response;
 
-            if (response != null)
-            {
-                this.todayTasks = response;
-            } else
+            if (response == null)
             {
                 this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de takenlijst.";
+            } else
+            {
+                this.errorMessage = "";
             }
         } catch (Exception e)
         {
             this.errorMessage = e.Message;
+            this.todayTasks = null;
         }
 
         StateHasChanged();
     }
+
+    public async Task UpdateDate(int deltaDays)
+    {
+        this.selectedDate = this.selectedDate.AddDays(deltaDays);
+        await LoadUser();
+        StateHasChanged();
+    }
 }
+
