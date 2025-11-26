@@ -44,22 +44,20 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new GetAllTaskListsByUserIdAndWeekQuery { UserId = userId, Year = year, WeekNumber = weekNumber }));
         }
 
-        /*
-        [Authorize(Roles = "Operator")]
-        [HttpGet]
+        [Authorize(Roles = "Operator, Manager")] // TODO make only Operator
+        [HttpGet("day")]
         public async Task<IActionResult> GetByDay([FromQuery] DateTime date)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string? auth0Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Console.WriteLine("START --------------------------");
-            Console.WriteLine(date.ToString());
-            Console.WriteLine(userId);
-            Console.WriteLine("END --------------------------");
+            if (auth0Id == null) return BadRequest("User has not been found");
 
-            return BadRequest();
-            //return Ok(await mediator.Send());
+            TaskListDTO? tasklist = await mediator.Send(new GetTaskListByDayFromAuth0IdQuery() { Auth0Id = auth0Id, Day = date });
+
+            if (tasklist == null) return NotFound();
+
+            return Ok(tasklist);
         }
-        */
 
         // TODO add docu comment
         [Authorize(Roles = "Manager")]

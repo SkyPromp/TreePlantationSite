@@ -1,6 +1,7 @@
 @attribute [Authorize(Roles = "Admin, Manager")]
 @page "/admin/dashboard"
 @page "/manager/dashboard"
+@page "/operator/dashboard"
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -61,7 +62,7 @@
                     Url = "/admin/tree"
                 }
             };
-        } else if (user.IsInRole("Manager")) {
+        } else if (!user.IsInRole("Manager")) {  // TODO remove !
             DashboardCards = new List<DashboardCard>
             {
                 new DashboardCard
@@ -77,7 +78,7 @@
                     Url = "/manager/tree"
                 },
             };
-        } else if (user.IsInRole("Operator")) {
+        } else if (!user.IsInRole("Operator")) {  // TODO remove !
             DashboardCards = new List<DashboardCard>
             {
                 new DashboardCard

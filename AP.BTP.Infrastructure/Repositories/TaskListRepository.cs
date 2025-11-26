@@ -80,6 +80,26 @@ namespace AP.BTP.Infrastructure.Repositories
         }
 
         /// <summary>
+        /// Retrieves all <see cref="TaskList"/> entities for a specific user on a specific date
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="date">The date of the tasklist.</param>
+        /// <returns>A collection of <see cref="TaskList"/> entities for the specified user and date.</returns>
+        public async Task<TaskList?> GetAllByUserIdAndDate(int userId, DateTime date)
+        {
+            DateTime endOfDay = date.AddDays(1);
+
+            return await dbSet
+                .Where(tl =>
+                    !tl.IsDeleted &&
+                    tl.UserId == userId &&
+                    tl.Date >= date &&
+                    tl.Date < endOfDay)
+                .Include(tl => tl.TaskItems.Where(item => !item.IsDeleted))
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Retrieves a <see cref="TaskList"/> by its ID.
         /// </summary>
         /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
