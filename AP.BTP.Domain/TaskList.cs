@@ -27,7 +27,29 @@ namespace AP.BTP.Domain
         /// <summary>
         /// Gets or sets the user associated with this task list.
         /// </summary>
-        public User User { get; set; }  // TODO make required or nullable
+        public required User User { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the plantation site that this task list belongs to.
+        /// </summary>
+        public int? PlantationSiteId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the plantation site associated with this task list.
+        /// This property is ignored during JSON serialization.
+        /// </summary>        
+        [JsonIgnore] public PlantationSite? PlantationSite { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the zone that this task list belongs to.
+        /// </summary>
+        public int? ZoneId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the zone associated with this task list.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
+        [JsonIgnore] public Zone? Zone { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of task items in this task list.

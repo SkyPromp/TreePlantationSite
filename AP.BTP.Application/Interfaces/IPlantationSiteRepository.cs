@@ -14,6 +14,7 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">A search term to filter plantation sites by name, city, or other criteria.</param>
+        /// <param name="sortAscending">An optional sorting bool to sort sites by name.</param>
         /// <returns>
         /// A task that returns a tuple containing:
         /// <list type="bullet">
@@ -21,6 +22,6 @@ namespace AP.BTP.Application.Interfaces
         /// <item><description>The total count of matching plantation sites.</description></item>
         /// </list>
         /// </returns>
-        Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search, bool sortAscending);
     }
 }

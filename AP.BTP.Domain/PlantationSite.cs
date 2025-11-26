@@ -67,6 +67,13 @@ namespace AP.BTP.Domain
         [JsonIgnore] public IEnumerable<User>? Users { get; set; }
 
         /// <summary>
+        /// Gets or sets the task lists associated with this plantation site.
+        /// This property is ignored during JSON serialization.
+        /// </summary>
+        [JsonIgnore]
+        public ICollection<TaskList> TaskLists { get; set; } = new List<TaskList>();
+
+        /// <summary>
         /// Gets or sets a value indicating whether the plantation site is considered deleted (soft deletion).
         /// </summary>
         public bool IsDeleted { get; set; } = false;

@@ -17,9 +17,19 @@
         public required string Auth0Id { get; set; }
 
         /// <summary>
-        /// The user's display name. Defaults to an empty string if not set.
+        /// The user's first name. Defaults to an empty string if not set.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The user's last name. Defaults to an empty string if not set.
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The user's phone number. Defaults to an empty string if not set.
+        /// </summary>
+        public string PhoneNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// The user's email address. Defaults to an empty string if not set.

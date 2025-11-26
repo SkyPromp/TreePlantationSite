@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using System.Linq.Expressions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
@@ -24,9 +25,15 @@ namespace AP.BTP.Application.CQRS.Tree
     public class EditTreeCommandValidator: AbstractValidator<EditTreeCommand>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditTreeCommandValidator"/> class.
+        /// A collection of file extensions allowed for maintenance plan documents.
+        /// </summary> 
+        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".pdf" };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddTreeCommandValidator"/> class.
+        /// Configures validation rules for species, ID, and each seasonal maintenance plan.
         /// </summary>
-        /// <param name="uow">The unit of work, available for potential data validation checks.</param>
+        /// <param name="uow">The unit of work, provided for potential data-dependent validation.</param>
         public EditTreeCommandValidator(IUnitOfWork uow)
         {
             RuleFor(command => command.Tree.Species)
@@ -47,7 +54,32 @@ namespace AP.BTP.Application.CQRS.Tree
                     return trees.Count(t => (t.Id != tree.Id) && (t.Species == tree.Species)) == 0;
                 })
                 .WithMessage("The tree species must be unique.");
+
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanSpring, "spring");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanSummer, "summer");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanAutumn, "autumn");
+            ValidateMaintenancePlan(command => command.Tree.MaintenancePlanWinter, "winter");                
         }
+
+        /// <summary>
+        /// Adds a validation rule for a maintenance plan field.
+        /// The plan is optional; however, when provided, its file extension must be one of the allowed types.
+        /// </summary>
+        /// <param name="selector">An expression selecting the maintenance plan field to validate.</param>
+        /// <param name="season">A string identifying the season (used in the error message).</param>
+        private void ValidateMaintenancePlan(Expression<Func<EditTreeCommand, string?>> selector, string season)
+        {
+            RuleFor(selector)
+                .Must(path =>
+                {
+                    if (string.IsNullOrWhiteSpace(path))
+                        return true;
+
+                    string ext = Path.GetExtension(path).ToLower();
+                    return AllowedExtensions.Contains(ext);
+                })
+                .WithMessage($"Unsupported {season} maintenance plan file type.");
+        }        
     }
 
     /// <summary>

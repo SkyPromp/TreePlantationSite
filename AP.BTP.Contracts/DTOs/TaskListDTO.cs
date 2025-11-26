@@ -16,6 +16,11 @@
         public required DateTime Date { get; set; }
 
         /// <summary>
+        /// The plantation site id associated with this task list.
+        /// </summary>
+        public int? PlantationSiteId { get; set; }
+
+        /// <summary>
         /// The collection of task items associated with this task list.
         /// May be <c>null</c> if there are no tasks.
         /// </summary>
@@ -25,5 +30,10 @@
         /// The ID of the user associated with this task list.
         /// </summary>
         public required int UserId { get; set; }
+
+        /// <summary>
+        /// The zone id associated with this task list.
+        /// </summary>
+        public int? ZoneId { get; set; }
     }
 }

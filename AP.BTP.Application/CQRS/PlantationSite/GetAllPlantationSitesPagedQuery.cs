@@ -24,6 +24,8 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// The search term used to filter plantation sites by name or other criteria.
         /// </summary>
         public string? Search { get; set; }
+
+        public bool SortAscending { get; set; }
     }
 
     /// <summary>
@@ -57,7 +59,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         {
             if (request.Search == null) request.Search = "";
 
-            (IEnumerable<Domain.PlantationSite> items, int totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Domain.PlantationSite> items, int totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search, request.SortAscending);
 
             return new PagedResponseDTO<PlantationSiteDTO>
             {

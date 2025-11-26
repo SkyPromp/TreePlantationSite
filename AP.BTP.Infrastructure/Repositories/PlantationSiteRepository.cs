@@ -58,12 +58,17 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
     /// <param name="pageNr">The page number (1-based).</param>
     /// <param name="pageSize">The number of items per page.</param>
     /// <param name="search">An optional search string to filter by <see cref="PlantationSite.Name"/>.</param>
+    /// <param name="sortAscending">An optional sorting bool to sort sites by name.</param>
     /// <returns>A tuple containing the collection of <see cref="PlantationSite"/> items and the total count.</returns>
-    public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
+    public async Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search, bool sortAscending)
     {
         IQueryable<PlantationSite> query = dbSet
             .Where(ps => !ps.IsDeleted)
             .AsQueryable();
+
+        query = sortAscending 
+            ? query.OrderBy(site => site.Name) 
+            : query.OrderByDescending(site => site.Name);            
 
         if (!string.IsNullOrWhiteSpace(search))
         {

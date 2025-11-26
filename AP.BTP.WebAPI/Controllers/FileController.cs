@@ -103,6 +103,7 @@ namespace AP.BTP.WebAPI.Controllers
                 ".gif" => "image/gif",
                 ".bmp" => "image/bmp",
                 ".svg" => "image/svg+xml",
+                ".pdf" => "application/pdf",
                 _ => "application/octet-stream"
             };
         }

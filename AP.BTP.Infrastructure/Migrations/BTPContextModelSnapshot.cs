@@ -1397,32 +1397,6 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.HasIndex("TaskListId");
 
                     b.ToTable("TaskItem");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description 1",
-                            IsDeleted = false,
-                            TaskListId = 1,
-                            Title = "Task 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description 2",
-                            IsDeleted = false,
-                            TaskListId = 1,
-                            Title = "Task 2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Description 3",
-                            IsDeleted = false,
-                            TaskListId = 2,
-                            Title = "Task 3"
-                        });
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
@@ -1439,37 +1413,24 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PlantationSiteId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ZoneId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlantationSiteId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("TaskList");
+                    b.HasIndex("ZoneId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(2025, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(2025, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(2025, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            UserId = 1
-                        });
+                    b.ToTable("TaskList");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.Tree", b =>
@@ -1483,7 +1444,16 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MaintenancePlan")
+                    b.Property<string>("MaintenancePlanAutumn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanSpring")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanSummer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaintenancePlanWinter")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Species")
@@ -1499,350 +1469,500 @@ namespace AP.BTP.Infrastructure.Migrations
                         {
                             Id = 1,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 1",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 1"
                         },
                         new
                         {
                             Id = 2,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 2",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 2"
                         },
                         new
                         {
                             Id = 3,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 3",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 3"
                         },
                         new
                         {
                             Id = 4,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 4",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 4"
                         },
                         new
                         {
                             Id = 5,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 5",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 5"
                         },
                         new
                         {
                             Id = 6,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 6",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 6"
                         },
                         new
                         {
                             Id = 7,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 7",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 7"
                         },
                         new
                         {
                             Id = 8,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 8",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 8"
                         },
                         new
                         {
                             Id = 9,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 9",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 9"
                         },
                         new
                         {
                             Id = 10,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 10",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 10"
                         },
                         new
                         {
                             Id = 11,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 11",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 11"
                         },
                         new
                         {
                             Id = 12,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 12",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 12"
                         },
                         new
                         {
                             Id = 13,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 13",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 13"
                         },
                         new
                         {
                             Id = 14,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 14",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 14"
                         },
                         new
                         {
                             Id = 15,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 15",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 15"
                         },
                         new
                         {
                             Id = 16,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 16",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 16"
                         },
                         new
                         {
                             Id = 17,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 17",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 17"
                         },
                         new
                         {
                             Id = 18,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 18",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 18"
                         },
                         new
                         {
                             Id = 19,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 19",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 19"
                         },
                         new
                         {
                             Id = 20,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 20",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 20"
                         },
                         new
                         {
                             Id = 21,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 21",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 21"
                         },
                         new
                         {
                             Id = 22,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 22",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 22"
                         },
                         new
                         {
                             Id = 23,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 23",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 23"
                         },
                         new
                         {
                             Id = 24,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 24",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 24"
                         },
                         new
                         {
                             Id = 25,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 25",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 25"
                         },
                         new
                         {
                             Id = 26,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 26",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 26"
                         },
                         new
                         {
                             Id = 27,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 27",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 27"
                         },
                         new
                         {
                             Id = 28,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 28",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 28"
                         },
                         new
                         {
                             Id = 29,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 29",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 29"
                         },
                         new
                         {
                             Id = 30,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 30",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 30"
                         },
                         new
                         {
                             Id = 31,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 31",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 31"
                         },
                         new
                         {
                             Id = 32,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 32",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 32"
                         },
                         new
                         {
                             Id = 33,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 33",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 33"
                         },
                         new
                         {
                             Id = 34,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 34",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 34"
                         },
                         new
                         {
                             Id = 35,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 35",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 35"
                         },
                         new
                         {
                             Id = 36,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 36",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 36"
                         },
                         new
                         {
                             Id = 37,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 37",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 37"
                         },
                         new
                         {
                             Id = 38,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 38",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 38"
                         },
                         new
                         {
                             Id = 39,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 39",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 39"
                         },
                         new
                         {
                             Id = 40,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 40",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 40"
                         },
                         new
                         {
                             Id = 41,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 41",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 41"
                         },
                         new
                         {
                             Id = 42,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 42",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 42"
                         },
                         new
                         {
                             Id = 43,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 43",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 43"
                         },
                         new
                         {
                             Id = 44,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 44",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 44"
                         },
                         new
                         {
                             Id = 45,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 45",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 45"
                         },
                         new
                         {
                             Id = 46,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 46",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 46"
                         },
                         new
                         {
                             Id = 47,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 47",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 47"
                         },
                         new
                         {
                             Id = 48,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 48",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 48"
                         },
                         new
                         {
                             Id = 49,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 49",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 49"
                         },
                         new
                         {
                             Id = 50,
                             IsDeleted = false,
-                            MaintenancePlan = "Maintenance plan 50",
+                            MaintenancePlanAutumn = "",
+                            MaintenancePlanSpring = "",
+                            MaintenancePlanSummer = "",
+                            MaintenancePlanWinter = "",
                             Species = "Tree 50"
                         });
                 });
@@ -1891,10 +2011,18 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1908,16 +2036,20 @@ namespace AP.BTP.Infrastructure.Migrations
                             Id = 1,
                             Auth0Id = "auth0|user1",
                             Email = "alice@example.com",
+                            FirstName = "Alice",
                             IsDeleted = false,
-                            Name = "Alice"
+                            LastName = "",
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 2,
                             Auth0Id = "auth0|user2",
                             Email = "bob@example.com",
+                            FirstName = "Bob",
                             IsDeleted = false,
-                            Name = "Bob"
+                            LastName = "",
+                            PhoneNumber = ""
                         });
                 });
 
@@ -1993,13 +2125,26 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.TaskList", b =>
                 {
+                    b.HasOne("AP.BTP.Domain.PlantationSite", "PlantationSite")
+                        .WithMany("TaskLists")
+                        .HasForeignKey("PlantationSiteId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("AP.BTP.Domain.User", "User")
                         .WithMany("TaskLists")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AP.BTP.Domain.Zone", "Zone")
+                        .WithMany("TaskLists")
+                        .HasForeignKey("ZoneId");
+
+                    b.Navigation("PlantationSite");
+
                     b.Navigation("User");
+
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.TreePicture", b =>
@@ -2049,6 +2194,8 @@ namespace AP.BTP.Infrastructure.Migrations
 
             modelBuilder.Entity("AP.BTP.Domain.PlantationSite", b =>
                 {
+                    b.Navigation("TaskLists");
+
                     b.Navigation("Zones");
                 });
 
@@ -2065,6 +2212,11 @@ namespace AP.BTP.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("AP.BTP.Domain.User", b =>
+                {
+                    b.Navigation("TaskLists");
+                });
+
+            modelBuilder.Entity("AP.BTP.Domain.Zone", b =>
                 {
                     b.Navigation("TaskLists");
                 });

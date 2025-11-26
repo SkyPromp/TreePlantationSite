@@ -89,16 +89,22 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageNr">The page number (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by species name.</param>
+        /// <param name="sortAscending">An optional sorting bool to sort trees by species.</param>
         /// <returns>A tuple containing the collection of <see cref="Tree"/> items and the total count.</returns>        
-        public async Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search)
+        public async Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search, bool sortAscending)
         {
             IQueryable<Tree> query = dbSet
                 .Where(tree => !tree.IsDeleted)
                 .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true);  // This is delegated, 1 Where() is less readable than 2
 
+            query = sortAscending 
+                ? query.OrderBy(tree => tree.Species) 
+                : query.OrderByDescending(tree => tree.Species);
+
             int totalCount = await query.CountAsync();
 
-            List<Tree> items = await query.Skip((pageNr - 1) * pageSize)
+            List<Tree> items = await query
+                                .Skip((pageNr - 1) * pageSize)
                                 .Take(pageSize)
                                 .ToListAsync();
                                 
@@ -124,7 +130,13 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>The updated <see cref="Tree"/> entity.</returns>
         public Tree Update(Tree modifiedItem)
         {
-            return this.dbSet.Update(modifiedItem).Entity;
+            Tree? existingEntity = dbSet.Find(modifiedItem.Id);
+
+            if (existingEntity == null) throw new KeyNotFoundException($"Tree with ID {modifiedItem.Id} not found.");
+
+            dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+            return existingEntity;
         }
     }
 }

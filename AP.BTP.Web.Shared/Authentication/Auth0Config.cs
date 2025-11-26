@@ -16,7 +16,7 @@ namespace AP.BTP.Web.Authentication
     public static class Auth0Config
     {
         /// <summary>
-        /// Configures Auth0 authentication for the application, including login, logout, callback handling, and access token setup.
+        /// Configures Auth0 authentication for the application, logout, callback handling.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/> to add authentication services to.</param>
         /// <param name="config">The <see cref="IConfiguration"/> containing Auth0 settings.</param>
@@ -33,23 +33,19 @@ namespace AP.BTP.Web.Authentication
                 {
                     OnRemoteFailure = context =>
                     {
-                        // Capture the Auth0 error
                         string? failureMessage = context.Failure?.Message;
                         string description = "You do not have access to this application.";
 
                         if (!string.IsNullOrEmpty(failureMessage))
                         {
-                            // Attempt to extract error_description text
                             Match match = Regex.Match(failureMessage, @"error_description: '(.+?)'");
 
                             if (match.Success) description = match.Groups[1].Value;
                         }
 
-                        // Redirect to access denied page, passing the description as query parameter
                         string redirectUrl = $"/access-denied?description={Uri.EscapeDataString(description)}";
                         context.Response.Redirect(redirectUrl);
 
-                        // Stop the exception from propagating
                         context.HandleResponse();
 
                         return Task.CompletedTask;
@@ -63,7 +59,6 @@ namespace AP.BTP.Web.Authentication
 
             services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.LoginPath = "/login";
                 options.LogoutPath = "/logout";
             });
 
@@ -72,39 +67,11 @@ namespace AP.BTP.Web.Authentication
 
 
         /// <summary>
-        /// Maps Auth0-related endpoints for login, registration, and logout to the <see cref="WebApplication"/>.
+        /// Maps Auth0-related endpoints for logout to the <see cref="WebApplication"/>.
         /// </summary>
         /// <param name="app">The <see cref="WebApplication"/> to map endpoints to.</param>
         public static void MapAuth0Endpoints(this WebApplication app)
         {
-            /// <summary>
-            /// Initiates the login process via Auth0 and redirects the user after authentication.
-            /// </summary>
-            app.MapGet("/login", async (HttpContext context, string? redirectUri) =>
-            {
-                AuthenticationProperties authProps = new LoginAuthenticationPropertiesBuilder()
-                    .WithRedirectUri(redirectUri ?? "/")
-                    .Build();
-
-                await context.ChallengeAsync(Auth0Constants.AuthenticationScheme, authProps);
-            });
-
-            /// <summary>
-            /// Initiates the registration process via Auth0 and redirects the user after signup.
-            /// </summary>
-            app.MapGet("/register", async (HttpContext context, string? redirectUri) =>
-            {
-                AuthenticationProperties authProps = new LoginAuthenticationPropertiesBuilder()
-                    .WithRedirectUri(redirectUri ?? "/")
-                    .WithParameter("screen_hint", "signup")
-                    .Build();
-
-                await context.ChallengeAsync(Auth0Constants.AuthenticationScheme, authProps);
-            });
-
-            /// <summary>
-            /// Logs out the user from both Auth0 and the local cookie-based session.
-            /// </summary>
             app.MapGet("/logout", async (HttpContext context) =>
             {
                 AuthenticationProperties authProps = new LogoutAuthenticationPropertiesBuilder()

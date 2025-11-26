@@ -22,4 +22,8 @@
     <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AP.BTP.Contracts\AP.BTP.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

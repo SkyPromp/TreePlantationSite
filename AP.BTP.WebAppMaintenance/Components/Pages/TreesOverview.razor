@@ -4,6 +4,7 @@
 @rendermode InteractiveServer
 @using System.Drawing
 @using AP.BTP.Contracts.DTOs
+@using BlazorBootstrap.Components.Form.SelectInput
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
@@ -17,7 +18,12 @@
     @if(user != null && user.IsInRole("Admin")){
         <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Add new</Button>
     }
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 15vw; height: 5vh"/>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 25vw; height: 5vh"/>
+
+    <select class="form-select" @onchange="OnSortOrderChanged" style="width: 15vw; height: 5vh">
+        <option value="true" selected>A-Z</option>
+        <option value="false">Z-A</option>
+    </select>    
 </div>
 <div class="container-fluid m-0">
     @if (response?.Items != null)
@@ -116,6 +122,11 @@
     private string? searchText = null;
 
     /// <summary>
+    /// Whether the tree list should be sorted ascending (A-Z). Defaults to true.
+    /// </summary>
+    private bool sortAscending = true;
+
+    /// <summary>
     /// Holds the paged response of trees from the API.
     /// </summary>
     PagedResponseDTO<TreeDTO>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
@@ -174,7 +185,7 @@
         currentPage = page;
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
-        string url = $"Tree?pageNr={page}&pageSize={pageSize}";
+        string url = $"Tree?pageNr={page}&pageSize={pageSize}&sortAscending={sortAscending}";
 
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
@@ -270,5 +281,19 @@
     {
         this.showDeleteConfirmation = false;
         this.selectedTree = null;
-    }        
+    }
+
+    /// <summary>
+    /// Handles changes to the sort order dropdown.  
+    /// Converts the selected value to a boolean and reloads the first page of the tree list.
+    /// </summary>
+    /// <param name="e">The <see cref="ChangeEventArgs"/> containing the selected value from the dropdown.</param>
+    private async Task OnSortOrderChanged(ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out bool value))
+        {
+            sortAscending = value;
+            await LoadPage(1);
+        }
+    }
 }
