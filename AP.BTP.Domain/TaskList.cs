@@ -29,16 +29,24 @@ namespace AP.BTP.Domain
         /// </summary>
         public required User User { get; set; }
 
+        /// <summary>
+        /// Gets or sets the identifier of the plantation site that this task list belongs to.
+        /// </summary>
         public int? PlantationSiteId { get; set; }
-        public PlantationSite? PlantationSite { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of the zone that this task item belongs to.
+        /// Gets or sets the plantation site associated with this task list.
+        /// This property is ignored during JSON serialization.
+        /// </summary>        
+        [JsonIgnore] public PlantationSite? PlantationSite { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the zone that this task list belongs to.
         /// </summary>
         public int? ZoneId { get; set; }
 
         /// <summary>
-        /// Gets or sets the zone associated with this task item.
+        /// Gets or sets the zone associated with this task list.
         /// This property is ignored during JSON serialization.
         /// </summary>
         [JsonIgnore] public Zone? Zone { get; set; }

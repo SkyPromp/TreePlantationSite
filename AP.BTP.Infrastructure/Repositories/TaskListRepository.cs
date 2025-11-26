@@ -83,8 +83,8 @@ namespace AP.BTP.Infrastructure.Repositories
         /// Retrieves a <see cref="TaskList"/> by its ID.
         /// </summary>
         /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
-        /// <returns>The <see cref="TaskList"/> entity, or <c>null</c> if not found.</returns>
-        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
+        /// <returns>The <see cref="TaskList"/> with the specified ID.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
         public async Task<TaskList?> GetById(int id)
         {
             TaskList? site = await dbSet
@@ -100,7 +100,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// </summary>
         /// <param name="modifiedItem">The modified <see cref="TaskList"/> entity.</param>
         /// <returns>The updated <see cref="TaskList"/> entity.</returns>
-        /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity to update is not found.</exception>
         public TaskList Update(TaskList modifiedItem)
         {
             TaskList? existingEntity = dbSet.Find(modifiedItem.Id);

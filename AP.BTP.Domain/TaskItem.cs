@@ -30,7 +30,7 @@ namespace AP.BTP.Domain
         public required int TaskListId { get; set; }
 
         /// <summary>
-        /// Gets or sets the task list associated with this task item.
+        /// Gets or sets the task list associated with this task list.
         /// This property is ignored during JSON serialization.
         /// </summary>
         [JsonIgnore] public required TaskList TaskList { get; set; }

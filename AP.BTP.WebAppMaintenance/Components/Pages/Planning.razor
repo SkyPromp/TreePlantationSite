@@ -668,6 +668,13 @@
         }
     }
 
+    /// <summary>
+    /// Clears the plantation site for the current week's task lists if none of the lists contain tasks.
+    /// </summary>
+    /// <remarks>
+    /// Sends a PATCH request for each task list to remove the plantation site. Updates <see cref="selectedPlantationSiteId"/> 
+    /// and triggers <see cref="StateHasChanged"/> if successful. Captures any errors in <see cref="errorMessage"/>.
+    /// </remarks>
     private async Task ClearPlantationSiteIfNoTasks()
     {
         if (this.client == null)

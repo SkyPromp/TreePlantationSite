@@ -15,6 +15,9 @@
         /// </summary>
         public required DateTime Date { get; set; }
 
+        /// <summary>
+        /// The plantation site id associated with this task list.
+        /// </summary>
         public int? PlantationSiteId { get; set; }
 
         /// <summary>
@@ -29,7 +32,7 @@
         public required int UserId { get; set; }
 
         /// <summary>
-        /// The zone id associated with this task item.
+        /// The zone id associated with this task list.
         /// </summary>
         public int? ZoneId { get; set; }
     }
