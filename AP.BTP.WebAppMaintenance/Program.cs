@@ -43,7 +43,6 @@ namespace AP.BTP.WebAppMaintenance
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
@@ -82,7 +81,6 @@ namespace AP.BTP.WebAppMaintenance
                 return handler;
             }).AddHttpMessageHandler(provider =>
             {
-                // Custom handler to add the access token as Bearer token
                 return new AuthTokenHandler(provider.GetRequiredService<IHttpContextAccessor>());
             });
 
@@ -104,7 +102,6 @@ namespace AP.BTP.WebAppMaintenance
 
             WebApplication app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");

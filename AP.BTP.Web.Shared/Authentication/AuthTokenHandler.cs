@@ -36,7 +36,6 @@ namespace AP.BTP.Web.Authentication
             HttpContext? httpContext = _httpContextAccessor.HttpContext;
             if (httpContext != null)
             {
-                // Use claims in the current user
                 accessToken = httpContext.User?.Claims.FirstOrDefault(c => c.Type == "access_token")?.Value;
             }
 
