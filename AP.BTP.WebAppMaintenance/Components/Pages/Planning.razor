@@ -70,6 +70,26 @@
                 <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 14%; min-width: 14%; font-size: 0.90rem; @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")">
                     <div class="text-center fw-bold p-3" style="background-color: #E3E3E3">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
+                        @{
+                            int totalMinutes = GetTotalDurationForDay(day);
+                            int remainingMinutes = GetRemainingTimeForDay(day);
+                            string totalColor = totalMinutes > 480 ? "text-danger" : totalMinutes > 400 ? "text-warning" : "text-success";
+                        }
+                        <div class="@totalColor" style="font-size: 0.75rem; font-weight: normal;">
+                            @FormatDuration(totalMinutes) / 8u
+                        </div>
+                        @if (remainingMinutes < 480 && remainingMinutes > 0)
+                        {
+                            <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
+                                nog @FormatDuration(remainingMinutes)
+                            </div>
+                        }
+                        else if (remainingMinutes <= 0)
+                        {
+                            <div class="text-danger" style="font-size: 0.7rem; font-weight: normal;">
+                                vol!
+                            </div>
+                        }
                     </div>
 
                     <div class="p-2" style="background-color: #F5F5F5; border-bottom: 1px solid #dee2e6;">
@@ -263,6 +283,16 @@
     private DateTime taskToBeAddedDate;
 
     /// <summary>
+    /// Temporary storage for hours input when adding/editing a task.
+    /// </summary>
+    private int taskDurationHours = 0;
+    
+    /// <summary>
+    /// Temporary storage for minutes input when adding/editing a task.
+    /// </summary>
+    private int taskDurationMinutes = 0;
+
+    /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
     /// and sets up the current week and its task lists on the first render.
     /// </summary>
@@ -449,6 +479,8 @@
     private void EditTaskItem(TaskItemDTO task)
     {
         this.taskToBeAdded = task;
+        this.taskDurationHours = task.DurationInMinutes / 60;
+        this.taskDurationMinutes = task.DurationInMinutes % 60;
         this.ShowAddTaskItem = true;
     }
 
@@ -515,6 +547,10 @@
 
         this.taskToBeAddedDate = day;
         this.selectedZoneId = null;
+
+        this.taskDurationHours = 0;
+        this.taskDurationMinutes = 0;
+
         await this.AddTaskItem();
         this.ShowAddTaskItem = true;
         StateHasChanged();
@@ -564,19 +600,42 @@
                 return;
             }
 
-            if (this.taskToBeAdded.Id == 0)
-            {
-                this.errorMessage = "The tasklist has not been saved yet";
-            }
-
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
-                this.errorMessage = "The task description or task title is empty";
-                this.ShowAddTaskItem = false;
+                this.errorMessage = "De titel en beschrijving zijn verplicht";
                 StateHasChanged();
-
                 return;
             }
+
+            int totalMinutes = (taskDurationHours * 60) + taskDurationMinutes;
+            
+            if (totalMinutes <= 0)
+            {
+                this.errorMessage = "Duur moet minimaal 1 minuut zijn";
+                StateHasChanged();
+                return;
+            }
+
+            if (totalMinutes > 480)
+            {
+                this.errorMessage = "Duur kan niet meer dan 8 uur zijn";
+                StateHasChanged();
+                return;
+            }
+
+            // Check if adding this task would exceed daily limit
+            int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
+            int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
+            
+            if ((currentDayTotal - existingTaskDuration + totalMinutes) > 480)
+            {
+                int available = 480 - (currentDayTotal - existingTaskDuration);
+                this.errorMessage = $"Te veel uren voor deze dag. Nog beschikbaar: {FormatDuration(available)}";
+                StateHasChanged();
+                return;
+            }
+
+            this.taskToBeAdded.DurationInMinutes = totalMinutes;            
 
             HttpResponseMessage? response;
 
@@ -592,6 +651,8 @@
             {
                 this.errorMessage = "";
                 this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
+                this.taskDurationHours = 0;
+                this.taskDurationMinutes = 0;                
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
@@ -819,5 +880,42 @@
         {
             errorMessage = $"Fout bij bijwerken van zone: {ex.Message}";
         }
-    }      
+    }
+
+    /// <summary>
+    /// Calculates the total duration in minutes for all tasks in a given day.
+    /// </summary>
+    private int GetTotalDurationForDay(DateTime day)
+    {
+        if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList) 
+            && taskList?.TaskItems != null)
+        {
+            return taskList.TaskItems.Sum(t => t.DurationInMinutes);
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Formats minutes into a readable "Xh Ym" format.
+    /// </summary>
+    private string FormatDuration(int totalMinutes)
+    {
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+        
+        if (hours > 0 && minutes > 0)
+            return $"{hours}u {minutes}m";
+        else if (hours > 0)
+            return $"{hours}u";
+        else
+            return $"{minutes}m";
+    }
+
+    /// <summary>
+    /// Gets remaining available time for a day in minutes.
+    /// </summary>
+    private int GetRemainingTimeForDay(DateTime day)
+    {
+        return 480 - GetTotalDurationForDay(day); // 480 minutes = 8 hours
+    }        
 }

@@ -25,6 +25,11 @@ namespace AP.BTP.Domain
         public required string Description { get; set; }
 
         /// <summary>
+        /// Duration of the task in minutes.
+        /// </summary>
+        public int DurationInMinutes { get; set; }
+
+        /// <summary>
         /// Gets or sets the identifier of the task list that this task item belongs to.
         /// </summary>
         public required int TaskListId { get; set; }
