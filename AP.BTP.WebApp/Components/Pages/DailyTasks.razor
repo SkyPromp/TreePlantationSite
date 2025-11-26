@@ -104,6 +104,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Updates the selected date (<see cref="selectedDate"/>) of which to show the tasklist.
+    /// </summary>
     public async Task UpdateDate(int deltaDays)
     {
         this.selectedDate = this.selectedDate.AddDays(deltaDays);
