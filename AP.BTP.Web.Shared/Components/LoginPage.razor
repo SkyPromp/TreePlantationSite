@@ -99,7 +99,7 @@
                 return;
             }
 
-            TokenResponseDTO? token = await response.Content.ReadFromJsonAsync<TokenResponseDTO>();
+            LoginResponseDTO? token = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
 
             string tempKey = Guid.NewGuid().ToString();
             Cache.Set(tempKey, token, TimeSpan.FromMinutes(5));

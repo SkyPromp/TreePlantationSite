@@ -117,14 +117,14 @@ namespace AP.BTP.WebAppMaintenance
             app.MapGet("/auth/login-callback", async (HttpContext context, [FromServices] IMemoryCache cache) =>
             {
                 string key = context.Request.Query["key"].ToString();
-                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<TokenResponseDTO>(key, out TokenResponseDTO? token))
+                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<LoginResponseDTO>(key, out LoginResponseDTO? LoginResponse))
                 {
                     return Results.BadRequest("Invalid or expired key.");
                 }
 
                 cache.Remove(key);
 
-                if (string.IsNullOrEmpty(token.id_token))
+                if (LoginResponse == null)
                 {
                     return Results.Unauthorized();
                 }
@@ -153,7 +153,7 @@ namespace AP.BTP.WebAppMaintenance
 
                 try
                 {
-                    ClaimsPrincipal principal = handler.ValidateToken(token.id_token, validationParameters, out SecurityToken? validatedToken);
+                    ClaimsPrincipal principal = handler.ValidateToken(LoginResponse.id_token, validationParameters, out SecurityToken? validatedToken);
 
                     List<Claim> claims = principal.Claims.Select(c =>
                     {
@@ -164,8 +164,13 @@ namespace AP.BTP.WebAppMaintenance
                         return [new Claim(c.Type, c.Value)];
                     }).SelectMany(c => c).ToList();
 
-                    claims.Add(new Claim("access_token", token.access_token));
-                    claims.Add(new Claim("id_token", token.id_token));
+                    claims.Add(new Claim("access_token", LoginResponse.access_token));
+                    claims.Add(new Claim("id_token", LoginResponse.id_token));
+                    claims.Add(new Claim(ClaimTypes.NameIdentifier, LoginResponse.UserId.ToString()));
+                    claims.Add(new Claim(ClaimTypes.GivenName, LoginResponse.FirstName));
+                    claims.Add(new Claim(ClaimTypes.Surname, LoginResponse.LastName));
+                    claims.Add(new Claim(ClaimTypes.MobilePhone, LoginResponse.PhoneNumber));
+                    claims.Add(new Claim(ClaimTypes.Email, LoginResponse.Email));
 
                     ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal cookiePrincipal = new ClaimsPrincipal(identity);
