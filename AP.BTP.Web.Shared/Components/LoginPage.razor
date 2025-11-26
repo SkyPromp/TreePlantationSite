@@ -92,16 +92,16 @@
                 return;
             }
 
-            var response = await client.PostAsJsonAsync("user/login", loginDetails);
+            HttpResponseMessage? response = await client.PostAsJsonAsync("user/login", loginDetails);
             if (!response.IsSuccessStatusCode)
             {
                 errorMessage = await response.Content.ReadAsStringAsync();
                 return;
             }
 
-            var token = await response.Content.ReadFromJsonAsync<TokenResponseDTO>();
+            TokenResponseDTO? token = await response.Content.ReadFromJsonAsync<TokenResponseDTO>();
 
-            var tempKey = Guid.NewGuid().ToString();
+            string tempKey = Guid.NewGuid().ToString();
             Cache.Set(tempKey, token, TimeSpan.FromMinutes(5));
 
             Navigation.NavigateTo($"/auth/login-callback?key={tempKey}", forceLoad: true);
