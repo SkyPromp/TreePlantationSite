@@ -85,7 +85,7 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// <returns>The updated <see cref="TaskListDTO"/>.</returns>
         public async Task<TaskListDTO> Handle(PatchTaskListZoneCommand request, CancellationToken cancellationToken)
         {
-            var taskList = await uow.TaskListRepository.GetById(request.TaskListId);
+            Domain.TaskList? taskList = await uow.TaskListRepository.GetById(request.TaskListId);
             
             if (taskList == null)
                 throw new KeyNotFoundException($"Task list with ID {request.TaskListId} not found");
