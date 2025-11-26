@@ -31,21 +31,18 @@ namespace AP.BTP.Web.Authentication
         /// <exception cref="InvalidOperationException">Thrown when there is no access token available in the current context.</exception>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            HttpContext? context = _httpContextAccessor.HttpContext;
+            string? accessToken = null;
 
-            if (context != null)
+            HttpContext? httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null)
             {
-                string? accessToken = await context.GetTokenAsync("access_token");
+                // Use claims in the current user
+                accessToken = httpContext.User?.Claims.FirstOrDefault(c => c.Type == "access_token")?.Value;
+            }
 
-                if (!string.IsNullOrEmpty(accessToken))
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                }
-                else
-                {
-                    // Optionally handle the case where there is no access token
-                    throw new InvalidOperationException("No access token available in the current context.");
-                }
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             }
 
             return await base.SendAsync(request, cancellationToken);

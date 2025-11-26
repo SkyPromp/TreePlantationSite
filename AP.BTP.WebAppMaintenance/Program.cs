@@ -1,9 +1,19 @@
-using System.Security.Cryptography.X509Certificates;
-using AP.BTP.WebAppMaintenance.Components;
+﻿using AP.BTP.Contracts.DTOs;
 using AP.BTP.Web.Authentication;
-using AP.BTP.WebAppMaintenance.Extentions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AP.BTP.Web.Shared.Components;
+using AP.BTP.WebAppMaintenance.Components;
+using AP.BTP.WebAppMaintenance.Extentions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 namespace AP.BTP.WebAppMaintenance
 {
@@ -41,6 +51,8 @@ namespace AP.BTP.WebAppMaintenance
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddMemoryCache();
+
             builder.Services.AddHttpClient("BTPApi", client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"]!);
@@ -74,7 +86,13 @@ namespace AP.BTP.WebAppMaintenance
                 return new AuthTokenHandler(provider.GetRequiredService<IHttpContextAccessor>());
             });
 
-            builder.Services.AddAuth0Authentication(builder.Configuration);
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.LoginPath = "/login";
+            });
 
             builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
             {
@@ -98,13 +116,81 @@ namespace AP.BTP.WebAppMaintenance
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapAuth0Endpoints();
+            // TODO login callback endpoint in apparte file steken (en ook andere auth configuraties)
+            app.MapGet("/auth/login-callback", async (HttpContext context, [FromServices] IMemoryCache cache) =>
+            {
+                string key = context.Request.Query["key"].ToString();
+                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<TokenResponseDTO>(key, out TokenResponseDTO? token))
+                {
+                    return Results.BadRequest("Invalid or expired key.");
+                }
+
+                cache.Remove(key);
+
+                if (string.IsNullOrEmpty(token.id_token))
+                {
+                    return Results.Unauthorized();
+                }
+
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+                string authority = $"https://{builder.Configuration["AUTH0:DOMAIN"]}/"; // e.g. https://yourtenant.auth0.com/
+                string? audience = builder.Configuration["AUTH0:CLIENT_ID"];
+
+                ConfigurationManager<OpenIdConnectConfiguration> configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    $"{authority}.well-known/openid-configuration",
+                    new OpenIdConnectConfigurationRetriever()
+                );
+
+                OpenIdConnectConfiguration openIdConfig = await configManager.GetConfigurationAsync(CancellationToken.None);
+
+                TokenValidationParameters validationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = authority,
+                    ValidAudience = audience,
+                    IssuerSigningKeys = openIdConfig.SigningKeys,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(2)
+                };
+
+                try
+                {
+                    ClaimsPrincipal principal = handler.ValidateToken(token.id_token, validationParameters, out SecurityToken? validatedToken);
+
+                    List<Claim> claims = principal.Claims.Select(c =>
+                    {
+                        if (c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+                        {
+                            return c.Value.Split(',').Select(r => new Claim(ClaimTypes.Role, r.Trim()));
+                        }
+                        return [new Claim(c.Type, c.Value)];
+                    }).SelectMany(c => c).ToList();
+
+                    claims.Add(new Claim("access_token", token.access_token));
+                    claims.Add(new Claim("id_token", token.id_token));
+
+                    ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal cookiePrincipal = new ClaimsPrincipal(identity);
+
+                    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cookiePrincipal);
+
+                    return Results.Redirect("/");
+                }
+                catch (SecurityTokenValidationException)
+                {
+                    return Results.Unauthorized();
+                }
+            });
+
+
+            // TODO: logout fixen en endpoint toevoegen
 
             app.UseRedirectToWelcomeWhenUnautenticated();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
-                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);          
+                .AddAdditionalAssemblies(typeof(AppRouter).Assembly);
 
             app.Run();
         }
