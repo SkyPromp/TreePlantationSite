@@ -266,7 +266,7 @@
     /// <summary>
     /// Flag to track if the current operation is editing an existing zone.
     /// </summary>
-    private bool IsEditZone;  // TODO not needed, can be derrived from the index
+    private bool IsEditZone;
 
     /// <summary>
     /// Holds the new zone that is being added.
@@ -592,7 +592,7 @@
             return;
         }
 
-        if (newZone.TreeId == 0)
+        if (this.newZone.TreeId == 0)
         {
             this.errorMessage = "The tree in the new zone has not been stored yet in the database.";
             StateHasChanged();
@@ -600,7 +600,7 @@
             return;
         }
 
-        if (newZone.PlantationSiteId == 0)
+        if (this.newZone.PlantationSiteId == 0)
         {
             this.errorMessage = "The plantationsite in the new zone has not been stored yet in the database.";
             StateHasChanged();
