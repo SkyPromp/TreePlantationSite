@@ -4,10 +4,9 @@ using FluentValidation.TestHelper;
 using Moq;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
-using AP.BTP.Application;
 using FluentValidation;
 
-namespace AP.BTP.Unittests.TaskList
+namespace AP.BTP.Unittests.TaskItem
 {
     [TestClass]
     public class EndTaskCommandTests
@@ -77,7 +76,7 @@ namespace AP.BTP.Unittests.TaskList
         }
 
         [TestMethod]
-        public async Task Should_Have_Error_When_TaskEndTime_Is_After_TaskStartTime()
+        public async Task Should_Have_Error_When_Task_EndTime_Is_After_Task_StartTime()
         {
             TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
             EndTaskCommand command = new EndTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1, StartTime=DateTime.Now.AddMinutes(15) } };
@@ -93,6 +92,18 @@ namespace AP.BTP.Unittests.TaskList
             {
                 Assert.AreEqual($"The task start time is after the end time. taskItemId={taskItem.Id}", ex.Message);
             }
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Correctly_Filled_In()
+        {
+            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
+            EndTaskCommand command = new EndTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1, StartTime=DateTime.Now.AddMinutes(-15) } };
+            TestValidationResult<EndTaskCommand> result = await validator.TestValidateAsync(command);
+
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(this.uowMock.Object, this.mapper);
+
+            await handler.Handle(command, CancellationToken.None);
         }
     }
 }
