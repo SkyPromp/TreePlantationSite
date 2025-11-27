@@ -209,5 +209,66 @@ namespace AP.BTP.Unittests.Tree
                 Assert.AreEqual(Items.Count(), 4);
             }
         }
+
+        [TestMethod]
+        public void Should_Have_Error_When_Updating_Nonexistant_Id()
+        {
+             this._options = new DbContextOptionsBuilder<BTPContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            int treeId = 0;
+
+            using (BTPContext context = new BTPContext(_options))
+            {
+                DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
+
+                Domain.Tree tree = new Domain.Tree() { Species = "Birch" };
+
+                dbSet.Add(tree);
+                context.SaveChanges();
+
+                treeId = tree.Id;
+            }
+
+            using (BTPContext context = new BTPContext(_options))
+            {
+                ITreeRepository treeRepo = new TreeRepository(context);
+
+                try
+                {
+                    Domain.Tree? result = treeRepo.Update(new Domain.Tree() { Id = treeId + 1, Species = "Oak" });
+                    throw new Exception("No exception was raised.");
+                } catch(KeyNotFoundException ex) { }
+            }
+        }
+
+        [TestMethod]
+        public void Should_Not_Have_Error_When_Updating_Existing_Id()
+        {
+            this._options = new DbContextOptionsBuilder<BTPContext>()
+               .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+               .Options;
+
+            int treeId = 0;
+
+            using (BTPContext context = new BTPContext(_options))
+            {
+                DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
+
+                Domain.Tree tree = new Domain.Tree() { Species = "Birch" };
+
+                dbSet.Add(tree);
+                context.SaveChanges();
+
+                treeId = tree.Id;
+            }
+
+            using (BTPContext context = new BTPContext(_options))
+            {
+                ITreeRepository treeRepo = new TreeRepository(context);
+                Domain.Tree? result = treeRepo.Update(new Domain.Tree() { Id = treeId, Species = "Oak" });
+            }
+        }
     }
 }
