@@ -84,7 +84,12 @@ namespace AP.BTP.Infrastructure.Repositories
                 search = search.ToLower();
 
                 query = query.Where(u =>
-                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+                        u.FirstName.ToLower().Contains(search) ||
+                        u.LastName.ToLower().Contains(search) ||
+                        u.Email.ToLower().Contains(search) ||
+                        u.PhoneNumber.ToLower().Contains(search) ||
+                        (u.Role != null && u.Role.ToString().ToLower().Contains(search))
+                   );
             }
 
             int totalCount = await query.CountAsync();
@@ -115,7 +120,12 @@ namespace AP.BTP.Infrastructure.Repositories
                 search = search.ToLower();
 
                 query = query.Where(u =>
-                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+                        u.FirstName.ToLower().Contains(search) ||
+                        u.LastName.ToLower().Contains(search) ||
+                        u.Email.ToLower().Contains(search) ||
+                        u.PhoneNumber.ToLower().Contains(search) ||
+                        (u.Role != null && u.Role.ToString().ToLower().Contains(search))
+                   );
             }
 
             int totalCount = await query.CountAsync();
@@ -145,7 +155,12 @@ namespace AP.BTP.Infrastructure.Repositories
                 search = search.ToLower();
 
                 query = query.Where(u =>
-                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+                        u.FirstName.ToLower().Contains(search) ||
+                        u.LastName.ToLower().Contains(search) ||
+                        u.Email.ToLower().Contains(search) ||
+                        u.PhoneNumber.ToLower().Contains(search) ||
+                        (u.Role != null && u.Role.ToString().ToLower().Contains(search))
+                   );
             }
 
             int totalCount = await query.CountAsync();

@@ -23,13 +23,8 @@
         <TextInput @bind-Value="@searchText"
                    @oninput="OnSearchChanged"
                    TextAlignment="Alignment.Start"
-                   Placeholder="zoek e-mail"
-                   Class="@(showSearchWarning ? "border-danger" : "")"
+                   Placeholder="Zoek gebruikers"
                    Style="width: 15vw; border-width: 2px;" />
-        @if (showSearchWarning)
-        {
-            <small class="text-danger mt-1">Voer minimaal 3 tekens in</small>
-        }
     </div>
 </div>
 <div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
@@ -202,11 +197,6 @@
     private string? searchText = null;
 
     /// <summary>
-    /// Indicates whether a warning should be displayed when the search text is too short.
-    /// </summary>
-    private bool showSearchWarning = false;
-
-    /// <summary>
     /// The paginated response containing pending users retrieved from the backend.
     /// </summary>
     PagedResponseDTO<UserDTO>? response;  // TODO just use IEnumerable<...> not a respone
@@ -319,7 +309,6 @@
 
     /// <summary>
     /// Loads a specific page of pending users from the API.
-    /// Applies search filters if the search text length is valid (≥ 3 characters).
     /// </summary>
     /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
@@ -327,8 +316,7 @@
         currentPage = page;
 
         string url = $"UserManagement/pending?pageNr={page}&pageSize={pageSize}";
-        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
-            url += $"&search={Uri.EscapeDataString(searchText)}";
+        if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
         StateHasChanged();
@@ -377,7 +365,6 @@
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
-        showSearchWarning = !string.IsNullOrEmpty(searchText) && searchText.Length < 3;
         debounceTimer?.Stop();
         debounceTimer?.Dispose();
 
