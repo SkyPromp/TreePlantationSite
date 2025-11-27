@@ -141,7 +141,8 @@
 
             <h5>Select tree species</h5>
             <p>Which tree species would you like to assign to this zone?</p>
-            <select @bind="this.SelectedZone.TreeId" class="form-select mb-3">
+            <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 25vw; height: 5vh"/>
+            <select @bind="this.SelectedZone.TreeId" size ="3" class="form-select mb-3">
                 @foreach(TreeDTO tree in this.Trees ?? [])
                 {
                     <option value="@tree.Id">@tree.Species</option>
@@ -221,6 +222,11 @@
     };
 
     /// <summary>
+    /// Current search text entered by the user for filtering trees.
+    /// </summary>
+    private string? searchTreeText = null;
+
+    /// <summary>
     /// Base64 representation of the ground plan image for preview.
     /// </summary>
     string groundPlanPreview = string.Empty;
@@ -290,6 +296,11 @@
     /// Temporary index used for newly added zones before they are saved to the backend.
     /// </summary>
     private int tempAddedZoneIndex = -1;
+
+    /// <summary>
+    /// Timer used to debounce the search input to avoid making too many API calls while typing.
+    /// </summary>
+    private System.Timers.Timer? debounceTimer;
 
     /// <summary>
     /// Currently selected zone for editing or addition.
@@ -382,7 +393,7 @@
         {
             IEnumerable<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree");
+            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree/all" + (this.searchTreeText != null? $"?search={this.searchTreeText}": ""));
 
             if (response != null)
             {
@@ -397,6 +408,31 @@
         {
             this.errorMessage = e.Message;
         }
+    }
+
+    /// <summary>
+    /// Handles changes in the search input field. Debounces the search by 300ms before reloading the first page.
+    /// </summary>
+    /// <param name="e">The change event containing the new search text.</param>
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        this.searchTreeText = e.Value?.ToString()?.Trim();
+
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadTrees();
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
     }
 
     /// <summary>
@@ -602,7 +638,6 @@
     /// </summary>
     /// <param name="client">The HTTP client for fetching the image.</param>
     /// <param name="fileName">The filename of the ground plan image.</param>
-
     private async Task LoadImagePreview(HttpClient client, string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName)) return;
