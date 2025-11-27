@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 
-namespace AP.BTP.Web.Authentication
+namespace AP.BTP.Web.Shared.Authentication
 {
     /// <summary>
     /// A <see cref="DelegatingHandler"/> that automatically attaches the current user's access token

@@ -21,4 +21,8 @@
     <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extentions\" />
+  </ItemGroup>
+
 </Project>
