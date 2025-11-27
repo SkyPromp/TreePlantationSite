@@ -1,9 +1,7 @@
-﻿using AP.BTP.Application.CQRS.Zone;
-using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 
 namespace AP.BTP.Unittests.Zone
 {
