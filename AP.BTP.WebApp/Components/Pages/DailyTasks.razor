@@ -24,18 +24,18 @@
                             <p class="text-truncate">@task.Description</p>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-center col-6">
-                            <button @onclick="() => ConfirmStartTask(task)" class="btn btn-secondary">Start</button>
-                            @if(task.StartTime == null)
+                            @if (task.StartTime == null)
                             {
+                                <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
                                 <small>Time spent doing task</small>
-                            }
-                            else if(task.EndTime == null)
+                            } else if (task.EndTime == null)
                             {
+                                <button @onclick="() => ConfirmEndTask(task)" class="btn btn-danger">Stop</button>
                                 <small>@($"{task.StartTime:HH:mm:ss}")</small>
-                            } 
-                            else
+                            } else
                             {
-                                <small>@($"{(task.EndTime - task.StartTime):HH:mm:ss}")</small>
+                                <button class="btn btn-secondary" disabled>Beëindigd</button>
+                                <small>@($"{(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
                             }
                         </div>
                     </div>
@@ -56,6 +56,23 @@
                     </div>
                     <div class="col">
                         <button @onclick="StartTask" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+}
+
+@if (this.showEndConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> taak wilt stoppen?</h5>
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelEndTask" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="EndTask" class="btn btn-danger">Bevestig</button>
                     </div>
                 </div>
         </div>
@@ -84,6 +101,8 @@
     private TaskListDTO? todayTasks;
 
     private bool showStartConfirmation;
+
+    private bool showEndConfirmation;
 
     private TaskItemDTO? selectedTask;
 
@@ -163,6 +182,7 @@
         if(this.client == null)
         {
             this.errorMessage = "The client could not be found!";
+            this.showStartConfirmation = false;
             StateHasChanged();
 
             return;
@@ -171,6 +191,7 @@
         if(this.selectedTask == null)
         {
             this.errorMessage = "The selected could not be found!";
+            this.showStartConfirmation = false;
             StateHasChanged();
 
             return;
@@ -196,11 +217,24 @@
         StateHasChanged();
     }
     
+    private void ConfirmEndTask(TaskItemDTO task)
+    {
+        this.selectedTask = task;
+        this.showEndConfirmation = true;
+    }
+
+    private void CancelEndTask()
+    {
+        this.selectedTask = null;
+        this.showEndConfirmation = false;
+    }
+    
     private async Task EndTask()
     {
         if(this.client == null)
         {
             this.errorMessage = "The client could not be found!";
+            this.showEndConfirmation = false;
             StateHasChanged();
 
             return;
@@ -209,6 +243,7 @@
         if(this.selectedTask == null)
         {
             this.errorMessage = "The selected could not be found!";
+            this.showEndConfirmation = false;
             StateHasChanged();
 
             return;
