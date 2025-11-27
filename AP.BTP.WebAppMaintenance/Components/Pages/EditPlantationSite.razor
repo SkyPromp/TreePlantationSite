@@ -569,6 +569,11 @@
         }
     }
 
+    /// <summary>
+    /// Creates or updates a zone within the plantation site.
+    /// Performs validation checks, handles edit vs. create logic,
+    /// refreshes related data, and updates UI state.
+    /// </summary>
     private async Task CreateZone()
     {
         if (this.newZone == null)
@@ -614,7 +619,7 @@
             }
 
             List<ZoneDTO> zones = this.plantationSite.Zones.ToList();
-            int index = zones.FindIndex(zone => zone.Id == newZone.Id);  // TODO is broken
+            int index = zones.FindIndex(zone => zone.Id == newZone.Id);
 
             if(index == -1)
             {
@@ -641,12 +646,19 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Cancels the deletion confirmation dialog for a zone.
+    /// </summary>
     private void CancelZoneDeletion()
     {
         this.showConfirmZoneDeletion = false;
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Cancels the process of creating or editing a zone.
+    /// Resets temporary state and reloads available trees.
+    /// </summary>
     private async Task CancelZoneCreation()
     {
         this.searchTreeText = null;
@@ -656,7 +668,12 @@
         StateHasChanged();
     }
 
-    private void OpenEditZone(ZoneDTO zone)  // TODO is edit zone not true maybe? idk
+    /// <summary>
+    /// Opens the UI section for editing an existing zone.
+    /// Creates a temporary editable copy of the selected zone.
+    /// </summary>
+    /// <param name="zone">The zone to edit.</param>
+    private void OpenEditZone(ZoneDTO zone)
     {
         this.showZoneCreation = true;
 
@@ -674,6 +691,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Opens the UI for creating a new zone.
+    /// Initializes a temporary zone with defaults.
+    /// </summary>
     private void OpenZoneCreation()
     {
         this.showZoneCreation = true;
