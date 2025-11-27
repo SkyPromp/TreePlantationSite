@@ -30,7 +30,14 @@
         /// </summary>
         public required int TaskListId { get; set; }
 
+        /// <summary>
+        /// The start time of this task item.
+        /// </summary>
         public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// The end time of this task item.
+        /// </summary>
         public DateTime? EndTime { get; set; }
     }
 }
