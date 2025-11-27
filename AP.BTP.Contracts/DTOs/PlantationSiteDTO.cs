@@ -5,7 +5,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) for a plantation site, including address, size, ground plan, zones, and deletion status.
     /// </summary>
-    public class PlantationSiteDTO
+    public record PlantationSiteDTO
     {
         /// <summary>
         /// The unique identifier of the plantation site.

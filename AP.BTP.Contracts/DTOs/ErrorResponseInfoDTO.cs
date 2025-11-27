@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a standardized JSON error response returned by <see cref="ExceptionHandlingMiddleware"/>.
     /// </summary>
-    public class ErrorResponseInfoDTO
+    public record ErrorResponseInfoDTO
     {
         /// <summary>
         /// Gets or sets the HTTP status code of the error response.

@@ -9,7 +9,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) containing tokens returned by Auth0 after authentication and the user information.
     /// </summary>
-    public class LoginResponseDTO
+    public record LoginResponseDTO
     {
         /// <summary>
         /// The access token issued by Auth0 to access protected resources.

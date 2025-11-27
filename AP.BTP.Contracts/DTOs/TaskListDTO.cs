@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a data transfer object (DTO) for a task list, including its identifier, date, and associated task items.
     /// </summary>
-    public class TaskListDTO
+    public record TaskListDTO
     {
         /// <summary>
         /// The unique identifier of the task list.

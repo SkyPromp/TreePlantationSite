@@ -6,7 +6,7 @@ namespace AP.BTP.Contracts.DTOs
     /// Data transfer object (DTO) representing a user in the system, including authentication information, personal details,
     /// and related plantation sites and task lists.
     /// </summary>
-    public class UserDTO
+    public record UserDTO
     {
         /// <summary>
         /// The unique identifier of the user.

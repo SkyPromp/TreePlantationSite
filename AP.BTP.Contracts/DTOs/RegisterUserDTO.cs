@@ -6,7 +6,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) for registering a new user, including personal details, email, and password.
     /// </summary>
-    public class RegisterUserDTO
+    public record RegisterUserDTO
     {
         /// <summary>
         /// The first name of the user.

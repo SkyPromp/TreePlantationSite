@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a data transfer object (DTO) containing tokens returned by Auth0 after authentication.
     /// </summary>
-    public class TokenResponseDTO
+    public record TokenResponseDTO
     {
         /// <summary>
         /// The access token issued by Auth0 to access protected resources.
