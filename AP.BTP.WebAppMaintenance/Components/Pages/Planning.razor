@@ -289,11 +289,6 @@
     /// List of zones available for the currently selected plantation site.
     /// </summary>
     private List<ZoneDTO> availableZones = new();
-    
-    /// <summary>
-    /// The selected zone ID for the task being added.
-    /// </summary>
-    private int? selectedZoneId;
 
     /// <summary>
     /// Start date (Monday) of the currently displayed week.
@@ -600,7 +595,6 @@
         }
 
         this.taskToBeAddedDate = day;
-        this.selectedZoneId = null;
 
         this.taskDurationHours = 0;
         this.taskDurationMinutes = 0;

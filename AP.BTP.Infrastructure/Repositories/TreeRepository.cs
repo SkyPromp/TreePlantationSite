@@ -77,10 +77,25 @@ namespace AP.BTP.Infrastructure.Repositories
 
         /// <summary>
         /// Retrieves all <see cref="Tree"/> entities that are not soft-deleted.
+        /// <param name="search">Optional search string to filter by species name.</param>
         /// </summary>
         public async Task<IEnumerable<Tree>> GetAll()
         {
-            return await this.dbSet.Where(tree => !tree.IsDeleted).ToListAsync();
+            return await this.dbSet
+                .Where(tree => !tree.IsDeleted)
+                .OrderBy(tree => tree.Species).ToListAsync();
+        }
+        
+        /// <summary>
+        /// Retrieves all <see cref="Tree"/> entities that are not soft-deleted.
+        /// <param name="search">Optional search string to filter by species name.</param>
+        /// </summary>
+        public async Task<IEnumerable<Tree>> GetAll(string? search)
+        {
+            return await this.dbSet
+                .Where(tree => !tree.IsDeleted)
+                .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true)
+                .OrderBy(tree => tree.Species).ToListAsync();
         }
 
         /// <summary>

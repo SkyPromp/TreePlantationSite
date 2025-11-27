@@ -42,5 +42,11 @@ namespace AP.BTP.Application.Interfaces
         /// A task that returns a paginated list of trees containing total count.
         /// </returns>
         Task<(IEnumerable<Tree> Items, int totalCount)> GetAllPaged(int pageNr, int pageSize, string? search, bool sortAscending);
+
+        /// <summary>
+        /// Retrieves all <see cref="Tree"/> entities that are not soft-deleted.
+        /// <param name="search">Optional search string to filter by species name.</param>
+        /// </summary>
+        Task<IEnumerable<Tree>> GetAll(string? search);
     }
 }

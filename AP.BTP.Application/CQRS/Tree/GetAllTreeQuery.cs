@@ -11,6 +11,10 @@ namespace AP.BTP.Application.CQRS.Tree
     /// </summary>
     public class GetAllTreeQuery: IRequest<IEnumerable<TreeDTO>>  // TODO this should probably be merged in with GetTreeQuery
     {
+        /// <summary>
+        /// An optional search string to filter trees by relevant fields (e.g., species name).
+        /// </summary>
+        public string? Search { get; set; }
     }
 
     /// <summary>
@@ -55,7 +59,7 @@ namespace AP.BTP.Application.CQRS.Tree
         /// <returns>A collection of <see cref="TreeDTO"/> objects representing all trees in the system.</returns>
         public async Task<IEnumerable<TreeDTO>> Handle(GetAllTreeQuery request, CancellationToken cancellationToken)
         {
-            IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll();
+            IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll(request.Search);
             IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees);
 
             return treeDTOs;

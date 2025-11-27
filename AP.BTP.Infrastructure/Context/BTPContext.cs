@@ -50,6 +50,10 @@ namespace AP.BTP.Infrastructure.Context
                 .WithMany(ti => ti.TaskLists)
                 .HasForeignKey(zo => zo.ZoneId);
 
+            modelBuilder.Entity<Zone>()
+                .HasOne(t => t.Tree)
+                .WithMany(z => z.Zones)
+                .HasForeignKey(t => t.TreeId);
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Role)

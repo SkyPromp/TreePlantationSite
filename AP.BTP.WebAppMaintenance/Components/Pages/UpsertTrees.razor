@@ -258,7 +258,6 @@
         Winter
     }
 
-
     /// <summary>
     /// Stores newly selected images that have not yet been uploaded.
     /// Key is a temporary GUID, value is a tuple of the file and its byte content.
@@ -305,12 +304,12 @@
     /// Stores QR code images as base64 data URIs.
     /// Key is the file key (same as maintenance previews), value is the QR code image data URI.
     /// </summary>
-    private Dictionary<string, string> qrCodes = new(); 
+    private Dictionary<string, string> qrCodes = new();
 
     /// <summary>
     /// Holds the currently selected image for deletion.
     /// </summary>
-    private string? selectedImage = null; 
+    private string? selectedImage = null;
 
     /// <summary>
     /// Indicates whether the delete confirmation modal should be shown.
@@ -335,7 +334,7 @@
         "image/webp",
         "image/bmp"
     };
-    
+
     /// <summary>
     /// The allowed content types for maintenance plan uploads.
     /// </summary>    
@@ -344,7 +343,7 @@
         "image/jpeg",
         "image/png",
         "image/webp"
-    };    
+    };
 
     /// <summary>
     /// Called when the component is initialized.
@@ -407,7 +406,7 @@
                 return;
             }
 
-            if (newMaintenanceFiles.Count > 0) 
+            if (newMaintenanceFiles.Count > 0)
             {
                 List<KeyValuePair<string, (IBrowserFile file, byte[] data)>>? maintenanceFilesToUpload = newMaintenanceFiles.ToList();
                 newMaintenanceFiles.Clear();
@@ -481,8 +480,8 @@
             this.Tree = savedTree;
             this.Id = this.Tree.Id;
 
-            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();  
-            newPictures.Clear();   
+            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();
+            newPictures.Clear();
 
             foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
             {
@@ -533,7 +532,7 @@
                     await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
                 }
             }
-            
+
             this.errorMessage = "";
 
         } catch (Exception e)
@@ -620,7 +619,7 @@
         } catch (Exception e){
             errorMessage = $"Failed to generate QR code: {e.Message}";
         }
-    }    
+    }
 
     /// <summary>
     /// Generates a base64 preview for an uploaded file and updates the corresponding preview dictionary.
@@ -635,7 +634,7 @@
         if(!response.IsSuccessStatusCode) return;
 
         byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-        string type = response.Content.Headers.ContentType?.MediaType!;    
+        string type = response.Content.Headers.ContentType?.MediaType!;
 
         if(fileType == FileType.Picture){
             previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
@@ -662,7 +661,7 @@
             existingPictures.Clear();
             previews.Clear();
             foreach (TreePictureDTO pic in response)
-            {      
+            {
                 existingPictures[pic.Id] = pic.Path;
                 await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
             }

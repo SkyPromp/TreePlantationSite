@@ -48,9 +48,23 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name"sortAscending"> An optional sorting bool to sort trees by species. Defaults to sort ascending.
         /// <returns>A paginated list of trees.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllTreesPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "", [FromQuery] bool sortAscending = true)
+        public async Task<IActionResult> GetTrees([FromQuery] int pageNr, [FromQuery] int pageSize, [FromQuery] string? search = null, [FromQuery] bool sortAscending = true)
         {
             return Ok(await mediator.Send(new GetAllTreesPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search, SortAscending = sortAscending }));
+        }
+
+        /// <summary>
+        /// Retrieves a list of trees with optional paging and search parameters.
+        /// </summary>
+        /// <param name="page">The page number for paged results (optional).</param>
+        /// <param name="pageSize">The number of items per page (optional).</param>
+        /// <param name="search">Optional search string to filter trees by species.</param>
+        /// <param name"sortAscending"> An optional sorting bool to sort trees by species. Defaults to sort ascending.
+        /// <returns>A paginated list of trees.</returns>
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTrees([FromQuery] string? search)
+        {
+            return Ok(await mediator.Send(new GetAllTreeQuery() { Search = search }));
         }
 
         /// <summary>

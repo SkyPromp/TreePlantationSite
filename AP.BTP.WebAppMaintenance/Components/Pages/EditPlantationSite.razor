@@ -85,7 +85,7 @@
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
                     <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Cancel</Button>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Save</Button>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Betwaar</Button>
                 </div>
             </EditForm>
         </Content>
@@ -96,7 +96,7 @@
                 <div class="container">
                     <div class="row d-flex justify-content-end">
                         <div class="col-auto">
-                            <button @onclick="() => this.ShowTreeList=true" class="btn btn-secondary">+ Add new</button>
+                            <button @onclick="OpenZoneCreation" class="btn btn-secondary">+ Toevoegen</button>
                         </div>
                     </div>
                 </div>
@@ -113,11 +113,11 @@
                         @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
-                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Name: zone.Name)</td>
-                                <td>@((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.Size: zone.Size)</td>
-                                <td>@(this.findTree((this.OldZone != null && zone.Id == this.OldZone.Id)? this.OldZone.TreeId: zone.TreeId)?.Species ?? "No species name was found")</td>
+                                <td>@zone.Name</td>
+                                <td>@zone.Size</td>
+                                <td>@(this.findTree(zone.TreeId)?.Species ?? "No species name was found")</td>
                                 <td>
-                                    <i @onclick="() => EditZone(zone.Id)" class="bi bi-pencil-square"></i>
+                                    <i @onclick="() => OpenEditZone(zone)" class="bi bi-pencil-square"></i>
                                     <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-trash"></i>
                                 </td>
                             </tr>
@@ -129,19 +129,20 @@
     </Tab>
 </Tabs>
 
-@if (this.ShowTreeList)
+@if (this.showZoneCreation && this.newZone != null)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
         <div class="card position-absolute align-self-center p-4">
             <h5>Give a zone name</h5>
-            <input type="text" @bind="this.SelectedZone.Name" />
+            <input type="text" @bind="this.newZone.Name" />
 
             <h5>Specify the zone area (in m^2)</h5>
-            <input type="number" @bind="this.SelectedZone.Size" />
+            <input type="number" @bind="this.newZone.Size" />
 
             <h5>Select tree species</h5>
             <p>Which tree species would you like to assign to this zone?</p>
-            <select @bind="this.SelectedZone.TreeId" class="form-select mb-3">
+            <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 25vw; height: 5vh"/>
+            <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
                 @foreach(TreeDTO tree in this.Trees ?? [])
                 {
                     <option value="@tree.Id">@tree.Species</option>
@@ -149,17 +150,17 @@
             </select>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsZoneAdded = false" class="btn btn-warning">Cancel</button>
+                    <button @onclick="this.CancelZoneCreation" class="btn btn-warning">Cancel</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsZoneAdded = true" class="btn btn-secondary">Confirm</button>
+                    <button @onclick="this.CreateZone" class="btn btn-secondary">Confirm</button>
                 </div>
             </div>
         </div>
     </div>
 }
 
-@if (this.ShowConfirmZoneDeletion)
+@if (this.showConfirmZoneDeletion && this.SelectedZoneId != 0)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
         <div class="card position-absolute align-self-center p-4">
@@ -167,10 +168,10 @@
             <p>Wenst u om te bevestigen?</p>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="() => this.IsZoneRemoved = false" class="btn btn-warning">Annuleer</button>
+                    <button @onclick="this.CancelZoneDeletion" class="btn btn-warning">Annuleer</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.IsZoneRemoved = true" class="btn btn-secondary">Bevestig</button>
+                    <button @onclick="() => this.DeleteZone(this.SelectedZoneId)" class="btn btn-secondary">Bevestig</button>
                 </div>
             </div>
         </div>
@@ -221,55 +222,16 @@
     };
 
     /// <summary>
+    /// Current search text entered by the user for filtering trees.
+    /// </summary>
+    private string? searchTreeText = null;
+
+    /// <summary>
     /// Base64 representation of the ground plan image for preview.
     /// </summary>
     string groundPlanPreview = string.Empty;
-
-    private bool showTreeList;
-    private bool ShowTreeList {
-        get { return this.showTreeList; }
-        set {
-            this.IsZoneAdded = false;
-            this.showTreeList = value;
-        }
-    }
-    private bool isZoneAdded;  // TODO rewrite
-    private bool IsZoneAdded
-    {
-        get { return this.isZoneAdded; }
-        set {
-            this.isZoneAdded = value;
-            this.showTreeList = false;
-            if (value)
-            {
-                this.AddZone();
-                this.SelectedZone = EmptyZone;
-            } else if (this.OldZone != null)
-            {
-                this.SelectedZone = this.OldZone;
-                this.OldZone = null;
-            }
-        }
-    }
-
-    private bool showConfirmZoneDeletion;  // TODO rewrite
-    private bool ShowConfirmZoneDeletion {
-        get { return this.showConfirmZoneDeletion; }
-        set {
-            this.IsZoneRemoved = false;
-            this.showConfirmZoneDeletion = value;
-        }
-    }
-    private bool isZoneRemoved;
-    private bool IsZoneRemoved
-    {
-        get { return this.isZoneRemoved; }
-        set {
-            this.isZoneRemoved = value;
-            this.showConfirmZoneDeletion = false;
-            if(value) this.DeleteZone(this.SelectedZone.Id);
-        }
-    }
+    private bool showZoneCreation;
+    private bool showConfirmZoneDeletion;
 
     /// <summary>
     /// Returns a new, empty zone DTO associated with the current plantation site.
@@ -292,19 +254,24 @@
     private int tempAddedZoneIndex = -1;
 
     /// <summary>
+    /// Timer used to debounce the search input to avoid making too many API calls while typing.
+    /// </summary>
+    private System.Timers.Timer? debounceTimer;
+
+    /// <summary>
     /// Currently selected zone for editing or addition.
     /// </summary>
-    private ZoneDTO SelectedZone;  // TODO read warning
+    private int SelectedZoneId;
 
     /// <summary>
     /// Flag to track if the current operation is editing an existing zone.
     /// </summary>
-    private bool IsEditZone;  // TODO not needed, can be derrived from the index
+    private bool IsEditZone;
 
     /// <summary>
-    /// Holds the original zone before editing for restoration if editing is cancelled.
+    /// Holds the new zone that is being added.
     /// </summary>
-    private ZoneDTO? OldZone;
+    private ZoneDTO? newZone;
 
     /// <summary>
     /// List of available trees for assignment to zones.
@@ -322,7 +289,7 @@
     protected override async Task OnInitializedAsync()
     {
         client = HttpClientFactory.CreateClient("BTPApi");
-        this.SelectedZone = EmptyZone;
+        this.SelectedZoneId = 0;
 
         if (this.id != 0) {
             try {
@@ -382,7 +349,7 @@
         {
             IEnumerable<TreeDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree");
+            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree/all" + (this.searchTreeText != null? $"?search={this.searchTreeText}": ""));
 
             if (response != null)
             {
@@ -397,6 +364,31 @@
         {
             this.errorMessage = e.Message;
         }
+    }
+
+    /// <summary>
+    /// Handles changes in the search input field. Debounces the search by 300ms before reloading the first page.
+    /// </summary>
+    /// <param name="e">The change event containing the new search text.</param>
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        this.searchTreeText = e.Value?.ToString()?.Trim();
+
+        debounceTimer?.Stop();
+        debounceTimer?.Dispose();
+
+        debounceTimer = new System.Timers.Timer(300);
+        debounceTimer.Elapsed += async (_, __) =>
+        {
+            debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await LoadTrees();
+                StateHasChanged();
+            });
+        };
+        debounceTimer.AutoReset = false;
+        debounceTimer.Start();
     }
 
     /// <summary>
@@ -502,62 +494,13 @@
     }
 
     /// <summary>
-    /// Finds a zone by its ID within the current plantation site.
-    /// </summary>
-    /// <param name="id">Zone ID.</param>
-    /// <returns>The zone DTO or null if not found.</returns>
-    private ZoneDTO? findZone(int? id)
-    {
-        if (this.plantationSite == null) return null;
-
-        return id == null? null : this.plantationSite.Zones?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
-    }
-
-    /// <summary>
-    /// Adds the currently selected zone to the plantation site, or updates it if editing.
-    /// </summary>
-    private void AddZone()
-    {
-        if (this.SelectedZone == null) this.SelectedZone = EmptyZone;
-        if (this.plantationSite == null) return;
-        if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
-        if (this.SelectedZone.TreeId == 0 || this.plantationSite == null) return;
-        if (!this.IsEditZone)
-        {
-            this.SelectedZone.Id = this.tempAddedZoneIndex--;
-            this.plantationSite.Zones.Add(this.SelectedZone);
-        }
-
-        this.OldZone = null;
-        this.IsEditZone = false;
-    }
-
-    /// <summary>
-    /// Begins editing the zone with the specified ID.
-    /// </summary>
-    /// <param name="id">Zone ID.</param>
-    private void EditZone(int id)
-    {
-        this.IsEditZone = true;
-        this.ShowTreeList = true;
-
-        ZoneDTO? zone = findZone(id);
-
-        if (zone == null) return;
-
-        this.SelectedZone = zone;
-        this.OldZone = this.SelectedZone.CloneZone();
-        this.SelectedZone.TreeId = zone.TreeId;
-    }
-
-    /// <summary>
     /// Confirms deletion of a zone by ID.
     /// </summary>
     /// <param name="id">Zone ID.</param>
     private void ConfirmDeleteZone(int id)
     {
-        this.SelectedZone.Id = id;
-        this.ShowConfirmZoneDeletion = true;
+        this.SelectedZoneId = id;
+        this.showConfirmZoneDeletion = true;
     }
 
     /// <summary>
@@ -566,10 +509,12 @@
     /// <param name="id">Zone ID.</param>
     private async void DeleteZone(int id)
     {
+        this.showConfirmZoneDeletion = false;
+
         if (this.plantationSite == null || this.plantationSite.Zones == null) return;
 
-        // If the plantationSite id is 0, this means the the zone hasn't been sent to the backend yet, so it can just be removed from the frontend.
-        if(this.plantationSite.Id == 0)
+        // If the plantationSite id is 0 or smaller, this means the the zone hasn't been sent to the backend yet, so it can just be removed from the frontend.
+        if(this.plantationSite.Id <= 0)
         {
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
 
@@ -593,7 +538,7 @@
         }
 
         await this.LoadTrees();
-        this.SelectedZone = EmptyZone;
+        this.SelectedZoneId = 0;
         StateHasChanged();
     }
 
@@ -602,7 +547,6 @@
     /// </summary>
     /// <param name="client">The HTTP client for fetching the image.</param>
     /// <param name="fileName">The filename of the ground plan image.</param>
-
     private async Task LoadImagePreview(HttpClient client, string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName)) return;
@@ -623,5 +567,151 @@
         {
             groundPlanPreview = string.Empty;
         }
+    }
+
+    /// <summary>
+    /// Creates or updates a zone within the plantation site.
+    /// Performs validation checks, handles edit vs. create logic,
+    /// refreshes related data, and updates UI state.
+    /// </summary>
+    private async Task CreateZone()
+    {
+        if (this.newZone == null)
+        {
+            this.errorMessage = "New Zone could not be found it is null.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (this.plantationSite == null)
+        {
+            this.errorMessage = "The plantationsite could not be found it is null.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (this.newZone.TreeId == 0)
+        {
+            this.errorMessage = "The tree in the new zone has not been stored yet in the database.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (this.newZone.PlantationSiteId == 0)
+        {
+            this.errorMessage = "The plantationsite in the new zone has not been stored yet in the database.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (this.IsEditZone)
+        {
+            if(this.plantationSite.Zones == null)
+            {
+                this.errorMessage = "The plantationsite did not have any zones, so no zones could be updated.";
+                StateHasChanged();
+
+                return;
+            }
+
+            List<ZoneDTO> zones = this.plantationSite.Zones.ToList();
+            int index = zones.FindIndex(zone => zone.Id == newZone.Id);
+
+            if(index == -1)
+            {
+                this.errorMessage = "Zone could not be updated since it could no longer be found in the plantationsite zones list";
+                StateHasChanged();
+
+                return;
+            }
+
+            zones[index] = newZone;
+            this.plantationSite.Zones = zones;
+        } else
+        {
+            if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
+
+            this.plantationSite.Zones.Add(newZone);
+        }
+
+        this.newZone = null;
+        this.searchTreeText = null;
+        await this.LoadTrees();
+        this.IsEditZone = false;
+        this.showZoneCreation = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the deletion confirmation dialog for a zone.
+    /// </summary>
+    private void CancelZoneDeletion()
+    {
+        this.showConfirmZoneDeletion = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the process of creating or editing a zone.
+    /// Resets temporary state and reloads available trees.
+    /// </summary>
+    private async Task CancelZoneCreation()
+    {
+        this.searchTreeText = null;
+        await this.LoadTrees();
+        this.showZoneCreation = false;
+        this.newZone = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the UI section for editing an existing zone.
+    /// Creates a temporary editable copy of the selected zone.
+    /// </summary>
+    /// <param name="zone">The zone to edit.</param>
+    private void OpenEditZone(ZoneDTO zone)
+    {
+        this.showZoneCreation = true;
+
+        this.newZone = new ZoneDTO()
+        {
+            Id = zone.Id,
+            PlantationSiteId = zone.PlantationSiteId,
+            TreeId = zone.TreeId,
+            Name = zone.Name,
+            Size = zone.Size
+        };
+
+        this.IsEditZone = true;
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the UI for creating a new zone.
+    /// Initializes a temporary zone with defaults.
+    /// </summary>
+    private void OpenZoneCreation()
+    {
+        this.showZoneCreation = true;
+        this.IsEditZone = true;
+
+        if(this.newZone == null)
+        {
+            this.newZone = new ZoneDTO()
+            {
+                Id = this.tempAddedZoneIndex--,
+                PlantationSiteId = this.plantationSite?.Id ?? 0,
+                TreeId = 0
+            };
+
+            this.IsEditZone = false;
+        }
+
+        StateHasChanged();
     }
 }
