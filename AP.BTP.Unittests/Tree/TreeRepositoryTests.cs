@@ -10,23 +10,12 @@ namespace AP.BTP.Unittests.Tree
     [TestClass]
     public class TreeRepositoryTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreeRepository> treeRepoMock;
-        private GetAllTreeQueryValidator validator;
-
         private DbContextOptions<BTPContext> _options;
 
 
         [TestInitialize]
         public void Setup()
         {
-            uowMock = new Mock<IUnitOfWork>();
-            treeRepoMock = new Mock<ITreeRepository>();
-
-            uowMock.Setup(u => u.TreeRepository).Returns(treeRepoMock.Object);
-
-            validator = new GetAllTreeQueryValidator(uowMock.Object);
-
             _options = new DbContextOptionsBuilder<BTPContext>()
            .UseInMemoryDatabase("TestDb")
            .Options;
