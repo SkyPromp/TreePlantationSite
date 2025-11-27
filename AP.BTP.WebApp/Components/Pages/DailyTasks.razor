@@ -27,15 +27,14 @@
                             @if (task.StartTime == null)
                             {
                                 <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
-                                <small>Time spent doing task</small>
                             } else if (task.EndTime == null)
                             {
                                 <button @onclick="() => ConfirmEndTask(task)" class="btn btn-danger">Stop</button>
-                                <small>@($"{task.StartTime:HH:mm:ss}")</small>
+                                <small>@($"Startuur: {task.StartTime:HH:mm:ss}")</small>
                             } else
                             {
                                 <button class="btn btn-secondary" disabled>Beëindigd</button>
-                                <small>@($"{(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
+                                <small>@($"Totaalduur: {(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
                             }
                         </div>
                     </div>

@@ -61,8 +61,9 @@ namespace AP.BTP.Application.CQRS.TaskItem
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
-            if (taskItem.EndTime != null) throw new Exception("The task has already been ended.");
-            if (taskItem.StartTime > DateTime.Now) throw new Exception("The task start time is after the end time.");
+            if (taskItem.StartTime == null) throw new ValidationException($"The task has not yet been started. taskItemId={taskItem.Id}");
+            if (taskItem.EndTime != null) throw new ValidationException($"The task has already been ended. taskItemId={taskItem.Id}");
+            if (taskItem.StartTime > DateTime.Now) throw new ValidationException($"The task start time is after the end time. taskItemId={taskItem.Id}");
 
             taskItem.EndTime = DateTime.Now;
 

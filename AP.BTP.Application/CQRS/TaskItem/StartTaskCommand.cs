@@ -61,7 +61,8 @@ namespace AP.BTP.Application.CQRS.TaskItem
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
-            if (taskItem.StartTime != null) throw new Exception("The task has already been started.");
+            if (taskItem.StartTime != null) throw new ValidationException($"The task has already been started. taskItemId={taskItem.Id}");
+            if (taskItem.EndTime != null) throw new ValidationException($"Impossible state, the starttime is null and the endtime is not null. taskItemId={taskItem.Id}");
 
             taskItem.StartTime = DateTime.Now;
 
