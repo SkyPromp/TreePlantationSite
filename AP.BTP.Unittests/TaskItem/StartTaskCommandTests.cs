@@ -4,10 +4,9 @@ using FluentValidation.TestHelper;
 using Moq;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
-using AP.BTP.Application;
 using FluentValidation;
 
-namespace AP.BTP.Unittests.TaskList
+namespace AP.BTP.Unittests.TaskItem
 {
     [TestClass]
     public class StartTaskCommandTests
@@ -125,6 +124,29 @@ namespace AP.BTP.Unittests.TaskList
             {
                 Assert.AreEqual($"Cannot start multiple tasks at the same time from the same tasklist.", ex.Message);
             }
+        }
+        
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Another_Task_Has_Been_Started_And_Stopped()
+        {
+            Domain.User user = new Domain.User() { Id=1, Auth0Id="AUTH" };
+            Domain.TaskList taskList = new Domain.TaskList() { Id = 1, Date=DateTime.Now, User=user, UserId=user.Id };
+            Domain.TaskItem taskItem1 = new Domain.TaskItem() { Id = 1, Title = "", Description = "", TaskListId = 1, TaskList=taskList };
+            Domain.TaskItem taskItem2 = new Domain.TaskItem() { Id = 2, Title = "", Description = "", TaskListId = 1, TaskList=taskList, StartTime=DateTime.Now.AddMicroseconds(-10), EndTime=DateTime.Now.AddMicroseconds(-5) };
+            taskList.TaskItems = new List<Domain.TaskItem>()
+            {
+                taskItem1,
+                taskItem2
+            };
+
+            this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
+
+            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
+            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
+
+            StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
+
+            await handler.Handle(command, CancellationToken.None);
         }
     }
 }
