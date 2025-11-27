@@ -1385,6 +1385,9 @@ namespace AP.BTP.Infrastructure.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DurationInMinutes")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
