@@ -1,4 +1,5 @@
 ﻿using AP.BTP.Application.Interfaces;
+using AP.BTP.Contracts.Enums;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -106,7 +107,7 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             IQueryable<User> query = dbSet
                 .Include(u => u.PlantationSites)
-                .Where(u => !u.IsDeleted && u.PlantationSites.Any())
+                .Where(u => !u.IsDeleted && u.Role == UserRole.Operator)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))

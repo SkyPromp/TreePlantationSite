@@ -477,7 +477,7 @@
     }
 
     /// <summary>
-    /// Deletes the selected user from both Auth0 and the internal database.
+    /// Deletes the selected user.
     /// </summary>
     private async Task DeleteUser()
     {
@@ -487,19 +487,9 @@
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/auth/{selectedUser!.Auth0Id}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                await client.DeleteAsync($"UserManagement/users/{selectedUser!.Id}");
-                await Task.Delay(500); // small delay to ensure auth0 has processed the change
-                await LoadPage(currentPage);
-                StateHasChanged();
-            }
-            else
-            {
-                errorMessage = $"Kon gebruiker niet verwijderen: {response.StatusCode}";
-            }
+            await client.DeleteAsync($"UserManagement/users/{selectedUser!.Id}");
+            await LoadPage(currentPage);
+            StateHasChanged();
         }
         catch (Exception ex)
         {

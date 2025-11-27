@@ -1,7 +1,6 @@
 ﻿using AP.BTP.Application.CQRS.Auth0User;
 using AP.BTP.Application.CQRS.User;
 using AP.BTP.Contracts.DTOs;
-using AP.BTP.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -115,30 +114,6 @@ namespace AP.BTP.WebAPI.Controllers
         public async Task<IActionResult> GetUserById(int userId)
         {
             return Ok(await _mediator.Send(new GetUserByIdQuery() { Id = userId }));
-        }
-
-        /// <summary>
-        /// Deletes a user from Auth0 by their Auth0 ID.
-        /// </summary>
-        /// <param name="auth0Id">The Auth0 ID of the user to delete.</param>
-        /// <returns>No content on success, NotFound if the user does not exist, or 500 on error.</returns>
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("users/auth/{auth0Id}")]
-        public async Task<IActionResult> DeleteAuth0User(string auth0Id)
-        {
-            try
-            {
-                await _mediator.Send(new DeleteAuth0UserCommand(auth0Id));
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"User with Auth0 ID '{auth0Id}' not found.");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, "An error occurred while deleting the Auth0 user.");
-            }
         }
 
         /// <summary>

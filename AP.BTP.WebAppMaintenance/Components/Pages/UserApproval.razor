@@ -485,7 +485,7 @@
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/auth/{selectedUserId}");
+            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/{selectedUserId}");
 
             if (response.IsSuccessStatusCode)
             {
