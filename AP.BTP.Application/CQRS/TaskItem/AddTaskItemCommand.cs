@@ -32,6 +32,26 @@ namespace AP.BTP.Application.CQRS.TaskItem
             RuleFor(command => command.TaskItem.Id)
                 .Equal(0)
                 .WithMessage("Id should be zero when adding a task item.");
+
+            RuleFor(x => x.TaskItem.DurationInMinutes)
+                .GreaterThan(0)
+                .WithMessage("Duration must be greater than 0 minutes")
+                .LessThanOrEqualTo(480)
+                .WithMessage("Duration cannot exceed 8 hours (480 minutes)");
+
+            RuleFor(x => x.TaskItem)
+                .MustAsync(async (taskItem, cancellation) =>
+                {
+                    Domain.TaskList? taskList = await uow.TaskListRepository.GetById(taskItem.TaskListId);
+                    if (taskList == null) return true;
+                    
+                    int totalMinutes = taskList.TaskItems
+                        .Where(t => !t.IsDeleted && t.Id != taskItem.Id)
+                        .Sum(t => t.DurationInMinutes);
+                    
+                    return (totalMinutes + taskItem.DurationInMinutes) <= 480;
+                })
+                .WithMessage("Total task duration for this day cannot exceed 8 hours (480 minutes)");                             
         }
     }
 
