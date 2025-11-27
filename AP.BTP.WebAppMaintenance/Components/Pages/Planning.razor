@@ -63,11 +63,27 @@
                     </div>
                 </div>
             }
-            
-            @foreach (DateTime day in WeekDays)
+
+            @for (int i = 0; i < WeekDays.Count; i++)
             {
-                <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 14%; min-width: 14%; font-size: 0.90rem; @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")">
-                    <div class="text-center fw-bold p-3" style="background-color: #E3E3E3">
+                DateTime day = WeekDays[i];
+                var isFirst = i == 0;
+                var isLast = i == WeekDays.Count - 1;
+                <div class="border flex-shrink-0 d-flex flex-column"
+                     style="
+                                    max-width: 14%;
+                                    min-width: 14%;
+                                    font-size: 0.90rem;
+                                    @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                                    @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                                    @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                            ">
+                    <div class="text-center fw-bold p-3"
+                         style="
+                                    background-color: #E3E3E3;
+                                    @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                    @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                                ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
