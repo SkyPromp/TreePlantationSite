@@ -1,7 +1,6 @@
 ﻿@attribute [Authorize(Roles = "Admin, Manager")]
 @page "/manager/planning/user/{userId:int}"
 @rendermode InteractiveServer
-@using System.Text.Json
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 @using System.Globalization
@@ -355,16 +354,15 @@
     /// <param name="firstRender">True if this is the first render of the component.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            client = HttpClientFactory.CreateClient("BTPApi");
-            await LoadUser();
-            currentWeekStart = StartOfWeek(DateTime.Today);
-            UpdateWeekDays();
-            await LoadTaskListsForWeek();
+        if (!firstRender) return;
 
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
-        }
+        this.client = HttpClientFactory.CreateClient("BTPApi");
+        await LoadUser();
+        currentWeekStart = StartOfWeek(DateTime.Today);
+        UpdateWeekDays();
+        await LoadTaskListsForWeek();
+
+        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
     }
 
     /// <summary>

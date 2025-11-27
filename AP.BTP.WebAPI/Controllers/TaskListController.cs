@@ -3,6 +3,7 @@ using AP.BTP.Contracts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AP.BTP.WebAPI.Controllers
 {
@@ -36,6 +37,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="year">The year to filter the task lists.</param>
         /// <param name="weekNumber">The ISO week number to filter the task lists.</param>
         /// <returns>A list of <see cref="TaskListDTO"/> objects for the specified user and week.</returns>
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet]
         public async Task<IActionResult> GetByUserAndWeek([FromQuery] int userId, [FromQuery] int year, [FromQuery] int weekNumber)
         {
@@ -43,6 +45,28 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Gets the task list for a specific day for the authenticated user.
+        /// </summary>
+        /// <param name="date">The date to retrieve the task list for.</param>
+        /// <returns>
+        /// Returns the task list for the specified day if found, 
+        /// otherwise returns 404 Not Found or 400 Bad Request if the user is not found.
+        /// </returns>
+        [Authorize(Roles = "Operator")]
+        [HttpGet("day")]
+        public async Task<IActionResult> GetByDay([FromQuery] DateTime date)
+        {
+            string? auth0Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (auth0Id == null) return BadRequest("User has not been found");
+
+            TaskListDTO? tasklist = await mediator.Send(new GetTaskListByDayFromAuth0IdQuery() { Auth0Id = auth0Id, Day = date });
+
+            if (tasklist == null) return NotFound();
+
+            return Ok(tasklist);
+        }
+
         /// Adds a new task list.
         /// </summary>
         /// <param name="taskList">The <see cref="TaskListDTO"/> object containing task list data to add.</param>
