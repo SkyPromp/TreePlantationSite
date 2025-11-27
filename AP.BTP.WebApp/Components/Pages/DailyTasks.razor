@@ -24,8 +24,19 @@
                             <p class="text-truncate">@task.Description</p>
                         </div>
                         <div class="d-flex flex-column align-items-center justify-content-center col-6">
-                            <button class="btn btn-secondary">Start</button>
-                            <small>Time spent doing task</small>
+                            <button @onclick="() => ConfirmStartTask(task)" class="btn btn-secondary">Start</button>
+                            @if(task.StartTime == null)
+                            {
+                                <small>Time spent doing task</small>
+                            }
+                            else if(task.EndTime == null)
+                            {
+                                <small>@($"{task.StartTime:HH:mm:ss}")</small>
+                            } 
+                            else
+                            {
+                                <small>@($"{(task.EndTime - task.StartTime):HH:mm:ss}")</small>
+                            }
                         </div>
                     </div>
                 </div>
@@ -33,6 +44,23 @@
         }
     </div>
 </div>
+
+@if (this.showStartConfirmation)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u deze <br /> taak wilt starten?</h5>
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="CancelStartTask" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="StartTask" class="btn btn-danger">Bevestig</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+}
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -54,6 +82,10 @@
     private DateTime selectedDate;
 
     private TaskListDTO? todayTasks;
+
+    private bool showStartConfirmation;
+
+    private TaskItemDTO? selectedTask;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -107,10 +139,98 @@
     /// <summary>
     /// Updates the selected date (<see cref="selectedDate"/>) of which to show the tasklist.
     /// </summary>
-    public async Task UpdateDate(int deltaDays)
+    private async Task UpdateDate(int deltaDays)
     {
         this.selectedDate = this.selectedDate.AddDays(deltaDays);
         await LoadUser();
+        StateHasChanged();
+    }
+
+    private void ConfirmStartTask(TaskItemDTO task)
+    {
+        this.selectedTask = task;
+        this.showStartConfirmation = true;
+    }
+
+    private void CancelStartTask()
+    {
+        this.selectedTask = null;
+        this.showStartConfirmation = false;
+    }
+
+    private async Task StartTask()
+    {
+        if(this.client == null)
+        {
+            this.errorMessage = "The client could not be found!";
+            StateHasChanged();
+
+            return;
+        }
+
+        if(this.selectedTask == null)
+        {
+            this.errorMessage = "The selected could not be found!";
+            StateHasChanged();
+
+            return;
+        }
+
+        try
+        {
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/started", this.selectedTask);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
+            } else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+
+        this.selectedTask = null;
+        this.showStartConfirmation = false;
+        StateHasChanged();
+    }
+    
+    private async Task EndTask()
+    {
+        if(this.client == null)
+        {
+            this.errorMessage = "The client could not be found!";
+            StateHasChanged();
+
+            return;
+        }
+
+        if(this.selectedTask == null)
+        {
+            this.errorMessage = "The selected could not be found!";
+            StateHasChanged();
+
+            return;
+        }
+
+        try
+        {
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/ended", this.selectedTask);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                this.errorMessage = "";
+                this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
+            } else
+                this.errorMessage = await response.Content.ReadAsStringAsync();
+        } catch (Exception e)
+        {
+            this.errorMessage = e.Message;
+        }
+
+        this.selectedTask = null;
+        this.showStartConfirmation = false;
         StateHasChanged();
     }
 }

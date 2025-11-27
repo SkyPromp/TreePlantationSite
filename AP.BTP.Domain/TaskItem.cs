@@ -35,6 +35,9 @@ namespace AP.BTP.Domain
         /// </summary>
         [JsonIgnore] public required TaskList TaskList { get; set; }
 
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the task item is considered deleted (soft deletion).
         /// </summary>

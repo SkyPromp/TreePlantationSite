@@ -474,7 +474,7 @@
                 ZoneId = zoneId
             };            
 
-            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", newTaskList);
+            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>("TaskList", newTaskList);
 
             if (response.IsSuccessStatusCode)
             {
