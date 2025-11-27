@@ -98,7 +98,7 @@
         <div class="card position-absolute align-self-center p-4">
             <h5>Selecteer de rol die aan deze gebruiker moet worden toegewezen</h5>
             <select @bind="this.selectedRole" class="form-select mb-3">
-                @foreach (var role in Enum.GetValues<UserRole>())
+                @foreach (UserRole role in Enum.GetValues<UserRole>())
                 {
                     <option value="@(role.ToString())">@role.ToString()</option>
                 }
