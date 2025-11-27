@@ -68,7 +68,7 @@ namespace AP.BTP.Application.CQRS.TaskList
         {
             Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);
 
-            if (user == null) throw new Exception("The user could not be found!");
+            if (user == null) throw new ValidationException("The user could not be found!");
 
             Domain.TaskList? taskList = await uow.TaskListRepository.GetAllByUserIdAndDate(userId:user.Id, date:request.Day);
 

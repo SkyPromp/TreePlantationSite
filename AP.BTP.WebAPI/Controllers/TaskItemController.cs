@@ -82,5 +82,23 @@ namespace AP.BTP.WebAPI.Controllers
 
             return Ok(newTaskItem);
         }
+
+        [Authorize(Roles = "Operator")]
+        [HttpPatch("started")]
+        public async Task<IActionResult> StartTaskItem([FromBody] TaskItemDTO taskItem)
+        {
+            TaskItemDTO newTaskItem = await mediator.Send(new StartTaskCommand() { TaskItem=taskItem });
+
+            return Ok(newTaskItem);
+        }
+
+        [Authorize(Roles = "Operator")]
+        [HttpPatch("ended")]
+        public async Task<IActionResult> EndTaskItem([FromBody] TaskItemDTO taskItem)
+        {
+            TaskItemDTO newTaskItem = await mediator.Send(new EndTaskCommand() { TaskItem=taskItem });
+
+            return Ok(newTaskItem);
+        }
     }
 }

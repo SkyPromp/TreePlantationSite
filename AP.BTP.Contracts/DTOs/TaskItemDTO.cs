@@ -21,8 +21,16 @@
         public required string Description { get; set; }
 
         /// <summary>
+        /// Duration of the task in minutes.
+        /// </summary>
+        public int DurationInMinutes { get; set; }
+
+        /// <summary>
         /// The task list id associated with this task item.
         /// </summary>
         public required int TaskListId { get; set; }
+
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
     }
 }

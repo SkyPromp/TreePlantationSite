@@ -105,10 +105,29 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
         /// <returns>The <see cref="TaskList"/> with the specified ID.</returns>
         /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
+        public async Task<TaskList?> GetByIdUntracked(int id)
+        {
+            TaskList? site = await dbSet
+                .Include(tl => tl.TaskItems.Where(item => !item.IsDeleted))
+                .AsNoTracking()  // Don't track it with EntityFramework
+                .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
+
+            if (site == null) throw new KeyNotFoundException($"TaskList with ID {id} not found.");
+
+            return site;
+        }
+
+        /// <summary>
+        /// Retrieves a <see cref="TaskList"/> by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
+        /// <returns>The <see cref="TaskList"/> with the specified ID.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
         public async Task<TaskList?> GetById(int id)
         {
             TaskList? site = await dbSet
-            .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
+                .Include(tl => tl.TaskItems.Where(item => !item.IsDeleted))
+                .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
             if (site == null) throw new KeyNotFoundException($"TaskList with ID {id} not found.");
 

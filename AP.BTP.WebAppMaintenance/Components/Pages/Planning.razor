@@ -69,6 +69,30 @@
                 <div class="border flex-shrink-0 d-flex flex-column" style="max-width: 14%; min-width: 14%; font-size: 0.90rem; @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")">
                     <div class="text-center fw-bold p-3" style="background-color: #E3E3E3">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
+                        @{
+                            int totalMinutes = GetTotalDurationForDay(day);
+                            int remainingMinutes = GetRemainingTimeForDay(day);
+                            string totalColor = totalMinutes > 480 ? "text-danger" : totalMinutes > 400 ? "text-warning" : "text-success";
+                        }
+                        <div class="@totalColor" style="font-size: 0.75rem; font-weight: normal;">
+                            @FormatDuration(totalMinutes) / 8u
+                        </div>
+                        @if (remainingMinutes < 480 && remainingMinutes > 0)
+                        {
+                            <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
+                                nog @FormatDuration(remainingMinutes)
+                            </div>
+                        }
+                        else if (remainingMinutes <= 0)
+                        {
+                            <div class="text-danger" style="font-size: 0.7rem; font-weight: normal;">
+                                vol!
+                            </div>
+                        } else {
+                            <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
+                                nog @FormatDuration(480)
+                            </div>
+                        }
                     </div>
 
                     <div class="p-2" style="background-color: #F5F5F5; border-bottom: 1px solid #dee2e6;">
@@ -93,14 +117,19 @@
                             {
                                 <div class="p-1 m-2 border border-dark rounded"
                                     style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
-                                    <div class="d-flex justify-content-end">
-                                        <Button @onclick="() => EditTaskItem(taskItem)" class="p-0 me-1">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </Button>
-                                        <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
-                                            <i class="bi bi-trash"></i>
-                                        </Button>
-                                    </div>
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <span class="badge bg-secondary" style="font-size: 0.7rem;">
+                                                @FormatDuration(taskItem.DurationInMinutes)
+                                            </span>
+                                            <div>
+                                                <Button @onclick="() => EditTaskItem(taskItem)" class="p-0 me-1">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </Button>
+                                                <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
+                                                    <i class="bi bi-trash"></i>
+                                                </Button>
+                                            </div>
+                                        </div>
                                     <div class="fw-normal text-truncate-multiline-2" title="@taskItem.Title">@taskItem.Title</div>
                                     <div class="text-muted small text-truncate-multiline-3" title="@taskItem.Description">@taskItem.Description</div>
                                 </div>
@@ -123,22 +152,69 @@
 
 @if (this.ShowAddTaskItem && taskToBeAdded != null)
 {
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5 class="mb-3">Nieuwe taak</h5>
-            <div class="input-group mb-3">
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10; background-color: rgba(0, 0, 0, 0.5);">
+        <div class="card position-absolute align-self-center p-4" style="min-width: 400px;">
+            <h5 class="mb-3">@(taskToBeAdded.Id == 0 ? "Nieuwe taak" : "Taak bewerken")</h5>
+            
+            <div class="mb-3">
+                <label class="form-label">Titel</label>
                 <input @bind="taskToBeAdded!.Title" placeholder="Titel" class="form-control"/>
             </div>
-            <div class="input-group mb-3">
-                <textarea @bind="taskToBeAdded!.Description" placeholder="Beschrijving" class="form-control"></textarea>
+            
+            <div class="mb-3">
+                <label class="form-label">Beschrijving</label>
+                <textarea @bind="taskToBeAdded!.Description" placeholder="Beschrijving" class="form-control" rows="3"></textarea>
             </div>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelAddTask" class="btn btn-dark">Annuleer</button>
+            
+            <div class="mb-3">
+                <label class="form-label">Duur</label>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group">
+                            <input type="number" @bind="taskDurationHours" min="0" max="8" class="form-control" placeholder="Uren"/>
+                            <span class="input-group-text">u</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <input type="number" @bind="taskDurationMinutes" min="0" max="59" class="form-control" placeholder="Minuten"/>
+                            <span class="input-group-text">m</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <button @onclick="SubmitTaskItem" class="btn btn-success">Opslaan</button>
+                @{
+                    int totalInputMinutes = (taskDurationHours * 60) + taskDurationMinutes;
+                    int remainingForDay = GetRemainingTimeForDay(taskToBeAddedDate);
+                    if (taskToBeAdded.Id > 0)
+                    {
+                        remainingForDay += taskToBeAdded.DurationInMinutes;
+                    }
+                }
+                @if (totalInputMinutes > 0)
+                {
+                    <small class="text-muted d-block mt-1">
+                        Totaal: @FormatDuration(totalInputMinutes)
+                    </small>
+                }
+                @if (totalInputMinutes > remainingForDay)
+                {
+                    <small class="text-danger d-block mt-1">
+                        <i class="bi bi-exclamation-triangle"></i> Te lang! Nog beschikbaar: @FormatDuration(remainingForDay)
+                    </small>
+                }
+            </div>
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
                 </div>
+            }
+            
+            <div class="d-flex gap-2">
+                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Annuleer</button>
+                <button @onclick="SubmitTaskItem" class="btn btn-success flex-fill">Opslaan</button>
             </div>
         </div>
     </div>
@@ -260,6 +336,16 @@
     /// This is used to link the task to the correct task list by day.
     /// </summary>
     private DateTime taskToBeAddedDate;
+
+    /// <summary>
+    /// Temporary storage for hours input when adding/editing a task.
+    /// </summary>
+    private int taskDurationHours = 0;
+    
+    /// <summary>
+    /// Temporary storage for minutes input when adding/editing a task.
+    /// </summary>
+    private int taskDurationMinutes = 0;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -447,6 +533,8 @@
     private void EditTaskItem(TaskItemDTO task)
     {
         this.taskToBeAdded = task;
+        this.taskDurationHours = task.DurationInMinutes / 60;
+        this.taskDurationMinutes = task.DurationInMinutes % 60;
         this.ShowAddTaskItem = true;
     }
 
@@ -474,7 +562,7 @@
                 ZoneId = zoneId
             };            
 
-            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>($"TaskList", newTaskList);
+            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>("TaskList", newTaskList);
 
             if (response.IsSuccessStatusCode)
             {
@@ -513,6 +601,10 @@
 
         this.taskToBeAddedDate = day;
         this.selectedZoneId = null;
+
+        this.taskDurationHours = 0;
+        this.taskDurationMinutes = 0;
+
         await this.AddTaskItem();
         this.ShowAddTaskItem = true;
         StateHasChanged();
@@ -562,19 +654,42 @@
                 return;
             }
 
-            if (this.taskToBeAdded.Id == 0)
-            {
-                this.errorMessage = "The tasklist has not been saved yet";
-            }
-
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
-                this.errorMessage = "The task description or task title is empty";
-                this.ShowAddTaskItem = false;
+                this.errorMessage = "De titel en beschrijving zijn verplicht";
                 StateHasChanged();
-
                 return;
             }
+
+            int totalMinutes = (taskDurationHours * 60) + taskDurationMinutes;
+            
+            if (totalMinutes <= 0)
+            {
+                this.errorMessage = "Duur moet minimaal 1 minuut zijn";
+                StateHasChanged();
+                return;
+            }
+
+            if (totalMinutes > 480)
+            {
+                this.errorMessage = "Duur kan niet meer dan 8 uur zijn";
+                StateHasChanged();
+                return;
+            }
+
+            // Check if adding this task would exceed daily limit
+            int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
+            int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
+            
+            if ((currentDayTotal - existingTaskDuration + totalMinutes) > 480)
+            {
+                int available = 480 - (currentDayTotal - existingTaskDuration);
+                this.errorMessage = $"Te veel uren voor deze dag. Nog beschikbaar: {FormatDuration(available)}";
+                StateHasChanged();
+                return;
+            }
+
+            this.taskToBeAdded.DurationInMinutes = totalMinutes;            
 
             HttpResponseMessage? response;
 
@@ -590,6 +705,8 @@
             {
                 this.errorMessage = "";
                 this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
+                this.taskDurationHours = 0;
+                this.taskDurationMinutes = 0;                
             } else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
         } catch (Exception e)
@@ -817,5 +934,42 @@
         {
             errorMessage = $"Fout bij bijwerken van zone: {ex.Message}";
         }
-    }      
+    }
+
+    /// <summary>
+    /// Calculates the total duration in minutes for all tasks in a given day.
+    /// </summary>
+    private int GetTotalDurationForDay(DateTime day)
+    {
+        if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList) 
+            && taskList?.TaskItems != null)
+        {
+            return taskList.TaskItems.Sum(t => t.DurationInMinutes);
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Formats minutes into a readable "Xh Ym" format.
+    /// </summary>
+    private string FormatDuration(int totalMinutes)
+    {
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+        
+        if (hours > 0 && minutes > 0)
+            return $"{hours}u {minutes}m";
+        else if (hours > 0)
+            return $"{hours}u";
+        else
+            return $"{minutes}m";
+    }
+
+    /// <summary>
+    /// Gets remaining available time for a day in minutes.
+    /// </summary>
+    private int GetRemainingTimeForDay(DateTime day)
+    {
+        return 480 - GetTotalDurationForDay(day); // 480 minutes = 8 hours
+    }        
 }

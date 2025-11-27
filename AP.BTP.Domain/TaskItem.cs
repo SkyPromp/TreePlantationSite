@@ -25,6 +25,11 @@ namespace AP.BTP.Domain
         public required string Description { get; set; }
 
         /// <summary>
+        /// Duration of the task in minutes.
+        /// </summary>
+        public int DurationInMinutes { get; set; }
+
+        /// <summary>
         /// Gets or sets the identifier of the task list that this task item belongs to.
         /// </summary>
         public required int TaskListId { get; set; }
@@ -34,6 +39,9 @@ namespace AP.BTP.Domain
         /// This property is ignored during JSON serialization.
         /// </summary>
         [JsonIgnore] public required TaskList TaskList { get; set; }
+
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the task item is considered deleted (soft deletion).
