@@ -186,6 +186,16 @@ namespace AP.BTP.Infrastructure.Repositories
         }
 
         /// <summary>
+        /// Retrieves a <see cref="User"/> by its Auth0 ID.
+        /// </summary>
+        /// <param name="Auth0Id">The Auth0 ID of the user.</param>
+        /// <returns>The <see cref="User"/> entity if found and not soft-deleted; otherwise, <c>null</c>.</returns>
+        public async Task<User?> GetUserByAuth0IdIncludingDeleted(string Auth0Id)
+        {
+            return await this.dbSet.FirstOrDefaultAsync(u => u.Auth0Id == Auth0Id);
+        }
+
+        /// <summary>
         /// Updates an existing <see cref="User"/> entity in the database.
         /// </summary>
         /// <param name="modifiedItem">The modified <see cref="User"/> entity.</param>

@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using AP.BTP.Application.Exceptions;
+using AP.BTP.Contracts.DTOs;
 using FluentValidation;
 
 namespace AP.BTP.WebAPI.Middleware
@@ -34,7 +36,7 @@ namespace AP.BTP.WebAPI.Middleware
             }
             catch (Exception ex)
             {
-                ErrorResponseInfo response = new ErrorResponseInfo();
+                ErrorResponseInfoDTO response = new ErrorResponseInfoDTO();
                 response.Message = ex.Message;
                 switch (ex)
                 {
@@ -42,7 +44,14 @@ namespace AP.BTP.WebAPI.Middleware
                         response.StatusCode = StatusCodes.Status400BadRequest;
                         response.Message = validationException.Message;
                         Console.WriteLine(response.Message);
+                        break;
+                    case AuthenticationFailedException authenticationFailedException:
+                        response.StatusCode = StatusCodes.Status401Unauthorized;
+                        response.ErrorCode = authenticationFailedException.ErrorCode;
+                        break;
 
+                    case NotFoundException:
+                        response.StatusCode = StatusCodes.Status404NotFound;
                         break;
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -54,21 +63,5 @@ namespace AP.BTP.WebAPI.Middleware
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
         }
-    }
-
-    /// <summary>
-    /// Represents a standardized JSON error response returned by <see cref="ExceptionHandlingMiddleware"/>.
-    /// </summary>
-    public class ErrorResponseInfo
-    {
-        /// <summary>
-        /// Gets or sets the HTTP status code of the error response.
-        /// </summary>
-        public int StatusCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the error message describing the problem.
-        /// </summary>
-        public string Message { get; set; }  // TODO read warning
     }
 }

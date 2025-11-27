@@ -1,6 +1,6 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Exceptions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
-using AP.BTP.Domain;
 using FluentValidation;
 using MediatR;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,12 +12,27 @@ namespace AP.BTP.Application.CQRS.User
     /// </summary>
     public class LoginUserCommand : IRequest<LoginResponseDTO?>
     {
+        /// <summary>
+        /// The user's email address used for login.
+        /// </summary>
         public string Email { get; set; } = "";
+
+        /// <summary>
+        /// The user's password used for login.
+        /// </summary>
         public string Password { get; set; } = "";
     }
 
+    /// <summary>
+    /// Provides validation rules for the <see cref="LoginUserCommand"/>.
+    /// Ensures that email and password are not empty, and that the email is in a valid format.
+    /// </summary>
     public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginUserCommandValidator"/> class.
+        /// Configures rules for email and password validation.
+        /// </summary>
         public LoginUserCommandValidator()
         {
             RuleFor(x => x.Email)
@@ -29,32 +44,58 @@ namespace AP.BTP.Application.CQRS.User
         }
     }
 
+    /// <summary>
+    /// Handles the <see cref="LoginUserCommand"/> by authenticating the user against Auth0 and returning user and token information.
+    /// </summary>
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginResponseDTO?>
     {
         private readonly IAuth0PasswordGrantService passwordGrant;
         private readonly IUserRepository userRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginUserCommandHandler"/> class.
+        /// </summary>
+        /// <param name="passwordGrant">Service for performing password grant authentication against Auth0.</param>
+        /// <param name="userRepository">Repository for querying user data in the system.</param>
         public LoginUserCommandHandler(IAuth0PasswordGrantService passwordGrant, IUserRepository userRepository)
         {
             this.passwordGrant = passwordGrant;
             this.userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Handles the <see cref="LoginUserCommand"/> by performing authentication and returning a <see cref="LoginResponseDTO"/> with tokens and user details.
+        /// </summary>
+        /// <param name="request">The command containing the user's login credentials.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="LoginResponseDTO"/> containing access, refresh, and ID tokens, as well as user information.</returns>
+        /// <exception cref="AuthenticationFailedException">Thrown when authentication fails due to invalid credentials or account status.</exception>
+        /// <exception cref="NotFoundException">Thrown when the user exists in Auth0 but not in the local system database.</exception>
         public async Task<LoginResponseDTO?> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
+
             TokenResponseDTO? tokens = await passwordGrant.LoginAsync(request.Email, request.Password);
 
             if (tokens == null)
-                return null;
+                throw new AuthenticationFailedException(message: "Invalid email or password.", errorCode: "INVALID_CREDENTIALS");
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             JwtSecurityToken jwt = handler.ReadJwtToken(tokens.id_token);
             string auth0UserId = jwt.Claims.First(c => c.Type == "sub").Value;
 
-            Domain.User? user = await userRepository.GetUserByAuth0Id(auth0UserId);
+            Domain.User? user = await userRepository.GetUserByAuth0IdIncludingDeleted(auth0UserId);
 
             if (user == null)
-                return null;
+                throw new NotFoundException("User account does not exist in the system.");
+
+            if (user.IsDeleted && user.IsApproved)
+                throw new AuthenticationFailedException("User account has been deleted.", "USER_DELETED");
+
+            if (user.IsDeleted && !user.IsApproved)
+                throw new AuthenticationFailedException("User account has been rejected.", "USER_REJECTED");
+
+            if (!user.IsApproved && !user.IsDeleted)
+                throw new AuthenticationFailedException("User account is not approved.", "NOT_APPROVED");
 
             LoginResponseDTO loginResponse = new LoginResponseDTO
             {

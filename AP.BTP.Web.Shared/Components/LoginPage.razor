@@ -81,6 +81,7 @@
     /// <summary>
     /// Handles form submission when all fields are valid.
     /// Sends the login request to the backend and saves the response tokens in the cache to be used in the /auth/login-callback endpoint.
+    /// if an error occurs, it sets the appropriate error message.
     /// </summary>
     private async Task HandleValidSubmit()
     {
@@ -95,7 +96,22 @@
             HttpResponseMessage? response = await client.PostAsJsonAsync("user/login", loginDetails);
             if (!response.IsSuccessStatusCode)
             {
-                errorMessage = await response.Content.ReadAsStringAsync();
+                errorMessage = "Er is een fout opgetreden tijdens het inloggen.";
+
+                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+
+                if (errorResponseInfo == null)
+                    return;
+
+                errorMessage = errorResponseInfo.ErrorCode switch
+                {
+                    "INVALID_CREDENTIALS" => "Geen toegang. Ongeldige e-mail of wachtwoord.",
+                    "NOT_APPROVED" => "Geen toegang. Je bent nog niet goedgekeurd",
+                    "USER_REJECTED" => "Geen toegang. Je registratie werd afgewezen",
+                    "USER_DELETED" => "Geen toegang. Je account werd verwijderd",
+                    _ => errorMessage
+                };
+
                 return;
             }
 

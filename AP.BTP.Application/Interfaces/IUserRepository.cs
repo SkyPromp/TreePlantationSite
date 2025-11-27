@@ -19,6 +19,15 @@ namespace AP.BTP.Application.Interfaces
         Task<User?> GetUserByAuth0Id(string Auth0Id);
 
         /// <summary>
+        /// Retrieves a <see cref="User"/> entity by its Auth0 identifier, also if the user is deleted.
+        /// </summary>
+        /// <param name="Auth0Id">The Auth0 ID of the user.</param>
+        /// <returns>
+        /// A task that returns the <see cref="User"/> if found; otherwise, <c>null</c>.
+        /// </returns>
+        Task<User?> GetUserByAuth0IdIncludingDeleted(string auth0UserId);
+
+        /// <summary>
         /// Retrieves a paginated list of all approved users matching the specified search term.
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
