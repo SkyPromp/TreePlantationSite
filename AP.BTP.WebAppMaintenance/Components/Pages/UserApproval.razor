@@ -315,7 +315,7 @@
     {
         currentPage = page;
 
-        string url = $"UserManagement/pending?pageNr={page}&pageSize={pageSize}";
+        string url = $"User/pending?pageNr={page}&pageSize={pageSize}";
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
@@ -331,7 +331,7 @@
     {
         isLoading = true;
 
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = selectedRole });
+        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDTO() { Role = selectedRole });
 
         if (responseMessage.IsSuccessStatusCode)
         {
@@ -346,8 +346,7 @@
 
             UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
 
-            await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
-            Console.WriteLine("UserManagement/users/{user.Id}/sitesUserManagement/users/{user.Id}/sites");
+            await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
 
             CancelEditUser();
 
@@ -472,7 +471,7 @@
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/{selectedUserId}");
+            HttpResponseMessage response = await client.DeleteAsync($"user/{selectedUserId}");
 
             if (response.IsSuccessStatusCode)
             {

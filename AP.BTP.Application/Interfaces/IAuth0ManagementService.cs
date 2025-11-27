@@ -9,20 +9,6 @@ namespace AP.BTP.Application.Interfaces
     public interface IAuth0ManagementService
     {
         /// <summary>
-        /// Retrieves a specific user from Auth0 by their unique Auth0 identifier.
-        /// </summary>
-        /// <param name="auth0Id">The unique Auth0 identifier of the user.</param>
-        /// <returns>A task that returns the <see cref="Auth0User"/> if found; otherwise, null.</returns>
-        Task<Auth0UserDTO?> GetUserByIdAsync(string auth0Id);
-
-        /// <summary>
-        /// Deletes a user from Auth0.
-        /// </summary>
-        /// <param name="userId">The unique identifier of the user to delete.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        Task DeleteUserAsync(string userId);
-
-        /// <summary>
         /// Creates a user in Auth0.
         /// </summary>
         /// <param name="username">The name of the user to be created.</param>

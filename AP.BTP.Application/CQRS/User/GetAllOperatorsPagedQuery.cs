@@ -64,13 +64,6 @@ namespace AP.BTP.Application.CQRS.User
 
             IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
 
-            foreach (UserDTO user in users)
-            {
-                Auth0UserDTO? auth0user = await auth0.GetUserByIdAsync(user.Auth0Id);
-                user.FirstName = auth0user?.username ?? string.Empty;
-                user.Email = auth0user?.email ?? string.Empty;
-            }
-
             return new PagedResponseDTO<UserDTO>
             {
                 Items = users,

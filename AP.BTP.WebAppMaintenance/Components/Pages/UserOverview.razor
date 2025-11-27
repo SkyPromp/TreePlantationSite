@@ -317,7 +317,7 @@
     {
         currentPage = page;
 
-        string url = $"UserManagement/users?pageNr={page}&pageSize={pageSize}";
+        string url = $"user/approved?pageNr={page}&pageSize={pageSize}";
 
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
@@ -362,7 +362,7 @@
     /// </summary>
     private async Task LoadRequestsCount()
     {
-        PagedResponseDTO<Auth0UserDTO>? response = await client.GetFromJsonAsync<PagedResponseDTO<Auth0UserDTO>>("UserManagement/pending");
+        PagedResponseDTO<UserDTO>? response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>("User/pending");
         requestsCount = response?.TotalItems ?? 0;
         StateHasChanged();
     }
@@ -409,7 +409,7 @@
         if (site2.HasValue)
             selectedSites.Add(site2.Value);
 
-        await client.PutAsJsonAsync($"UserManagement/users/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
+        await client.PutAsJsonAsync($"user/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
 
         CancelEditUser();
 
@@ -487,7 +487,7 @@
 
         try
         {
-            await client.DeleteAsync($"UserManagement/users/{selectedUser!.Id}");
+            await client.DeleteAsync($"user/{selectedUser!.Id}");
             await LoadPage(currentPage);
             StateHasChanged();
         }

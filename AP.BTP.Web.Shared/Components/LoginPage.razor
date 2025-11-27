@@ -93,7 +93,7 @@
                 return;
             }
 
-            HttpResponseMessage? response = await client.PostAsJsonAsync("user/login", loginDetails);
+            HttpResponseMessage? response = await client.PostAsJsonAsync("user/auth/login", loginDetails);
             if (!response.IsSuccessStatusCode)
             {
                 errorMessage = "Er is een fout opgetreden tijdens het inloggen.";

@@ -10,15 +10,6 @@ namespace AP.BTP.Application.Interfaces
     public interface IUserRepository: IGenericRepository<User>
     {
         /// <summary>
-        /// Retrieves a <see cref="User"/> entity by its Auth0 identifier.
-        /// </summary>
-        /// <param name="Auth0Id">The Auth0 ID of the user.</param>
-        /// <returns>
-        /// A task that returns the <see cref="User"/> if found; otherwise, <c>null</c>.
-        /// </returns>
-        Task<User?> GetUserByAuth0Id(string Auth0Id);
-
-        /// <summary>
         /// Retrieves a <see cref="User"/> entity by its Auth0 identifier, also if the user is deleted.
         /// </summary>
         /// <param name="Auth0Id">The Auth0 ID of the user.</param>

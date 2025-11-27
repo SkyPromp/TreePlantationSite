@@ -130,63 +130,6 @@ namespace AP.BTP.Infrastructure.Auth0
         }
 
         /// <summary>
-        /// Retrieves a user from Auth0 by their user ID.
-        /// </summary>
-        /// <param name="userId">The Auth0 user ID.</param>
-        /// <returns>A <see cref="Task{Auth0User}"/> representing the user, or null if not found.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the request fails for other reasons.</exception>
-        public async Task<Auth0UserDTO?> GetUserByIdAsync(string userId)
-        {
-            string token = await GetManagementTokenAsync();
-
-            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
-            RestRequest request = new RestRequest();
-            request.Method = Method.Get;
-            request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
-
-            RestResponse response = await client.ExecuteAsync(request);
-
-            if (!response.IsSuccessful)
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return null;
-                }
-
-                throw new InvalidOperationException($"Failed to get user: {response.StatusCode} - {response.Content}");
-            }
-
-            Auth0UserDTO? user = JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            return user;
-        }
-
-        /// <summary>
-        /// Deletes a user in Auth0 by their user ID.
-        /// </summary>
-        /// <param name="userId">The Auth0 user ID to delete.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if deletion fails.</exception>
-        public async Task DeleteUserAsync(string userId)
-        {
-            string token = await GetManagementTokenAsync();
-
-            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
-            RestRequest request = new RestRequest();
-            request.Method = Method.Delete;
-            request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
-
-            RestResponse response = await client.ExecuteAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.NoContent)
-            {
-                throw new InvalidOperationException($"Failed to delete user: {response.StatusCode} - {response.Content}");
-            }
-        }
-
-        /// <summary>
         /// Creates a new user in Auth0.
         /// </summary>
         /// <param name="username">The user's name</param>

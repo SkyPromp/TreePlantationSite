@@ -4,7 +4,7 @@ using AP.BTP.Contracts.Enums;
 using AutoMapper;
 using MediatR;
 
-namespace AP.BTP.Application.CQRS.Auth0User
+namespace AP.BTP.Application.CQRS.User
 {
     /// <summary>
     /// Represents a command to approve a user in the system by assigning a specified role.

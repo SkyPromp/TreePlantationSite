@@ -3,7 +3,7 @@ using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using MediatR;
 
-namespace AP.BTP.Application.CQRS.Auth0User
+namespace AP.BTP.Application.CQRS.User
 {
     /// <summary>
     /// Represents a query to retrieve a paged list of unapproved users, optionally filtered by a search term.
@@ -55,6 +55,8 @@ namespace AP.BTP.Application.CQRS.Auth0User
         /// </returns>
         public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
+            if (request.Search == null) request.Search = "";
+
             (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
 
             IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);

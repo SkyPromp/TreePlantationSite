@@ -175,7 +175,7 @@
     {
         currentPage = page;
 
-        string url = $"UserManagement/users/operators?pageNr={page}&pageSize={pageSize}";
+        string url = $"user/operators?pageNr={page}&pageSize={pageSize}";
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 

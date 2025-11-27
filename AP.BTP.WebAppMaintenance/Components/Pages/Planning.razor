@@ -291,7 +291,7 @@
 
         try
         {
-            UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"usermanagement/users/{this.userId}");
+            UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"user/{this.userId}");
 
             if (response != null)
             {
