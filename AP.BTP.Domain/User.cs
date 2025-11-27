@@ -1,4 +1,5 @@
-﻿using AP.BTP.Domain.Interfaces;
+﻿using AP.BTP.Contracts.Enums;
+using AP.BTP.Domain.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace AP.BTP.Domain
@@ -38,6 +39,16 @@ namespace AP.BTP.Domain
         /// Gets or sets the email address of the user.
         /// </summary>
         public string Email { get; set; } = string.Empty;
+
+        /// <summary>
+        /// gets or sets a value indicating whether the user is approved. default is false.
+        /// </summary>
+        public bool IsApproved { get; set; } = false;
+
+        /// <summary>
+        /// gets or sets the role of the user. default is null
+        /// </summary>
+        public UserRole? Role { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the collection of plantation sites associated with the user.

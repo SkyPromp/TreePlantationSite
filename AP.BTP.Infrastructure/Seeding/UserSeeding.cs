@@ -1,4 +1,5 @@
-﻿using AP.BTP.Domain;
+﻿using AP.BTP.Contracts.Enums;
+using AP.BTP.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AP.BTP.Infrastructure.Seeding
@@ -25,8 +26,42 @@ namespace AP.BTP.Infrastructure.Seeding
         {
             List<User> users = new List<User>
             {
-                new User { Id = 1, Auth0Id = "auth0|user1", FirstName = "Alice", Email = "alice@example.com", IsDeleted = false },
-                new User { Id = 2, Auth0Id = "auth0|user2", FirstName = "Bob", Email = "bob@example.com", IsDeleted = false }
+                new User
+                {
+                    Id = 1,
+                    Auth0Id = "auth0|68f5f3c8fa9e243c35508427",
+                    FirstName = "Admin1",
+                    LastName = "Lastname",
+                    PhoneNumber = "0123456789",
+                    Email = "admin123@admin.admin",
+                    IsApproved = true,
+                    Role = UserRole.Admin,
+                    IsDeleted = false,
+                },
+                new User
+                {
+                    Id = 2,
+                    Auth0Id = "auth0|690db2550eb8c001baeaeb22",
+                    FirstName = "Manager1",
+                    LastName = "Lastname",
+                    PhoneNumber = "0123456789",
+                    Email = "manager123@manager.manager",
+                    IsApproved = true,
+                    Role = UserRole.Manager,
+                    IsDeleted = false,
+                },
+                new User
+                {
+                    Id = 3,
+                    Auth0Id = "auth0|68f7f831f5bc833fc99fca15",
+                    FirstName = "Operator1",
+                    LastName = "Lastname",
+                    PhoneNumber = "0123456789",
+                    Email = "operator123@operator.operator",
+                    IsApproved = true,
+                    Role = UserRole.Operator,
+                    IsDeleted = false,
+                },
             };
 
             builder.HasData(users);

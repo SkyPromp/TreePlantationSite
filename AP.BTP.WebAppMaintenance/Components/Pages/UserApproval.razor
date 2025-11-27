@@ -5,6 +5,7 @@
 @using System.Drawing
 @using System.Text.Json
 @using System.Text.Encodings.Web
+@using AP.BTP.Contracts.Enums
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Wachtende gebruikers</PageTitle>
 
@@ -22,13 +23,8 @@
         <TextInput @bind-Value="@searchText"
                    @oninput="OnSearchChanged"
                    TextAlignment="Alignment.Start"
-                   Placeholder="zoek e-mail"
-                   Class="@(showSearchWarning ? "border-danger" : "")"
+                   Placeholder="Zoek gebruikers"
                    Style="width: 15vw; border-width: 2px;" />
-        @if (showSearchWarning)
-        {
-            <small class="text-danger mt-1">Voer minimaal 3 tekens in</small>
-        }
     </div>
 </div>
 <div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
@@ -42,31 +38,31 @@
             <div class="text-center">Goedkeuring</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
-            @foreach (List<Auth0UserDTO> row in Rows)
+            @foreach (List<UserDTO> row in Rows)
             {
                 <div class="row">
-                    @foreach (Auth0UserDTO item in row)
+                    @foreach (UserDTO item in row)
                     {
                         <div class="p-2">
                             <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
                                 <CardBody Class="p-0 d-grid align-items-center"
                                           Style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem;">
-                                    <CardText class="m-0">@item.username</CardText>
+                                    <CardText class="m-0">@item.FirstName @item.LastName</CardText>
                                     <CardText class="m-0">
-                                        <a href="mailto:@item.email" style="text-decoration:none; color:#0d6efd;">
-                                            @item.email
+                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                                            @item.Email
                                         </a>
                                     </CardText>
-                                    <CardText class="m-0">123456456789</CardText>
+                                    <CardText class="m-0">@item.PhoneNumber</CardText>
                                     <div class="p-1">
                                         <Button title="Gebruiker goedkeuren"
                                                 Class="btn btn-success btn-sm"
-                                                @onclick="() => { this.showEditUser = true; selectedUserId = item.user_id; }">
+                                                @onclick="() => { this.showEditUser = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.Check2" />
                                         </Button>
                                         <Button title="Gebruiker afwijzen"
                                                 Class="btn btn-danger btn-sm"
-                                                @onclick="() => { this.showDeleteConfirmation = true; selectedUserId = item.user_id; }">
+                                                @onclick="() => { this.showDeleteConfirmation = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.X" />
                                         </Button>
                                     </div>
@@ -101,13 +97,13 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
             <h5>Selecteer de rol die aan deze gebruiker moet worden toegewezen</h5>
-            <select @bind="this.roleId" class="form-select mb-3">
-                @foreach (Auth0RoleDTO auth0Role in this.roles)
+            <select @bind="this.selectedRole" class="form-select mb-3">
+                @foreach (UserRole role in Enum.GetValues<UserRole>())
                 {
-                    <option value="@auth0Role.Id">@auth0Role.Name</option>
+                    <option value="@(role.ToString())">@role.ToString()</option>
                 }
             </select>
-            @if (roles.FirstOrDefault(r => r.Id == roleId)?.Name == "Operator")
+            @if (selectedRole == UserRole.Operator.ToString())
             {
                 <h5>Selecteer de plantagelocaties die aan deze gebruiker moeten worden toegewezen</h5>
                 <p>Plantagelocatie 1</p>
@@ -142,7 +138,7 @@
                         <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
                     </div>
                     <div class="col">
-                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(roleId)">Bevestig</button>
+                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestig</button>
                     </div>
                 </div>
             }
@@ -201,14 +197,9 @@
     private string? searchText = null;
 
     /// <summary>
-    /// Indicates whether a warning should be displayed when the search text is too short.
-    /// </summary>
-    private bool showSearchWarning = false;
-
-    /// <summary>
     /// The paginated response containing pending users retrieved from the backend.
     /// </summary>
-    PagedResponseDTO<Auth0UserDTO>? response;  // TODO just use IEnumerable<...> not a respone
+    PagedResponseDTO<UserDTO>? response;  // TODO just use IEnumerable<...> not a respone
 
     /// <summary>
     /// The current page index of the user list being displayed.
@@ -272,14 +263,14 @@
     private int? site2;
 
     /// <summary>
-    /// The selected role ID assigned to the user during approval.
+    /// The selected role assigned to the user during approval.
     /// </summary>
-    private string roleId = "";
+    private string selectedRole = "";
 
     /// <summary>
-    /// The selected role ID assigned to the user during approval.
-    /// </summary>    private string roleId = "";
-    private string selectedUserId = "";
+    /// The selected user ID during approval.
+    /// </summary>
+    private int? selectedUserId;
 
     /// <summary>
     /// Indicates whether the success toast notification should be displayed.
@@ -290,11 +281,6 @@
     /// The opacity level of the success toast for fade-in/out animation.
     /// </summary>
     private double toastOpacity = 1.0;
-
-    /// <summary>
-    /// A list of available Auth0 roles loaded from the API.
-    /// </summary>
-    private IEnumerable<Auth0RoleDTO> roles = new List<Auth0RoleDTO>();
 
     /// <summary>
     /// Indicates whether the component is performing a background operation (e.g., approving a user).
@@ -318,41 +304,37 @@
 
             await LoadPage(1);
             await LoadPlantationSites();
-            await LoadRoles();
         }
     }
 
     /// <summary>
     /// Loads a specific page of pending users from the API.
-    /// Applies search filters if the search text length is valid (≥ 3 characters).
     /// </summary>
     /// <param name="page">The page number to load.</param>
     private async Task LoadPage(int page)
     {
         currentPage = page;
 
-        string url = $"UserManagement/pending?pageNr={page}&pageSize={pageSize}";
-        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length >= 3)
-            url += $"&search={Uri.EscapeDataString(searchText)}";
+        string url = $"User/pending?pageNr={page}&pageSize={pageSize}";
+        if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<Auth0UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
 
     /// <summary>
-    /// Approves a selected pending user by assigning a role and plantation sites.
+    /// Approves a selected pending user by assigning a role and optionally plantation sites.
     /// Sends requests to update the user in Auth0 and link them to plantation sites.
     /// </summary>
     private async Task ApproveUser()
     {
         isLoading = true;
 
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"UserManagement/users/auth/{selectedUserId}/approval", new ApproveUserDTO() { Role = roleId });
+        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDTO() { Role = selectedRole });
 
         if (responseMessage.IsSuccessStatusCode)
         {
-            await Task.Delay(500); // small delay to ensure auth0 has processed the change
             await LoadPage(currentPage);
             StateHasChanged();
 
@@ -364,8 +346,7 @@
 
             UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
 
-            await client.PutAsJsonAsync($"UserManagement/users/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
-            Console.WriteLine("UserManagement/users/{user.Id}/sitesUserManagement/users/{user.Id}/sites");
+            await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
 
             CancelEditUser();
 
@@ -383,7 +364,6 @@
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchText = e.Value?.ToString()?.Trim();
-        showSearchWarning = !string.IsNullOrEmpty(searchText) && searchText.Length < 3;
         debounceTimer?.Stop();
         debounceTimer?.Dispose();
 
@@ -404,8 +384,8 @@
     /// <summary>
     /// Splits the list of users into rows for grid-based rendering in the UI.
     /// </summary>
-    private IEnumerable<List<Auth0UserDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<Auth0UserDTO>())
+    private IEnumerable<List<UserDTO>> Rows =>
+    (response?.Items ?? Enumerable.Empty<UserDTO>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
@@ -440,44 +420,15 @@
     }
 
     /// <summary>
-    /// Loads the list of available roles from the API to be assigned to users during approval.
-    /// </summary>
-    private async Task LoadRoles()
-    {
-        if (this.client == null) return;
-
-        try
-        {
-            IEnumerable<Auth0RoleDTO>? response;
-
-            response = await this.client.GetFromJsonAsync<IEnumerable<Auth0RoleDTO>>("UserManagement/Roles");
-
-            if (response != null)
-            {
-                this.roles = response;
-                StateHasChanged();
-            }
-            else
-            {
-                this.errorMessage = "Something went wrong when loading in the roles";
-            }
-        }
-        catch (Exception e)
-        {
-            this.errorMessage = e.Message;
-        }
-    }
-
-    /// <summary>
     /// Cancels the current user edit or approval operation and resets form state.
     /// </summary>
     private void CancelEditUser()
     {
         this.showEditUser = false;
-        this.selectedUserId = "";
+        this.selectedUserId = null;
         this.site1 = null;
         this.site2 = null;
-        this.roleId = "";
+        this.selectedRole = "";
         this.showDeleteConfirmation = false;
     }
 
@@ -509,22 +460,21 @@
     }
 
     /// <summary>
-    /// Rejects a pending user by sending a deletion request to the API and Auth0.
+    /// Rejects a pending user by sending a deletion request.
     /// Refreshes the user list afterward.
     /// </summary>
     private async Task RejectUser()
     {
         isLoading = true;
-        if (string.IsNullOrWhiteSpace(selectedUserId))
+        if (selectedUserId == null)
             return;
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"UserManagement/users/auth/{selectedUserId}");
+            HttpResponseMessage response = await client.DeleteAsync($"user/{selectedUserId}");
 
             if (response.IsSuccessStatusCode)
             {
-                await Task.Delay(500); // small delay to ensure auth0 has processed the change
                 await LoadPage(currentPage);
                 StateHasChanged();
             }

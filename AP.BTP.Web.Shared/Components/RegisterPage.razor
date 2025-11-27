@@ -148,7 +148,7 @@
                 return;
             }
 
-            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user", this.newUser);
+            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
 
             if (response.IsSuccessStatusCode)
             {

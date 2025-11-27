@@ -50,14 +50,20 @@ namespace AP.BTP.Infrastructure.Context
                 .WithMany(ti => ti.TaskLists)
                 .HasForeignKey(zo => zo.ZoneId);
 
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>();
+
             // Seeding
             modelBuilder.Entity<PlantationSite>().Seed();
             modelBuilder.Entity<Tree>().Seed();
             modelBuilder.Entity<User>().Seed();
-            
+            // TODO: Seed Zone with correct PlantationSite relation
+
             modelBuilder.Entity("PlantationSiteUser").HasData(
-                new { PlantationSitesId = 1, UsersId = 1 },
-                new { PlantationSitesId = 2, UsersId = 1 }
+                new { PlantationSitesId = 1, UsersId = 3 },
+                new { PlantationSitesId = 2, UsersId = 3 }
             );
         }
     }

@@ -1,4 +1,7 @@
-﻿namespace AP.BTP.WebAppMaintenance.Extentions
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+
+namespace AP.BTP.Web.Shared.Extentions
 {
     /// <summary>
     /// Provides middleware extension methods for handling unauthenticated user redirection.

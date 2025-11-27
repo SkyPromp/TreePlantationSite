@@ -1,9 +1,10 @@
 ﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
+using AP.BTP.Contracts.Enums;
 using AutoMapper;
 using MediatR;
 
-namespace AP.BTP.Application.CQRS.Auth0User
+namespace AP.BTP.Application.CQRS.User
 {
     /// <summary>
     /// Represents a command to approve a user in the system by assigning a specified role.
@@ -16,7 +17,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
         /// <summary>
         /// The unique identifier of the user to approve.
         /// </summary>
-        public required string UserId { get; set; }
+        public required int UserId { get; set; }
 
         /// <summary>
         /// The role to assign to the approved user.
@@ -29,7 +30,7 @@ namespace AP.BTP.Application.CQRS.Auth0User
     /// </summary>
     public class ApproveUserCommandHandler : IRequestHandler<ApproveUserCommand, UserDTO?>
     {
-        private readonly IAuth0ManagementService _auth0;
+        private readonly IAuth0ManagementService auth0;
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
@@ -41,36 +42,36 @@ namespace AP.BTP.Application.CQRS.Auth0User
         /// <param name="mapper">The mapper used to convert domain entities to DTOs.</param>
         public ApproveUserCommandHandler(IAuth0ManagementService auth0, IUnitOfWork uow, IMapper mapper)
         {
-            _auth0 = auth0;
+            this.auth0 = auth0;
             this.uow = uow;
             this.mapper = mapper;
         }
 
         /// <summary>
-        /// Handles the <see cref="ApproveUserCommand"/> by approving the user in Auth0,
-        /// creating a new domain user if one does not already exist, and returning the corresponding <see cref="UserDTO"/>.
+        /// Handles the <see cref="ApproveUserCommand"/> by approving the user and assigning the specified role.
         /// </summary>
         /// <param name="request">The command containing user approval details.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>
-        /// A <see cref="UserDTO"/> representing the approved user, or <c>null</c> if the user already exists.
+        /// A <see cref="UserDTO"/> representing the approved user, or <c>null</c>.
         /// </returns>
         public async Task<UserDTO?> Handle(ApproveUserCommand request, CancellationToken cancellationToken)
         {
-            await _auth0.ApproveUserAsync(request.UserId, request.Role);
-
-            Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.UserId);
+            Domain.User? user = await uow.UserRepository.GetById(request.UserId);
 
             if (user == null)
-            {
-                Domain.User newUser = new Domain.User { Auth0Id = request.UserId };
-                await uow.UserRepository.Create(newUser);
-                await uow.Commit();
+                return null;
 
-                return mapper.Map<UserDTO>(newUser);
-            }
+           await auth0.AssignRoleToUserAsync(user.Auth0Id, request.Role);
 
-            return null;
+            user.IsApproved = true;
+            user.Role = Enum.Parse<UserRole>(request.Role, true);
+
+            uow.UserRepository.Update(user);
+
+            await uow.Commit();
+
+            return mapper.Map<UserDTO>(user); ;
         }
     }
 }

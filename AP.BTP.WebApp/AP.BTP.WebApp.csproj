@@ -17,4 +17,8 @@
     <ProjectReference Include="..\AP.BTP.Web.Shared\AP.BTP.Web.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extentions\" />
+  </ItemGroup>
+
 </Project>
