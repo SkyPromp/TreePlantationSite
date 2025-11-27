@@ -29,17 +29,5 @@
         /// Optional size of the zone, typically in square meters or relevant unit.
         /// </summary>
         public int? Size { get; set; }
-
-        /// <summary>
-        /// Creates a shallow copy of the current <see cref="ZoneDTO"/>.
-        /// </summary>
-        /// <returns>A new <see cref="ZoneDTO"/> instance with the same property values as the original.</returns>
-        public ZoneDTO CloneZone() => new ZoneDTO() { 
-            Id = this.Id, 
-            PlantationSiteId = this.PlantationSiteId,
-            TreeId = this.TreeId,
-            Name = this.Name,
-            Size = this.Size
-        };
     }
 }

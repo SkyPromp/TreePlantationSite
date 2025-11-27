@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a data transfer object (DTO) for a task item, including its identifier, title, and description.
     /// </summary>
-    public class TaskItemDTO
+    public record TaskItemDTO
     {
         /// <summary>
         /// The unique identifier of the task item.
@@ -30,7 +30,14 @@
         /// </summary>
         public required int TaskListId { get; set; }
 
+        /// <summary>
+        /// The start time of this task item.
+        /// </summary>
         public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// The end time of this task item.
+        /// </summary>
         public DateTime? EndTime { get; set; }
     }
 }

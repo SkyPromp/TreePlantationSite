@@ -4,7 +4,7 @@ namespace AP.BTP.Contracts.DTOs
     /// Represents a generic paginated response that contains a subset of items and pagination metadata.
     /// </summary>
     /// <typeparam name="T">The type of items contained in the paged response.</typeparam>
-    public class PagedResponseDTO<T>
+    public record PagedResponseDTO<T>
     {
         /// <summary>
         /// The collection of items for the current page.
