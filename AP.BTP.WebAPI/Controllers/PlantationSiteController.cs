@@ -50,7 +50,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The ID of the plantation site.</param>
         /// <returns>The requested <see cref="PlantationSiteDTO"/> if found.</returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Operator")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPlantationSiteById(int id)
         {

@@ -8,13 +8,19 @@
 
 <div class="d-flex mx-4 justify-content-between align-items-center gap-0">
     <h3 class="p-0" @onclick="() => UpdateDate(-1)">←</h3>
-    <h3 class="text-center">Tasks of @($"{this.selectedDate:yyyy-MM-dd}")</h3>
+    <h3 class="text-center">Takenlijst @($"{this.selectedDate:yyyy-MM-dd}")</h3>
     <h3 class="p-0" @onclick="() => UpdateDate(1)">→</h3>
+</div>
+
+<div class="text-center my-3">
+    <button class="btn btn-light" @onclick="ShowGroundPlan">
+        <i class="bi bi-map fs-5"></i>  Zie locatie
+    </button>
 </div>
 
 <div class="card border-0">
     <div class="p-3 d-flex flex-column gap-2">
-        @foreach(TaskItemDTO task in todayTasks?.TaskItems ?? [])
+        @foreach (TaskItemDTO task in todayTasks?.TaskItems ?? [])
         {
             <div class="card py-2">
                 <div class="container">
@@ -27,11 +33,13 @@
                             @if (task.StartTime == null)
                             {
                                 <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
-                            } else if (task.EndTime == null)
+                            }
+                            else if (task.EndTime == null)
                             {
                                 <button @onclick="() => ConfirmEndTask(task)" class="btn btn-danger">Stop</button>
                                 <small>@($"Startuur: {task.StartTime:HH:mm:ss}")</small>
-                            } else
+                            }
+                            else
                             {
                                 <button class="btn btn-secondary" disabled>Beëindigd</button>
                                 <small>@($"Totaalduur: {(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
@@ -49,14 +57,14 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
             <h5>Bent u zeker dat u deze <br /> taak wilt starten?</h5>
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelStartTask" class="btn btn-warning">Annuleer</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="StartTask" class="btn btn-danger">Bevestig</button>
-                    </div>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelStartTask" class="btn btn-warning">Annuleer</button>
                 </div>
+                <div class="col">
+                    <button @onclick="StartTask" class="btn btn-danger">Bevestig</button>
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -66,17 +74,66 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
             <h5>Bent u zeker dat u deze <br /> taak wilt stoppen?</h5>
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelEndTask" class="btn btn-warning">Annuleer</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="EndTask" class="btn btn-danger">Bevestig</button>
-                    </div>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="CancelEndTask" class="btn btn-warning">Annuleer</button>
                 </div>
+                <div class="col">
+                    <button @onclick="EndTask" class="btn btn-danger">Bevestig</button>
+                </div>
+            </div>
         </div>
     </div>
 }
+
+@if (this.showGroundPlan)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+         style="background: rgba(0,0,0,0.5); z-index: 10">
+
+        <div class="card shadow-lg p-4"
+             style="max-width: 850px; width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 12px;">
+
+            <h4 class="text-center fw-bold mb-4">
+                @currentSite?.Name
+            </h4>
+
+            @if (currentSite != null)
+            {
+                <div class="mb-4 p-3 border rounded bg-light">
+
+                    <p class="mb-1">
+                        <b>Adres:</b>
+                        @currentSite.Street @currentSite.HouseNumber,
+                        @currentSite.PostalCode @currentSite.City
+                    </p>
+
+                    <p><b>Zone: </b>@currentZone.Name</p>
+
+                </div>
+            }
+
+            <div class="text-center mb-3">
+                @if (!string.IsNullOrEmpty(groundPlanPreview))
+                {
+                    <img src="@groundPlanPreview"
+                         class="img-fluid rounded shadow-sm"
+                         style="max-height: 60vh; object-fit: contain;" />
+                }
+                else
+                {
+                    <p>Geen plattegrond gevonden.</p>
+                }
+            </div>
+
+            <div class="text-center mt-2">
+                <button class="btn btn-warning px-4" @onclick="() => showGroundPlan = false">Sluit</button>
+            </div>
+
+        </div>
+    </div>
+}
+
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
@@ -104,6 +161,14 @@
     private bool showEndConfirmation;
 
     private TaskItemDTO? selectedTask;
+
+    private bool showGroundPlan = false;
+
+    private string groundPlanPreview = string.Empty;
+
+    private PlantationSiteDTO? currentSite;
+
+    private ZoneDTO? currentZone;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -141,11 +206,13 @@
             if (response == null)
             {
                 this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de takenlijst.";
-            } else
+            }
+            else
             {
                 this.errorMessage = "";
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
             this.todayTasks = null;
@@ -178,7 +245,7 @@
 
     private async Task StartTask()
     {
-        if(this.client == null)
+        if (this.client == null)
         {
             this.errorMessage = "The client could not be found!";
             this.showStartConfirmation = false;
@@ -187,9 +254,9 @@
             return;
         }
 
-        if(this.selectedTask == null)
+        if (this.selectedTask == null)
         {
-            this.errorMessage = "The selected could not be found!";
+            this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
             this.showStartConfirmation = false;
             StateHasChanged();
 
@@ -199,14 +266,16 @@
         try
         {
             HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/started", this.selectedTask);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
                 this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
-            } else
+            }
+            else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
@@ -215,7 +284,7 @@
         this.showStartConfirmation = false;
         StateHasChanged();
     }
-    
+
     private void ConfirmEndTask(TaskItemDTO task)
     {
         this.selectedTask = task;
@@ -227,10 +296,10 @@
         this.selectedTask = null;
         this.showEndConfirmation = false;
     }
-    
+
     private async Task EndTask()
     {
-        if(this.client == null)
+        if (this.client == null)
         {
             this.errorMessage = "The client could not be found!";
             this.showEndConfirmation = false;
@@ -239,9 +308,9 @@
             return;
         }
 
-        if(this.selectedTask == null)
+        if (this.selectedTask == null)
         {
-            this.errorMessage = "The selected could not be found!";
+            this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
             this.showEndConfirmation = false;
             StateHasChanged();
 
@@ -251,14 +320,16 @@
         try
         {
             HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/ended", this.selectedTask);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 this.errorMessage = "";
                 this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
-            } else
+            }
+            else
                 this.errorMessage = await response.Content.ReadAsStringAsync();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
@@ -266,6 +337,78 @@
         this.selectedTask = null;
         this.showEndConfirmation = false;
         StateHasChanged();
+    }
+
+    private async Task ShowGroundPlan()
+    {
+        if (client == null)
+        {
+            errorMessage = "Client is null";
+            return;
+        }
+
+        if (todayTasks == null)
+        {
+            errorMessage = "Geen locatie beschikbaar op deze datum";
+            return;
+        }
+
+        try
+        {
+            currentSite =
+                await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{todayTasks.PlantationSiteId}");
+
+            if (currentSite == null)
+            {
+                errorMessage = "Site niet gevonden.";
+                return;
+            }
+
+            if (todayTasks.ZoneId.HasValue && currentSite.Zones != null)
+            {
+                currentZone = currentSite.Zones
+                    .FirstOrDefault(z => z.Id == todayTasks.ZoneId.Value);
+            }
+            else
+            {
+                currentZone = null;
+            }
+
+            if (string.IsNullOrWhiteSpace(currentSite.GroundPlan))
+            {
+                errorMessage = "Geen plategrond beschikbaar.";
+                groundPlanPreview = "";
+            }
+            else
+            {
+                await LoadImagePreview(client, currentSite.GroundPlan);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+        showGroundPlan = true;
+        StateHasChanged();
+    }
+
+
+    private async Task LoadImagePreview(HttpClient client, string fileName)
+    {
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
+            response.EnsureSuccessStatusCode();
+            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "image/jpeg";
+            groundPlanPreview = $"data:{contentType};base64,{Convert.ToBase64String(imageBytes)}";
+        }
+        catch
+        {
+            groundPlanPreview = string.Empty;
+        }
     }
 }
 
