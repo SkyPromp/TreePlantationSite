@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.WebApp", "AP.BTP.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.WebAppMaintenance", "AP.BTP.WebAppMaintenance\AP.BTP.WebAppMaintenance.csproj", "{5707E864-4CFD-4DA3-8F2A-7FE6A535A14F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Contracts", "AP.BTP.Contracts\AP.BTP.Contracts.csproj", "{CB16F3AA-7CDF-4BB9-92CD-C37F0793F627}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Contracts", "AP.BTP.Contracts\AP.BTP.Contracts.csproj", "{CB16F3AA-7CDF-4BB9-92CD-C37F0793F627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AP.BTP.Web.Shared", "AP.BTP.Web.Shared\AP.BTP.Web.Shared.csproj", "{EC2360EF-C2D8-49E6-873A-75969350EBCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AP.BTP.Web.Shared", "AP.BTP.Web.Shared\AP.BTP.Web.Shared.csproj", "{EC2360EF-C2D8-49E6-873A-75969350EBCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

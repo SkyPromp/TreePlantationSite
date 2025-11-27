@@ -18,5 +18,13 @@ namespace AP.BTP.Application.Interfaces
         /// A task that returns an enumerable of <see cref="TaskList"/> entities matching the specified criteria.
         /// </returns>
         Task<IEnumerable<TaskList>> GetAllByUserIdAndWeek(int userId, int year, int weekNumber);
+
+        /// <summary>
+        /// Retrieves all <see cref="TaskList"/> entities for a specific user on a specific date
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="date">The date of the tasklist.</param>
+        /// <returns>A collection of <see cref="TaskList"/> entities for the specified user and date.</returns>
+        Task<TaskList?> GetAllByUserIdAndDate(int userId, DateTime date);
     }
 }
