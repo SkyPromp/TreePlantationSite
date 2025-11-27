@@ -64,6 +64,11 @@ namespace AP.BTP.Application.CQRS.TaskItem
             if (taskItem.StartTime != null) throw new ValidationException($"The task has already been started. taskItemId={taskItem.Id}");
             if (taskItem.EndTime != null) throw new ValidationException($"Impossible state, the starttime is null and the endtime is not null. taskItemId={taskItem.Id}");
 
+            Domain.TaskList? taskList = await uow.TaskListRepository.GetByIdUntracked(request.TaskItem.TaskListId);
+
+            if (taskList == null) throw new ValidationException($"Impossible state, the taskList of the current (taskItem {request.TaskItem.Id}) is null. taskListId={request.TaskItem.TaskListId}");
+            if (taskList.TaskItems.Count(ti => ti.StartTime != null && ti.EndTime == null) != 0) throw new ValidationException("Cannot start multiple tasks at the same time from the same tasklist.");
+
             taskItem.StartTime = DateTime.Now;
 
             uow.TaskItemRepository.Update(taskItem);

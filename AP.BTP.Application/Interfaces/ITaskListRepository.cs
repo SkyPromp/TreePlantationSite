@@ -26,5 +26,13 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="date">The date of the tasklist.</param>
         /// <returns>A collection of <see cref="TaskList"/> entities for the specified user and date.</returns>
         Task<TaskList?> GetAllByUserIdAndDate(int userId, DateTime date);
+
+        /// <summary>
+        /// Retrieves a <see cref="TaskList"/> by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the <see cref="TaskList"/>.</param>
+        /// <returns>The <see cref="TaskList"/> with the specified ID.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the entity with the specified ID is not found or is deleted.</exception>
+        Task<TaskList?> GetByIdUntracked(int id);
     }
 }
