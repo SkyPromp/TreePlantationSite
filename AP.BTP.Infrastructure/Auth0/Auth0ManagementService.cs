@@ -70,89 +70,31 @@ namespace AP.BTP.Infrastructure.Auth0
         }
 
         /// <summary>
-        /// Approves a user by setting their metadata to approved and assigns a role.
-        /// </summary>
-        /// <param name="userId">The Auth0 user ID to approve.</param>
-        /// <param name="role">The role to assign to the user.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the approval or role assignment fails.</exception>
-        public async Task ApproveUserAsync(string userId, string role)
-        {
-            string token = await GetManagementTokenAsync();
-
-            RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}");
-            RestRequest request = new RestRequest();
-            request.Method = Method.Patch;
-            request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
-            request.AddJsonBody(new { app_metadata = new { approved = true } }); 
-
-            RestResponse response = await client.ExecuteAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new InvalidOperationException($"Failed to approve user: {response.StatusCode}");
-            }
-
-            await AssignRoleToUserAsync(userId, role);
-        }
-
-        /// <summary>
-        /// Retrieves all unapproved users with optional search and paging.
-        /// </summary>
-        /// <param name="pageNr">The page number to retrieve (1-based).</param>
-        /// <param name="pageSize">The number of items per page.</param>
-        /// <param name="search">Optional search string for filtering users by email.</param>
-        /// <returns>A <see cref="Task{Tuple}"/> containing the list of unapproved users and the total count.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the request fails.</exception>
-        public async Task<(IEnumerable<Auth0UserDTO> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
-        {
-            string token = await GetManagementTokenAsync();
-            string baseUrl = $"https://{_domain}/api/v2/users";
-            string query = $"q=app_metadata.approved:false";
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                query += $" AND email:*{search}*";
-            }
-
-            query += $"&search_engine=v3&page={pageNr - 1}&per_page={pageSize}&include_totals=true";
-
-            RestClient client = new RestClient(baseUrl);
-            RestRequest request = new RestRequest($"?{query}", Method.Get);
-            request.AddHeader("Authorization", $"Bearer {token}");
-            RestResponse response = await client.ExecuteAsync(request);
-
-            if (!response.IsSuccessful)
-            {
-                throw new InvalidOperationException("Failed to list users.");
-            }
-
-            using JsonDocument doc = JsonDocument.Parse(response.Content!);
-            JsonElement usersElement = doc.RootElement.GetProperty("users");
-            int totalCount = doc.RootElement.GetProperty("total").GetInt32();
-
-            List<Auth0UserDTO> users = JsonSerializer.Deserialize<List<Auth0UserDTO>>(usersElement.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-
-            return (users, totalCount);
-        }
-
-        /// <summary>
         /// Assigns a role to a specific user in Auth0.
         /// </summary>
         /// <param name="userId">The Auth0 user ID.</param>
         /// <param name="role">The role to assign.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         /// <exception cref="InvalidOperationException">Thrown if role assignment fails.</exception>
-        private async Task AssignRoleToUserAsync(string userId, string role)
+        public async Task AssignRoleToUserAsync(string userId, string role)
         {
             string token = await GetManagementTokenAsync();
+
+            IEnumerable<Auth0RoleDTO> roles = await GetRoles();
+
+            string? roleId = roles.FirstOrDefault(r => r.Name.Equals(role, StringComparison.OrdinalIgnoreCase))?.Id;
+
+            if (roleId == null)
+            {
+                throw new InvalidOperationException($"Role '{role}' not found in Auth0.");
+            }
+
             RestClient client = new RestClient($"https://{_domain}/api/v2/users/{Uri.EscapeDataString(userId)}/roles");
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddHeader("content-type", "application/json");
-            request.AddJsonBody(new { roles = new[] { role } });
+            request.AddJsonBody(new { roles = new[] { roleId } });
             RestResponse response = await client.ExecuteAsync(request);
 
             if (response.StatusCode != HttpStatusCode.NoContent)
@@ -166,7 +108,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// </summary>
         /// <returns>A <see cref="Task{IEnumerable{Auth0Role}}"/> containing the list of roles.</returns>
         /// <exception cref="InvalidOperationException">Thrown if retrieving roles fails.</exception>
-        public async Task<IEnumerable<Auth0RoleDTO>> GetRoles()
+        private async Task<IEnumerable<Auth0RoleDTO>> GetRoles()
         {
             string token = await GetManagementTokenAsync();
             RestClient client = new RestClient($"https://{_domain}/api/v2/roles");

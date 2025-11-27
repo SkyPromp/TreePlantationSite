@@ -31,30 +31,16 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Approves a user in Auth0 and assigns a role.
+        /// Approves a user in and assigns a role.
         /// </summary>
-        /// <param name="auth0Id">The Auth0 ID of the user to approve.</param>
+        /// <param name="userId">The ID of the user to approve.</param>
         /// <param name="approveUserDTO">DTO containing the role to assign.</param>
-        /// <returns>The approved <see cref="UserDTO"/> or NotFound if the user does not exist.</returns>
+        /// <returns>The approved <see cref="UserDTO"/>.</returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost("users/auth/{auth0Id}/approval")]
-        public async Task<IActionResult> Approve(string auth0Id, [FromBody] ApproveUserDTO approveUserDTO)
+        [HttpPost("users/auth/{userId}/approval")]
+        public async Task<IActionResult> Approve(int userId, [FromBody] ApproveUserDTO approveUserDTO)
         {
-            try
-            {
-                Console.WriteLine($"auth0id: {auth0Id}, approveUserDTO: {approveUserDTO.Role}");
-                UserDTO? user = await _mediator.Send(new ApproveUserCommand() { UserId = auth0Id, Role = approveUserDTO.Role });
-
-                if (user == null) return NotFound();
-
-                return Ok(user);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            return Ok();
+                return Ok(await _mediator.Send(new ApproveUserCommand() { UserId = userId, Role = approveUserDTO.Role }));
         }
 
         /// <summary>
@@ -92,17 +78,6 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Retrieves all roles defined in Auth0.
-        /// </summary>
-        /// <returns>List of roles.</returns>
-        [Authorize(Roles = "Admin")]
-        [HttpGet("roles")]
-        public async Task<IActionResult> GetAllRoles()
-        {
-            return Ok(await _mediator.Send(new GetAllRolesQuery()));
-        }
-
-        /// <summary>
         /// Retrieves a paged list of all approved users.
         /// </summary>
         /// <param name="pageNr">Page number (default 1).</param>
@@ -113,7 +88,7 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpGet("users")]
         public async Task<IActionResult> GetAllApprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
         {
-            return Ok(await _mediator.Send(new GetAllUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+            return Ok(await _mediator.Send(new GetAllApprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
         }
 
         /// <summary>

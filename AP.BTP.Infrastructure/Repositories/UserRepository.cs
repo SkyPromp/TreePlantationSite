@@ -65,17 +65,17 @@ namespace AP.BTP.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Retrieves a paged list of <see cref="User"/> entities with optional search filtering.
+        /// Retrieves a paged list of approved <see cref="User"/> entities with optional search filtering.
         /// </summary>
         /// <param name="pageNr">The page number (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by name or email.</param>
         /// <returns>A tuple containing the paged users and the total count.</returns>
-        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search)
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search)
         {
             IQueryable<User> query = dbSet
                 .Include(u => u.PlantationSites)
-                .Where(u => !u.IsDeleted)
+                .Where(u => !u.IsDeleted && u.IsApproved)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -107,6 +107,36 @@ namespace AP.BTP.Infrastructure.Repositories
             IQueryable<User> query = dbSet
                 .Include(u => u.PlantationSites)
                 .Where(u => !u.IsDeleted && u.PlantationSites.Any())
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u =>
+                    u.FirstName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<User> items = await query.Skip((pageNr - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
+        /// <summary>
+        /// Retrieves a paged list of unapproved <see cref="User"/> entities with optional search filtering.
+        /// </summary>
+        /// <param name="pageNr">The page number (1-based).</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="search">Optional search string to filter by name or email.</param>
+        /// <returns>A tuple containing the paged users and the total count.</returns>
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
+        {
+            IQueryable<User> query = dbSet
+                .Where(u => !u.IsDeleted && !u.IsApproved)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))

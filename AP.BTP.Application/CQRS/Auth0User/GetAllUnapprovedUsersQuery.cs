@@ -1,13 +1,14 @@
 ﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
+using AutoMapper;
 using MediatR;
 
 namespace AP.BTP.Application.CQRS.Auth0User
 {
     /// <summary>
-    /// Represents a query to retrieve a paged list of unapproved users from Auth0, optionally filtered by a search term.
+    /// Represents a query to retrieve a paged list of unapproved users, optionally filtered by a search term.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDTO<Auth0UserDTO>>
+    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDTO<UserDTO>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -26,36 +27,40 @@ namespace AP.BTP.Application.CQRS.Auth0User
     }
 
     /// <summary>
-    /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged collection of unapproved Auth0 users.
+    /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged collection of unapproved users.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponseDTO<Auth0UserDTO>>
+    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponseDTO<UserDTO>>
     {
-        private readonly IAuth0ManagementService _auth0;
+        private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetAllUnapprovedUsersPagedQueryHandler"/> class.
         /// </summary>
-        /// <param name="auth0">The Auth0 management service used to retrieve unapproved user data.</param>
-        public GetAllUnapprovedUsersPagedQueryHandler(IAuth0ManagementService auth0)
+        /// <param name="uow">The unit of work for database operations.</param>
+        /// <param name="mapper">The mapper used to convert domain entities to DTOs.</param>
+        public GetAllUnapprovedUsersPagedQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
-            _auth0 = auth0;
+            this.uow = uow;
+            this.mapper = mapper;
         }
 
         /// <summary>
-        /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged list of unapproved users from Auth0.
+        /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged list of users.
         /// </summary>
         /// <param name="request">The query containing pagination parameters and an optional search term.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>
         /// A <see cref="PagedResponse{T}"/> containing the unapproved users for the requested page and the total user count.
         /// </returns>
-        public async Task<PagedResponseDTO<Auth0UserDTO>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
-            (IEnumerable<Auth0UserDTO> items, int totalCount) = await _auth0.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search);
 
-            return new PagedResponseDTO<Auth0UserDTO>
+            IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
+            return new PagedResponseDTO<UserDTO>
             {
-                Items = items,
+                Items = users,
                 PageNumber = request.PageNr,
                 PageSize = request.PageSize,
                 TotalItems = totalCount
