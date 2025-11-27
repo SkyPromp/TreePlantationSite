@@ -5,6 +5,7 @@
 @using System.Text.Json
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.DTOs
+@using AP.BTP.Contracts.Enums
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Gebruikers</PageTitle>
 
@@ -137,7 +138,14 @@
                         <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
                     </div>
                     <div class="col">
-                        <button @onclick="UpdateUserSites" class="btn btn-secondary">Bevestig</button>
+                        @if (selectedUser.Role == UserRole.Operator)
+                        {
+                            <button @onclick="UpdateUserSites" class="btn btn-secondary">Bevestig</button>
+                        }
+                        else
+                        {
+                            <div>Je kan geen plantagelocaties aan deze gebruiker toewijzen omdat het geen operator is.</div>
+                        }
                     </div>
                 </div>
             }
