@@ -1,82 +1,16 @@
 @page "/view-file/{fileName}"
 @layout Layout.EmptyLayout
-@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 
-@if (fileData != null)
-{
-    <div class="h-100 d-flex justify-content-center align-items-center">
-        @if (FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-        {
-            <iframe class="w-100 h-100" src="@fileData">
-            </iframe>
-        }
-        else
-        {
-            <img src="@fileData" alt="@FileName"/>
-        }
-    </div>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger m-4 d-flex justify-content-center">
-        <div class="d-flex flex-column align-items-center">
-            <h4 class="alert-heading">Fout bij het laden van het bestand</h4>
-            <p class="text-danger">@errorMessage</p>
-        </div>
-    </div>
-}
-else
-{
-    <div class="d-flex justify-content-center align-items-center h-100" >
-        <div class="text-center">
-            <div class="spinner-border text-success"></div>
-            <p class="mt-3">Bestand laden...</p>
-        </div>
-    </div>
-}
-
 @code {
-    /// <summary>
-    /// The file name parameter from the URL route.
-    /// </summary>
     [Parameter] 
-    public string FileName { get; set; } = "";
-
-    /// <summary>
-    /// The file data as a base64 data URI.
-    /// </summary>
-    private string? fileData;
-
-    /// <summary>
-    /// Error message to display if file loading fails.
-    /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
-    /// Loads the file from the API when the component initializes.
-    /// </summary>
-    protected override async Task OnInitializedAsync()
+    public string? FileName { get; set; }
+    
+    protected override void OnInitialized()
     {
-        try
+        if (!string.IsNullOrEmpty(FileName))
         {
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-            HttpResponseMessage response = await client.GetAsync($"File/{FileName}");
-            
-            if (response.IsSuccessStatusCode)
-            {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-                string type = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-                fileData = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
-            }
-            else
-            {
-                errorMessage = $"Bestand niet gevonden (Status: {response.StatusCode})";
-            }
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Fout bij laden bestand: {ex.Message}";
+            NavigationManager.NavigateTo($"/api/FileProxy/{FileName}", forceLoad: true);
         }
     }
 }
