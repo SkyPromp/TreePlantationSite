@@ -1,8 +1,10 @@
 @page "/view-file/{fileName}"
 @layout Layout.EmptyLayout
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<PdfViewer DocumentUrl="@pdfUrl" Height="100vh" Width="100%" />
+<PdfViewer Url="@FileName" />
 
 @code {
     [Parameter] 
@@ -10,11 +12,11 @@
     
     private string? pdfUrl;
     
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
         if (!string.IsNullOrEmpty(FileName))
         {
-            pdfUrl = $"/api/FileProxy/{FileName}";
+            pdfUrl = $"{NavigationManager.BaseUri}api/FileProxy/{FileName}";
         }
     }
 }
