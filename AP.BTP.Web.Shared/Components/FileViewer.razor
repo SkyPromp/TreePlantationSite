@@ -1,16 +1,20 @@
 @page "/view-file/{fileName}"
 @layout Layout.EmptyLayout
-@inject NavigationManager NavigationManager
+@inject IHttpClientFactory HttpClientFactory
+
+<PdfViewer DocumentUrl="@pdfUrl" Height="100vh" Width="100%" />
 
 @code {
     [Parameter] 
     public string? FileName { get; set; }
     
-    protected override void OnInitialized()
+    private string? pdfUrl;
+    
+    protected override async Task OnParametersSetAsync()
     {
         if (!string.IsNullOrEmpty(FileName))
         {
-            NavigationManager.NavigateTo($"/api/FileProxy/{FileName}", forceLoad: true);
+            pdfUrl = $"/api/FileProxy/{FileName}";
         }
     }
 }
