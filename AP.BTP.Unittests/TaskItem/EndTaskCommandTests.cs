@@ -1,10 +1,9 @@
 ﻿using AP.BTP.Application.CQRS.TaskItem;
+using AP.BTP.Application.Exceptions;
 using AP.BTP.Application.Interfaces;
-using FluentValidation.TestHelper;
-using Moq;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
-using FluentValidation;
+using Moq;
 
 namespace AP.BTP.Unittests.TaskItem
 {
@@ -14,7 +13,6 @@ namespace AP.BTP.Unittests.TaskItem
         private Mock<IUnitOfWork> uowMock;
         private Mock<ITaskListRepository> taskListRepoMock;
         private Mock<ITaskItemRepository> taskItemRepoMock;
-        private EndTaskCommandValidator validator;
         private IMapper mapper;
 
         public EndTaskCommandTests()
@@ -25,8 +23,6 @@ namespace AP.BTP.Unittests.TaskItem
 
             uowMock.Setup(u => u.TaskListRepository).Returns(taskListRepoMock.Object);
             uowMock.Setup(u => u.TaskItemRepository).Returns(taskItemRepoMock.Object);
-
-            validator = new EndTaskCommandValidator(uowMock.Object);
 
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
@@ -41,69 +37,106 @@ namespace AP.BTP.Unittests.TaskItem
         public async Task Should_Have_Error_When_Not_Started()
         {
             TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
-            EndTaskCommand command = new EndTaskCommand() { TaskItem=taskItem };
-            TestValidationResult<EndTaskCommand> result = await validator.TestValidateAsync(command);
+            EndTaskCommand command = new EndTaskCommand() { TaskItem = taskItem };
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(uowMock.Object, mapper);
 
-            EndTaskCommandHandler handler = new EndTaskCommandHandler(this.uowMock.Object, this.mapper);
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"The task has not yet been started. taskItemId={taskItem.Id}", ex.Message);
-            }
+            Assert.AreEqual("TASK_NOT_STARTED", ex.ErrorCode);
         }
 
         [TestMethod]
         public async Task Should_Have_Error_When_EndTime_Is_Not_Null()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime=DateTime.Now.AddMinutes(-1), EndTime = DateTime.Now };
-            EndTaskCommand command = new EndTaskCommand() { TaskItem=taskItem };
-            TestValidationResult<EndTaskCommand> result = await validator.TestValidateAsync(command);
+            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now.AddMinutes(-1), EndTime = DateTime.Now };
+            EndTaskCommand command = new EndTaskCommand() { TaskItem = taskItem };
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(uowMock.Object, mapper);
 
-            EndTaskCommandHandler handler = new EndTaskCommandHandler(this.uowMock.Object, this.mapper);
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"The task has already been ended. taskItemId={taskItem.Id}", ex.Message);
-            }
+            Assert.AreEqual("TASK_ALREADY_ENDED", ex.ErrorCode);
         }
 
         [TestMethod]
-        public async Task Should_Have_Error_When_Task_EndTime_Is_After_Task_StartTime()
+        public async Task Should_Have_Error_When_StartTime_In_Future()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
-            EndTaskCommand command = new EndTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1, StartTime=DateTime.Now.AddMinutes(15) } };
-            TestValidationResult<EndTaskCommand> result = await validator.TestValidateAsync(command);
+            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now.AddMinutes(15) };
+            EndTaskCommand command = new EndTaskCommand { TaskItem = taskItem };
 
-            EndTaskCommandHandler handler = new EndTaskCommandHandler(this.uowMock.Object, this.mapper);
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(uowMock.Object, mapper);
 
-            try
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_INVALID_TIME", ex.ErrorCode);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_TaskList_Is_Null()
+        {
+            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now.AddMinutes(-1) };
+            taskListRepoMock.Setup(r => r.GetByIdUntracked(taskItem.TaskListId)).ReturnsAsync((Domain.TaskList?)null);
+
+            EndTaskCommand command = new EndTaskCommand { TaskItem = taskItem };
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(uowMock.Object, mapper);
+
+            NotFoundException ex = await Assert.ThrowsExceptionAsync<NotFoundException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            StringAssert.Contains(ex.Message, "TaskList niet gevonden");
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_TaskList_Date_Is_Not_Today()
+        {
+            Domain.TaskList taskList = new Domain.TaskList
             {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"The task start time is after the end time. taskItemId={taskItem.Id}", ex.Message);
-            }
+                Id = 1,
+                UserId = 1,
+                User = null!,
+                Date = DateTime.Now.AddDays(-1),
+                TaskItems = new List<Domain.TaskItem>()
+            };
+            taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
+
+            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now.AddMinutes(-1) };
+            EndTaskCommand command = new EndTaskCommand { TaskItem = taskItem };
+            EndTaskCommandHandler handler = new EndTaskCommandHandler(uowMock.Object, mapper);
+
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_END_INVALID_DATE", ex.ErrorCode);
         }
 
         [TestMethod]
         public async Task Should_Not_Have_Error_When_Correctly_Filled_In()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
-            EndTaskCommand command = new EndTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1, StartTime=DateTime.Now.AddMinutes(-15) } };
-            TestValidationResult<EndTaskCommand> result = await validator.TestValidateAsync(command);
+            Domain.TaskList taskList = new Domain.TaskList
+            {
+                Id = 1,
+                UserId = 1,
+                User = null!,
+                Date = DateTime.Now,
+                TaskItems = new List<Domain.TaskItem>()
+            };
+            taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
+
+            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now.AddMinutes(-15) };
+            EndTaskCommand command = new EndTaskCommand { TaskItem = taskItem };
 
             EndTaskCommandHandler handler = new EndTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            await handler.Handle(command, CancellationToken.None);
+            TaskItemDTO result = await handler.Handle(command, CancellationToken.None);
+
+            Assert.IsNotNull(result.EndTime);
         }
     }
 }
