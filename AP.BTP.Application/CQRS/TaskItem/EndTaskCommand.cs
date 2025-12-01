@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Exceptions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
@@ -61,9 +62,37 @@ namespace AP.BTP.Application.CQRS.TaskItem
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
-            if (taskItem.StartTime == null) throw new ValidationException($"The task has not yet been started. taskItemId={taskItem.Id}");
-            if (taskItem.EndTime != null) throw new ValidationException($"The task has already been ended. taskItemId={taskItem.Id}");
-            if (taskItem.StartTime > DateTime.Now) throw new ValidationException($"The task start time is after the end time. taskItemId={taskItem.Id}");
+            if (taskItem.StartTime == null)
+                throw new StartStopTaskFailedException(
+                    $"Deze taak is nog niet gestart. taskItemId={taskItem.Id}",
+                    "TASK_NOT_STARTED"
+                );
+
+            if (taskItem.EndTime != null)
+                throw new StartStopTaskFailedException(
+                    $"Deze taak is al beëindigd. taskItemId={taskItem.Id}",
+                    "TASK_ALREADY_ENDED"
+                );
+
+            if (taskItem.StartTime > DateTime.Now)
+                throw new StartStopTaskFailedException(
+                    $"De starttijd van de taak ligt in de toekomst. taskItemId={taskItem.Id}",
+                    "TASK_INVALID_TIME"
+                );
+
+
+            Domain.TaskList? taskList = await uow.TaskListRepository.GetByIdUntracked(request.TaskItem.TaskListId);
+
+            if (taskList == null)
+                throw new NotFoundException(
+                    $"TaskList niet gevonden voor taskItemId={request.TaskItem.Id}, taskListId={request.TaskItem.TaskListId}"
+                );
+
+            if (taskList.Date.Date != DateTime.Now.Date)
+                throw new StartStopTaskFailedException(
+                    "Taken kunnen alleen gestopt worden op de huidige datum.",
+                    "TASK_END_INVALID_DATE"
+                );
 
             taskItem.EndTime = DateTime.Now;
 
