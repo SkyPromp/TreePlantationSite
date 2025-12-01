@@ -11,13 +11,13 @@
         <ul class="navbar-nav ms-auto">
         @if(user != null && user.IsInRole("Admin")){
             <li class="nav-item">
-                <a class="nav-link" href="/admin/users">Users</a>
+                <a class="nav-link" href="/admin/users">Gebruikers</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/plantation-site">Sites</a>
+                <a class="nav-link" href="/admin/plantation-site">Kweeksites</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/tree">Trees</a>
+                <a class="nav-link" href="/admin/tree">Bomen</a>
             </li>
         } else if(user != null && user.IsInRole("Manager")){
             <li class="nav-item">
@@ -42,7 +42,7 @@
                     <div class="profile-dropdown bg-white shadow-sm rounded">
                         <p>@user?.Identity?.Name</p>
                         <div class="d-flex justify-content-center">
-                            <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                            <a href="/logout"><Button Color="ButtonColor.Danger">Uitloggen</Button></a>
                         </div>
                     </div>
                 }
