@@ -7,11 +7,30 @@
 <PdfViewer Url="@pdfUrl" />
 
 @code {
+
+    /// <summary>
+    /// The file name parameter from the URL route.
+    /// This is used to construct the full URL to the file proxy endpoint.
+    /// </summary>
     [Parameter] 
     public string? FileName { get; set; }
-    
+
+    /// <summary>
+    /// The full URL to the file proxy endpoint that will serve the PDF file.
+    /// This URL is constructed by combining the base URI with the API endpoint and filename.
+    /// </summary>    
     private string? pdfUrl;
     
+    /// <summary>
+    /// Called when the component's parameters are set.
+    /// Constructs the full URL to the FileProxy API endpoint using the provided filename.
+    /// </summary>
+    /// <remarks>
+    /// This method is triggered whenever route parameters change, allowing the component
+    /// to update the PDF URL dynamically based on the filename in the route.
+    /// The constructed URL points to the FileProxy controller which securely retrieves
+    /// the file from the backend API and streams it to the browser.
+    /// </remarks>
     protected override void OnParametersSet()
     {
         if (!string.IsNullOrEmpty(FileName))
