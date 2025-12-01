@@ -2,6 +2,17 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+}
+
+.body{
+    background-color: #F0F0F0;
+    height: 91vh;
+    padding: 5vh 8vw;
+}
+
 a, .btn-link {
     color: #006bb7;
 }

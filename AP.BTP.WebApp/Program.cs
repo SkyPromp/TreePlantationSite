@@ -44,6 +44,8 @@ namespace AP.BTP.WebAppMaintenance
 
             builder.Services.AddMemoryCache();
 
+            builder.Services.AddControllers();
+
             builder.Services.AddHttpClient("BTPApi", client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"]!);
@@ -104,6 +106,8 @@ namespace AP.BTP.WebAppMaintenance
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.MapControllers();
 
             app.MapAuthEndpoints(builder.Configuration);
 

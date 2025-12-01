@@ -2,81 +2,40 @@
 @layout Layout.EmptyLayout
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-@if (fileData != null)
-{
-    <div class="h-100 d-flex justify-content-center align-items-center">
-        @if (FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-        {
-            <iframe class="w-100 h-100" src="@fileData">
-            </iframe>
-        }
-        else
-        {
-            <img src="@fileData" alt="@FileName"/>
-        }
-    </div>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger m-4 d-flex justify-content-center">
-        <div class="d-flex flex-column align-items-center">
-            <h4 class="alert-heading">Fout bij het laden van het bestand</h4>
-            <p class="text-danger">@errorMessage</p>
-        </div>
-    </div>
-}
-else
-{
-    <div class="d-flex justify-content-center align-items-center h-100" >
-        <div class="text-center">
-            <div class="spinner-border text-success"></div>
-            <p class="mt-3">Bestand laden...</p>
-        </div>
-    </div>
-}
+<PdfViewer Url="@pdfUrl" />
 
 @code {
+
     /// <summary>
     /// The file name parameter from the URL route.
+    /// This is used to construct the full URL to the file proxy endpoint.
     /// </summary>
     [Parameter] 
-    public string FileName { get; set; } = "";
+    public string? FileName { get; set; }
 
     /// <summary>
-    /// The file data as a base64 data URI.
-    /// </summary>
-    private string? fileData;
-
+    /// The full URL to the file proxy endpoint that will serve the PDF file.
+    /// This URL is constructed by combining the base URI with the API endpoint and filename.
+    /// </summary>    
+    private string? pdfUrl;
+    
     /// <summary>
-    /// Error message to display if file loading fails.
+    /// Called when the component's parameters are set.
+    /// Constructs the full URL to the FileProxy API endpoint using the provided filename.
     /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
-    /// Loads the file from the API when the component initializes.
-    /// </summary>
-    protected override async Task OnInitializedAsync()
+    /// <remarks>
+    /// This method is triggered whenever route parameters change, allowing the component
+    /// to update the PDF URL dynamically based on the filename in the route.
+    /// The constructed URL points to the FileProxy controller which securely retrieves
+    /// the file from the backend API and streams it to the browser.
+    /// </remarks>
+    protected override void OnParametersSet()
     {
-        try
+        if (!string.IsNullOrEmpty(FileName))
         {
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-            HttpResponseMessage response = await client.GetAsync($"File/{FileName}");
-            
-            if (response.IsSuccessStatusCode)
-            {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-                string type = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-                fileData = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
-            }
-            else
-            {
-                errorMessage = $"Bestand niet gevonden (Status: {response.StatusCode})";
-            }
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Fout bij laden bestand: {ex.Message}";
+            pdfUrl = $"{NavigationManager.BaseUri}api/FileProxy/{FileName}";
         }
     }
 }
