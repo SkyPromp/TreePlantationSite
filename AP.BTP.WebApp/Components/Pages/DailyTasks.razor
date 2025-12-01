@@ -25,11 +25,11 @@
             <div class="card py-2">
                 <div class="container">
                     <div class="row">
-                        <div class="col-6">
-                            <b>@task.Title</b>
-                            <p class="text-truncate">@task.Description</p>
+                        <div class="col-7">
+                            <b class="text-truncate-multiline-1" title="@task.Title">@task.Title</b>
+                            <p class="small text-truncate-multiline-2" title="@task.Description">@task.Description</p>
                         </div>
-                        <div class="d-flex flex-column align-items-center justify-content-center col-6">
+                        <div class="d-flex flex-column align-items-center justify-content-center col-5">
                             @if (task.StartTime == null)
                             {
                                 <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
@@ -211,6 +211,11 @@
             {
                 this.errorMessage = "";
             }
+        }
+        catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            this.errorMessage = "Geen taken gevonden voor deze dag";
+            this.todayTasks = null;
         }
         catch (Exception e)
         {
