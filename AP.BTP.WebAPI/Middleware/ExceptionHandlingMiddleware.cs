@@ -43,19 +43,23 @@ namespace AP.BTP.WebAPI.Middleware
                     case ValidationException validationException:
                         response.StatusCode = StatusCodes.Status400BadRequest;
                         response.Message = validationException.Message;
-                        Console.WriteLine(response.Message);
+                        response.ErrorCode = "VALIDATION_ERROR";
                         break;
                     case AuthenticationFailedException authenticationFailedException:
                         response.StatusCode = StatusCodes.Status401Unauthorized;
                         response.ErrorCode = authenticationFailedException.ErrorCode;
                         break;
-
+                    case StartStopTaskFailedException startStopTaskFailedException:
+                        response.StatusCode = StatusCodes.Status409Conflict;
+                        response.ErrorCode = startStopTaskFailedException.ErrorCode;
+                        break;
                     case NotFoundException:
                         response.StatusCode = StatusCodes.Status404NotFound;
+                        response.ErrorCode = "NOT_FOUND";
                         break;
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
-
+                        response.ErrorCode = "INTERNAL_ERROR";
                         break;
                 }
                 context.Response.StatusCode = response.StatusCode;

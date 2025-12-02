@@ -25,11 +25,11 @@
             <div class="card py-2">
                 <div class="container">
                     <div class="row">
-                        <div class="col-6">
-                            <b>@task.Title</b>
-                            <p class="text-truncate">@task.Description</p>
+                        <div class="col-7">
+                            <b class="text-truncate-multiline-1" title="@task.Title">@task.Title</b>
+                            <p class="small text-truncate-multiline-2" title="@task.Description">@task.Description</p>
                         </div>
-                        <div class="d-flex flex-column align-items-center justify-content-center col-6">
+                        <div class="d-flex flex-column align-items-center justify-content-center col-5">
                             @if (task.StartTime == null)
                             {
                                 <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
@@ -212,6 +212,11 @@
                 this.errorMessage = "";
             }
         }
+        catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            this.errorMessage = "Geen taken gevonden voor deze dag";
+            this.todayTasks = null;
+        }
         catch (Exception e)
         {
             this.errorMessage = e.Message;
@@ -247,10 +252,9 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "The client could not be found!";
+            this.errorMessage = "De client kon niet gevonden worden!";
             this.showStartConfirmation = false;
             StateHasChanged();
-
             return;
         }
 
@@ -259,25 +263,38 @@
             this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
             this.showStartConfirmation = false;
             StateHasChanged();
-
             return;
         }
 
         try
         {
             HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/started", this.selectedTask);
-
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                this.errorMessage = "";
-                this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
+                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+
+                if (errorResponseInfo == null)
+                    return;
+
+                this.errorMessage = errorResponseInfo.ErrorCode switch
+                {
+                    "TASK_ALREADY_STARTED" => "Deze taak is al gestart.",
+                    "TASK_MULTIPLE_ACTIVE_NOT_ALLOWED" => "Er kan niet meer dan één taak tegelijk gestart zijn in deze takenlijst.",
+                    "TASK_START_INVALID_DATE" => "Taken kunnen alleen gestart worden op de huidige datum.",
+                    "TASK_INVALID_STATE" => "De taak bevindt zich in een ongeldige toestand.",
+                    _ => errorResponseInfo.Message ?? "Er is een onverwachte fout opgetreden."
+                };
+                this.showStartConfirmation = false;
+                return;
             }
-            else
-                this.errorMessage = await response.Content.ReadAsStringAsync();
+
+            this.errorMessage = "";
+            this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
         }
         catch (Exception e)
         {
-            this.errorMessage = e.Message;
+            this.errorMessage = $"Er is een fout opgetreden: {e.Message}";
+            this.showStartConfirmation = false;
         }
 
         this.selectedTask = null;
@@ -304,7 +321,6 @@
             this.errorMessage = "The client could not be found!";
             this.showEndConfirmation = false;
             StateHasChanged();
-
             return;
         }
 
@@ -313,7 +329,6 @@
             this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
             this.showEndConfirmation = false;
             StateHasChanged();
-
             return;
         }
 
@@ -321,17 +336,36 @@
         {
             HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/ended", this.selectedTask);
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                this.errorMessage = "";
-                this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
+                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+
+                if (errorResponseInfo != null)
+                {
+                    this.errorMessage = errorResponseInfo.ErrorCode switch
+                    {
+                        "TASK_NOT_STARTED" => "Deze taak is nog niet gestart.",
+                        "TASK_ALREADY_ENDED" => "Deze taak is al beëindigd.",
+                        "TASK_INVALID_TIME" => "De starttijd van de taak ligt in de toekomst.",
+                        "TASK_END_INVALID_DATE" => "Taken kunnen alleen gestopt worden op de huidige datum.",
+                        _ => errorResponseInfo.Message ?? "Er is een onverwachte fout opgetreden."
+                    };
+                }
+                else
+                {
+                    this.errorMessage = "Er is een onverwachte fout opgetreden.";
+                }
+
+                this.showEndConfirmation = false;
+                return;
             }
-            else
-                this.errorMessage = await response.Content.ReadAsStringAsync();
+
+            this.errorMessage = "";
+            this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
         }
         catch (Exception e)
         {
-            this.errorMessage = e.Message;
+            this.errorMessage = $"Er is een fout opgetreden: {e.Message}";
         }
 
         this.selectedTask = null;

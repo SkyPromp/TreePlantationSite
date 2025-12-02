@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Exceptions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
@@ -9,7 +10,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Represents a command to start the task.
     /// </summary>
-    public class StartTaskCommand: IRequest<TaskItemDTO>
+    public class StartTaskCommand : IRequest<TaskItemDTO>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the task item to be started.
@@ -21,7 +22,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// Provides validation rules for the <see cref="StartTaskCommand"/>.
     /// Ensures that required fields are present and valid before starting the task item.
     /// </summary>
-    public class StartTaskCommandValidator: AbstractValidator<StartTaskCommand>
+    public class StartTaskCommandValidator : AbstractValidator<StartTaskCommand>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StartTaskCommandValidator"/> class.
@@ -35,7 +36,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Handles the <see cref="StartTaskCommand"/> to start the task item and returning the resulting DTO.
     /// </summary>
-    public class StartTaskCommandHandler: IRequestHandler<StartTaskCommand, TaskItemDTO>
+    public class StartTaskCommandHandler : IRequestHandler<StartTaskCommand, TaskItemDTO>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -61,13 +62,35 @@ namespace AP.BTP.Application.CQRS.TaskItem
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
-            if (taskItem.StartTime != null) throw new ValidationException($"The task has already been started. taskItemId={taskItem.Id}");
-            if (taskItem.EndTime != null) throw new ValidationException($"Impossible state, the starttime is null and the endtime is not null. taskItemId={taskItem.Id}");
+            if (taskItem.StartTime != null)
+                throw new StartStopTaskFailedException(
+                    $"The task has already been started. taskItemId={taskItem.Id}",
+                    "TASK_ALREADY_STARTED"
+                );
+
+            if (taskItem.EndTime != null)
+                throw new StartStopTaskFailedException(
+                    $"Impossible state, the StartTime is null but EndTime is not null. taskItemId={taskItem.Id}",
+                    "TASK_INVALID_STATE"
+                );
+
 
             Domain.TaskList? taskList = await uow.TaskListRepository.GetByIdUntracked(request.TaskItem.TaskListId);
 
-            if (taskList == null) throw new ValidationException($"Impossible state, the taskList of the current (taskItem {request.TaskItem.Id}) is null. taskListId={request.TaskItem.TaskListId}");
-            if (taskList.TaskItems.Count(ti => ti.StartTime != null && ti.EndTime == null) != 0) throw new ValidationException("Cannot start multiple tasks at the same time from the same tasklist.");
+            if (taskList == null)
+                throw new NotFoundException($"TaskList not found for taskItemId={request.TaskItem.Id}. taskListId={request.TaskItem.TaskListId}");
+
+            if (taskList.TaskItems.Count(ti => ti.StartTime != null && ti.EndTime == null) != 0)
+                throw new StartStopTaskFailedException(
+                    "Cannot start multiple tasks at the same time from the same tasklist.",
+                    "TASK_MULTIPLE_ACTIVE_NOT_ALLOWED"
+                );
+
+            if (taskList.Date.Date != DateTime.Now.Date)
+                throw new StartStopTaskFailedException(
+                    "Cannot start tasks that are in the past or future.",
+                    "TASK_START_INVALID_DATE"
+                );
 
             taskItem.StartTime = DateTime.Now;
 

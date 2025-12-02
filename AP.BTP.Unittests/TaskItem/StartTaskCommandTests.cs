@@ -1,10 +1,9 @@
 ﻿using AP.BTP.Application.CQRS.TaskItem;
+using AP.BTP.Application.Exceptions;
 using AP.BTP.Application.Interfaces;
-using FluentValidation.TestHelper;
-using Moq;
 using AP.BTP.Contracts.DTOs;
 using AutoMapper;
-using FluentValidation;
+using Moq;
 
 namespace AP.BTP.Unittests.TaskItem
 {
@@ -14,7 +13,6 @@ namespace AP.BTP.Unittests.TaskItem
         private Mock<IUnitOfWork> uowMock;
         private Mock<ITaskListRepository> taskListRepoMock;
         private Mock<ITaskItemRepository> taskItemRepoMock;
-        private StartTaskCommandValidator validator;
         private IMapper mapper;
 
         public StartTaskCommandTests()
@@ -25,8 +23,6 @@ namespace AP.BTP.Unittests.TaskItem
 
             uowMock.Setup(u => u.TaskListRepository).Returns(taskListRepoMock.Object);
             uowMock.Setup(u => u.TaskItemRepository).Returns(taskItemRepoMock.Object);
-
-            validator = new StartTaskCommandValidator(uowMock.Object);
 
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
@@ -42,18 +38,13 @@ namespace AP.BTP.Unittests.TaskItem
         {
             TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now };
             StartTaskCommand command = new StartTaskCommand() { TaskItem=taskItem };
-            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
-
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"The task has already been started. taskItemId={taskItem.Id}", ex.Message);
-            }
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_ALREADY_STARTED", ex.ErrorCode);
         }
 
         [TestMethod]
@@ -61,18 +52,13 @@ namespace AP.BTP.Unittests.TaskItem
         {
             TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, EndTime = DateTime.Now };
             StartTaskCommand command = new StartTaskCommand() { TaskItem=taskItem };
-            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
-
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"Impossible state, the starttime is null and the endtime is not null. taskItemId={taskItem.Id}", ex.Message);
-            }
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_INVALID_STATE", ex.ErrorCode);
         }
 
         [TestMethod]
@@ -82,18 +68,13 @@ namespace AP.BTP.Unittests.TaskItem
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskItem.TaskListId)).ReturnsAsync((Domain.TaskList?)null);
 
             StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
-            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
-
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"Impossible state, the taskList of the current (taskItem {taskItem.Id}) is null. taskListId={taskItem.TaskListId}", ex.Message);
-            }
+            NotFoundException ex = await Assert.ThrowsExceptionAsync<NotFoundException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            StringAssert.Contains(ex.Message, "TaskList not found");
         }
 
         [TestMethod]
@@ -112,20 +93,39 @@ namespace AP.BTP.Unittests.TaskItem
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
 
             StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
-            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
-
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            try
-            {
-                await handler.Handle(command, CancellationToken.None);
-                throw new Exception();
-            } catch (ValidationException ex)
-            {
-                Assert.AreEqual($"Cannot start multiple tasks at the same time from the same tasklist.", ex.Message);
-            }
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_MULTIPLE_ACTIVE_NOT_ALLOWED", ex.ErrorCode);
         }
-        
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_TaskList_Date_Is_Not_Today()
+        {
+            Domain.TaskList taskList = new Domain.TaskList
+            {
+                Id = 1,
+                UserId = 1,
+                User = null!,
+                Date = DateTime.Now.AddDays(-1),
+                TaskItems = new List<Domain.TaskItem>()
+            };
+            taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
+
+            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1 };
+            StartTaskCommand command = new StartTaskCommand { TaskItem = taskItem };
+            StartTaskCommandHandler handler = new StartTaskCommandHandler(uowMock.Object, mapper);
+
+            StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
+                () => handler.Handle(command, CancellationToken.None)
+            );
+
+            Assert.AreEqual("TASK_START_INVALID_DATE", ex.ErrorCode);
+        }
+
         [TestMethod]
         public async Task Should_Not_Have_Error_When_Another_Task_Has_Been_Started_And_Stopped()
         {
@@ -142,8 +142,6 @@ namespace AP.BTP.Unittests.TaskItem
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
 
             StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
-            TestValidationResult<StartTaskCommand> result = await validator.TestValidateAsync(command);
-
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
             await handler.Handle(command, CancellationToken.None);
