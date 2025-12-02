@@ -10,7 +10,7 @@
 
 @if (user == null)
 {
-    <p>Loading...</p>
+    <p>Laden...</p>
 } else
 {
     <div class="d-flex">
@@ -40,7 +40,7 @@
                     </select>
                     @if (isPlantationSiteSelectionDisabled && selectedPlantationSiteId.HasValue)
                     {
-                        <small class="text-muted d-block mt-1">
+                        <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
                             Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                         </small>
                     }
@@ -229,8 +229,8 @@
             }
             
             <div class="d-flex gap-2">
-                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Annuleer</button>
-                <button @onclick="SubmitTaskItem" class="btn btn-success flex-fill">Opslaan</button>
+                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
+                <button @onclick="SubmitTaskItem" class="btn btn-success flex-fill">Bewaren</button>
             </div>
         </div>
     </div>
@@ -240,13 +240,13 @@
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
+            <h5>Bent u zeker dat u deze <br /> taak wilt verwijderen?</h5>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Annuleer</button>
+                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Annuleren</button>
                 </div>
                 <div class="col">
-                    <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestig</button>
+                    <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestigen</button>
                 </div>
             </div>
         </div>
@@ -510,10 +510,10 @@
 
             if (!response.IsSuccessStatusCode)
             {
-                this.errorMessage = $"The deletion of id={id} has been unsuccessfull";
+                this.errorMessage = $"Het verwijderen van id={id} is niet gelukt.";
             } else
             {
-                this.errorMessage = $"{id} has been sucessfully deleted";
+                this.errorMessage = $"{id} is succesvol verwijderd.";
                 await this.LoadTaskListsForWeek();
                 await ClearPlantationSiteIfNoTasks();
             }
@@ -560,7 +560,7 @@
         {
             if (this.client == null)
             {
-                this.errorMessage = "No httpclient found.";
+                this.errorMessage = "Geen httpclient gevonden.";
                 return null;
             }
 
@@ -639,7 +639,7 @@
 
         if (taskList == null)
         {
-            this.errorMessage = "tasklist could not be created";
+            this.errorMessage = "De takenlijst kon niet worden aangemaakt.";
 
             return;
         }
@@ -657,7 +657,7 @@
         {
             if (this.client == null)
             {
-                this.errorMessage = "No httpclient found.";
+                this.errorMessage = "Geen httpclient gevonden.";
                 this.ShowAddTaskItem = false;
                 StateHasChanged();
 
@@ -666,7 +666,7 @@
 
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
-                this.errorMessage = "De titel en beschrijving zijn verplicht";
+                this.errorMessage = "De titel en beschrijving zijn verplicht.";
                 StateHasChanged();
                 return;
             }
@@ -675,7 +675,7 @@
             
             if (totalMinutes <= 0)
             {
-                this.errorMessage = "Duur moet minimaal 1 minuut zijn";
+                this.errorMessage = "Duur moet minimaal 1 minuut zijn.";
                 StateHasChanged();
                 return;
             }
@@ -687,7 +687,6 @@
                 return;
             }
 
-            // Check if adding this task would exceed daily limit
             int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
             int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
             
@@ -766,7 +765,7 @@
         {
             if (client == null)
             {
-                errorMessage = "No httpclient found.";
+                errorMessage = "Geen httpclient gevonden.";
                 return;
             }
 
@@ -775,7 +774,7 @@
                 HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/plantation-site", newSiteId);
                 if (!response.IsSuccessStatusCode)
                 {
-                    errorMessage = $"Failed to update task list for {taskList.Date:dd/MM}";
+                    errorMessage = $"Kan takenlijst voor {taskList.Date:dd/MM} niet bijwerken";
                     return;
                 }
             }
@@ -818,7 +817,7 @@
                     
                     if (!response.IsSuccessStatusCode)
                     {
-                        errorMessage = $"Failed to clear plantation site for {taskList.Date:dd/MM}";
+                        errorMessage = $"Het is niet gelukt om de plantage te ontruimen voor {taskList.Date:dd/MM}";
                         return;
                     }
                 }
@@ -878,7 +877,6 @@
     /// </summary>
     private async Task OnZoneChangedForDay(DateTime day, ChangeEventArgs e)
     {
-        Console.WriteLine($"Zone changed for day {day}");
         if (e.Value == null)
         {
             return;
@@ -890,14 +888,12 @@
         {
             return;
         }
-
-        Console.WriteLine($"Trying to make tasklist with zone {zoneId}");
         
         try
         {
             if (client == null)
             {
-                errorMessage = "No httpclient found.";
+                errorMessage = "Geen httpclient gevonden.";
                 return;
             }
 
@@ -908,7 +904,6 @@
                 if (taskList != null)
                 {
                     CurrentWeekTaskListsByDay[day.Date] = taskList;
-                    Console.WriteLine($"Created new TaskList with ZoneId {taskList.ZoneId}");
                     errorMessage = "";
                     StateHasChanged();
                     return;
@@ -921,11 +916,10 @@
 
             if (taskList == null)
             {
-                errorMessage = "Could not create or find task list for this day.";
+                errorMessage = "Kan geen takenlijst voor deze dag maken of vinden.";
                 return;
             }
 
-            Console.WriteLine($"Patching existing TaskList {taskList.Id} with zone {zoneId}");
             HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/zone", zoneId);
             
             if (response.IsSuccessStatusCode)
@@ -935,7 +929,7 @@
             }
             else
             {
-                errorMessage = $"Failed to update zone for {day:dd/MM}";
+                errorMessage = $"Kan zone voor {day:dd/MM} niet bijwerken";
             }
             
             StateHasChanged();

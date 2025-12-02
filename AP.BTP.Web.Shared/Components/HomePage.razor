@@ -7,8 +7,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 
-<div class="d-flex justify-content-center mt-5" style="font-size: 5vw">Welcome! 🌱</div>
-<div class="d-flex justify-content-center" style="font-size: 2vw">What would you like to do today?</div>
+<div class="d-flex justify-content-center mt-5" style="font-size: 5vw">Welkom! 🌱</div>
+<div class="d-flex justify-content-center" style="font-size: 2vw">Wat zou je vandaag willen doen?</div>
 
 <div class="d-flex justify-content-between" style="margin-top: 10vh">
     @if(DashboardCards != null){
@@ -18,7 +18,7 @@
                 <CardBody Class="p-0 m-0">
                     <CardTitle Style="font-weight: bold; margin-bottom: 2vh; font-size: 2.25vw;">@card.Title</CardTitle>
                     <CardText Style="font-size:1vw; margin-bottom: 2vh;">@card.Description</CardText>
-                    <a href=@card.Url><Button Color="ButtonColor.Dark" Style="height: 5vh; width:100%">Go to</Button></a>
+                    <a href=@card.Url><Button Color="ButtonColor.Dark" Style="height: 5vh; width:100%">Ga naar</Button></a>
                 </CardBody>
             </Card>
         }
@@ -45,20 +45,20 @@
             {
                 new DashboardCard
                 {
-                    Title = "Manage users",
-                    Description = "Approve or disapprove user accounts, review user activity, and manage permissions.",
+                    Title = "Gebruikers beheren",
+                    Description = "Gebruikersaccounts goedkeuren of afkeuren, gebruikersactiviteiten bekijken en machtigingen beheren.",
                     Url = "/admin/users"
                 },
                 new DashboardCard
                 {
-                    Title = "Manage sites",
-                    Description = "Add, update, delete, or search plantation sites. Keep site information up-to-date.",
+                    Title = "Kweeksites beheren",
+                    Description = "Plantages toevoegen, bijwerken, verwijderen of zoeken. Houd de informatie over de locaties up-to-date.",
                     Url = "/admin/plantation-site"
                 },
                 new DashboardCard
                 {
-                    Title = "Manage trees",
-                    Description = "Add, update, delete, or search trees. Monitor tree health and track growth across your sites.",
+                    Title = "Bomen beheren",
+                    Description = "Bomen toevoegen, bijwerken, verwijderen of zoeken. De gezondheid van bomen monitoren en de groei op al uw locaties volgen.",
                     Url = "/admin/tree"
                 }
             };
@@ -67,14 +67,14 @@
             {
                 new DashboardCard
                 {
-                    Title = "Beheer de planning",
-                    Description = "Bekijk de medewerkers en maak hun planning.",
+                    Title = "Planning beheren",
+                    Description = "Bekijk alle medewerkers en beheer hun planning.",
                     Url = "/manager/planning"
                 },
                 new DashboardCard
                 {
-                    Title = "Bekijk de bomen",
-                    Description = "bekijk de bomen en hun details zoals de qr code, foto's en beschrijving.",
+                    Title = "Bomen bekijken",
+                    Description = "Bekijk bomen en hun details zoals onderhoudsplannen, foto's en beschrijving",
                     Url = "/manager/tree"
                 },
             };
@@ -83,7 +83,7 @@
             {
                 new DashboardCard
                 {
-                    Title = "Bekijk het dagoverzicht",
+                    Title = "Takenoverzicht bekijken",
                     Description = "Bekijk je persoonlijke takenoverzicht voor de dag.",
                     Url = "/planning"
                 }

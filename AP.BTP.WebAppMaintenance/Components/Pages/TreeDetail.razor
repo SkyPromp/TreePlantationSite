@@ -74,7 +74,7 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "No httpclient found.";
+            this.errorMessage = "Geen httpclient gevonden.";
 
             return;
         }
@@ -90,7 +90,7 @@
                 await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
             } *@
 
-        } else this.errorMessage = "Couldn't load tree";
+        } else this.errorMessage = "Kan boom niet laden";
 
         StateHasChanged();
     }
@@ -117,10 +117,7 @@
         } catch
         {
             @* this.maintenancePlan = ""; *@
-            this.errorMessage = "Something went wrong while loading the image";
+            this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
         }
     }
-
-    private void OnDocumentLoaded() { }
-    private void OnPageChanged() { }
 }
