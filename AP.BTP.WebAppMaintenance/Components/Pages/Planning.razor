@@ -115,7 +115,10 @@
                         @if (selectedPlantationSiteId.HasValue)
                         {
                             int? zoneId = GetZoneForDay(day);
-                            <select class="form-select form-select-sm" value="@zoneId" @onchange="(e) => OnZoneChangedForDay(day, e)" disabled="@(!selectedPlantationSiteId.HasValue)">
+                            <select class="form-select form-select-sm"
+                                    value="@zoneId"
+                                    @onchange="(e) => OnZoneChangedForDay(day, e)"
+                                    disabled="@(!selectedPlantationSiteId.HasValue || DayHasTasks(day))">
                                 <option value="" disabled selected hidden>--- Zone ---</option>
                                 @foreach (ZoneDTO zone in availableZones)
                                 {
@@ -251,6 +254,11 @@
             </div>
         </div>
     </div>
+}
+
+@if (this.errorMessage != "")
+{
+    <p>@this.errorMessage</p>
 }
 
 @code {
@@ -981,5 +989,20 @@
     private int GetRemainingTimeForDay(DateTime day)
     {
         return 480 - GetTotalDurationForDay(day); // 480 minutes = 8 hours
-    }        
+    }  
+    
+    /// <summary>
+    /// Determines whether the specified day already has one or more tasks.
+    /// This is used to prevent changing the zone once tasks exist.
+    /// </summary>
+    /// <param name="day">The day to check for tasks.</param>
+    /// <returns>
+    /// True if the day exists in the weekly task dictionary AND contains at least one task.
+    /// Otherwise, false.
+    /// </returns>
+    private bool DayHasTasks(DateTime day)
+    {
+        return CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList)
+               && taskList?.TaskItems?.Any() == true;
+    }
 }
