@@ -105,8 +105,8 @@
             </select>
             @if (selectedRole == UserRole.Operator.ToString())
             {
-                <h5>Selecteer de plantagelocaties die aan deze gebruiker moeten worden toegewezen</h5>
-                <p>Plantagelocatie 1</p>
+                <h5>Selecteer de kweeksites die aan deze gebruiker moeten worden toegewezen</h5>
+                <p>Kweeksite 1</p>
                 <select @bind="this.site1" class="form-select mb-3">
                     <option value=""></option>
                     @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
@@ -115,7 +115,7 @@
                     }
                 </select>
 
-                <p>Plantagelocatie 2</p>
+                <p>Kweeksite 2</p>
                 <select @bind="this.site2" class="form-select mb-3">
                     <option value=""></option>
                     @foreach (PlantationSiteDTO plantationSite in this.plantationSites)

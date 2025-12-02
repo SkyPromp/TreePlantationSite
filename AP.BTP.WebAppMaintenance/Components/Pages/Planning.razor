@@ -40,7 +40,7 @@
                     </select>
                     @if (isPlantationSiteSelectionDisabled && selectedPlantationSiteId.HasValue)
                     {
-                        <small class="text-muted d-block mt-1">
+                        <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
                             Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                         </small>
                     }
@@ -240,10 +240,10 @@
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
         <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
+            <h5>Bent u zeker dat u deze <br /> taak wilt verwijderen?</h5>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Verlaten</button>
+                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Annuleren</button>
                 </div>
                 <div class="col">
                     <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestigen</button>
