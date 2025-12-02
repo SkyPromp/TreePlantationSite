@@ -16,9 +16,9 @@
 
 <div class="d-flex justify-content-between px-4">
     @if(user != null && user.IsInRole("Admin")){
-        <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+        <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
     }
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 25vw; height: 5vh"/>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
 
     <select class="form-select" @onchange="OnSortOrderChanged" style="width: 15vw; height: 5vh">
         <option value="true" selected>A-Z</option>
@@ -39,12 +39,12 @@
                                 <CardTitle Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Species</CardTitle>
                                 @if(user != null && user.IsInRole("Admin")){
                                     <div class="card-buttons d-flex justify-content-between">
-                                        <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Edit</Button>
+                                        <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Bewerken</Button>
                                         <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.showDeleteConfirmation = true; selectedTree = item; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
                                     </div>
                                 } else if (user != null && user.IsInRole("Manager")){
                                     <a href="@($"/manager/tree/{item.Id}")" class="d-flex justify-content-center" style="text-decoration:none;">
-                                        <Button Color="ButtonColor.Dark" Style="min-width: 80%; height: 5vh;">Bekijk</Button>
+                                        <Button Color="ButtonColor.Dark" Style="min-width: 80%; height: 5vh;">Bekijken</Button>
                                     </a>
                                 }
                             </CardBody>
@@ -57,7 +57,7 @@
     }
     else
     {
-        <p class="text-center mt-4">No results found.</p>
+        <p class="text-center mt-4">Geen resultaten gevonden.</p>
     }
 
     <Pagination 

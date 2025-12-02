@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
                     <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Volgende</Button>
                 </div>
             </EditForm>
@@ -79,7 +79,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
                                     }
                                     else
@@ -91,7 +91,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
                                     }
                                     else
@@ -122,7 +122,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
                                     }
                                     else
@@ -153,7 +153,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;"/>
                                     }                                    
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
                                     }
                                     else
@@ -184,15 +184,15 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }                                    
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaar</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>
@@ -206,10 +206,10 @@
             <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
             <div class="row gap-3">
                 <div class="col">
-                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Annuleer</button>
+                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Verlaten</button>
                 </div>
                 <div class="col">
-                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestig</button>
+                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestigen</button>
                 </div>
             </div>
         </div>
@@ -369,7 +369,7 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "No httpclient found.";
+            this.errorMessage = "Geen httpclient gevonden.";
 
             return;
         }
@@ -379,7 +379,7 @@
         if (response != null)
             this.Tree = response;
         else
-            this.errorMessage = "Couldn't load tree";
+            this.errorMessage = "Kon boom niet laden.";
 
         StateHasChanged();
     }
@@ -394,14 +394,14 @@
         {
             if (this.client == null)
             {
-                this.errorMessage = "No httpclient found.";
+                this.errorMessage = "Geen httpclient gevonden.";
 
                 return;
             }
 
             if (string.IsNullOrEmpty(this.Tree.Species))
             {
-                this.errorMessage = "The tree name is empty";
+                this.errorMessage = "De boomnaam is leeg";
 
                 return;
             }
@@ -425,7 +425,7 @@
 
                     if (!uploadResponse.IsSuccessStatusCode)
                     {
-                        this.errorMessage = $"Failed to upload maintenance file {file.Name}.";
+                        this.errorMessage = $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.";
                         continue;
                     }
 
@@ -434,7 +434,7 @@
                     if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
                     if (string.IsNullOrEmpty(fileName))
                     {
-                        errorMessage = $"Upload succeeded but no fileName returned for {file.Name}";
+                        errorMessage = $"Uploaden is gelukt, maar er is geen bestandsnaam geretourneerd voor {file.Name}";
                         continue;
                     }
 
@@ -473,7 +473,7 @@
             TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
             if (savedTree == null || savedTree.Id == 0)
             {
-                this.errorMessage = "Failed to get saved tree id.";
+                this.errorMessage = "Kan de opgeslagen boom-id niet ophalen.";
                 return;
             }
 
@@ -505,7 +505,7 @@
 
                 if (string.IsNullOrEmpty(fileName))
                 {
-                    this.errorMessage = $"Failed to upload file {file.Name}";
+                    this.errorMessage = $"Kan bestand {file.Name} niet uploaden";
                     continue;
                 }
 
@@ -555,19 +555,19 @@
         {
             if (type == FileType.Picture && !ImageFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"File type '{file.ContentType}' is not permitted!";
+                errorMessage = $"Bestandstype '{file.ContentType}' is niet toegestaan!";
                 continue;
             }
 
             if (type == FileType.Maintenance && !AllowedMaintenanceFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"File type '{file.ContentType}' is not permitted for maintenance plans!";
+                errorMessage = $"Het bestandstype '{file.ContentType}' is niet toegestaan voor onderhoudsplannen!";
                 continue;
             }
 
             if (file.Size > 10_000_000)
             {
-                errorMessage = $"File '{file.Name}' exceeds the 10MB file size limit!";
+                errorMessage = $"Het bestand '{file.Name}' overschrijdt de maximale bestandsgrootte van 10 MB!";
                 continue;
             }
 
@@ -617,7 +617,7 @@
 
             StateHasChanged();
         } catch (Exception e){
-            errorMessage = $"Failed to generate QR code: {e.Message}";
+            errorMessage = $"Kan geen QR-code genereren: {e.Message}";
         }
     }
 

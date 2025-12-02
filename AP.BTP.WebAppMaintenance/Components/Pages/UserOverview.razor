@@ -9,7 +9,7 @@
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Gebruikers</PageTitle>
 
-<h3 class="text-center">Gebruikers overzicht</h3>
+<h3 class="text-center">Gebruikersoverzicht</h3>
 
 <div class="d-flex justify-content-between px-3">
     <a href="/admin/users/approve" style="text-decoration: none;">
@@ -36,7 +36,7 @@
             <div>Gsm-number</div>
             <div>plantagelocaties</div>
             <div>Rol</div>
-            <div class="text-center">Beheer</div>
+            <div class="text-center">Beheren</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
             @foreach (List<UserDTO> row in Rows)
@@ -68,7 +68,7 @@
                                         <Button title="Bewerk gebruiker"
                                                 Class="btn btn-dark btn-sm px-3"
                                                 @onclick="() => OnEditUser(item)">
-                                            Edit
+                                            Bewerken
                                         </Button>
                                         <Button title="Verwijder gebruiker"
                                                 Class="btn btn-danger btn-sm"
@@ -135,12 +135,12 @@
             {
                 <div class="row gap-3">
                     <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
                         @if (selectedUser.Role == UserRole.Operator)
                         {
-                            <button @onclick="UpdateUserSites" class="btn btn-secondary">Bevestig</button>
+                            <button @onclick="UpdateUserSites" class="btn btn-secondary">Bevestigen</button>
                         }
                         else
                         {
@@ -169,10 +169,10 @@
             {
                 <div class="row gap-3">
                     <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
-                        <button @onclick="DeleteUser" class="btn btn-danger">Bevestig</button>
+                        <button @onclick="DeleteUser" class="btn btn-danger">Bevestigen</button>
                     </div>
                 </div>
             }
@@ -390,7 +390,7 @@
             }
             else
             {
-                this.errorMessage = "Something went wrong when loading in the plantation sites";
+                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
             }
         }
         catch (Exception e)

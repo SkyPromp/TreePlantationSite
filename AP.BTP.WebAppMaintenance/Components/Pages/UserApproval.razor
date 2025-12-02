@@ -7,9 +7,9 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.Enums
 @inject IHttpClientFactory HttpClientFactory
-<PageTitle>Wachtende gebruikers</PageTitle>
+<PageTitle>Registratieaanvragen</PageTitle>
 
-<h3 class="text-center">Wachtende gebruikers goedkeuren</h3>
+<h3 class="text-center">Registratieaanvragen goedkeuren</h3>
 
 <div class="d-flex justify-content-between px-3">
     <a href="/admin/users" style="text-decoration: none;">
@@ -135,10 +135,10 @@
             {
                 <div class="row gap-3">
                     <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
-                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestig</button>
+                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestigen</button>
                     </div>
                 </div>
             }
@@ -162,10 +162,10 @@
             {
                 <div class="row gap-3">
                     <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
-                        <button @onclick="RejectUser" class="btn btn-danger">Bevestig</button>
+                        <button @onclick="RejectUser" class="btn btn-danger">Bevestigen</button>
                     </div>
                 </div>
             }
@@ -410,7 +410,7 @@
             }
             else
             {
-                this.errorMessage = "Something went wrong when loading in the plantation sites";
+                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
             }
         }
         catch (Exception e)
