@@ -67,8 +67,8 @@
             @for (int i = 0; i < WeekDays.Count; i++)
             {
                 DateTime day = WeekDays[i];
-                var isFirst = i == 0;
-                var isLast = i == WeekDays.Count - 1;
+                bool isFirst = i == 0;
+                bool isLast = i == WeekDays.Count - 1;
                 <div class="border flex-shrink-0 d-flex flex-column"
                      style="
                                     max-width: 14%;
