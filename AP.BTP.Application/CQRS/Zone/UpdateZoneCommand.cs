@@ -33,6 +33,14 @@ namespace AP.BTP.Application.CQRS.Zone
                 .NotEqual(0)
                 .WithMessage("Id should not be zero when updating a zone.");
 
+            RuleFor(command => string.IsNullOrWhiteSpace(command.Zone.Name))
+                .Equal(false)
+                .WithMessage("The zone name cannot be empty");
+
+            RuleFor(command => command.Zone.Size)
+                .NotNull()
+                .WithMessage("The zone size cannot be null");
+
             RuleFor(command => command.Zone.PlantationSiteId)
                 .NotEqual(0)
                 .WithMessage("The plantation site must already exist.");
@@ -82,6 +90,8 @@ namespace AP.BTP.Application.CQRS.Zone
         /// <returns>The updated <see cref="ZoneDTO"/>.</returns>
         public async Task<ZoneDTO> Handle(UpdateZoneCommand request, CancellationToken cancellationToken)
         {
+            if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+
             Domain.Zone zone = mapper.Map<Domain.Zone>(request.Zone);
 
             uow.ZoneRepository.Update(zone);

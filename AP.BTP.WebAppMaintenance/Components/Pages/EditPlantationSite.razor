@@ -113,7 +113,7 @@
                         @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
-                                <td>@zone.Name</td>
+                                <td>@zone.Name?.Trim()</td>
                                 <td>@zone.Size</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "Er werd geen soortnaam gevonden.")</td>
                                 <td>
@@ -137,7 +137,7 @@
             <input type="text" @bind="this.newZone.Name" />
 
             <h5>Oppervlakte</h5>
-            <input type="number" @bind="this.newZone.Size" />
+            <input type="number" @bind="this.newZone.Size" min="0" step="1" />
 
             <h5>Boomsoort</h5>
             <p>Welke boomsoort wilt u aan deze zone toewijzen?</p>
@@ -603,6 +603,22 @@
         if (this.newZone.PlantationSiteId == 0)
         {
             this.errorMessage = "De kweeksite in de nieuwe zone is nog niet opgeslagen in de database.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(this.newZone.Name))
+        {
+            this.errorMessage = "De naam van een zone kan niet leeg zijn.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if(this.newZone.Size == null)
+        {
+            this.errorMessage = "De zone moet een oppervlakte hebben.";
             StateHasChanged();
 
             return;
