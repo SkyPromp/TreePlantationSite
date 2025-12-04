@@ -124,7 +124,13 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>The updated <see cref="Zone"/> entity.</returns>
         public Zone Update(Zone modifiedItem)
         {
-            return this.dbSet.Update(modifiedItem).Entity;
+            Zone? existingEntity = dbSet.Find(modifiedItem.Id);
+
+            if (existingEntity == null) throw new KeyNotFoundException($"Zone with ID {modifiedItem.Id} not found.");
+
+            dbSet.Entry(existingEntity).CurrentValues.SetValues(modifiedItem);
+
+            return existingEntity;
         }
     }
 }
