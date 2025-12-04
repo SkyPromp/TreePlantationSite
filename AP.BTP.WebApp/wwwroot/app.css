@@ -78,3 +78,40 @@ h1:focus {
     word-break: break-word;
     line-height: 1.15
 }
+
+.navbar {
+    background-color: #4EB862;
+    height: 9vh;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.brand-logo {
+    max-height: 100%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-item {
+    margin: 0 1.25vw;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 15vw;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+@media (max-width: 576px) {
+    .profile-dropdown {
+        width: 50vw;
+    }
+}
