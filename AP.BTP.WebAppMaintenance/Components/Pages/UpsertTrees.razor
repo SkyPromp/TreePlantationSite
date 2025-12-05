@@ -2,6 +2,7 @@
 @page "/admin/tree/edit/{Id:int?}"
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -214,52 +215,43 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaren</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>
     </Tab>
 </Tabs>
 
-@if (this.showDeleteConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Annuleren</button>
-                </div>
-                <div class="col">
-                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestigen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmation"
+    onCancellation="this.CancelDeletePicture"
+    onConfirmation="this.DeletePicture"
+    confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?"
+/>
 
-@if (this.showDeleteConfirmationMaintenancePlan)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); }" class="btn btn-warning">Annuleren</button>
-                </div>
-                <div class="col">
-                    <button @onclick="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); }" class="btn btn-danger">Bevestigen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
+    onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?"
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmLeaveForm"
+    onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
+    confirmationDescription="Bent u zeker dat u de pagina wilt verlaten? Onopgeslagen wijzigingen zullen ongedaan wordedn gemaakt."
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmSaveForm"
+    onConfirmation="this.Submit"
+/>
 
 @code {
-        /// <summary>
-        /// Reference to the tab component for switching between tabs.
-        /// </summary>    
+    /// <summary>
+    /// Reference to the tab component for switching between tabs.
+    /// </summary>    
     private Tabs tabs = default!;
 
     /// <summary>
@@ -354,7 +346,17 @@
     /// <summary>
     /// Indicates whether the delete confirmation modal should be shown.
     /// </summary>
-    private bool showDeleteConfirmation = false;
+    private bool showDeleteConfirmation;
+
+    /// <summary>
+    /// Indicates whether the leave form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmLeaveForm;
+
+    /// <summary>
+    /// Indicates whether the save form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmSaveForm;
 
     /// <summary>
     /// Represents the current tree being created or edited.
@@ -751,10 +753,12 @@
     /// Cancels the delete picture operation.
     /// Hides the confirmation modal and clears the selected image.
     /// </summary>
-    private void CancelDeletePicture()
+    private Task CancelDeletePicture()
     {
         this.showDeleteConfirmation = false;
         this.selectedImage = null;
+
+        return Task.CompletedTask;
     }
 
     private async Task DeleteAllQueuedPictures(){

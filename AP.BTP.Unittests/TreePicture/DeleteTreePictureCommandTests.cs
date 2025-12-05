@@ -1,9 +1,7 @@
 using AP.BTP.Application.CQRS.TreePicture;
 using AP.BTP.Application.Interfaces;
 using FluentValidation.TestHelper;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Threading.Tasks;
 
 namespace AP.BTP.Unittests.TreePicture
 {

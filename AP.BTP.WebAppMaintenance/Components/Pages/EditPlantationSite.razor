@@ -133,23 +133,16 @@
     </Tab>
 </Tabs>
 
-@if (this.showConfirmSaveForm)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
-        <div class="card position-absolute align-self-center p-4">
-            <h1>Bevestigen</h1>
-            <p>Wenst u om te bevestigen?</p>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="() => this.showConfirmSaveForm = false" class="btn btn-warning">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="this.HandleValidSubmit" class="btn btn-secondary">Bevestigen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmSaveForm"
+    onConfirmation="this.HandleValidSubmit"
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmZoneDeletion && this.SelectedZoneId != 0"
+    onCancellation="this.CancelZoneDeletion"
+    onConfirmation="() => this.DeleteZone(this.SelectedZoneId)"
+/>
 
 @if (this.showZoneCreation && this.newZone != null)
 {
@@ -176,24 +169,6 @@
                 </div>
                 <div class="col">
                     <button @onclick="this.CreateZone" class="btn btn-secondary">Bewaren</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@if (this.showConfirmZoneDeletion && this.SelectedZoneId != 0)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
-        <div class="card position-absolute align-self-center p-4">
-            <h1>Bevestigen</h1>
-            <p>Wenst u om te bevestigen?</p>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="this.CancelZoneDeletion" class="btn btn-warning">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="() => this.DeleteZone(this.SelectedZoneId)" class="btn btn-secondary">Bevestigen</button>
                 </div>
             </div>
         </div>
@@ -302,6 +277,11 @@
     /// Flag to track if the current operation is editing an existing zone.
     /// </summary>
     private bool IsEditZone;
+
+    /// <summary>
+    /// This is a delegate that is used to delete all the zones at once.
+    /// </summary>
+    private Func<Task<HttpResponseMessage>>? DeleteZonesAction;
 
     /// <summary>
     /// Holds the new zone that is being added.
@@ -441,6 +421,12 @@
                 if (zone.PlantationSiteId == 0) zone.PlantationSiteId = this.plantationSite.Id;
             }
 
+            if (this.DeleteZonesAction != null)
+            {
+                await this.DeleteZonesAction();
+                this.DeleteZonesAction = null;
+            }
+
             this.showConfirmSaveForm = false;
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
             else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
@@ -545,7 +531,7 @@
     /// Deletes a zone by ID, either from the backend or the local list if it hasn't been saved yet.
     /// </summary>
     /// <param name="id">Zone ID.</param>
-    private async void DeleteZone(int id)
+    private async Task DeleteZone(int id)
     {
         this.showConfirmZoneDeletion = false;
 
@@ -563,6 +549,10 @@
 
         if (this.client != null)
         {
+            if(this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
+            else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
+
+            /*
             response = await this.client.DeleteAsync($"Zone?id={id}");
 
             if (!response.IsSuccessStatusCode)
@@ -571,8 +561,9 @@
             } else
             {
                 this.errorMessage = $"{id} is succesvol verwijderd.";
-                this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
-            }
+            */
+            this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
+            //}
         }
 
         await this.LoadTrees();
@@ -711,10 +702,12 @@
     /// <summary>
     /// Cancels the deletion confirmation dialog for a zone.
     /// </summary>
-    private void CancelZoneDeletion()
+    private Task CancelZoneDeletion()
     {
         this.showConfirmZoneDeletion = false;
         StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
