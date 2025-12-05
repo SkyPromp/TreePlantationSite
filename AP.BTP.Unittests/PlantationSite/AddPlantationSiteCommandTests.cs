@@ -24,6 +24,36 @@ namespace AP.BTP.Unittests.PlantationSite
             validator = new AddPlantationSiteCommandValidator(uowMock.Object);
         }
 
+        private TreeDTO TreeDTO 
+        {
+            get
+            {
+                return new TreeDTO() { Id = 1, Species = "Oak" };
+            }
+        }
+
+        private Domain.Tree Tree
+        {
+            get
+            {
+                return new Domain.Tree() { Id = 1, Species = "Oak" };
+            }
+        }
+
+        private PlantationSiteDTO PlantationSiteDTO { 
+            get
+            {
+                return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<ZoneDTO>(), Size=100 };
+            }
+        }
+
+        private Domain.PlantationSite PlantationSite { 
+            get
+            {
+                return new Domain.PlantationSite() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<Domain.Zone>(), Size=100 };
+            }
+        }
+
         [TestMethod]
         public async Task Should_Have_Error_When_Id_Not_Zero()
         {
@@ -310,6 +340,92 @@ namespace AP.BTP.Unittests.PlantationSite
             TestValidationResult<AddPlantationSiteCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Total_Zone_Size_Is_Smaller_Than_The_PlantationSite_Size()
+        {
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
+            plantationSiteDTO.Zones = new List<ZoneDTO>();
+            plantationSiteDTO.Size = 100;
+
+            plantationSiteDTO.Zones.Add(
+                new ZoneDTO()
+                {
+                    Id = 1,
+                    Name = "Zone",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                }
+            );
+
+            plantationSiteDTO.Zones.Add(
+                new ZoneDTO()
+                {
+                    Id = 2,
+                    Name = "Zone 2",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                }
+            );
+
+            AddPlantationSiteCommand command = new AddPlantationSiteCommand
+            {
+                PlantationSite = plantationSiteDTO
+            };
+
+            TestValidationResult<AddPlantationSiteCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldNotHaveValidationErrorFor(command => command.PlantationSite);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Total_Zone_Size_Is_Bigger_Than_The_PlantationSite_Size()
+        {
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
+            plantationSiteDTO.Zones = new List<ZoneDTO>();
+            plantationSiteDTO.Size = 60;
+
+            plantationSiteDTO.Zones.Add(
+                new ZoneDTO()
+                {
+                    Id = 1,
+                    Name = "Zone",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                }
+            );
+
+            plantationSiteDTO.Zones.Add(
+                new ZoneDTO()
+                {
+                    Id = 2,
+                    Name = "Zone 2",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                }
+            );
+
+            AddPlantationSiteCommand command = new AddPlantationSiteCommand
+            {
+                PlantationSite = plantationSiteDTO
+            };
+
+            TestValidationResult<AddPlantationSiteCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.PlantationSite).WithErrorMessage("The sum of the area of the zones must be smaller or equal to the total size of the plantationSite") != null);
         }
     }
 }

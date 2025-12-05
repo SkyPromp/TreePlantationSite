@@ -164,7 +164,7 @@ namespace AP.BTP.Unittests.Tree
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
             // Assert
-            result.ShouldHaveValidationErrorFor($"TreeDTO.{propertyName}");
+            result.ShouldHaveValidationErrorFor($"Tree.{propertyName}");
         }
 
         [TestMethod]
