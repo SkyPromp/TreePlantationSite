@@ -153,32 +153,12 @@
     </div>
 }
 
-@if (this.showDeleteConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Ben je zeker dat je deze <br /> gebruiker wil verwijderen?</h5>
-            @if (isLoading)
-            {
-
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            }
-            else
-            {
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="DeleteUser" class="btn btn-danger">Bevestigen</button>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmation"
+    onCancellation="this.CancelEditUser"
+    onConfirmation="this.DeleteUser"
+    confirmationDescription="Ben je zeker dat je deze gebruiker wil verwijderen?"
+/>
 
 @if (this.showSuccessToast)
 {
@@ -445,13 +425,15 @@
     /// <summary>
     /// Cancels the user editing process and resets related UI state.
     /// </summary>
-    private void CancelEditUser()
+    private Task CancelEditUser()
     {
         this.showEditUser = false;
         this.selectedUser = null;
         this.site1 = null;
         this.site2 = null;
         this.showDeleteConfirmation = false;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
