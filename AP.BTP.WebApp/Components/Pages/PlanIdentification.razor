@@ -94,19 +94,57 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Error message to display to the user when validation or API calls fail.
+    /// </summary>
     private string errorMessage = "";
+
+    /// <summary>
+    /// Base64 encoded data URL of the uploaded image for preview display.
+    /// </summary>    
     private string previewImageUrl = "";
+    
+    /// <summary>
+    /// Indicates whether a plant identification API call is currently in progress.
+    /// </summary>    
     private bool isLoading = false;
+
+    /// <summary>
+    /// The browser file object representing the uploaded image file.
+    /// </summary>    
     private IBrowserFile? selectedFile;
+
+    /// <summary>
+    /// List of plant identification results returned from the Pl@ntNet API.
+    /// </summary>    
     private List<PlantResultDTO>? plantResults;
+
+    /// <summary>
+    /// Byte array containing the uploaded image data, used for both preview and API calls.
+    /// </summary>    
     private byte[]? fileBytes;
+
+    /// <summary>
+    /// API key for authenticating with the Pl@ntNet API.
+    /// Loaded from the PLANT_API configuration setting.
+    /// </summary>    
     public required string plantApiKey;
 
+    /// <summary>
+    /// Initializes the component and loads the Pl@ntNet API key from configuration.
+    /// Throws an exception if the API key is not configured.
+    /// </summary>
     protected override void OnInitialized(){
         plantApiKey = Configuration["PLANT_API"] 
                 ?? throw new Exception("PLANT_API is missing");
     }
 
+    /// <summary>
+    /// Handles image file upload and preview generation.
+    /// Validates file size (max 10MB) and file type (images only).
+    /// Reads the file into memory and generates a base64 preview.
+    /// </summary>
+    /// <param name="e">File change event containing the uploaded file</param>
     private async Task HandlePictureUpload(InputFileChangeEventArgs e) {
         errorMessage = string.Empty;
         plantResults = null;
@@ -143,6 +181,11 @@
         }
     }
 
+    /// <summary>
+    /// Calls the Pl@ntNet API to identify the uploaded plant image.
+    /// Sends the image as multipart/form-data with the "leaf" organ parameter.
+    /// Parses the response and displays the top matches.
+    /// </summary>
     private async Task IdentifyPlant(){
         if (selectedFile == null || fileBytes == null) return;
         
@@ -207,6 +250,9 @@
         }
     }
 
+    /// <summary>
+    /// Clears the uploaded image and resets all component state.
+    /// </summary>
     private void ClearImage(){
         previewImageUrl = string.Empty;
         selectedFile = null;
