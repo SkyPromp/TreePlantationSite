@@ -12,7 +12,7 @@
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Site details">
         <Content>
-            <EditForm Model="plantationSite" OnValidSubmit="HandleValidSubmit">
+            <EditForm Model="plantationSite" OnValidSubmit="() => this.showConfirmSaveForm = true">
                 <DataAnnotationsValidator />
                 <div class="form-content">
                     <div class="row">
@@ -113,7 +113,7 @@
                         @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
-                                <td>@zone.Name</td>
+                                <td>@zone.Name?.Trim()</td>
                                 <td>@zone.Size</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "Er werd geen soortnaam gevonden.")</td>
                                 <td>
@@ -125,9 +125,31 @@
                     </tbody>
                 </table>
             </div>
+                <div class="buttons d-flex justify-content-end mt-4">
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Verlaten</Button>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+                </div>
         </Content>
     </Tab>
 </Tabs>
+
+@if (this.showConfirmSaveForm)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
+        <div class="card position-absolute align-self-center p-4">
+            <h1>Bevestigen</h1>
+            <p>Wenst u om te bevestigen?</p>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="() => this.showConfirmSaveForm = false" class="btn btn-warning">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="this.HandleValidSubmit" class="btn btn-secondary">Bevestigen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @if (this.showZoneCreation && this.newZone != null)
 {
@@ -137,7 +159,7 @@
             <input type="text" @bind="this.newZone.Name" />
 
             <h5>Oppervlakte</h5>
-            <input type="number" @bind="this.newZone.Size" />
+            <input type="number" @bind="this.newZone.Size" min="0" step="1" max="@((this.plantationSite?.Size ?? 0) - (this.plantationSite?.Zones?.Sum(zone => zone.Size) ?? 0))" />
 
             <h5>Boomsoort</h5>
             <p>Welke boomsoort wilt u aan deze zone toewijzen?</p>
@@ -230,8 +252,21 @@
     /// Base64 representation of the ground plan image for preview.
     /// </summary>
     string groundPlanPreview = string.Empty;
+
+    /// <summary>
+    /// If true this displays the zone creation popup.
+    /// </summary>
     private bool showZoneCreation;
+
+    /// <summary>
+    /// If true this displays the zone deletion popup.
+    /// </summary>
     private bool showConfirmZoneDeletion;
+
+    /// <summary>
+    /// If true this displays the form submission popup.
+    /// </summary>
+    private bool showConfirmSaveForm;
 
     /// <summary>
     /// Returns a new, empty zone DTO associated with the current plantation site.
@@ -406,6 +441,7 @@
                 if (zone.PlantationSiteId == 0) zone.PlantationSiteId = this.plantationSite.Id;
             }
 
+            this.showConfirmSaveForm = false;
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
             else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
 
@@ -423,6 +459,7 @@
         {
             // TODO add snackbar exception
         }
+        StateHasChanged();
     }
 
     /// <summary>
@@ -430,6 +467,7 @@
     /// </summary>
     private void Cancel()
     {
+        this.showConfirmSaveForm = false;
         Navigation.NavigateTo("/admin/plantation-site");
     }
 
@@ -603,6 +641,30 @@
         if (this.newZone.PlantationSiteId == 0)
         {
             this.errorMessage = "De kweeksite in de nieuwe zone is nog niet opgeslagen in de database.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(this.newZone.Name))
+        {
+            this.errorMessage = "De naam van een zone kan niet leeg zijn.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if(this.newZone.Size == null)
+        {
+            this.errorMessage = "De zone moet een oppervlakte hebben.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone? 0: this.newZone.Size) >= this.plantationSite.Size)
+        {
+            this.errorMessage = "De som van de oppervlaktes van de zones moet kleiner zijn dan het oppervlakte van de kweeksite.";
             StateHasChanged();
 
             return;
