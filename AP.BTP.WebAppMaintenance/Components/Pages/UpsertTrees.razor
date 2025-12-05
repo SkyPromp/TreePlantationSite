@@ -2,6 +2,7 @@
 @page "/admin/tree/edit/{Id:int?}"
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -214,14 +215,13 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaren</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>
     </Tab>
 </Tabs>
-
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmation"
@@ -235,6 +235,17 @@
     onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
     onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
     confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?"
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmLeaveForm"
+    onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
+    confirmationDescription="Bent u zeker dat u de pagina wilt verlaten? Onopgeslagen wijzigingen zullen ongedaan wordedn gemaakt."
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmSaveForm"
+    onConfirmation="this.Submit"
 />
 
 @code {
@@ -335,7 +346,17 @@
     /// <summary>
     /// Indicates whether the delete confirmation modal should be shown.
     /// </summary>
-    private bool showDeleteConfirmation = false;
+    private bool showDeleteConfirmation;
+
+    /// <summary>
+    /// Indicates whether the leave form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmLeaveForm;
+
+    /// <summary>
+    /// Indicates whether the save form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmSaveForm;
 
     /// <summary>
     /// Represents the current tree being created or edited.
