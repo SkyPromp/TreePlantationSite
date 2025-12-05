@@ -137,7 +137,7 @@
             <input type="text" @bind="this.newZone.Name" />
 
             <h5>Oppervlakte</h5>
-            <input type="number" @bind="this.newZone.Size" min="0" step="1" />
+            <input type="number" @bind="this.newZone.Size" min="0" step="1" max="@((this.plantationSite?.Size ?? 0) - (this.plantationSite?.Zones?.Sum(zone => zone.Size) ?? 0))" />
 
             <h5>Boomsoort</h5>
             <p>Welke boomsoort wilt u aan deze zone toewijzen?</p>
@@ -619,6 +619,14 @@
         if(this.newZone.Size == null)
         {
             this.errorMessage = "De zone moet een oppervlakte hebben.";
+            StateHasChanged();
+
+            return;
+        }
+
+        if((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone? 0: this.newZone.Size) >= this.plantationSite.Size)
+        {
+            this.errorMessage = "De som van de oppervlaktes van de zones moet kleiner zijn dan het oppervlakte van de kweeksite.";
             StateHasChanged();
 
             return;
