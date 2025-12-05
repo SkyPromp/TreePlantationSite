@@ -15,14 +15,6 @@
     <h3>"Boom niet gevonden"</h3>
 }
 
-@* @if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
-{
-    <PdfViewer Class="mb-3"
-               Url="@this.maintenancePlan"
-               OnDocumentLoaded="OnDocumentLoaded"
-               OnPageChanged="OnPageChanged" />
-} *@
-
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
     <p>@errorMessage</p>
@@ -44,11 +36,6 @@
     /// Holds the details of the currently loaded tree.
     /// </summary>
     private TreeDTO? Tree;
-
-    @* /// <summary>
-    /// Base64-encoded maintenance plan PDF data to display in the UI.
-    /// </summary>
-    string maintenancePlan = ""; *@
 
     /// <summary>
     /// HTTP client used to call the backend API.

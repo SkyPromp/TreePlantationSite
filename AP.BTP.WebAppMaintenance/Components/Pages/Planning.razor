@@ -236,22 +236,11 @@
     </div>
 }
 
-@if (this.ShowDeleteConfirm)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> taak wilt verwijderen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Annuleren</button>
-                </div>
-                <div class="col">
-                    <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestigen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.ShowDeleteConfirm"
+    onCancellation="this.CancelRemoveTask"
+    onConfirmation="() => this.DeleteTaskItem(this.selectedTaskItemId)"
+/>
 
 @code {
     /// <summary>
@@ -739,10 +728,12 @@
     /// <summary>
     /// Cancels the remove task operation and hides the delete confirmation dialog.
     /// </summary>
-    private void CancelRemoveTask()
+    private Task CancelRemoveTask()
     {
         this.ShowDeleteConfirm = false;
         this.selectedTaskItemId = null;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
