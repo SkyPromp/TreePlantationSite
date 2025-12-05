@@ -3,7 +3,7 @@ html, body {
     height: 100%;
 }
 
-.body{
+.body {
     background-color: #F0F0F0;
     height: 91vh;
     padding: 5vh 8vw;
@@ -61,16 +61,16 @@ div.nav.nav-tabs {
     border: none;
 }
 
-div.nav.nav-tabs .nav-link {
-    padding: 1vw 4vw;
-    font-size: 2.5vh;
-    font-weight: 600;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-color: #c4c4c4;
-    border-bottom: none;
-    color: #2c2c2c;
-}
+    div.nav.nav-tabs .nav-link {
+        padding: 1vw 4vw;
+        font-size: 2.5vh;
+        font-weight: 600;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-color: #c4c4c4;
+        border-bottom: none;
+        color: #2c2c2c;
+    }
 
 .tab-content .tab-pane.active .form-content {
     overflow: scroll;
@@ -82,13 +82,13 @@ div.nav.nav-tabs .nav-link {
     padding: 5vh 8vw;
 }
 
-.tab-content .tab-pane.active .form-content input {
-    margin-bottom: 1vh;
-}
+    .tab-content .tab-pane.active .form-content input {
+        margin-bottom: 1vh;
+    }
 
-.tab-content .tab-pane.active .form-content label {
-    font-size: 2vh;
-}
+    .tab-content .tab-pane.active .form-content label {
+        font-size: 2vh;
+    }
 
 .validation-message {
     color: #b32121;
@@ -126,3 +126,44 @@ div.nav.nav-tabs .nav-link {
     word-break: break-word;
     line-height: 1.15
 }
+
+.added-card {
+    position: relative;
+}
+
+    .added-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 255, 0, 0.5);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+.updated-card {
+    position: relative;
+}
+
+    .updated-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 123, 255, 0.5);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+.deleted-card {
+    opacity: 0.8;
+    pointer-events: none;
+    position: relative;
+}
+
+    .deleted-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(255, 0, 0, 0.5);
+        border-radius: inherit;
+        pointer-events: none;
+    }

@@ -83,6 +83,18 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
 
+        /// <summary>
+        /// Submits multiple task lists with their task items in a single request.
+        /// </summary>
+        /// <param name="request">The <see cref="SubmitWeekScheduleCommand"/> containing all task lists and task items.</param>
+        /// <returns>The updated task lists after applying all changes.</returns>
+        [Authorize(Roles = "Manager")]
+        [HttpPost("submit-changes")]
+        public async Task<IActionResult> SubmitWeekSchedule([FromBody] SubmitWeekScheduleDTO submitWeekScheduleDTO)
+        {
+            return Ok(await mediator.Send(new SubmitWeekScheduleCommand() { TaskLists = submitWeekScheduleDTO.TaskLists }));
+        }
+
 
         /// <summary>
         /// Updates the plantation site associated with a specific task list.

@@ -39,5 +39,10 @@
         /// The end time of this task item.
         /// </summary>
         public DateTime? EndTime { get; set; }
+
+        /// <summary>
+        /// Indicates whether the task item is marked as deleted.
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 }
