@@ -256,5 +256,101 @@ namespace AP.BTP.Unittests.Zone
             result.ShouldNotHaveAnyValidationErrors();
             result2.ShouldNotHaveAnyValidationErrors();
         }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Total_Zone_Size_Is_Smaller_Than_The_PlantationSite_Size()
+        {
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            Domain.PlantationSite plantationSite = PlantationSite;
+            plantationSite.Size = 100;
+
+            plantationSite.Zones.Add(
+                new Domain.Zone()
+                {
+                    Id = 1,
+                    Name = "Zone",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                    PlantationSite = plantationSite,
+                    Tree = Tree
+                }
+            );
+
+            plantationSite.Zones.Add(
+                new Domain.Zone()
+                {
+                    Id = 2,
+                    Name = "Zone 2",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                    PlantationSite = plantationSite,
+                    Tree = Tree
+                }
+            );
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(plantationSite);
+
+            UpdateZoneCommand command = new UpdateZoneCommand
+            {
+                Zone = new ZoneDTO() { Id = 2, Name = "Zone3", Size = 20, TreeId = TreeDTO.Id, PlantationSiteId = PlantationSiteDTO.Id }
+            };
+
+            TestValidationResult<UpdateZoneCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldNotHaveValidationErrorFor(command => command.Zone);
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Total_Zone_Size_Is_Bigger_Than_The_PlantationSite_Size()
+        {
+            Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
+
+            uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
+
+            Domain.PlantationSite plantationSite = PlantationSite;
+            plantationSite.Size = 100;
+
+            plantationSite.Zones.Add(
+                new Domain.Zone()
+                {
+                    Id = 1,
+                    Name = "Zone",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                    PlantationSite = plantationSite,
+                    Tree = Tree
+                }
+            );
+
+            plantationSite.Zones.Add(
+                new Domain.Zone()
+                {
+                    Id = 2,
+                    Name = "Zone 2",
+                    Size = 40,
+                    TreeId = TreeDTO.Id,
+                    PlantationSiteId = PlantationSiteDTO.Id,
+                    PlantationSite = plantationSite,
+                    Tree = Tree
+                }
+            );
+
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(plantationSite);
+
+            UpdateZoneCommand command = new UpdateZoneCommand
+            {
+                Zone = new ZoneDTO() { Id = 2, Name = "Zone3", Size = 110, TreeId = TreeDTO.Id, PlantationSiteId = PlantationSiteDTO.Id }
+            };
+
+            TestValidationResult<UpdateZoneCommand> result = await validator.TestValidateAsync(command);
+
+            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Zone).WithErrorMessage("The sum of all the zone sizes must be smaller than the total plantationsite area.") != null);
+        }
     }
 }
