@@ -11,87 +11,87 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject IConfiguration Configuration
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger alert-dismissible">
-                    @errorMessage
-                    <Button Class="btn-close" @onclick="() => errorMessage = string.Empty"></Button>
-                </div>
-            }
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible">
+                @errorMessage
+                <Button Class="btn-close" @onclick="() => errorMessage = string.Empty"></Button>
+            </div>
+        }
 
-            <Card>
-                <CardBody>
-                @if (string.IsNullOrEmpty(previewImageUrl))
+        <Card>
+            <CardBody>
+            @if (string.IsNullOrEmpty(previewImageUrl))
+                {
+                    <div class="text-center p-5 border border-2 border-dashed rounded">
+                        <Icon Name="IconName.CloudUpload" Class="fs-1 text-muted mb-3" />
+                        <p class="text-muted mb-3">Upload een foto van de plant</p>
+                        <InputFile OnChange="HandlePictureUpload" accept="image/*" class="d-none" id="fileInput" />
+                        <label for="fileInput" class="btn btn-dark">
+                            <Icon Name="IconName.Camera" Class="me-2" />
+                            Selecteer
+                        </label>
+                    </div>
+                }
+                else
+                {
+                    <div class="position-relative">
+                        <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3" style="max-height: 50vh; width: 100%; object-fit: cover;" />
+                        <Button Class="position-absolute end-0 m-2" Color="ButtonColor.Danger" @onclick="ClearImage">
+                            <Icon Name="IconName.X" />
+                        </Button>
+                    </div>
+
+                    @if (isLoading)
                     {
-                        <div class="text-center p-5 border border-2 border-dashed rounded">
-                            <Icon Name="IconName.CloudUpload" Class="fs-1 text-muted mb-3" />
-                            <p class="text-muted mb-3">Upload een foto van de plant</p>
-                            <InputFile OnChange="HandlePictureUpload" accept="image/*" class="d-none" id="fileInput" />
-                            <label for="fileInput" class="btn btn-dark">
-                                <Icon Name="IconName.Camera" Class="me-2" />
-                                Selecteer foto
-                            </label>
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                            <p class="mt-2 text-muted">Plant aan het identificeren...</p>
                         </div>
                     }
-                    else
+                    else if (plantResults != null && plantResults.Any())
                     {
-                        <div class="position-relative">
-                            <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3" style="max-height: 50vh; width: 100%; object-fit: cover;" />
-                            <Button Class="position-absolute end-0 m-2" Color="ButtonColor.Danger" @onclick="ClearImage">
-                                <Icon Name="IconName.X" />
+                        <h5 class="mb-3">Resultaten:</h5>
+                        @foreach (PlantResultDTO result in plantResults.Take(5))
+                        {
+                            <Card class="mb-2">
+                                <CardBody>
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">@result.ScientificName</h6>
+                                            @if (!string.IsNullOrEmpty(result.CommonName))
+                                            {
+                                                <p class="text-muted mb-1 small">@result.CommonName</p>
+                                            }
+                                            <p class="mb-0 small">Familie: @result.Family</p>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-success">@result.Score.ToString("P1")</span>
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                    }
+
+                    @if (!isLoading && string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="d-flex mt-3">
+                            <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled="@(selectedFile == null)">
+                                <Icon Name="IconName.Search" Class="me-2" />
+                                Identificeer Plant
                             </Button>
                         </div>
-
-                        @if (isLoading)
-                        {
-                            <div class="text-center py-3">
-                                <div class="spinner-border text-success" role="status">
-                                    <span class="visually-hidden"></span>
-                                </div>
-                                <p class="mt-2 text-muted">Plant aan het identificeren...</p>
-                            </div>
-                        }
-                        else if (plantResults != null && plantResults.Any())
-                        {
-                            <h5 class="mb-3">Resultaten:</h5>
-                            @foreach (PlantResultDTO result in plantResults.Take(5))
-                            {
-                                <Card class="mb-2">
-                                    <CardBody>
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="mb-1">@result.ScientificName</h6>
-                                                @if (!string.IsNullOrEmpty(result.CommonName))
-                                                {
-                                                    <p class="text-muted mb-1 small">@result.CommonName</p>
-                                                }
-                                                <p class="mb-0 small">Familie: @result.Family</p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge bg-success">@result.Score.ToString("P1")</span>
-                                            </div>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            }
-                        }
-
-                        @if (!isLoading && string.IsNullOrEmpty(errorMessage))
-                        {
-                            <div class="d-flex mt-3">
-                                <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled="@(selectedFile == null)">
-                                    <Icon Name="IconName.Search" Class="me-2" />
-                                    Identificeer Plant
-                                </Button>
-                            </div>
-                        }
                     }
-                </CardBody>
-            </Card>
-        </div>
+                }
+            </CardBody>
+        </Card>
     </div>
+</div>
 
 @code {
     private string errorMessage = "";
@@ -129,9 +129,10 @@
             
             try
             {
-                fileBytes = new byte[selectedFile.Size];
-                using Stream stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
-                await stream.ReadAsync(fileBytes);
+                using MemoryStream ms = new MemoryStream();
+                await selectedFile.OpenReadStream(10 * 1024 * 1024).CopyToAsync(ms);
+
+                fileBytes = ms.ToArray(); 
                 
                 previewImageUrl = $"data:{selectedFile.ContentType};base64,{Convert.ToBase64String(fileBytes)}";
             }
@@ -193,7 +194,7 @@
 
                 }
 
-                errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Onverwacht probleem bij het identificeren van de afbeelding: geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding."; //TODO juiste verwoording
+                errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding.";
             }
         }
         catch (Exception ex)
