@@ -202,7 +202,7 @@
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
             content.Add(fileContent, "images", selectedFile.Name);
             
-            content.Add(new StringContent("leaf"), "organs"); //TODO check if these are the only ones needed
+            content.Add(new StringContent("habit"), "organs");
             
             string apiUrl = $"https://my-api.plantnet.org/v2/identify/all?api-key={plantApiKey}";
             HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
@@ -232,12 +232,10 @@
             else
             {
                 if(response.StatusCode == HttpStatusCode.NotFound) {
-
+                    errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding.";
                 } else {
-
+                    errorMessage = $"Onverwacht probleem bij het identificeren van de afbeelding.";
                 }
-
-                errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding.";
             }
         }
         catch (Exception ex)
