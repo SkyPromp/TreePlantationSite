@@ -12,9 +12,9 @@ namespace AP.BTP.Contracts.DTOs
         public string? ScientificName { get; set; }
 
         /// <summary>
-        /// Gets or sets the primary or most commonly used common name of the species.
+        /// Gets or sets the most commonly used common names of the species.
         /// </summary>        
-        public string? CommonName { get; set; }
+        public List<string> CommonNames { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the botanical family of the species.
