@@ -48,7 +48,7 @@ namespace AP.BTP.Unittests.TreePicture
             TestValidationResult<DeleteTreePictureCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.Id)
-                .WithErrorMessage("Tree picture does not exist.");
+                .WithErrorMessage("TreeDTO picture does not exist.");
         }
 
         [TestMethod]

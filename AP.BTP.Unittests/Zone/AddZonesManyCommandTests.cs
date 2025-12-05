@@ -24,7 +24,7 @@ namespace AP.BTP.Unittests.Zone
             validator = new AddZonesManyCommandValidator(uowMock.Object);
         }
 
-        private TreeDTO Tree
+        private TreeDTO TreeDTO 
         {
             get
             {
@@ -32,11 +32,25 @@ namespace AP.BTP.Unittests.Zone
             }
         }
 
-        private PlantationSiteDTO PlantationSite
+        private Domain.Tree Tree
         {
             get
             {
-                return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "" };
+                return new Domain.Tree() { Id = 1, Species = "Oak" };
+            }
+        }
+
+        private PlantationSiteDTO PlantationSiteDTO { 
+            get
+            {
+                return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<ZoneDTO>(), Size=100 };
+            }
+        }
+
+        private Domain.PlantationSite PlantationSite { 
+            get
+            {
+                return new Domain.PlantationSite() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<Domain.Zone>(), Size=100 };
             }
         }
 
@@ -53,7 +67,7 @@ namespace AP.BTP.Unittests.Zone
             plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(new Domain.PlantationSite()
                 {
-                    Id = PlantationSite.Id,
+                    Id = PlantationSiteDTO.Id,
                     Zones = zones,
                     Street = "Street",
                     Name = "Name",
@@ -65,7 +79,7 @@ namespace AP.BTP.Unittests.Zone
 
             for(int i = 1; i < 4; i++)
             {
-                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSite.Id, TreeId=Tree.Id};
+                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSiteDTO.Id, TreeId=TreeDTO.Id};
                 zonesDTO.Add(zone);
             }
 
@@ -93,7 +107,7 @@ namespace AP.BTP.Unittests.Zone
             plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync(new Domain.PlantationSite()
                 {
-                    Id = PlantationSite.Id,
+                    Id = PlantationSiteDTO.Id,
                     Zones = zones,
                     Street = "Street",
                     Name = "Name",
@@ -105,7 +119,7 @@ namespace AP.BTP.Unittests.Zone
 
             for(int i = 1; i < 4; i++)
             {
-                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=0, TreeId=Tree.Id};
+                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=0, TreeId=TreeDTO.Id};
                 Zones.Add(zone);
             }
 
@@ -124,28 +138,18 @@ namespace AP.BTP.Unittests.Zone
         {
             List<ZoneDTO> Zones = new List<ZoneDTO>();
 
-            List<Domain.Zone> zones = new List<Domain.Zone>();
+            Domain.PlantationSite plantationSite = PlantationSite;
 
             Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
 
             uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
 
             plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Domain.PlantationSite()
-                {
-                    Id = PlantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                });
+                .ReturnsAsync(plantationSite);
 
             for(int i = 1; i < 4; i++)
             {
-                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSite.Id, TreeId=0};
+                ZoneDTO zone = new ZoneDTO() { Id=1, PlantationSiteId=PlantationSiteDTO.Id, TreeId=0, Size=1};
                 Zones.Add(zone);
             }
 
@@ -162,62 +166,40 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task Should_Have_Error_With_Duplicate_Zone_Name_In_Db()
         {
-            PlantationSiteDTO plantationSite = PlantationSite;
-            List<Domain.Zone> zones = new List<Domain.Zone>();
+            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
+            Domain.PlantationSite plantationSite = PlantationSite;
 
             Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
 
             uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
 
-            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Domain.PlantationSite()
-                {
-                    Id = plantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                });
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(plantationSite);
 
 
             AddZonesManyCommand command = new AddZonesManyCommand()
             {
                 Zones = new List<ZoneDTO>()
                 {
-                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = TreeDTO.Id, PlantationSiteId = plantationSiteDTO.Id, Size=1 }
                 }
             };
 
             TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
 
-            zones.Add(new Domain.Zone() 
-                {
+            plantationSite.Zones.Add(new Domain.Zone() 
+            {
                     Id = 1,
                     Name = "Zone1",
-                    Tree = new Domain.Tree() { Id = 1,
-                    Species = "Oak"
-                },
-                PlantationSite = new Domain.PlantationSite()
-                {
-                    Id = plantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                }
+                    Tree = new Domain.Tree() { Id = 1, Species = "Oak" },
+                    PlantationSite = plantationSite,
+                    Size = 1
             });
 
             AddZonesManyCommand command2 = new AddZonesManyCommand()
             {
                 Zones = new List<ZoneDTO>()
                 {
-                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = TreeDTO.Id, PlantationSiteId = plantationSiteDTO.Id }
                 }
             };
 
@@ -230,7 +212,7 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task Should_Have_Error_With_Duplicate_Zone_Name_In_List()
         {
-            PlantationSiteDTO plantationSite = PlantationSite;
+            PlantationSiteDTO plantationSite = PlantationSiteDTO;
             List<Domain.Zone> zones = new List<Domain.Zone>();
 
             Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
@@ -255,8 +237,8 @@ namespace AP.BTP.Unittests.Zone
             {
                 Zones = new List<ZoneDTO>()
                 {
-                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
-                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = TreeDTO.Id, PlantationSiteId = plantationSite.Id },
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = TreeDTO.Id, PlantationSiteId = plantationSite.Id },
                 }
             };
 
@@ -268,83 +250,49 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task Should_Not_Have_Error_Without_Duplicate_Zone_Name()
         {
-            PlantationSiteDTO plantationSite = PlantationSite;
-            List<Domain.Zone> zones = new List<Domain.Zone>();
+            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
+            Domain.PlantationSite plantationSite = PlantationSite;
 
             Mock<IPlantationSiteRepository> plantationRepoMock = new Mock<IPlantationSiteRepository>();
 
             uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
 
-            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Domain.PlantationSite()
-                {
-                    Id = plantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                });
+            plantationRepoMock.Setup(r => r.GetById(It.IsAny<int>())).ReturnsAsync(plantationSite);
 
 
             AddZonesManyCommand command = new AddZonesManyCommand()
             {
                 Zones = new List<ZoneDTO>()
                 {
-                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
-                    new ZoneDTO() { Id = 0, Name = "Zone2", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id },
+                    new ZoneDTO() { Id = 0, Name = "Zone1", TreeId = TreeDTO.Id, PlantationSiteId = plantationSiteDTO.Id, Size=1 },
+                    new ZoneDTO() { Id = 0, Name = "Zone2", TreeId = TreeDTO.Id, PlantationSiteId = plantationSiteDTO.Id, Size=1 },
                 }
             };
 
             TestValidationResult<AddZonesManyCommand> result = await validator.TestValidateAsync(command);
 
-            zones.Add(new Domain.Zone() 
-                {
-                    Id = 1,
-                    Name = "Zone1",
-                    Tree = new Domain.Tree() { Id = 1,
-                    Species = "Oak"
-                },
-                PlantationSite = new Domain.PlantationSite()
-                {
-                    Id = plantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                }
+            plantationSite.Zones.Add(new Domain.Zone() 
+            {
+                Id = 1,
+                Name = "Zone1",
+                Tree = new Domain.Tree() { Id = 1, Species = "Oak" },
+                Size = 1,
+                PlantationSite = plantationSite
             });
 
-            zones.Add(new Domain.Zone() 
-                {
-                    Id = 2,
-                    Name = "Zone2",
-                    Tree = new Domain.Tree() { Id = 1,
-                    Species = "Oak"
-                },
-                PlantationSite = new Domain.PlantationSite()
-                {
-                    Id = plantationSite.Id,
-                    Zones = zones,
-                    Street = "Street",
-                    Name = "Name",
-                    HouseNumber = "1",
-                    GroundPlan = "",
-                    Country = "Country",
-                    City = "City"
-                }
+            plantationSite.Zones.Add(new Domain.Zone() 
+            {
+                Id = 2,
+                Name = "Zone2",
+                Tree = new Domain.Tree() { Id = 1, Species = "Oak" },
+                PlantationSite = plantationSite
             });
 
             AddZonesManyCommand command2 = new AddZonesManyCommand()
             {
                 Zones = new List<ZoneDTO>()
                 {
-                    new ZoneDTO() { Id = 0, Name = "Zone3", TreeId = Tree.Id, PlantationSiteId = plantationSite.Id }
+                    new ZoneDTO() { Id = 0, Name = "Zone3", TreeId = TreeDTO.Id, PlantationSiteId = plantationSiteDTO.Id, Size = 1 }
                 }
             };
 

@@ -3,6 +3,7 @@ using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using System.Linq;
 
 namespace AP.BTP.Application.CQRS.Zone
 {
@@ -66,6 +67,30 @@ namespace AP.BTP.Application.CQRS.Zone
                 })
                 .WithMessage("The zone name must be unique within a plantationsite.");
 
+            RuleFor(command => command.Zones)
+                .MustAsync(async (zones, cancellation) =>
+                {
+                    Dictionary<int, double> remainingAreaOfPlantationSite = new Dictionary<int, double>();
+
+                    foreach (ZoneDTO zone in zones)
+                    {
+                        if (!remainingAreaOfPlantationSite.Keys.Contains(zone.PlantationSiteId))
+                        {
+                            Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+
+                            if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
+
+                            remainingAreaOfPlantationSite.Add(zone.PlantationSiteId, plantationSite.Size);
+
+                            foreach (Domain.Zone existingZone in plantationSite.Zones) remainingAreaOfPlantationSite[zone.PlantationSiteId] -= existingZone.Size ?? 0;
+                        }
+
+                        remainingAreaOfPlantationSite[zone.PlantationSiteId] -= zone.Size ?? 0;
+                    }
+
+                    return remainingAreaOfPlantationSite.Values.All(area => area >= 0);
+                })
+                .WithMessage("The sum of all the zone sizes must be smaller than the total plantationsite area.");
         }
     }
 

@@ -152,7 +152,7 @@ namespace AP.BTP.Unittests.Tree
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
-                for(int i = 0; i < totalTrees; i++) dbSet.Add(new Domain.Tree() { Species=$"Tree {i}" });
+                for(int i = 0; i < totalTrees; i++) dbSet.Add(new Domain.Tree() { Species=$"TreeDTO {i}" });
 
                 context.SaveChanges();
             }
@@ -183,7 +183,7 @@ namespace AP.BTP.Unittests.Tree
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
-                for(int i = 0; i < totalTrees; i++) dbSet.Add(new Domain.Tree() { Species=$"Tree {i}" });
+                for(int i = 0; i < totalTrees; i++) dbSet.Add(new Domain.Tree() { Species=$"TreeDTO {i}" });
 
                 context.SaveChanges();
             }
