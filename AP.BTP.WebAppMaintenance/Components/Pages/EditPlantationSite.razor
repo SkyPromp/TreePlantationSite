@@ -279,6 +279,11 @@
     private bool IsEditZone;
 
     /// <summary>
+    /// This is a delegate that is used to delete all the zones at once.
+    /// </summary>
+    private Func<Task<HttpResponseMessage>>? DeleteZonesAction;
+
+    /// <summary>
     /// Holds the new zone that is being added.
     /// </summary>
     private ZoneDTO? newZone;
@@ -416,6 +421,12 @@
                 if (zone.PlantationSiteId == 0) zone.PlantationSiteId = this.plantationSite.Id;
             }
 
+            if (this.DeleteZonesAction != null)
+            {
+                await this.DeleteZonesAction();
+                this.DeleteZonesAction = null;
+            }
+
             this.showConfirmSaveForm = false;
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
             else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
@@ -538,6 +549,10 @@
 
         if (this.client != null)
         {
+            if(this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
+            else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
+
+            /*
             response = await this.client.DeleteAsync($"Zone?id={id}");
 
             if (!response.IsSuccessStatusCode)
@@ -546,8 +561,9 @@
             } else
             {
                 this.errorMessage = $"{id} is succesvol verwijderd.";
-                this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
-            }
+            */
+            this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
+            //}
         }
 
         await this.LoadTrees();
