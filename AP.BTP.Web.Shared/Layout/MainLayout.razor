@@ -8,10 +8,7 @@
 {
     <div class="page">
         <main>
-            @if (user != null && (user.IsInRole("Admin") || user.IsInRole("Manager")))
-            {
                 <NavBar></NavBar>
-            }
             <section class="body overflow-scroll">
                 <div style="max-height: 96%">
                     @Body
@@ -24,12 +21,6 @@ else
 {
     @Body
 }
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
 
 @code {
     private bool isAuthenticated;
