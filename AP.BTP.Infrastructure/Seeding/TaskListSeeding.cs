@@ -22,6 +22,7 @@ namespace AP.BTP.Infrastructure.Seeding
         {
             Random random = new Random(1);
             DateTime middleDate = DateTime.Parse("2026-01-16");
+            int daysToSetDayToMonday = 4;
             List<TaskList> taskLists = new List<TaskList>();
 
             const int totalDates = 101;
@@ -41,7 +42,7 @@ namespace AP.BTP.Infrastructure.Seeding
                         Date = middleDate.AddDays(i - totalDates / 2 + dayoffset).Date, 
                         IsDeleted = false, 
                         UserId = 3 + userIdOffset, 
-                        PlantationSiteId = i % 2 + 1 + userIdOffset * 2, 
+                        PlantationSiteId = ((i - daysToSetDayToMonday) / 7) % 2 + 1 + userIdOffset * 2,
                         ZoneId = ((i % 2) == 0? random.Next(1 + userIdOffset * 20, 11 + userIdOffset * 20): random.Next(11 + userIdOffset * 20, 21 + userIdOffset * 20))
                     });
                 }
