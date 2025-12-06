@@ -66,8 +66,8 @@ namespace AP.BTP.Infrastructure.Context
             modelBuilder.Entity<User>().Seed();
             modelBuilder.Entity<TaskList>().Seed();
             modelBuilder.Entity<TaskItem>().Seed();
-            // TODO: Seed Zone with correct PlantationSite relation
 
+            // TODO: Seed Zone with correct PlantationSite relation
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 3 },
                 new { PlantationSitesId = 2, UsersId = 3 }
