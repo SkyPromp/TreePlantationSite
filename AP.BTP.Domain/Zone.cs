@@ -33,7 +33,7 @@ namespace AP.BTP.Domain
         /// Gets or sets the plantation site associated with this zone.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public required PlantationSite PlantationSite { get; set; }
+        [JsonIgnore] public PlantationSite PlantationSite { get; set; }  // Not required because of seeding
 
         /// <summary>
         /// Gets or sets the identifier of the tree planted in this zone.
@@ -44,7 +44,7 @@ namespace AP.BTP.Domain
         /// Gets or sets the tree associated with this zone.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public required Tree Tree { get; set; }
+        [JsonIgnore] public Tree Tree { get; set; }  // Not required because of the seeding
 
         /// <summary>
         /// Gets or sets the collection of task lists in this zone.

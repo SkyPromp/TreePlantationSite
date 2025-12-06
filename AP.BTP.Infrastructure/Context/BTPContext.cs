@@ -62,7 +62,10 @@ namespace AP.BTP.Infrastructure.Context
             // Seeding
             modelBuilder.Entity<PlantationSite>().Seed();
             modelBuilder.Entity<Tree>().Seed();
+            modelBuilder.Entity<Zone>().Seed();
             modelBuilder.Entity<User>().Seed();
+            modelBuilder.Entity<TaskList>().Seed();
+            modelBuilder.Entity<TaskItem>().Seed();
             // TODO: Seed Zone with correct PlantationSite relation
 
             modelBuilder.Entity("PlantationSiteUser").HasData(
