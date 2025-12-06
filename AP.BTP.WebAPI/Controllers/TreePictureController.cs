@@ -52,6 +52,17 @@ namespace AP.BTP.WebAPI.Controllers
             return Created("", await mediator.Send(new AddTreePictureCommand() { TreePicture = treePicture }));
         }
 
+        /// <summary>
+        /// Updates the "favourite" status of a tree picture.
+        /// </summary>
+        /// <param name="id">The ID of the tree picture to update.</param>
+        /// <param name="favourite">A boolean indicating whether the picture should be marked as favourite.</param>
+        /// <returns>
+        /// Returns an <see cref="ActionResult{TreePictureDTO}"/> containing the updated <see cref="TreePictureDTO"/>.
+        /// </returns>
+        /// <remarks>
+        /// Only users in the "Admin" role are authorized to call this endpoint.
+        /// </remarks>
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/favourite")]
         public async Task<ActionResult<TreePictureDTO>> PatchTaskListPlantationSite(int id, [FromBody] bool favourite)

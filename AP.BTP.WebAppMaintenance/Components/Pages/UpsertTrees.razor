@@ -269,7 +269,14 @@
 }
 
 @code {
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
     private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
     private Toasts? toastContainer;
 
     /// <summary>
@@ -331,6 +338,10 @@
     /// </summary>
     private Dictionary<string, string> previews = new();
 
+    /// <summary>
+    /// Tracks which tree pictures are marked as favourites. 
+    /// The key is the tree picture ID, and the value indicates whether it is a favourite (<c>true</c>) or not (<c>false</c>).
+    /// </summary>
     private Dictionary<int, bool> favourites = new();
 
     /// <summary>
@@ -855,6 +866,11 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Checks whether a picture is currently marked as favourite.
+    /// </summary>
+    /// <param name="key">The picture key, usually its ID as string.</param>
+    /// <returns><c>true</c> if the picture is favourite; otherwise <c>false</c>.</returns>
     private bool IsPictureFavourite(string key)
     {
         if (int.TryParse(key, out int id))
@@ -863,6 +879,11 @@
         return false;
     }
 
+    /// <summary>
+    /// Toggles the favourite status of a picture.
+    /// Automatically unsets other favourites if a new one is being set.
+    /// </summary>
+    /// <param name="key">The picture key, usually its ID as string.</param>
     private async Task ToggleFavourite(string key)
     {
         if (!int.TryParse(key, out int picId))
@@ -902,11 +923,20 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Determines if the picture key represents a temporary (unsaved) image.
+    /// </summary>
+    /// <param name="key">The picture key.</param>
+    /// <returns><c>true</c> if the image is temporary; otherwise <c>false</c>.</returns>
     private bool IsTemporary(string key)
     {
         return !int.TryParse(key, out _);
     }
 
+    /// <summary>
+    /// Handles star icon click. Shows a warning if the image is not yet saved.
+    /// </summary>
+    /// <param name="key">The picture key.</param>
     private async Task OnStarClicked(string key)
     {
         if (IsTemporary(key))
@@ -918,6 +948,10 @@
         await ToggleFavourite(key);
     }
 
+    /// <summary>
+    /// Adds a warning toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
     private void ShowWarning(string message)
     {
         toastMessages.Add(new ToastMessage

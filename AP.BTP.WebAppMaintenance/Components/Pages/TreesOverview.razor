@@ -188,8 +188,14 @@
     /// </summary>
     private System.Timers.Timer? debounceTimer;
 
+    /// <summary>
+    /// Stores the base64-encoded image data for trees, keyed by tree ID as a string.
+    /// </summary>
     private Dictionary<string, string> images = new();
 
+    /// <summary>
+    /// Represents the current authenticated user.
+    /// </summary>
     private ClaimsPrincipal? user;
 
     /// <summary>
@@ -333,6 +339,12 @@
         }
     }
 
+    /// <summary>
+    /// Fetches all pictures for a specific tree and generates a base64 image for the favourite picture,
+    /// or the first picture if no favourite is set.
+    /// The result is stored in the <see cref="images"/> dictionary keyed by the tree ID.
+    /// </summary>
+    /// <param name="id">The ID of the tree to fetch pictures for.</param>
     private async Task GetFavouriteTreePicture(int id){
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         
@@ -350,6 +362,11 @@
         }
     }
 
+    /// <summary>
+    /// Generates a base64-encoded image from a file path fetched from the API and stores it in <see cref="images"/>.
+    /// </summary>
+    /// <param name="key">The key (tree ID) under which the image is stored in <see cref="images"/>.</param>
+    /// <param name="path">The file path of the image to load from the API.</param>
     private async Task GenerateImage(int key, string path){
 
         if (string.IsNullOrWhiteSpace(path)) return;

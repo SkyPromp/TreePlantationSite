@@ -7,7 +7,7 @@ using MediatR;
 namespace AP.BTP.Application.CQRS.TreePicture
 {
     /// <summary>
-    /// Represents a command to partially update a TreePicture (e.g., updating only the TreePictureId).
+    /// Represents a command to partially update a TreePicture (e.g., updating only the IsFavourite value).
     /// </summary>
     public class PatchTreePictureCommand : IRequest<TreePictureDTO>
     {
@@ -63,7 +63,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     }
 
     /// <summary>
-    /// Handles the <see cref="PatchTreePictureCommand"/> by partially updating the task list in the database.
+    /// Handles the <see cref="PatchTreePictureCommand"/> by partially updating the tree picture in the database.
     /// </summary>
     public class PatchTreePictureCommandHandler : IRequestHandler<PatchTreePictureCommand, TreePictureDTO>
     {
@@ -84,7 +84,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
         /// <summary>
         /// Handles the <see cref="PatchTreePictureCommand"/> by updating only the specified fields.
         /// </summary>
-        /// <param name="request">The command containing the task list ID and fields to update.</param>
+        /// <param name="request">The command containing the tree picture ID and fields to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>The updated <see cref="TreePictureDTO"/>.</returns>
         public async Task<TreePictureDTO> Handle(PatchTreePictureCommand request, CancellationToken cancellationToken)
