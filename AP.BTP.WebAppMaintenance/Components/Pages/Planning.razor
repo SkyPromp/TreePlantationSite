@@ -81,21 +81,33 @@ else
                 DateTime day = WeekDays[i];
                 bool isFirst = i == 0;
                 bool isLast = i == WeekDays.Count - 1;
-                <div class="border flex-shrink-0 d-flex flex-column"
+
+                <div class="border flex-shrink-0 d-flex flex-column position-relative @(IsPastDay(day) ? "past-day" : "")"
                      style="
-                                                max-width: 14%;
-                                                min-width: 14%;
-                                                font-size: 0.90rem;
-                                                @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                                                @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                                                @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                                             ">
+                            max-width: 14%;
+                            min-width: 14%;
+                            font-size: 0.90rem;
+                            @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                            @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                            @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                     ">
+                    @if (IsPastDay(day))
+                    {
+                        <div class="position-absolute top-0 start-0 w-100 h-100"
+                             style="
+                                    background-color: rgba(200, 200, 200, 0.45);
+                                    border-radius: inherit;
+                                    pointer-events: none;
+                             ">
+                        </div>
+                    }
+
                     <div class="text-center fw-bold p-3"
                          style="
-                                                    background-color: #E3E3E3;
-                                                    @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                                                    @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                                                 ">
+                                background-color: #E3E3E3;
+                                @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                         ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -168,8 +180,6 @@ else
                                 {
                                     cssClass = "updated-card";
                                 }
-
-
 
                                 <div class="p-1 m-2 border border-dark rounded @cssClass"
                                      style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
@@ -801,6 +811,7 @@ else
 
             errorMessage = errorResponseInfo?.Message
                 ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
+            return;
         }
 
         await LoadTaskListsForWeek();
@@ -1042,5 +1053,13 @@ else
             a.Title != b.Title ||
             a.Description != b.Description ||
             a.DurationInMinutes != b.DurationInMinutes;
+    }
+
+    /// <summary>
+    /// checks if the given day is in the past compared to today.
+    /// </summary>
+    private bool IsPastDay(DateTime day)
+    {
+        return day.Date < DateTime.Today;
     }
 }

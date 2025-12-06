@@ -30,6 +30,10 @@ namespace AP.BTP.Application.CQRS.TaskList
                 .NotEmpty()
                 .WithMessage("De week moet minstens één takenlijst bevatten.");
 
+            RuleForEach(x => x.TaskLists)
+                .MustAsync(async (tl, cancellation) => await NotEditingPastItemsAsync(tl, uow))
+                .WithMessage("Taken van een dag in het verleden mogen niet gewijzigd worden.");
+
             RuleFor(x => x.TaskLists)
                 .Must(AllSameSite)
                 .WithMessage("Een medewerker moet de volledige week in dezelfde site werken.");
@@ -63,6 +67,7 @@ namespace AP.BTP.Application.CQRS.TaskList
 
             return siteIds.Count <= 1;
         }
+
         private bool MaxFiveDays(List<TaskListDTO> taskLists)
         {
             int days = taskLists
@@ -72,6 +77,33 @@ namespace AP.BTP.Application.CQRS.TaskList
                 .Count();
 
             return days <= 5;
+        }
+
+        private async Task<bool> NotEditingPastItemsAsync(TaskListDTO taskList, IUnitOfWork uow)
+        {
+            if (taskList.Date.Date >= DateTime.Today)
+                return true;
+
+            if (taskList.TaskItems == null)
+                return true;
+
+            foreach (TaskItemDTO item in taskList.TaskItems)
+            {
+                Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(item.Id);
+                if (existingItem == null)
+                    return false;
+
+                bool edited =
+                    existingItem.Title != item.Title ||
+                    existingItem.Description != item.Description ||
+                    existingItem.DurationInMinutes != item.DurationInMinutes ||
+                    existingItem.IsDeleted != item.IsDeleted;
+
+                if (edited)
+                    return false;
+            }
+
+            return true;
         }
     }
 

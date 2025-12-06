@@ -167,3 +167,12 @@ div.nav.nav-tabs {
         border-radius: inherit;
         pointer-events: none;
     }
+
+.past-day button,
+.past-day select,
+.past-day [onclick],
+.past-day .clickable,
+.past-day .form-select {
+    pointer-events: none !important;
+    opacity: 0.6;
+}

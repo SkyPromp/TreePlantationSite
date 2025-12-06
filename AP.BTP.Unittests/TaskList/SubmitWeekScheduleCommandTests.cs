@@ -27,7 +27,7 @@ namespace AP.BTP.Unittests.TaskList
         {
             SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand();
 
-            DateTime startDate = new DateTime(2025, 1, 6);
+            DateTime startDate = DateTime.Today;
 
             for (int d = 0; d < dayCount; d++)
             {
@@ -114,6 +114,152 @@ namespace AP.BTP.Unittests.TaskList
 
             result.ShouldHaveValidationErrorFor("TaskLists[0]")
                 .WithErrorMessage("Een takenlijst mag maximaal 8 uur bevatten.");
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Editing_Item_In_Past()
+        {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
+            {
+                TaskLists = new List<TaskListDTO>
+        {
+            new TaskListDTO
+            {
+                Id = 1,
+                UserId = 123,
+                PlantationSiteId = 1,
+                Date = yesterday,
+                TaskItems = new List<TaskItemDTO>
+                {
+                    new TaskItemDTO
+                    {
+                        Id = 10,
+                        TaskListId = 1,
+                        Title = "Changed Title",
+                        Description = "Changed",
+                        DurationInMinutes = 120,
+                        IsDeleted = false
+                    }
+                }
+            }
+        }
+            };
+
+            uowMock.Setup(x => x.TaskItemRepository.GetById(10))
+                   .ReturnsAsync(new Domain.TaskItem
+                   {
+                       Id = 10,
+                       TaskListId = 1,
+                       TaskList = null,
+                       Title = "Changed Title",
+                       Description = "Original",
+                       DurationInMinutes = 60,
+                       IsDeleted = false
+                   });
+
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor("TaskLists[0]")
+                  .WithErrorMessage("Taken van een dag in het verleden mogen niet gewijzigd worden.");
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Deleting_Item_In_Past()
+        {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
+            {
+                TaskLists = new List<TaskListDTO>
+        {
+            new TaskListDTO
+            {
+                Id = 1,
+                UserId = 123,
+                PlantationSiteId = 1,
+                Date = yesterday,
+                TaskItems = new List<TaskItemDTO>
+                {
+                    new TaskItemDTO
+                    {
+                        Id = 10,
+                        TaskListId = 1,
+                        Title = "Original Title",
+                        Description = "Original",
+                        DurationInMinutes = 60,
+                        IsDeleted = true
+                    }
+                }
+            }
+        }
+            };
+
+            uowMock.Setup(x => x.TaskItemRepository.GetById(10))
+                   .ReturnsAsync(new Domain.TaskItem
+                   {
+                       Id = 10,
+                       TaskListId = 1,
+                       TaskList = null,
+                       Title = "Original Title",
+                       Description = "Original",
+                       DurationInMinutes = 60,
+                       IsDeleted = false
+                   });
+
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor("TaskLists[0]")
+                .WithErrorMessage("Taken van een dag in het verleden mogen niet gewijzigd worden.");
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Editing_Item_Today()
+        {
+            DateTime today = DateTime.Today;
+
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
+            {
+                TaskLists = new List<TaskListDTO>
+        {
+            new TaskListDTO
+            {
+                Id = 1,
+                UserId = 123,
+                PlantationSiteId = 1,
+                Date = today,
+                TaskItems = new List<TaskItemDTO>
+                {
+                    new TaskItemDTO
+                    {
+                        Id = 10,
+                        TaskListId = 1,
+                        Title = "Updated Title",
+                        Description = "Updated",
+                        DurationInMinutes = 200,
+                        IsDeleted = false
+                    }
+                }
+            }
+        }
+            };
+
+            uowMock.Setup(x => x.TaskItemRepository.GetById(10))
+                   .ReturnsAsync(new Domain.TaskItem
+                   {
+                       Id = 10,
+                       TaskListId = 1,
+                       TaskList = null,
+                       Title = "Old Title",
+                       Description = "Old",
+                       DurationInMinutes = 100,
+                       IsDeleted = false
+                   });
+
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldNotHaveAnyValidationErrors();
         }
 
         [TestMethod]
