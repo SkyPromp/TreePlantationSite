@@ -2442,6 +2442,4803 @@ namespace AP.BTP.Infrastructure.Migrations
                             IsDeleted = false,
                             TaskListId = 101,
                             Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 246,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 132,
+                            IsDeleted = false,
+                            TaskListId = 102,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 247,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 88,
+                            IsDeleted = false,
+                            TaskListId = 102,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 248,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 102,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 249,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 186,
+                            IsDeleted = false,
+                            TaskListId = 103,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 250,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 45,
+                            IsDeleted = false,
+                            TaskListId = 104,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 251,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 169,
+                            IsDeleted = false,
+                            TaskListId = 104,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 252,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 175,
+                            IsDeleted = false,
+                            TaskListId = 105,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 253,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 180,
+                            IsDeleted = false,
+                            TaskListId = 105,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 254,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 71,
+                            IsDeleted = false,
+                            TaskListId = 106,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 255,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 106,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 256,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 99,
+                            IsDeleted = false,
+                            TaskListId = 106,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 257,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 106,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 258,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 163,
+                            IsDeleted = false,
+                            TaskListId = 107,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 259,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 155,
+                            IsDeleted = false,
+                            TaskListId = 107,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 260,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 199,
+                            IsDeleted = false,
+                            TaskListId = 108,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 261,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 78,
+                            IsDeleted = false,
+                            TaskListId = 108,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 262,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 109,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 263,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 45,
+                            IsDeleted = false,
+                            TaskListId = 109,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 264,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 149,
+                            IsDeleted = false,
+                            TaskListId = 109,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 265,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 195,
+                            IsDeleted = false,
+                            TaskListId = 110,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 266,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 203,
+                            IsDeleted = false,
+                            TaskListId = 110,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 267,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 437,
+                            IsDeleted = false,
+                            TaskListId = 111,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 268,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 94,
+                            IsDeleted = false,
+                            TaskListId = 112,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 269,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 48,
+                            IsDeleted = false,
+                            TaskListId = 112,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 270,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 112,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 271,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 74,
+                            IsDeleted = false,
+                            TaskListId = 112,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 272,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 113,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 273,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 54,
+                            IsDeleted = false,
+                            TaskListId = 113,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 274,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 86,
+                            IsDeleted = false,
+                            TaskListId = 113,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 275,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 113,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 276,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 81,
+                            IsDeleted = false,
+                            TaskListId = 114,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 277,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 68,
+                            IsDeleted = false,
+                            TaskListId = 114,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 278,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 114,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 279,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 114,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 280,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 99,
+                            IsDeleted = false,
+                            TaskListId = 115,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 281,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 42,
+                            IsDeleted = false,
+                            TaskListId = 115,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 282,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 78,
+                            IsDeleted = false,
+                            TaskListId = 115,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 283,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 52,
+                            IsDeleted = false,
+                            TaskListId = 116,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 284,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 108,
+                            IsDeleted = false,
+                            TaskListId = 116,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 285,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 68,
+                            IsDeleted = false,
+                            TaskListId = 116,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 286,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 116,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 287,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 160,
+                            IsDeleted = false,
+                            TaskListId = 117,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 288,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 32,
+                            IsDeleted = false,
+                            TaskListId = 118,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 289,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 231,
+                            IsDeleted = false,
+                            TaskListId = 118,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 290,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 119,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 291,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 119,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 292,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 119,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 293,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 120,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 294,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 116,
+                            IsDeleted = false,
+                            TaskListId = 120,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 295,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 56,
+                            IsDeleted = false,
+                            TaskListId = 120,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 296,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 335,
+                            IsDeleted = false,
+                            TaskListId = 121,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 297,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 122,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 298,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 122,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 299,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 54,
+                            IsDeleted = false,
+                            TaskListId = 122,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 300,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 63,
+                            IsDeleted = false,
+                            TaskListId = 122,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 301,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 123,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 302,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 123,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 303,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 123,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 304,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 123,
+                            IsDeleted = false,
+                            TaskListId = 124,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 305,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 122,
+                            IsDeleted = false,
+                            TaskListId = 124,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 306,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 153,
+                            IsDeleted = false,
+                            TaskListId = 124,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 307,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 32,
+                            IsDeleted = false,
+                            TaskListId = 125,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 308,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 173,
+                            IsDeleted = false,
+                            TaskListId = 125,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 309,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 80,
+                            IsDeleted = false,
+                            TaskListId = 126,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 310,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 87,
+                            IsDeleted = false,
+                            TaskListId = 126,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 311,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 126,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 312,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 120,
+                            IsDeleted = false,
+                            TaskListId = 127,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 313,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 151,
+                            IsDeleted = false,
+                            TaskListId = 127,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 314,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 43,
+                            IsDeleted = false,
+                            TaskListId = 127,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 315,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 113,
+                            IsDeleted = false,
+                            TaskListId = 128,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 316,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 128,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 317,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 81,
+                            IsDeleted = false,
+                            TaskListId = 128,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 318,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 339,
+                            IsDeleted = false,
+                            TaskListId = 129,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 319,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 156,
+                            IsDeleted = false,
+                            TaskListId = 130,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 320,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 113,
+                            IsDeleted = false,
+                            TaskListId = 131,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 321,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 131,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 322,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 58,
+                            IsDeleted = false,
+                            TaskListId = 131,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 323,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 31,
+                            IsDeleted = false,
+                            TaskListId = 131,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 324,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 242,
+                            IsDeleted = false,
+                            TaskListId = 132,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 325,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 76,
+                            IsDeleted = false,
+                            TaskListId = 133,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 326,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 143,
+                            IsDeleted = false,
+                            TaskListId = 133,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 327,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 292,
+                            IsDeleted = false,
+                            TaskListId = 134,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 328,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 148,
+                            IsDeleted = false,
+                            TaskListId = 135,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 329,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 149,
+                            IsDeleted = false,
+                            TaskListId = 135,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 330,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 411,
+                            IsDeleted = false,
+                            TaskListId = 136,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 331,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 116,
+                            IsDeleted = false,
+                            TaskListId = 137,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 332,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 87,
+                            IsDeleted = false,
+                            TaskListId = 137,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 333,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 59,
+                            IsDeleted = false,
+                            TaskListId = 137,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 334,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 80,
+                            IsDeleted = false,
+                            TaskListId = 137,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 335,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 61,
+                            IsDeleted = false,
+                            TaskListId = 138,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 336,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 137,
+                            IsDeleted = false,
+                            TaskListId = 138,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 337,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 54,
+                            IsDeleted = false,
+                            TaskListId = 139,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 338,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 125,
+                            IsDeleted = false,
+                            TaskListId = 139,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 339,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 120,
+                            IsDeleted = false,
+                            TaskListId = 140,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 340,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 131,
+                            IsDeleted = false,
+                            TaskListId = 140,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 341,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 33,
+                            IsDeleted = false,
+                            TaskListId = 140,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 342,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 158,
+                            IsDeleted = false,
+                            TaskListId = 141,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 343,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 195,
+                            IsDeleted = false,
+                            TaskListId = 141,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 344,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 146,
+                            IsDeleted = false,
+                            TaskListId = 142,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 345,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 143,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 346,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 106,
+                            IsDeleted = false,
+                            TaskListId = 143,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 347,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 149,
+                            IsDeleted = false,
+                            TaskListId = 143,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 348,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 204,
+                            IsDeleted = false,
+                            TaskListId = 144,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 349,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 228,
+                            IsDeleted = false,
+                            TaskListId = 144,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 350,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 196,
+                            IsDeleted = false,
+                            TaskListId = 145,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 351,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 40,
+                            IsDeleted = false,
+                            TaskListId = 146,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 352,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 116,
+                            IsDeleted = false,
+                            TaskListId = 146,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 353,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 126,
+                            IsDeleted = false,
+                            TaskListId = 146,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 354,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 147,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 355,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 32,
+                            IsDeleted = false,
+                            TaskListId = 147,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 356,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 46,
+                            IsDeleted = false,
+                            TaskListId = 147,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 357,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 107,
+                            IsDeleted = false,
+                            TaskListId = 148,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 358,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 100,
+                            IsDeleted = false,
+                            TaskListId = 148,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 359,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 148,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 360,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 86,
+                            IsDeleted = false,
+                            TaskListId = 148,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 361,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 437,
+                            IsDeleted = false,
+                            TaskListId = 149,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 362,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 35,
+                            IsDeleted = false,
+                            TaskListId = 150,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 363,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 118,
+                            IsDeleted = false,
+                            TaskListId = 150,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 364,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 41,
+                            IsDeleted = false,
+                            TaskListId = 150,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 365,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 150,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 366,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 151,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 367,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 144,
+                            IsDeleted = false,
+                            TaskListId = 151,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 368,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 151,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 369,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 152,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 370,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 72,
+                            IsDeleted = false,
+                            TaskListId = 152,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 371,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 42,
+                            IsDeleted = false,
+                            TaskListId = 152,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 372,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 39,
+                            IsDeleted = false,
+                            TaskListId = 153,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 373,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 107,
+                            IsDeleted = false,
+                            TaskListId = 153,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 374,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 153,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 375,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 153,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 376,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 154,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 377,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 154,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 378,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 90,
+                            IsDeleted = false,
+                            TaskListId = 155,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 379,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 189,
+                            IsDeleted = false,
+                            TaskListId = 156,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 380,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 150,
+                            IsDeleted = false,
+                            TaskListId = 156,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 381,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 118,
+                            IsDeleted = false,
+                            TaskListId = 157,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 382,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 159,
+                            IsDeleted = false,
+                            TaskListId = 157,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 383,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 355,
+                            IsDeleted = false,
+                            TaskListId = 158,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 384,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 474,
+                            IsDeleted = false,
+                            TaskListId = 159,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 385,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 159,
+                            IsDeleted = false,
+                            TaskListId = 160,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 386,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 134,
+                            IsDeleted = false,
+                            TaskListId = 160,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 387,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 119,
+                            IsDeleted = false,
+                            TaskListId = 161,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 388,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 40,
+                            IsDeleted = false,
+                            TaskListId = 161,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 389,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 62,
+                            IsDeleted = false,
+                            TaskListId = 161,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 390,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 103,
+                            IsDeleted = false,
+                            TaskListId = 162,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 391,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 162,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 392,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 162,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 393,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 103,
+                            IsDeleted = false,
+                            TaskListId = 162,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 394,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 148,
+                            IsDeleted = false,
+                            TaskListId = 163,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 395,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 138,
+                            IsDeleted = false,
+                            TaskListId = 163,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 396,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 89,
+                            IsDeleted = false,
+                            TaskListId = 163,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 397,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 76,
+                            IsDeleted = false,
+                            TaskListId = 164,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 398,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 164,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 399,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 116,
+                            IsDeleted = false,
+                            TaskListId = 164,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 400,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 71,
+                            IsDeleted = false,
+                            TaskListId = 164,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 401,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 101,
+                            IsDeleted = false,
+                            TaskListId = 165,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 402,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 68,
+                            IsDeleted = false,
+                            TaskListId = 165,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 403,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 63,
+                            IsDeleted = false,
+                            TaskListId = 165,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 404,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 90,
+                            IsDeleted = false,
+                            TaskListId = 165,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 405,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 105,
+                            IsDeleted = false,
+                            TaskListId = 166,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 406,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 74,
+                            IsDeleted = false,
+                            TaskListId = 166,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 407,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 166,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 408,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 166,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 409,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 122,
+                            IsDeleted = false,
+                            TaskListId = 167,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 410,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 65,
+                            IsDeleted = false,
+                            TaskListId = 167,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 411,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 36,
+                            IsDeleted = false,
+                            TaskListId = 168,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 412,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 74,
+                            IsDeleted = false,
+                            TaskListId = 168,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 413,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 82,
+                            IsDeleted = false,
+                            TaskListId = 168,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 414,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 101,
+                            IsDeleted = false,
+                            TaskListId = 168,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 415,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 54,
+                            IsDeleted = false,
+                            TaskListId = 169,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 416,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 169,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 417,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 169,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 418,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 88,
+                            IsDeleted = false,
+                            TaskListId = 169,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 419,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 170,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 420,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 65,
+                            IsDeleted = false,
+                            TaskListId = 171,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 421,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 171,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 422,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 57,
+                            IsDeleted = false,
+                            TaskListId = 171,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 423,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 172,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 424,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 202,
+                            IsDeleted = false,
+                            TaskListId = 172,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 425,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 99,
+                            IsDeleted = false,
+                            TaskListId = 173,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 426,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 59,
+                            IsDeleted = false,
+                            TaskListId = 173,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 427,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 173,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 428,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 92,
+                            IsDeleted = false,
+                            TaskListId = 173,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 429,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 31,
+                            IsDeleted = false,
+                            TaskListId = 174,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 430,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 123,
+                            IsDeleted = false,
+                            TaskListId = 174,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 431,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 132,
+                            IsDeleted = false,
+                            TaskListId = 174,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 432,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 91,
+                            IsDeleted = false,
+                            TaskListId = 175,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 433,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 143,
+                            IsDeleted = false,
+                            TaskListId = 175,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 434,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 43,
+                            IsDeleted = false,
+                            TaskListId = 175,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 435,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 50,
+                            IsDeleted = false,
+                            TaskListId = 176,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 436,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 103,
+                            IsDeleted = false,
+                            TaskListId = 176,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 437,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 73,
+                            IsDeleted = false,
+                            TaskListId = 176,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 438,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 46,
+                            IsDeleted = false,
+                            TaskListId = 177,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 439,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 88,
+                            IsDeleted = false,
+                            TaskListId = 177,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 440,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 40,
+                            IsDeleted = false,
+                            TaskListId = 178,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 441,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 145,
+                            IsDeleted = false,
+                            TaskListId = 179,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 442,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 44,
+                            IsDeleted = false,
+                            TaskListId = 179,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 443,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 57,
+                            IsDeleted = false,
+                            TaskListId = 179,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 444,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 325,
+                            IsDeleted = false,
+                            TaskListId = 180,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 445,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 390,
+                            IsDeleted = false,
+                            TaskListId = 181,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 446,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 182,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 447,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 113,
+                            IsDeleted = false,
+                            TaskListId = 182,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 448,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 182,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 449,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 103,
+                            IsDeleted = false,
+                            TaskListId = 183,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 450,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 34,
+                            IsDeleted = false,
+                            TaskListId = 183,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 451,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 65,
+                            IsDeleted = false,
+                            TaskListId = 183,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 452,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 183,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 453,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 184,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 454,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 31,
+                            IsDeleted = false,
+                            TaskListId = 184,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 455,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 184,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 456,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 120,
+                            IsDeleted = false,
+                            TaskListId = 185,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 457,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 36,
+                            IsDeleted = false,
+                            TaskListId = 185,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 458,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 109,
+                            IsDeleted = false,
+                            TaskListId = 185,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 459,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 58,
+                            IsDeleted = false,
+                            TaskListId = 186,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 460,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 193,
+                            IsDeleted = false,
+                            TaskListId = 186,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 461,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 75,
+                            IsDeleted = false,
+                            TaskListId = 187,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 462,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 187,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 463,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 187,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 464,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 187,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 465,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 233,
+                            IsDeleted = false,
+                            TaskListId = 188,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 466,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 189,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 467,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 189,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 468,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 189,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 469,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 167,
+                            IsDeleted = false,
+                            TaskListId = 190,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 470,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 238,
+                            IsDeleted = false,
+                            TaskListId = 191,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 471,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 179,
+                            IsDeleted = false,
+                            TaskListId = 191,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 472,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 47,
+                            IsDeleted = false,
+                            TaskListId = 192,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 473,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 192,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 474,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 192,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 475,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 84,
+                            IsDeleted = false,
+                            TaskListId = 192,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 476,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 193,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 477,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 193,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 478,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 141,
+                            IsDeleted = false,
+                            TaskListId = 194,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 479,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 194,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 480,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 67,
+                            IsDeleted = false,
+                            TaskListId = 194,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 481,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 195,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 482,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 45,
+                            IsDeleted = false,
+                            TaskListId = 195,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 483,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 195,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 484,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 55,
+                            IsDeleted = false,
+                            TaskListId = 195,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 485,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 111,
+                            IsDeleted = false,
+                            TaskListId = 196,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 486,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 137,
+                            IsDeleted = false,
+                            TaskListId = 196,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 487,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 144,
+                            IsDeleted = false,
+                            TaskListId = 196,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 488,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 63,
+                            IsDeleted = false,
+                            TaskListId = 197,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 489,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 197,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 490,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 144,
+                            IsDeleted = false,
+                            TaskListId = 197,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 491,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 35,
+                            IsDeleted = false,
+                            TaskListId = 198,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 492,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 198,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 493,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 50,
+                            IsDeleted = false,
+                            TaskListId = 198,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 494,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 58,
+                            IsDeleted = false,
+                            TaskListId = 198,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 495,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 199,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 496,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 199,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 497,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 199,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 498,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 53,
+                            IsDeleted = false,
+                            TaskListId = 199,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 499,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 54,
+                            IsDeleted = false,
+                            TaskListId = 200,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 500,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 196,
+                            IsDeleted = false,
+                            TaskListId = 200,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 501,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 201,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 502,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 39,
+                            IsDeleted = false,
+                            TaskListId = 201,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 503,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 44,
+                            IsDeleted = false,
+                            TaskListId = 201,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 504,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 70,
+                            IsDeleted = false,
+                            TaskListId = 201,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 505,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 202,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 506,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 79,
+                            IsDeleted = false,
+                            TaskListId = 202,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 507,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 202,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 508,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 203,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 509,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 94,
+                            IsDeleted = false,
+                            TaskListId = 203,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 510,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 42,
+                            IsDeleted = false,
+                            TaskListId = 203,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 511,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 108,
+                            IsDeleted = false,
+                            TaskListId = 203,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 512,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 204,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 513,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 196,
+                            IsDeleted = false,
+                            TaskListId = 204,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 514,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 205,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 515,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 72,
+                            IsDeleted = false,
+                            TaskListId = 205,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 516,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 89,
+                            IsDeleted = false,
+                            TaskListId = 205,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 517,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 87,
+                            IsDeleted = false,
+                            TaskListId = 206,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 518,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 206,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 519,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 132,
+                            IsDeleted = false,
+                            TaskListId = 206,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 520,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 38,
+                            IsDeleted = false,
+                            TaskListId = 207,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 521,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 79,
+                            IsDeleted = false,
+                            TaskListId = 207,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 522,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 207,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 523,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 207,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 524,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 262,
+                            IsDeleted = false,
+                            TaskListId = 208,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 525,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 209,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 526,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 138,
+                            IsDeleted = false,
+                            TaskListId = 209,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 527,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 209,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 528,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 76,
+                            IsDeleted = false,
+                            TaskListId = 210,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 529,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 33,
+                            IsDeleted = false,
+                            TaskListId = 210,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 530,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 91,
+                            IsDeleted = false,
+                            TaskListId = 210,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 531,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 63,
+                            IsDeleted = false,
+                            TaskListId = 210,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 532,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 211,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 533,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 118,
+                            IsDeleted = false,
+                            TaskListId = 211,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 534,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 211,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 535,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 97,
+                            IsDeleted = false,
+                            TaskListId = 211,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 536,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 346,
+                            IsDeleted = false,
+                            TaskListId = 212,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 537,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 213,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 538,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 213,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 539,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 82,
+                            IsDeleted = false,
+                            TaskListId = 213,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 540,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 213,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 541,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 265,
+                            IsDeleted = false,
+                            TaskListId = 214,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 542,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 90,
+                            IsDeleted = false,
+                            TaskListId = 215,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 543,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 92,
+                            IsDeleted = false,
+                            TaskListId = 215,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 544,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 39,
+                            IsDeleted = false,
+                            TaskListId = 215,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 545,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 215,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 546,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 216,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 547,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 217,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 548,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 34,
+                            IsDeleted = false,
+                            TaskListId = 217,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 549,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 86,
+                            IsDeleted = false,
+                            TaskListId = 217,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 550,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 97,
+                            IsDeleted = false,
+                            TaskListId = 217,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 551,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 90,
+                            IsDeleted = false,
+                            TaskListId = 218,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 552,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 218,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 553,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 38,
+                            IsDeleted = false,
+                            TaskListId = 218,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 554,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 43,
+                            IsDeleted = false,
+                            TaskListId = 218,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 555,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 223,
+                            IsDeleted = false,
+                            TaskListId = 219,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 556,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 351,
+                            IsDeleted = false,
+                            TaskListId = 220,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 557,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 62,
+                            IsDeleted = false,
+                            TaskListId = 221,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 558,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 35,
+                            IsDeleted = false,
+                            TaskListId = 221,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 559,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 127,
+                            IsDeleted = false,
+                            TaskListId = 221,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 560,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 222,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 561,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 235,
+                            IsDeleted = false,
+                            TaskListId = 222,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 562,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 223,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 563,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 145,
+                            IsDeleted = false,
+                            TaskListId = 223,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 564,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 137,
+                            IsDeleted = false,
+                            TaskListId = 223,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 565,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 86,
+                            IsDeleted = false,
+                            TaskListId = 224,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 566,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 224,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 567,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 51,
+                            IsDeleted = false,
+                            TaskListId = 225,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 568,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 225,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 569,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 36,
+                            IsDeleted = false,
+                            TaskListId = 225,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 570,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 88,
+                            IsDeleted = false,
+                            TaskListId = 225,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 571,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 32,
+                            IsDeleted = false,
+                            TaskListId = 226,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 572,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 119,
+                            IsDeleted = false,
+                            TaskListId = 227,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 573,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 82,
+                            IsDeleted = false,
+                            TaskListId = 227,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 574,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 43,
+                            IsDeleted = false,
+                            TaskListId = 228,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 575,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 228,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 576,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 63,
+                            IsDeleted = false,
+                            TaskListId = 228,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 577,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 229,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 578,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 229,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 579,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 34,
+                            IsDeleted = false,
+                            TaskListId = 229,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 580,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 78,
+                            IsDeleted = false,
+                            TaskListId = 229,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 581,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 99,
+                            IsDeleted = false,
+                            TaskListId = 230,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 582,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 230,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 583,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 39,
+                            IsDeleted = false,
+                            TaskListId = 230,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 584,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 53,
+                            IsDeleted = false,
+                            TaskListId = 230,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 585,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 231,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 586,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 34,
+                            IsDeleted = false,
+                            TaskListId = 231,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 587,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 57,
+                            IsDeleted = false,
+                            TaskListId = 231,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 588,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 67,
+                            IsDeleted = false,
+                            TaskListId = 232,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 589,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 81,
+                            IsDeleted = false,
+                            TaskListId = 232,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 590,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 232,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 591,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 232,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 592,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 233,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 593,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 50,
+                            IsDeleted = false,
+                            TaskListId = 233,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 594,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 233,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 595,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 153,
+                            IsDeleted = false,
+                            TaskListId = 234,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 596,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 195,
+                            IsDeleted = false,
+                            TaskListId = 234,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 597,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 150,
+                            IsDeleted = false,
+                            TaskListId = 235,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 598,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 235,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 599,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 100,
+                            IsDeleted = false,
+                            TaskListId = 236,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 600,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 91,
+                            IsDeleted = false,
+                            TaskListId = 236,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 601,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 236,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 602,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 105,
+                            IsDeleted = false,
+                            TaskListId = 236,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 603,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 237,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 604,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 237,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 605,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 237,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 606,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 70,
+                            IsDeleted = false,
+                            TaskListId = 237,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 607,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 128,
+                            IsDeleted = false,
+                            TaskListId = 238,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 608,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 167,
+                            IsDeleted = false,
+                            TaskListId = 238,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 609,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 239,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 610,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 239,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 611,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 139,
+                            IsDeleted = false,
+                            TaskListId = 239,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 612,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 217,
+                            IsDeleted = false,
+                            TaskListId = 240,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 613,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 194,
+                            IsDeleted = false,
+                            TaskListId = 241,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 614,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 241,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 615,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 450,
+                            IsDeleted = false,
+                            TaskListId = 242,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 616,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 152,
+                            IsDeleted = false,
+                            TaskListId = 243,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 617,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 84,
+                            IsDeleted = false,
+                            TaskListId = 243,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 618,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 99,
+                            IsDeleted = false,
+                            TaskListId = 244,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 619,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 244,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 620,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 95,
+                            IsDeleted = false,
+                            TaskListId = 244,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 621,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 94,
+                            IsDeleted = false,
+                            TaskListId = 244,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 622,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 245,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 623,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 147,
+                            IsDeleted = false,
+                            TaskListId = 245,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 624,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 245,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 625,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 30,
+                            IsDeleted = false,
+                            TaskListId = 246,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 626,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 50,
+                            IsDeleted = false,
+                            TaskListId = 247,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 627,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 79,
+                            IsDeleted = false,
+                            TaskListId = 247,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 628,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 48,
+                            IsDeleted = false,
+                            TaskListId = 247,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 629,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 80,
+                            IsDeleted = false,
+                            TaskListId = 247,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 630,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 248,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 631,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 70,
+                            IsDeleted = false,
+                            TaskListId = 248,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 632,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 59,
+                            IsDeleted = false,
+                            TaskListId = 248,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 633,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 200,
+                            IsDeleted = false,
+                            TaskListId = 249,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 634,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 55,
+                            IsDeleted = false,
+                            TaskListId = 250,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 635,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 78,
+                            IsDeleted = false,
+                            TaskListId = 250,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 636,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 104,
+                            IsDeleted = false,
+                            TaskListId = 250,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 637,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 250,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 638,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 138,
+                            IsDeleted = false,
+                            TaskListId = 251,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 639,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 44,
+                            IsDeleted = false,
+                            TaskListId = 251,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 640,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 151,
+                            IsDeleted = false,
+                            TaskListId = 251,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 641,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 105,
+                            IsDeleted = false,
+                            TaskListId = 252,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 642,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 252,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 643,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 95,
+                            IsDeleted = false,
+                            TaskListId = 252,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 644,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 253,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 645,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 253,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 646,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 42,
+                            IsDeleted = false,
+                            TaskListId = 253,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 647,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 422,
+                            IsDeleted = false,
+                            TaskListId = 254,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 648,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 100,
+                            IsDeleted = false,
+                            TaskListId = 255,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 649,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 255,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 650,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 114,
+                            IsDeleted = false,
+                            TaskListId = 255,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 651,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 172,
+                            IsDeleted = false,
+                            TaskListId = 256,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 652,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 256,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 653,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 432,
+                            IsDeleted = false,
+                            TaskListId = 257,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 654,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 258,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 655,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 64,
+                            IsDeleted = false,
+                            TaskListId = 258,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 656,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 79,
+                            IsDeleted = false,
+                            TaskListId = 258,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 657,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 55,
+                            IsDeleted = false,
+                            TaskListId = 259,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 658,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 157,
+                            IsDeleted = false,
+                            TaskListId = 259,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 659,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 46,
+                            IsDeleted = false,
+                            TaskListId = 260,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 660,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 40,
+                            IsDeleted = false,
+                            TaskListId = 260,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 661,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 141,
+                            IsDeleted = false,
+                            TaskListId = 260,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 662,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 261,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 663,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 65,
+                            IsDeleted = false,
+                            TaskListId = 261,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 664,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 261,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 665,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 262,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 666,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 139,
+                            IsDeleted = false,
+                            TaskListId = 262,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 667,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 135,
+                            IsDeleted = false,
+                            TaskListId = 262,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 668,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 235,
+                            IsDeleted = false,
+                            TaskListId = 263,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 669,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 106,
+                            IsDeleted = false,
+                            TaskListId = 263,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 670,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 134,
+                            IsDeleted = false,
+                            TaskListId = 264,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 671,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 264,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 672,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 108,
+                            IsDeleted = false,
+                            TaskListId = 265,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 673,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 75,
+                            IsDeleted = false,
+                            TaskListId = 265,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 674,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 265,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 675,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 56,
+                            IsDeleted = false,
+                            TaskListId = 265,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 676,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 103,
+                            IsDeleted = false,
+                            TaskListId = 266,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 677,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 81,
+                            IsDeleted = false,
+                            TaskListId = 266,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 678,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 53,
+                            IsDeleted = false,
+                            TaskListId = 266,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 679,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 41,
+                            IsDeleted = false,
+                            TaskListId = 266,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 680,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 83,
+                            IsDeleted = false,
+                            TaskListId = 267,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 681,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 131,
+                            IsDeleted = false,
+                            TaskListId = 267,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 682,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 137,
+                            IsDeleted = false,
+                            TaskListId = 267,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 683,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 142,
+                            IsDeleted = false,
+                            TaskListId = 268,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 684,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 150,
+                            IsDeleted = false,
+                            TaskListId = 268,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 685,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 40,
+                            IsDeleted = false,
+                            TaskListId = 268,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 686,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 57,
+                            IsDeleted = false,
+                            TaskListId = 269,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 687,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 73,
+                            IsDeleted = false,
+                            TaskListId = 269,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 688,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 106,
+                            IsDeleted = false,
+                            TaskListId = 269,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 689,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 53,
+                            IsDeleted = false,
+                            TaskListId = 269,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 690,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 188,
+                            IsDeleted = false,
+                            TaskListId = 270,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 691,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 270,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 692,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 138,
+                            IsDeleted = false,
+                            TaskListId = 271,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 693,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 47,
+                            IsDeleted = false,
+                            TaskListId = 272,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 694,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 78,
+                            IsDeleted = false,
+                            TaskListId = 272,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 695,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 55,
+                            IsDeleted = false,
+                            TaskListId = 272,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 696,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 196,
+                            IsDeleted = false,
+                            TaskListId = 273,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 697,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 141,
+                            IsDeleted = false,
+                            TaskListId = 273,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 698,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 82,
+                            IsDeleted = false,
+                            TaskListId = 274,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 699,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 47,
+                            IsDeleted = false,
+                            TaskListId = 275,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 700,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 77,
+                            IsDeleted = false,
+                            TaskListId = 275,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 701,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 275,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 702,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 36,
+                            IsDeleted = false,
+                            TaskListId = 275,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 703,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 133,
+                            IsDeleted = false,
+                            TaskListId = 276,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 704,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 107,
+                            IsDeleted = false,
+                            TaskListId = 276,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 705,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 116,
+                            IsDeleted = false,
+                            TaskListId = 276,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 706,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 227,
+                            IsDeleted = false,
+                            TaskListId = 277,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 707,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 140,
+                            IsDeleted = false,
+                            TaskListId = 278,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 708,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 135,
+                            IsDeleted = false,
+                            TaskListId = 278,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 709,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 147,
+                            IsDeleted = false,
+                            TaskListId = 278,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 710,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 279,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 711,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 119,
+                            IsDeleted = false,
+                            TaskListId = 280,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 712,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 58,
+                            IsDeleted = false,
+                            TaskListId = 280,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 713,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 157,
+                            IsDeleted = false,
+                            TaskListId = 280,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 714,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 281,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 715,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 62,
+                            IsDeleted = false,
+                            TaskListId = 281,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 716,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 281,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 717,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 141,
+                            IsDeleted = false,
+                            TaskListId = 282,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 718,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 282,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 719,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 45,
+                            IsDeleted = false,
+                            TaskListId = 282,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 720,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 87,
+                            IsDeleted = false,
+                            TaskListId = 283,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 721,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 121,
+                            IsDeleted = false,
+                            TaskListId = 283,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 722,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 69,
+                            IsDeleted = false,
+                            TaskListId = 284,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 723,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 48,
+                            IsDeleted = false,
+                            TaskListId = 285,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 724,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 188,
+                            IsDeleted = false,
+                            TaskListId = 285,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 725,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 151,
+                            IsDeleted = false,
+                            TaskListId = 286,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 726,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 122,
+                            IsDeleted = false,
+                            TaskListId = 286,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 727,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 286,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 728,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 134,
+                            IsDeleted = false,
+                            TaskListId = 287,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 729,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 156,
+                            IsDeleted = false,
+                            TaskListId = 287,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 730,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 79,
+                            IsDeleted = false,
+                            TaskListId = 287,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 731,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 37,
+                            IsDeleted = false,
+                            TaskListId = 288,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 732,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 39,
+                            IsDeleted = false,
+                            TaskListId = 288,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 733,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 88,
+                            IsDeleted = false,
+                            TaskListId = 288,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 734,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 75,
+                            IsDeleted = false,
+                            TaskListId = 288,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 735,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 155,
+                            IsDeleted = false,
+                            TaskListId = 289,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 736,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 221,
+                            IsDeleted = false,
+                            TaskListId = 289,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 737,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 76,
+                            IsDeleted = false,
+                            TaskListId = 290,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 738,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 85,
+                            IsDeleted = false,
+                            TaskListId = 290,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 739,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 136,
+                            IsDeleted = false,
+                            TaskListId = 290,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 740,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 291,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 741,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 125,
+                            IsDeleted = false,
+                            TaskListId = 291,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 742,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 112,
+                            IsDeleted = false,
+                            TaskListId = 291,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 743,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 46,
+                            IsDeleted = false,
+                            TaskListId = 292,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 744,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 59,
+                            IsDeleted = false,
+                            TaskListId = 292,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 745,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 135,
+                            IsDeleted = false,
+                            TaskListId = 292,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 746,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 142,
+                            IsDeleted = false,
+                            TaskListId = 293,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 747,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 202,
+                            IsDeleted = false,
+                            TaskListId = 293,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 748,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 35,
+                            IsDeleted = false,
+                            TaskListId = 294,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 749,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 81,
+                            IsDeleted = false,
+                            TaskListId = 294,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 750,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 95,
+                            IsDeleted = false,
+                            TaskListId = 294,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 751,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 82,
+                            IsDeleted = false,
+                            TaskListId = 294,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 752,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 98,
+                            IsDeleted = false,
+                            TaskListId = 295,
+                            Title = "Bemesten van bomen"
+                        },
+                        new
+                        {
+                            Id = 753,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 138,
+                            IsDeleted = false,
+                            TaskListId = 295,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 754,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 91,
+                            IsDeleted = false,
+                            TaskListId = 296,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 755,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 60,
+                            IsDeleted = false,
+                            TaskListId = 296,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 756,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 45,
+                            IsDeleted = false,
+                            TaskListId = 296,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 757,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 46,
+                            IsDeleted = false,
+                            TaskListId = 296,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 758,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 95,
+                            IsDeleted = false,
+                            TaskListId = 297,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 759,
+                            Description = "Monitor de bodemkwaliteit en pH rondom de bomen.",
+                            DurationInMinutes = 145,
+                            IsDeleted = false,
+                            TaskListId = 297,
+                            Title = "Bodemkwaliteit monitoren"
+                        },
+                        new
+                        {
+                            Id = 760,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 106,
+                            IsDeleted = false,
+                            TaskListId = 297,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 761,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 62,
+                            IsDeleted = false,
+                            TaskListId = 298,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 762,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 47,
+                            IsDeleted = false,
+                            TaskListId = 299,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 763,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 117,
+                            IsDeleted = false,
+                            TaskListId = 299,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 764,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 49,
+                            IsDeleted = false,
+                            TaskListId = 300,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 765,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 44,
+                            IsDeleted = false,
+                            TaskListId = 300,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 766,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 102,
+                            IsDeleted = false,
+                            TaskListId = 300,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 767,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 100,
+                            IsDeleted = false,
+                            TaskListId = 300,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 768,
+                            Description = "Controleer bomen op ziektes of plagen.",
+                            DurationInMinutes = 96,
+                            IsDeleted = false,
+                            TaskListId = 301,
+                            Title = "Controle op ziektes en plagen"
+                        },
+                        new
+                        {
+                            Id = 769,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 95,
+                            IsDeleted = false,
+                            TaskListId = 301,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 770,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 110,
+                            IsDeleted = false,
+                            TaskListId = 301,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 771,
+                            Description = "Geef water aan pas geplante bomen om de groei te ondersteunen.",
+                            DurationInMinutes = 70,
+                            IsDeleted = false,
+                            TaskListId = 302,
+                            Title = "Water geven aan jonge bomen"
+                        },
+                        new
+                        {
+                            Id = 772,
+                            Description = "Breng mulch aan rond de boom om vocht vast te houden en onkruid te voorkomen.",
+                            DurationInMinutes = 56,
+                            IsDeleted = false,
+                            TaskListId = 302,
+                            Title = "Mulchen rondom bomen"
+                        },
+                        new
+                        {
+                            Id = 773,
+                            Description = "Controleer en herstel boomsteunen of palen indien nodig.",
+                            DurationInMinutes = 93,
+                            IsDeleted = false,
+                            TaskListId = 302,
+                            Title = "Controle van boomsteunen"
+                        },
+                        new
+                        {
+                            Id = 774,
+                            Description = "Verwijder invasieve planten of onkruid bij de wortels van de boom.",
+                            DurationInMinutes = 101,
+                            IsDeleted = false,
+                            TaskListId = 302,
+                            Title = "Onkruid verwijderen bij wortels"
+                        },
+                        new
+                        {
+                            Id = 775,
+                            Description = "Oogst vruchten of zaden van volwassen bomen.",
+                            DurationInMinutes = 66,
+                            IsDeleted = false,
+                            TaskListId = 303,
+                            Title = "Oogsten van vruchten of zaden"
+                        },
+                        new
+                        {
+                            Id = 776,
+                            Description = "Voer een veiligheidscontrole uit en verwijder gevaarlijke takken.",
+                            DurationInMinutes = 115,
+                            IsDeleted = false,
+                            TaskListId = 303,
+                            Title = "Veiligheidstakcontrole"
+                        },
+                        new
+                        {
+                            Id = 777,
+                            Description = "Snoei dode of overgroeide takken om de boom gezond te houden.",
+                            DurationInMinutes = 34,
+                            IsDeleted = false,
+                            TaskListId = 303,
+                            Title = "Snoeien van takken"
+                        },
+                        new
+                        {
+                            Id = 778,
+                            Description = "Breng organische mest rond de basis van de boom aan.",
+                            DurationInMinutes = 48,
+                            IsDeleted = false,
+                            TaskListId = 303,
+                            Title = "Bemesten van bomen"
                         });
                 });
 
@@ -3395,6 +8192,1842 @@ namespace AP.BTP.Infrastructure.Migrations
                             IsDeleted = false,
                             PlantationSiteId = 1,
                             UserId = 3,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Date = new DateTime(2025, 12, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Date = new DateTime(2025, 12, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Date = new DateTime(2025, 12, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Date = new DateTime(2025, 12, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Date = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Date = new DateTime(2026, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Date = new DateTime(2026, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 110,
+                            Date = new DateTime(2026, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 111,
+                            Date = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 112,
+                            Date = new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 113,
+                            Date = new DateTime(2026, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 114,
+                            Date = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 115,
+                            Date = new DateTime(2026, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 116,
+                            Date = new DateTime(2026, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Date = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Date = new DateTime(2026, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Date = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Date = new DateTime(2026, 1, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 121,
+                            Date = new DateTime(2026, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 122,
+                            Date = new DateTime(2026, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 123,
+                            Date = new DateTime(2026, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 124,
+                            Date = new DateTime(2026, 1, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 125,
+                            Date = new DateTime(2026, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 126,
+                            Date = new DateTime(2026, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 127,
+                            Date = new DateTime(2026, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 128,
+                            Date = new DateTime(2026, 1, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 129,
+                            Date = new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 130,
+                            Date = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 131,
+                            Date = new DateTime(2026, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 132,
+                            Date = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 133,
+                            Date = new DateTime(2026, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 134,
+                            Date = new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 135,
+                            Date = new DateTime(2026, 2, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 136,
+                            Date = new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 137,
+                            Date = new DateTime(2026, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 138,
+                            Date = new DateTime(2026, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 139,
+                            Date = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 140,
+                            Date = new DateTime(2026, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 141,
+                            Date = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 142,
+                            Date = new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 143,
+                            Date = new DateTime(2026, 2, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 144,
+                            Date = new DateTime(2026, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 145,
+                            Date = new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 146,
+                            Date = new DateTime(2026, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 147,
+                            Date = new DateTime(2026, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 148,
+                            Date = new DateTime(2026, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 149,
+                            Date = new DateTime(2026, 2, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 150,
+                            Date = new DateTime(2026, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 151,
+                            Date = new DateTime(2026, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 152,
+                            Date = new DateTime(2026, 2, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 153,
+                            Date = new DateTime(2026, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 154,
+                            Date = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 155,
+                            Date = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 156,
+                            Date = new DateTime(2026, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 157,
+                            Date = new DateTime(2026, 3, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 158,
+                            Date = new DateTime(2026, 3, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 159,
+                            Date = new DateTime(2026, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 160,
+                            Date = new DateTime(2026, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 161,
+                            Date = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 162,
+                            Date = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 163,
+                            Date = new DateTime(2026, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 164,
+                            Date = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 165,
+                            Date = new DateTime(2026, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 166,
+                            Date = new DateTime(2026, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 167,
+                            Date = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 168,
+                            Date = new DateTime(2026, 3, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 169,
+                            Date = new DateTime(2026, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 170,
+                            Date = new DateTime(2026, 3, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 171,
+                            Date = new DateTime(2026, 3, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 172,
+                            Date = new DateTime(2026, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 173,
+                            Date = new DateTime(2026, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 174,
+                            Date = new DateTime(2026, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 175,
+                            Date = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 176,
+                            Date = new DateTime(2026, 3, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 8
+                        },
+                        new
+                        {
+                            Id = 177,
+                            Date = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 178,
+                            Date = new DateTime(2026, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 179,
+                            Date = new DateTime(2026, 4, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 180,
+                            Date = new DateTime(2026, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 181,
+                            Date = new DateTime(2026, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 182,
+                            Date = new DateTime(2026, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 183,
+                            Date = new DateTime(2026, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 184,
+                            Date = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 8
+                        },
+                        new
+                        {
+                            Id = 185,
+                            Date = new DateTime(2026, 4, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 186,
+                            Date = new DateTime(2026, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 187,
+                            Date = new DateTime(2026, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 188,
+                            Date = new DateTime(2026, 4, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 189,
+                            Date = new DateTime(2026, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 190,
+                            Date = new DateTime(2026, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 191,
+                            Date = new DateTime(2026, 4, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 192,
+                            Date = new DateTime(2026, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 193,
+                            Date = new DateTime(2026, 4, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 194,
+                            Date = new DateTime(2026, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 195,
+                            Date = new DateTime(2026, 4, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 196,
+                            Date = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 197,
+                            Date = new DateTime(2026, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 198,
+                            Date = new DateTime(2026, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 199,
+                            Date = new DateTime(2026, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 200,
+                            Date = new DateTime(2026, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 201,
+                            Date = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 202,
+                            Date = new DateTime(2026, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 203,
+                            Date = new DateTime(2026, 5, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 4,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 204,
+                            Date = new DateTime(2026, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 4,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 205,
+                            Date = new DateTime(2026, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 206,
+                            Date = new DateTime(2026, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 207,
+                            Date = new DateTime(2026, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 208,
+                            Date = new DateTime(2026, 1, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 209,
+                            Date = new DateTime(2026, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 210,
+                            Date = new DateTime(2026, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 211,
+                            Date = new DateTime(2026, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 212,
+                            Date = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 213,
+                            Date = new DateTime(2026, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 214,
+                            Date = new DateTime(2026, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 215,
+                            Date = new DateTime(2026, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 216,
+                            Date = new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 217,
+                            Date = new DateTime(2026, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 218,
+                            Date = new DateTime(2026, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 219,
+                            Date = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 220,
+                            Date = new DateTime(2026, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 221,
+                            Date = new DateTime(2026, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 222,
+                            Date = new DateTime(2026, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 223,
+                            Date = new DateTime(2026, 2, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 224,
+                            Date = new DateTime(2026, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 225,
+                            Date = new DateTime(2026, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 226,
+                            Date = new DateTime(2026, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 227,
+                            Date = new DateTime(2026, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 228,
+                            Date = new DateTime(2026, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 229,
+                            Date = new DateTime(2026, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 230,
+                            Date = new DateTime(2026, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 231,
+                            Date = new DateTime(2026, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 232,
+                            Date = new DateTime(2026, 2, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 233,
+                            Date = new DateTime(2026, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 234,
+                            Date = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 235,
+                            Date = new DateTime(2026, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 236,
+                            Date = new DateTime(2026, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 237,
+                            Date = new DateTime(2026, 3, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 238,
+                            Date = new DateTime(2026, 3, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 239,
+                            Date = new DateTime(2026, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 240,
+                            Date = new DateTime(2026, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 241,
+                            Date = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 242,
+                            Date = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 243,
+                            Date = new DateTime(2026, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 244,
+                            Date = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 245,
+                            Date = new DateTime(2026, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 246,
+                            Date = new DateTime(2026, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 247,
+                            Date = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 248,
+                            Date = new DateTime(2026, 3, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 249,
+                            Date = new DateTime(2026, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 13
+                        },
+                        new
+                        {
+                            Id = 250,
+                            Date = new DateTime(2026, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 251,
+                            Date = new DateTime(2026, 3, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 14
+                        },
+                        new
+                        {
+                            Id = 252,
+                            Date = new DateTime(2026, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 253,
+                            Date = new DateTime(2026, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 254,
+                            Date = new DateTime(2026, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 255,
+                            Date = new DateTime(2026, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 256,
+                            Date = new DateTime(2026, 3, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 257,
+                            Date = new DateTime(2026, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 258,
+                            Date = new DateTime(2026, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 259,
+                            Date = new DateTime(2026, 4, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 260,
+                            Date = new DateTime(2026, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 261,
+                            Date = new DateTime(2026, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 262,
+                            Date = new DateTime(2026, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 263,
+                            Date = new DateTime(2026, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 20
+                        },
+                        new
+                        {
+                            Id = 264,
+                            Date = new DateTime(2026, 4, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 265,
+                            Date = new DateTime(2026, 4, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 266,
+                            Date = new DateTime(2026, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 267,
+                            Date = new DateTime(2026, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 268,
+                            Date = new DateTime(2026, 4, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 269,
+                            Date = new DateTime(2026, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 270,
+                            Date = new DateTime(2026, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 271,
+                            Date = new DateTime(2026, 4, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 272,
+                            Date = new DateTime(2026, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 273,
+                            Date = new DateTime(2026, 4, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 274,
+                            Date = new DateTime(2026, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 275,
+                            Date = new DateTime(2026, 4, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 276,
+                            Date = new DateTime(2026, 4, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 1
+                        },
+                        new
+                        {
+                            Id = 277,
+                            Date = new DateTime(2026, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 278,
+                            Date = new DateTime(2026, 4, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 279,
+                            Date = new DateTime(2026, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 280,
+                            Date = new DateTime(2026, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 281,
+                            Date = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 282,
+                            Date = new DateTime(2026, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 7
+                        },
+                        new
+                        {
+                            Id = 283,
+                            Date = new DateTime(2026, 5, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 284,
+                            Date = new DateTime(2026, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 285,
+                            Date = new DateTime(2026, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 286,
+                            Date = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 287,
+                            Date = new DateTime(2026, 5, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 288,
+                            Date = new DateTime(2026, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 4
+                        },
+                        new
+                        {
+                            Id = 289,
+                            Date = new DateTime(2026, 5, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 290,
+                            Date = new DateTime(2026, 5, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 291,
+                            Date = new DateTime(2026, 5, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 15
+                        },
+                        new
+                        {
+                            Id = 292,
+                            Date = new DateTime(2026, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 6
+                        },
+                        new
+                        {
+                            Id = 293,
+                            Date = new DateTime(2026, 5, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 294,
+                            Date = new DateTime(2026, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 295,
+                            Date = new DateTime(2026, 5, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 11
+                        },
+                        new
+                        {
+                            Id = 296,
+                            Date = new DateTime(2026, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 3
+                        },
+                        new
+                        {
+                            Id = 297,
+                            Date = new DateTime(2026, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 16
+                        },
+                        new
+                        {
+                            Id = 298,
+                            Date = new DateTime(2026, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 5
+                        },
+                        new
+                        {
+                            Id = 299,
+                            Date = new DateTime(2026, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 12
+                        },
+                        new
+                        {
+                            Id = 300,
+                            Date = new DateTime(2026, 5, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 10
+                        },
+                        new
+                        {
+                            Id = 301,
+                            Date = new DateTime(2026, 5, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 18
+                        },
+                        new
+                        {
+                            Id = 302,
+                            Date = new DateTime(2026, 5, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 9
+                        },
+                        new
+                        {
+                            Id = 303,
+                            Date = new DateTime(2026, 5, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 17
+                        },
+                        new
+                        {
+                            Id = 304,
+                            Date = new DateTime(2026, 5, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
+                            ZoneId = 2
+                        },
+                        new
+                        {
+                            Id = 305,
+                            Date = new DateTime(2026, 5, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 2,
+                            UserId = 5,
+                            ZoneId = 19
+                        },
+                        new
+                        {
+                            Id = 306,
+                            Date = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            PlantationSiteId = 1,
+                            UserId = 5,
                             ZoneId = 4
                         });
                 });
@@ -5218,6 +11851,30 @@ namespace AP.BTP.Infrastructure.Migrations
                             LastName = "Lastname",
                             PhoneNumber = "0123456789",
                             Role = "Operator"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Auth0Id = "auth0|6934b29bb240dfc03ff39189",
+                            Email = "karlross@gmail.com",
+                            FirstName = "Karl",
+                            IsApproved = true,
+                            IsDeleted = false,
+                            LastName = "Ross",
+                            PhoneNumber = "0135456865",
+                            Role = "Operator"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Auth0Id = "auth0|6934b2f91654205a1e8f2152",
+                            Email = "bobross@gmail.com",
+                            FirstName = "Bob",
+                            IsApproved = true,
+                            IsDeleted = false,
+                            LastName = "Ross",
+                            PhoneNumber = "0535556913",
+                            Role = "Operator"
                         });
                 });
 
@@ -6179,6 +12836,26 @@ namespace AP.BTP.Infrastructure.Migrations
                         {
                             PlantationSitesId = 2,
                             UsersId = 3
+                        },
+                        new
+                        {
+                            PlantationSitesId = 1,
+                            UsersId = 4
+                        },
+                        new
+                        {
+                            PlantationSitesId = 2,
+                            UsersId = 4
+                        },
+                        new
+                        {
+                            PlantationSitesId = 1,
+                            UsersId = 5
+                        },
+                        new
+                        {
+                            PlantationSitesId = 2,
+                            UsersId = 5
                         });
                 });
 

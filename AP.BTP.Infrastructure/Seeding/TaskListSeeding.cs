@@ -27,20 +27,23 @@ namespace AP.BTP.Infrastructure.Seeding
             int dayoffset = 0;
             const int totalDates = 101;
 
-            for (int i = 1; i <= totalDates + 1; i++)
+            for (int userIdOffset = 0; userIdOffset < 3; userIdOffset++)
             {
-                int weekday = i % 7;
+                for (int i = 1; i <= totalDates + 1; i++)
+                {
+                    int weekday = i % 7;
 
-                if (weekday == 5) dayoffset += 2;  // Only 5 days/week
+                    if (weekday == 5) dayoffset += 2;  // Only 5 days/week
 
-                taskLists.Add(new TaskList() {
-                    Id = i, 
-                    Date = middleDate.AddDays(i - totalDates / 2 + dayoffset).Date, 
-                    IsDeleted = false, 
-                    UserId = 3, 
-                    PlantationSiteId = i % 2 + 1, 
-                    ZoneId = ((i % 2) == 0? random.Next(1, 11): random.Next(11, 21))
-                });
+                    taskLists.Add(new TaskList() {
+                        Id = userIdOffset * (totalDates + 1) + i, 
+                        Date = middleDate.AddDays(i - totalDates / 2 + dayoffset).Date, 
+                        IsDeleted = false, 
+                        UserId = 3 + userIdOffset, 
+                        PlantationSiteId = i % 2 + 1, 
+                        ZoneId = ((i % 2) == 0? random.Next(1, 11): random.Next(11, 21))
+                    });
+                }
             }
 
             modelBuilder.HasData(taskLists);

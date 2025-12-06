@@ -70,7 +70,11 @@ namespace AP.BTP.Infrastructure.Context
             // TODO: Seed Zone with correct PlantationSite relation
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 3 },
-                new { PlantationSitesId = 2, UsersId = 3 }
+                new { PlantationSitesId = 2, UsersId = 3 },
+                new { PlantationSitesId = 1, UsersId = 4 },
+                new { PlantationSitesId = 2, UsersId = 4 },
+                new { PlantationSitesId = 1, UsersId = 5 },
+                new { PlantationSitesId = 2, UsersId = 5 }
             );
         }
     }
