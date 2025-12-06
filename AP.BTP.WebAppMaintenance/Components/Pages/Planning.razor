@@ -11,10 +11,11 @@
 @if (user == null)
 {
     <p>Laden...</p>
-} else
+}
+else
 {
     <div class="d-flex">
-        <div class="p-4 mb-4 bg-white border" style="height: 80vh; border-radius: 15px 0 0 15px; width: 15vw; min-width: 15vw; max-width: 15vw;">
+        <div class="p-4 mb-4 bg-white border d-flex flex-column " style="height: 80vh; border-radius: 15px 0 0 15px; width: 15vw; min-width: 15vw; max-width: 15vw;">
             <div class="mb-3 text-center">
                 <h2 class="fw-bold border-bottom">@user.FirstName</h2>
             </div>
@@ -28,15 +29,16 @@
                 </div>
             </div>
 
-            <div>
-                @if(user != null && user.PlantationSites != null){
+            <div class="flex-grow-1">
+                @if (user != null && user.PlantationSites != null)
+                {
                     <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
                     <select class="form-select" value="@selectedPlantationSiteId" @onchange="OnPlantationSiteChanged" disabled="@isPlantationSiteSelectionDisabled">
                         <option value="" disabled selected hidden>--- Site ---</option>
-                            @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
-                            {
-                                <option value="@plantationSite.Id">@plantationSite.Name</option>
-                            }
+                        @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                        {
+                            <option value="@plantationSite.Id">@plantationSite.Name</option>
+                        }
                     </select>
                     @if (isPlantationSiteSelectionDisabled && selectedPlantationSiteId.HasValue)
                     {
@@ -44,19 +46,29 @@
                             Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                         </small>
                     }
-                } else {
+                }
+                else
+                {
                     <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
                         Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                     </small>
                 }
+            </div>
+            <div>
+                <div class="mb-3">
+                    <button @onclick="this.LoadTaskListsForWeek" class="btn btn-danger"><small>Wijzigingen ongedaan maken</small></button>
+                </div>
+                <div class="mt-auto text-center mb-0">
+                    <Button class="btn btn-success" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
+                </div>
             </div>
         </div>
 
         <div class="d-flex bg-light p-4 w-100 border position-relative" style="height: 80vh; border-radius: 0 15px 15px 0">
             @if (!selectedPlantationSiteId.HasValue)
             {
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 
-                    style="background-color: rgba(255, 255, 255, 0.8); z-index: 5; border-radius: 0 15px 15px 0;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+                     style="background-color: rgba(255, 255, 255, 0.8); z-index: 5; border-radius: 0 15px 15px 0;">
                     <div class="text-center">
                         <i class="bi bi-exclamation-circle" style="font-size: 3rem; color: #6c757d;"></i>
                         <p class="mt-3 fw-semibold text-muted">Selecteer eerst een kweeksite om taken toe te voegen</p>
@@ -67,23 +79,35 @@
             @for (int i = 0; i < WeekDays.Count; i++)
             {
                 DateTime day = WeekDays[i];
-                var isFirst = i == 0;
-                var isLast = i == WeekDays.Count - 1;
-                <div class="border flex-shrink-0 d-flex flex-column"
+                bool isFirst = i == 0;
+                bool isLast = i == WeekDays.Count - 1;
+
+                <div class="border flex-shrink-0 d-flex flex-column position-relative @(IsPastDay(day) ? "past-day" : "")"
                      style="
-                                    max-width: 14%;
-                                    min-width: 14%;
-                                    font-size: 0.90rem;
-                                    @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                                    @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                                    @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                            ">
+                            max-width: 14%;
+                            min-width: 14%;
+                            font-size: 0.90rem;
+                            @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                            @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                            @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                     ">
+                    @if (IsPastDay(day))
+                    {
+                        <div class="position-absolute top-0 start-0 w-100 h-100"
+                             style="
+                                    background-color: rgba(200, 200, 200, 0.45);
+                                    border-radius: inherit;
+                                    pointer-events: none;
+                             ">
+                        </div>
+                    }
+
                     <div class="text-center fw-bold p-3"
                          style="
-                                    background-color: #E3E3E3;
-                                    @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                                    @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                                ">
+                                background-color: #E3E3E3;
+                                @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                         ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -104,7 +128,9 @@
                             <div class="text-danger" style="font-size: 0.7rem; font-weight: normal;">
                                 vol!
                             </div>
-                        } else {
+                        }
+                        else
+                        {
                             <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
                                 nog @FormatDuration(480)
                             </div>
@@ -115,7 +141,10 @@
                         @if (selectedPlantationSiteId.HasValue)
                         {
                             int? zoneId = GetZoneForDay(day);
-                            <select class="form-select form-select-sm" value="@zoneId" @onchange="(e) => OnZoneChangedForDay(day, e)" disabled="@(!selectedPlantationSiteId.HasValue)">
+                            <select class="form-select form-select-sm"
+                                    value="@zoneId"
+                                    @onchange="(e) => OnZoneChangedForDay(day, e)"
+                                    disabled="@(!selectedPlantationSiteId.HasValue || DayHasTasks(day))">
                                 <option value="" disabled selected hidden>--- Zone ---</option>
                                 @foreach (ZoneDTO zone in availableZones)
                                 {
@@ -126,26 +155,48 @@
                     </div>
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
-                        @if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList)
-                                    && taskList?.TaskItems?.Any() == true)
+                        @if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
+                                        && taskList?.TaskItems?.Any() == true)
                         {
+                            TaskListDTO? originalTaskList = null;
+                            CurrentWeekTaskListsByDay?.TryGetValue(day.Date, out originalTaskList);
+
                             @foreach (TaskItemDTO taskItem in taskList.TaskItems)
                             {
-                                <div class="p-1 m-2 border border-dark rounded"
-                                    style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;">
-                                                @FormatDuration(taskItem.DurationInMinutes)
-                                            </span>
-                                            <div>
-                                                <Button @onclick="() => EditTaskItem(taskItem)" class="p-0 me-1">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </Button>
-                                                <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
-                                                    <i class="bi bi-trash"></i>
-                                                </Button>
-                                            </div>
+                                string cssClass = "";
+
+                                TaskItemDTO? originalItem =
+                                originalTaskList?.TaskItems?.FirstOrDefault(t => t.Id == taskItem.Id);
+
+                                if (originalItem == null)
+                                {
+                                    cssClass = "added-card";
+                                }
+                                else if (taskItem.IsDeleted)
+                                {
+                                    cssClass = "deleted-card";
+                                }
+                                else if (HasTaskChanged(taskItem, originalItem))
+                                {
+                                    cssClass = "updated-card";
+                                }
+
+                                <div class="p-1 m-2 border border-dark rounded @cssClass"
+                                     style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
+
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <span class="badge bg-secondary" style="font-size: 0.7rem;">
+                                            @FormatDuration(taskItem.DurationInMinutes)
+                                        </span>
+                                        <div>
+                                            <Button @onclick="() => EditTaskItem(taskItem)" class="p-0 me-1">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </Button>
+                                            <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
+                                                <i class="bi bi-trash"></i>
+                                            </Button>
                                         </div>
+                                    </div>
                                     <div class="fw-normal text-truncate-multiline-2" title="@taskItem.Title">@taskItem.Title</div>
                                     <div class="text-muted small text-truncate-multiline-3" title="@taskItem.Description">@taskItem.Description</div>
                                 </div>
@@ -154,7 +205,7 @@
 
                         <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
                             <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
-                                style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
+                                 style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
                                 <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
                                 <div class="fw-normal" style="color: #5FC66D">Taak toevoegen</div>
                             </div>
@@ -170,30 +221,30 @@
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10; background-color: rgba(0, 0, 0, 0.5);">
         <div class="card position-absolute align-self-center p-4" style="min-width: 400px;">
-            <h5 class="mb-3">@(taskToBeAdded.Id == 0 ? "Nieuwe taak" : "Taak bewerken")</h5>
-            
+            <h5 class="mb-3">@(IsNewTask ? "Nieuwe taak" : "Taak bewerken")</h5>
+
             <div class="mb-3">
                 <label class="form-label">Titel</label>
-                <input @bind="taskToBeAdded!.Title" placeholder="Titel" class="form-control"/>
+                <input @bind="taskToBeAdded!.Title" placeholder="Titel" class="form-control" />
             </div>
-            
+
             <div class="mb-3">
                 <label class="form-label">Beschrijving</label>
                 <textarea @bind="taskToBeAdded!.Description" placeholder="Beschrijving" class="form-control" rows="3"></textarea>
             </div>
-            
+
             <div class="mb-3">
                 <label class="form-label">Duur</label>
                 <div class="row">
                     <div class="col-6">
                         <div class="input-group">
-                            <input type="number" @bind="taskDurationHours" min="0" max="8" class="form-control" placeholder="Uren"/>
+                            <input type="number" @bind="taskDurationHours" min="0" max="8" class="form-control" placeholder="Uren" />
                             <span class="input-group-text">u</span>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="input-group">
-                            <input type="number" @bind="taskDurationMinutes" min="0" max="59" class="form-control" placeholder="Minuten"/>
+                            <input type="number" @bind="taskDurationMinutes" min="0" max="59" class="form-control" placeholder="Minuten" />
                             <span class="input-group-text">m</span>
                         </div>
                     </div>
@@ -219,7 +270,7 @@
                     </small>
                 }
             </div>
-            
+
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -227,20 +278,40 @@
                     <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
                 </div>
             }
-            
+
             <div class="d-flex gap-2">
                 <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
-                <button @onclick="SubmitTaskItem" class="btn btn-success flex-fill">Bewaren</button>
+                <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Bewaren</button>
             </div>
         </div>
     </div>
 }
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.ShowDeleteConfirm"
-    onCancellation="this.CancelRemoveTask"
-    onConfirmation="() => this.DeleteTaskItem(this.selectedTaskItemId)"
-/>
+<ConfirmationPopup showConfirmationPopup="this.ShowDeleteConfirm"
+                   onCancellation="this.CancelRemoveTask"
+                   onConfirmation="() => this.DeleteTaskItem(this.selectedTaskItemId)" />
+
+@if (this.ShowSubmitChanges)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u de aangebrachte <br /> aanpassingen wil opslaan?</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="this.CancelSubmitChanges" class="btn btn-dark">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="this.SubmitAllLocalChanges" class="btn btn-success">Bevestigen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (this.errorMessage != "")
+{
+    <p>@this.errorMessage</p>
+}
 
 @code {
     /// <summary>
@@ -280,7 +351,7 @@
         {
             bool hasAnyTasks = CurrentWeekTaskListsByDay.Values
                 .Any(tl => tl.TaskItems != null && tl.TaskItems.Any());
-            
+
             return hasAnyTasks && selectedPlantationSiteId.HasValue;
         }
     }
@@ -288,7 +359,7 @@
     /// <summary>
     /// Dictionary mapping each day to its selected zone ID.
     /// </summary>
-    private Dictionary<DateTime, int?> zonesByDay = new(); 
+    private Dictionary<DateTime, int?> zonesByDay = new();
 
     /// <summary>
     /// List of zones available for the currently selected plantation site.
@@ -329,7 +400,7 @@
     /// Represents the task item currently being added or edited.
     /// Initialized with default values for a new task.
     /// </summary>
-    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
+    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
 
     /// <summary>
     /// Stores the date associated with the task item being added.
@@ -341,11 +412,32 @@
     /// Temporary storage for hours input when adding/editing a task.
     /// </summary>
     private int taskDurationHours = 0;
-    
+
     /// <summary>
     /// Temporary storage for minutes input when adding/editing a task.
     /// </summary>
     private int taskDurationMinutes = 0;
+
+    /// <summary>
+    /// Stores the see <see cref="CurrentWeekTaskListsByDay"/> with the local changes made.
+    /// This will eventually be send to the backend api
+    /// </summary>
+    private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDayLocal = new();
+
+    /// <summary>
+    /// Indicated whether the selected task item is new.
+    /// </summary>
+    private bool IsNewTask = false;
+
+    /// <summary>
+    /// The currently selected task item.
+    /// </summary>
+    private TaskItemDTO? selectedTaskItem;
+
+    /// <summary>
+    /// Indicates whether the confirm dialog is currently visible to cancel or submit the changes.
+    /// </summary>
+    private bool ShowSubmitChanges;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -381,11 +473,13 @@
             {
                 this.user = response;
                 StateHasChanged();
-            } else
+            }
+            else
             {
                 this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de gebruiker.";
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
@@ -396,6 +490,7 @@
     /// </summary>
     private async Task LoadTaskListsForWeek()
     {
+        ShowSubmitChanges = false;
         if (this.client == null || this.user == null)
             return;
 
@@ -409,8 +504,17 @@
 
             if (response != null)
             {
-                // store current week's tasks
+                CurrentWeekTaskListsByDay = new();
+                CurrentWeekTaskListsByDayLocal = new();
                 CurrentWeekTaskListsByDay = response.ToDictionary(t => t.Date.Date, t => t);
+                CurrentWeekTaskListsByDayLocal = response.ToDictionary(
+                    t => t.Date.Date,
+                    t => t with
+                    {
+                        TaskItems = t.TaskItems?.Select(item => item with { }).ToList()
+                    }
+                );
+
                 TaskListDTO? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
                 selectedPlantationSiteId = firstTaskListWithSite?.PlantationSiteId;
 
@@ -418,14 +522,16 @@
                 {
                     await LoadZonesForPlantationSite(selectedPlantationSiteId.Value);
                 }
-            } else
+            }
+            else
             {
                 CurrentWeekTaskListsByDay.Clear();
                 selectedPlantationSiteId = null;
             }
 
             StateHasChanged();
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             errorMessage = $"Fout bij ophalen van taken: {ex.Message}";
         }
@@ -478,39 +584,31 @@
     private string WeekRangeText => $"{currentWeekStart:dd/MM} - {currentWeekStart.AddDays(6):dd/MM}";
 
     /// <summary>
-    /// Deletes a task item with the given ID by calling the API.
+    /// Deletes a task item with the given ID locally.
     /// </summary>
     /// <param name="taskItem">The taskItem to be deleted.</param>
     private async Task DeleteTaskItem(int? id)  // TODO add confirmation message
     {
-        if (id == null || id == 0)
+        if ((id == null || id == 0) && selectedTaskItem != null)
         {
-            this.errorMessage = "Task item id is 0";
-            this.ShowDeleteConfirm = false;
-            // TODO remove out of tasklist
-            StateHasChanged();
-
-            return;
-        }
-
-        if (this.client != null)
-        {
-            HttpResponseMessage? response = await this.client.DeleteAsync($"TaskItem?id={id}");
-
-            if (!response.IsSuccessStatusCode)
+            foreach (KeyValuePair<DateTime, TaskListDTO> kv in CurrentWeekTaskListsByDayLocal)
             {
-                this.errorMessage = $"Het verwijderen van id={id} is niet gelukt.";
-            } else
-            {
-                this.errorMessage = $"{id} is succesvol verwijderd.";
-                await this.LoadTaskListsForWeek();
-                await ClearPlantationSiteIfNoTasks();
+                TaskListDTO taskList = kv.Value;
+                if (taskList?.TaskItems == null) continue;
+
+                if (taskList.TaskItems.Remove(selectedTaskItem))
+                    break;
             }
+        }
+        else if (selectedTaskItem != null)
+        {
+            selectedTaskItem.IsDeleted = true;
         }
 
         this.ShowDeleteConfirm = false;
         StateHasChanged();
     }
+
 
     /// <summary>
     /// Prepares the UI to confirm the deletion of a specified task item.
@@ -522,6 +620,7 @@
     /// </remarks>
     private void ConfirmDeletion(TaskItemDTO task)
     {
+        selectedTaskItem = task;
         this.ShowDeleteConfirm = true;
         this.selectedTaskItemId = task.Id;
     }
@@ -532,6 +631,8 @@
     /// <param name="task">The task item to edit.</param>
     private void EditTaskItem(TaskItemDTO task)
     {
+        IsNewTask = false;
+        selectedTaskItem = task;
         this.taskToBeAdded = task;
         this.taskDurationHours = task.DurationInMinutes / 60;
         this.taskDurationMinutes = task.DurationInMinutes % 60;
@@ -539,51 +640,33 @@
     }
 
     /// <summary>
-    /// Creates a new task list for the specified day by making a POST request to the backend API.
+    /// Creates a new task list for the specified day by adding it locally.
     /// </summary>
     /// <param name="day">The date for which the task list should be created.</param>
     /// <returns>The created <see cref="TaskListDTO"/> if successful; otherwise, null.</returns>
-    private async Task<TaskListDTO?> AddTaskList(DateTime day, int? zoneId = null)
+    private void AddTaskList(DateTime day, int? zoneId = null)
     {
-        try
+        TaskListDTO newTaskList = new TaskListDTO()
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen httpclient gevonden.";
-                return null;
-            }
+            Id = 0,
+            Date = day,
+            UserId = this.userId,
+            PlantationSiteId = selectedPlantationSiteId,
+            ZoneId = zoneId,
+            TaskItems = new List<TaskItemDTO>()
+        };
 
-            TaskListDTO newTaskList = new TaskListDTO() 
-            { 
-                Id = 0, 
-                Date = day, 
-                UserId = this.userId,
-                PlantationSiteId = selectedPlantationSiteId,
-                ZoneId = zoneId
-            };            
-
-            HttpResponseMessage? response = await this.client.PostAsJsonAsync<TaskListDTO>("TaskList", newTaskList);
-
-            if (response.IsSuccessStatusCode)
-            {
-                this.errorMessage = "";
-                return await response.Content.ReadFromJsonAsync<TaskListDTO>();
-            } else
-                this.errorMessage = await response.Content.ReadAsStringAsync();
-        } catch (Exception e)
-        {
-            this.errorMessage = e.Message;
-        }
-
-        return null;
+        CurrentWeekTaskListsByDayLocal.Add(day, newTaskList);
     }
 
     /// <summary>
     /// Prepares to add a new task item for the specified day and opens the add task dialog.
     /// </summary>
     /// <param name="day">The date the task item should be associated with.</param>
-    private async Task AddTaskItemConfirm(DateTime day)
+    private void AddTaskItemConfirm(DateTime day)
     {
+        IsNewTask = true;
+        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
         if (!selectedPlantationSiteId.HasValue)
         {
             errorMessage = "Selecteer eerst een kweeksite voordat u taken toevoegt.";
@@ -604,43 +687,19 @@
         this.taskDurationHours = 0;
         this.taskDurationMinutes = 0;
 
-        await this.AddTaskItem();
+        if (!CurrentWeekTaskListsByDayLocal.ContainsKey(taskToBeAddedDate.Date))
+        {
+            this.AddTaskList(taskToBeAddedDate.Date);
+        }
         this.ShowAddTaskItem = true;
         StateHasChanged();
     }
 
     /// <summary>
-    /// Ensures a task list exists for the given date and associates the current task item with it.
-    /// </summary>
-    private async Task AddTaskItem()
-    {
-        DateTime day = this.taskToBeAddedDate;
-
-        TaskListDTO? taskList;
-
-        if (!CurrentWeekTaskListsByDay.ContainsKey(day.Date))
-        {
-            taskList = await this.AddTaskList(day.Date);
-        } else
-        {
-            taskList = CurrentWeekTaskListsByDay[day.Date];
-        }
-
-        if (taskList == null)
-        {
-            this.errorMessage = "De takenlijst kon niet worden aangemaakt.";
-
-            return;
-        }
-
-        if (this.taskToBeAdded.TaskListId == 0) this.taskToBeAdded.TaskListId = taskList.Id ;
-    }
-
-    /// <summary>
-    /// Submits the current task item to the backend API. 
+    /// Add the current task item locally.
     /// If the task item is new, it is created; otherwise, it is updated.
     /// </summary>
-    private async Task SubmitTaskItem()
+    private void AddTaskItem(TaskItemDTO? existingTaskItem)
     {
         try
         {
@@ -661,7 +720,7 @@
             }
 
             int totalMinutes = (taskDurationHours * 60) + taskDurationMinutes;
-            
+
             if (totalMinutes <= 0)
             {
                 this.errorMessage = "Duur moet minimaal 1 minuut zijn.";
@@ -678,7 +737,7 @@
 
             int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
             int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
-            
+
             if ((currentDayTotal - existingTaskDuration + totalMinutes) > 480)
             {
                 int available = 480 - (currentDayTotal - existingTaskDuration);
@@ -687,34 +746,126 @@
                 return;
             }
 
-            this.taskToBeAdded.DurationInMinutes = totalMinutes;            
+            this.taskToBeAdded.DurationInMinutes = totalMinutes;
 
-            HttpResponseMessage? response;
-
-            if (this.taskToBeAdded?.Id == null || this.taskToBeAdded.Id == 0)
+            if (IsNewTask)
             {
-                response = await this.client.PostAsJsonAsync<TaskItemDTO>($"TaskItem", this.taskToBeAdded!);
-            } else
-            {
-                response = await this.client.PutAsJsonAsync<TaskItemDTO>("TaskItem", this.taskToBeAdded);
+                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDTO? taskList))
+                {
+                    if (taskList.TaskItems != null && taskToBeAdded != null)
+                    {
+                        taskList.TaskItems.Add(taskToBeAdded);
+                    }
+                }
             }
-
-            if (response.IsSuccessStatusCode)
+            else if (selectedTaskItem != null)
             {
-                this.errorMessage = "";
-                this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0};
-                this.taskDurationHours = 0;
-                this.taskDurationMinutes = 0;                
-            } else
-                this.errorMessage = await response.Content.ReadAsStringAsync();
-        } catch (Exception e)
+                selectedTaskItem.Title = taskToBeAdded.Title;
+                selectedTaskItem.Description = taskToBeAdded.Description;
+                selectedTaskItem.DurationInMinutes = taskToBeAdded.DurationInMinutes;
+            }
+            this.errorMessage = "";
+            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+            this.taskDurationHours = 0;
+            this.taskDurationMinutes = 0;
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
 
         this.ShowAddTaskItem = false;
-        await this.LoadTaskListsForWeek();
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Submit all the tasklists from the <see cref="CurrentWeekTaskListsByDayLocal"/>.
+    /// If the validation succeeds.
+    /// </summary>
+    private async Task SubmitAllLocalChanges()
+    {
+        ShowSubmitChanges = false;
+        if (client == null) return;
+
+        List<TaskListDTO> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
+
+        string? validationError = ValidateWeekSchedule(taskLists);
+        errorMessage = "";
+        if (!string.IsNullOrEmpty(validationError))
+        {
+            errorMessage = validationError;
+            return;
+        }
+
+        SubmitWeekScheduleDTO request = new SubmitWeekScheduleDTO
+        {
+            TaskLists = taskLists
+        };
+
+        HttpResponseMessage response = await client.PostAsJsonAsync("tasklist/weekschedule", request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorResponseInfoDTO? errorResponseInfo =
+                await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+
+            errorMessage = errorResponseInfo?.Message
+                ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
+            return;
+        }
+
+        await LoadTaskListsForWeek();
+    }
+
+    /// <summary>
+    /// Validation rules. Gives a string with the rule that was broken or an empty string
+    /// </summary>
+    private string? ValidateWeekSchedule(List<TaskListDTO> taskLists)
+    {
+        if (taskLists.Count == 0)
+        {
+            return "De week moet minstens één takenlijst bevatten.";
+        }
+        int dayCount = taskLists
+            .Where(tl => tl.TaskItems != null &&
+                 tl.TaskItems.Any(item => item.IsDeleted == false))
+            .Select(t => t.Date.Date)
+            .Distinct()
+            .Count();
+
+        if (dayCount > 5)
+            return "Een medewerker mag maximaal 5 dagen per week werken.";
+
+        List<int> siteIds = taskLists
+            .Where(t => t.PlantationSiteId != null)
+            .Select(t => t.PlantationSiteId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (siteIds.Count > 1)
+            return "Een medewerker moet de volledige week in dezelfde site werken.";
+
+        foreach (TaskListDTO tl in taskLists)
+        {
+            int activeTasks = tl.TaskItems?
+                .Where(t => !t.IsDeleted)
+                .Count() ?? 0;
+
+            if (activeTasks > 4)
+                return $"Een medewerker mag maximaal 4 taken hebben per dag.";
+        }
+
+        foreach (TaskListDTO tl in taskLists)
+        {
+            int totalMinutes = tl.TaskItems?
+                .Where(t => !t.IsDeleted)
+                .Sum(t => t.DurationInMinutes) ?? 0;
+
+            if (totalMinutes > 480)
+                return $"Op {tl.Date:dddd dd/MM} mag de takenlijst niet meer dan 8 uur bevatten.";
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -737,6 +888,14 @@
     }
 
     /// <summary>
+    /// Cancels the submit changes operation and hides the confirmation dialog.
+    /// </summary>
+    private void CancelSubmitChanges()
+    {
+        this.ShowSubmitChanges = false;
+    }
+
+    /// <summary>
     /// Handles the plantation site selection change event.
     /// Updates all task lists for the current week with the selected plantation site.
     /// </summary>
@@ -751,76 +910,12 @@
         }
 
         int newSiteId = int.Parse(e.Value.ToString()!);
-        
-        try
-        {
-            if (client == null)
-            {
-                errorMessage = "Geen httpclient gevonden.";
-                return;
-            }
 
-            foreach (TaskListDTO taskList in CurrentWeekTaskListsByDay.Values)
-            {                
-                HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/plantation-site", newSiteId);
-                if (!response.IsSuccessStatusCode)
-                {
-                    errorMessage = $"Kan takenlijst voor {taskList.Date:dd/MM} niet bijwerken";
-                    return;
-                }
-            }
+        selectedPlantationSiteId = newSiteId;
 
-            selectedPlantationSiteId = newSiteId;
+        await LoadZonesForPlantationSite(newSiteId);
 
-            await LoadZonesForPlantationSite(newSiteId);
 
-            errorMessage = "";
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Fout bij bijwerken van kweeksite: {ex.Message}";
-        }
-    }
-
-    /// <summary>
-    /// Clears the plantation site for the current week's task lists if none of the lists contain tasks.
-    /// </summary>
-    /// <remarks>
-    /// Sends a PATCH request for each task list to remove the plantation site. Updates <see cref="selectedPlantationSiteId"/> 
-    /// and triggers <see cref="StateHasChanged"/> if successful. Captures any errors in <see cref="errorMessage"/>.
-    /// </remarks>
-    private async Task ClearPlantationSiteIfNoTasks()
-    {
-        if (this.client == null)
-            return;
-
-        try
-        {
-            bool hasAnyTasks = CurrentWeekTaskListsByDay.Values
-                .Any(tl => tl.TaskItems != null && tl.TaskItems.Any());
-
-            if (!hasAnyTasks && selectedPlantationSiteId.HasValue)
-            {
-                foreach (TaskListDTO taskList in CurrentWeekTaskListsByDay.Values)
-                {
-                    HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/plantation-site", (int?)null);
-                    
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        errorMessage = $"Het is niet gelukt om de plantage te ontruimen voor {taskList.Date:dd/MM}";
-                        return;
-                    }
-                }
-
-                selectedPlantationSiteId = null;
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Fout bij wissen van kweeksite: {ex.Message}";
-        }
     }
 
     /// <summary>
@@ -834,7 +929,7 @@
         try
         {
             IEnumerable<ZoneDTO>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={plantationSiteId}");
-            
+
             if (response != null)
             {
                 availableZones = response.ToList();
@@ -856,7 +951,7 @@
     /// </summary>
     private int? GetZoneForDay(DateTime day)
     {
-        if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList))
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList))
         {
             return taskList.ZoneId;
         }
@@ -866,7 +961,7 @@
     /// <summary>
     /// Handles zone selection change for a specific day.
     /// </summary>
-    private async Task OnZoneChangedForDay(DateTime day, ChangeEventArgs e)
+    private void OnZoneChangedForDay(DateTime day, ChangeEventArgs e)
     {
         if (e.Value == null)
         {
@@ -874,61 +969,22 @@
         }
 
         string valueStr = e.Value.ToString()!;
-        
+
         if (string.IsNullOrEmpty(valueStr) || valueStr == "0" || !int.TryParse(valueStr, out int zoneId))
         {
             return;
         }
-        
-        try
+
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList))
         {
-            if (client == null)
-            {
-                errorMessage = "Geen httpclient gevonden.";
-                return;
-            }
-
-            TaskListDTO? taskList;
-            if (!CurrentWeekTaskListsByDay.ContainsKey(day.Date))
-            {
-                taskList = await AddTaskList(day.Date, zoneId);
-                if (taskList != null)
-                {
-                    CurrentWeekTaskListsByDay[day.Date] = taskList;
-                    errorMessage = "";
-                    StateHasChanged();
-                    return;
-                }
-            }
-            else
-            {
-                taskList = CurrentWeekTaskListsByDay[day.Date];
-            }
-
-            if (taskList == null)
-            {
-                errorMessage = "Kan geen takenlijst voor deze dag maken of vinden.";
-                return;
-            }
-
-            HttpResponseMessage response = await client.PatchAsJsonAsync($"TaskList/{taskList.Id}/zone", zoneId);
-            
-            if (response.IsSuccessStatusCode)
-            {
-                taskList.ZoneId = zoneId;
-                errorMessage = "";
-            }
-            else
-            {
-                errorMessage = $"Kan zone voor {day:dd/MM} niet bijwerken";
-            }
-            
-            StateHasChanged();
+            taskList.ZoneId = zoneId;
         }
-        catch (Exception ex)
+        else
         {
-            errorMessage = $"Fout bij bijwerken van zone: {ex.Message}";
+            AddTaskList(day.Date, zoneId);
         }
+
+        StateHasChanged();
     }
 
     /// <summary>
@@ -936,10 +992,12 @@
     /// </summary>
     private int GetTotalDurationForDay(DateTime day)
     {
-        if (CurrentWeekTaskListsByDay.TryGetValue(day.Date, out TaskListDTO? taskList) 
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
             && taskList?.TaskItems != null)
         {
-            return taskList.TaskItems.Sum(t => t.DurationInMinutes);
+            return taskList.TaskItems
+                .Where(t => !t.IsDeleted)
+                .Sum(t => t.DurationInMinutes);
         }
         return 0;
     }
@@ -951,7 +1009,7 @@
     {
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
-        
+
         if (hours > 0 && minutes > 0)
             return $"{hours}u {minutes}m";
         else if (hours > 0)
@@ -966,5 +1024,42 @@
     private int GetRemainingTimeForDay(DateTime day)
     {
         return 480 - GetTotalDurationForDay(day); // 480 minutes = 8 hours
-    }        
+    }
+
+    /// <summary>
+    /// Determines whether the specified day already has one or more tasks.
+    /// This is used to prevent changing the zone once tasks exist.
+    /// </summary>
+    /// <param name="day">The day to check for tasks.</param>
+    /// <returns>
+    /// True if the day exists in the weekly task dictionary AND contains at least one task.
+    /// Otherwise, false.
+    /// </returns>
+    private bool DayHasTasks(DateTime day)
+    {
+        return CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
+               && taskList?.TaskItems?.Any(t => !t.IsDeleted) == true;
+    }
+
+    /// <summary>
+    /// Determines whether the specified tasks share the same title description and durationInMinutes.
+    /// This is used to indicate that a task has changed.
+    /// </summary>
+    private bool HasTaskChanged(TaskItemDTO a, TaskItemDTO b)
+    {
+        if (a == null || b == null) return false;
+
+        return
+            a.Title != b.Title ||
+            a.Description != b.Description ||
+            a.DurationInMinutes != b.DurationInMinutes;
+    }
+
+    /// <summary>
+    /// checks if the given day is in the past compared to today.
+    /// </summary>
+    private bool IsPastDay(DateTime day)
+    {
+        return day.Date < DateTime.Today;
+    }
 }
