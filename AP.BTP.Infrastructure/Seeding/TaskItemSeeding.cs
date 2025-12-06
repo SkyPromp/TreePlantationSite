@@ -1,6 +1,5 @@
 ﻿using AP.BTP.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel.Design;
 
 namespace AP.BTP.Infrastructure.Seeding
 {
@@ -53,7 +52,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 "Veiligheidstakcontrole"
             };
 
-            for (int taskListId = 1; taskListId <= 201; taskListId++)
+            for (int taskListId = 1; taskListId <= 101; taskListId++)
             {
                 int taskItemCount = random.Next(2, 8);
                 int descriptionOffset = random.Next(0, descriptions.Length);

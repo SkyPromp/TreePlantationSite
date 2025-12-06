@@ -28,6 +28,33 @@ namespace AP.BTP.Infrastructure.Seeding
 
             for(int plantationSiteId = 1; plantationSiteId <= 10; plantationSiteId++)
             {
+                int zonesAmount = 10;
+
+                for(int zoneId = 1; zoneId <= zonesAmount; zoneId++)
+                {
+                    zones.Add(new Zone() { Id = ++totalZonesAmount, 
+                        Name = $"Zone {1 + zoneId / zoneLabels.Length}{zoneLabels[(zoneId - 1) % zoneLabels.Length]}", 
+                        PlantationSiteId = plantationSiteId, 
+                        TreeId = random.Next(1, 280), 
+                        Size = random.Next(80, 5100 / zonesAmount), 
+                        IsDeleted = false
+                    });
+                }
+            }
+
+            modelBuilder.HasData(zones);
+        }
+
+        public static void RandomSeed(this EntityTypeBuilder<Zone> modelBuilder)
+        {
+            Random random = new Random(1);
+            List<Zone> zones = new List<Zone>();
+
+            int totalZonesAmount = 0;
+            string[] zoneLabels = {"A", "B", "C"};
+
+            for(int plantationSiteId = 1; plantationSiteId <= 10; plantationSiteId++)
+            {
                 int zonesAmount = random.Next(11, 15);
 
                 for(int zoneId = 1; zoneId <= zonesAmount; zoneId++)
