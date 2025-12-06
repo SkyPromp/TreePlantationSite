@@ -54,8 +54,13 @@ else
                     </small>
                 }
             </div>
-            <div class ="mt-auto text-center mb-3">
-                <Button class="btn btn-success" @onclick="SubmitAllLocalChanges">Wijzigingen opslaan</Button>
+            <div>
+                <div class="mb-3">
+                    <button @onclick="this.LoadTaskListsForWeek" class="btn btn-danger">Wijzigingen ongedaan maken</button>
+                </div>
+                <div class="mt-auto text-center mb-0">
+                    <Button class="btn btn-success" @onclick="() => { ShowSubmitChanges = true; }">Wijzigingen opslaan</Button>
+                </div>
             </div>
         </div>
 
@@ -78,19 +83,19 @@ else
                 bool isLast = i == WeekDays.Count - 1;
                 <div class="border flex-shrink-0 d-flex flex-column"
                      style="
-                        max-width: 14%;
-                        min-width: 14%;
-                        font-size: 0.90rem;
-                        @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                        @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                        @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                     ">
+                                        max-width: 14%;
+                                        min-width: 14%;
+                                        font-size: 0.90rem;
+                                        @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                                        @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                                        @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                                     ">
                     <div class="text-center fw-bold p-3"
                          style="
-                            background-color: #E3E3E3;
-                            @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                            @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                         ">
+                                            background-color: #E3E3E3;
+                                            @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                            @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                                         ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -289,6 +294,23 @@ else
     </div>
 }
 
+@if (this.ShowSubmitChanges)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
+        <div class="card position-absolute align-self-center p-4">
+            <h5>Bent u zeker dat u de aangebrachte <br /> aanpassingen wil opslaan?</h5>
+            <div class="row gap-3">
+                <div class="col">
+                    <button @onclick="this.CancelSubmitChanges" class="btn btn-dark">Annuleer</button>
+                </div>
+                <div class="col">
+                    <button @onclick="this.SubmitAllLocalChanges" class="btn btn-success">Bevestig</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @if (this.errorMessage != "")
 {
     <p>@this.errorMessage</p>
@@ -416,6 +438,11 @@ else
     private TaskItemDTO? selectedTaskItem;
 
     /// <summary>
+    /// Indicates whether the confirm dialog is currently visible to cancel or submit the changes.
+    /// </summary>
+    private bool ShowSubmitChanges;
+
+    /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
     /// and sets up the current week and its task lists on the first render.
     /// </summary>
@@ -466,6 +493,7 @@ else
     /// </summary>
     private async Task LoadTaskListsForWeek()
     {
+        ShowSubmitChanges = false;
         if (this.client == null || this.user == null)
             return;
 
@@ -640,6 +668,7 @@ else
     private void AddTaskItemConfirm(DateTime day)
     {
         IsNewTask = true;
+        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
         if (!selectedPlantationSiteId.HasValue)
         {
             errorMessage = "Selecteer eerst een kweeksite voordat u taken toevoegt.";
@@ -757,6 +786,7 @@ else
     /// </summary>
     private async Task SubmitAllLocalChanges()
     {
+        ShowSubmitChanges = false;
         if (client == null) return;
 
         var taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
@@ -854,6 +884,14 @@ else
     {
         this.ShowDeleteConfirm = false;
         this.selectedTaskItemId = null;
+    }
+
+    /// <summary>
+    /// Cancels the submit changes operation and hides the confirmation dialog.
+    /// </summary>
+    private void CancelSubmitChanges()
+    {
+        this.ShowSubmitChanges = false;
     }
 
     /// <summary>
