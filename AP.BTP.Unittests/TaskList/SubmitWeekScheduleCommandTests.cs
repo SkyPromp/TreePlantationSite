@@ -121,7 +121,7 @@ namespace AP.BTP.Unittests.TaskList
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
 
-            var command = new SubmitWeekScheduleCommand
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
                 TaskLists = new List<TaskListDTO>
         {
@@ -159,7 +159,7 @@ namespace AP.BTP.Unittests.TaskList
                        IsDeleted = false
                    });
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor("TaskLists[0]")
                   .WithErrorMessage("Taken van een dag in het verleden mogen niet gewijzigd worden.");
@@ -170,7 +170,7 @@ namespace AP.BTP.Unittests.TaskList
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
 
-            var command = new SubmitWeekScheduleCommand
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
                 TaskLists = new List<TaskListDTO>
         {
@@ -208,7 +208,7 @@ namespace AP.BTP.Unittests.TaskList
                        IsDeleted = false
                    });
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor("TaskLists[0]")
                 .WithErrorMessage("Taken van een dag in het verleden mogen niet gewijzigd worden.");
@@ -219,7 +219,7 @@ namespace AP.BTP.Unittests.TaskList
         {
             DateTime today = DateTime.Today;
 
-            var command = new SubmitWeekScheduleCommand
+            SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
                 TaskLists = new List<TaskListDTO>
         {
@@ -257,7 +257,7 @@ namespace AP.BTP.Unittests.TaskList
                        IsDeleted = false
                    });
 
-            var result = await validator.TestValidateAsync(command);
+            TestValidationResult<SubmitWeekScheduleCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
         }
