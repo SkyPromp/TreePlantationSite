@@ -57,10 +57,6 @@ namespace AP.BTP.Infrastructure.Seeding
                 int taskItemCount = random.Next(1, 5);
                 int descriptionOffset = random.Next(0, descriptions.Length);
 
-                int weekday = taskListId % 7;
-
-                if (weekday == 5 || weekday == 6) continue;  // Only 5 days/week
-
                 for (int i = 0; i < taskItemCount; i++)
                 {
                     taskItems.Add(new TaskItem() { Id = ++totalTaskItems, Title = titles[(i + descriptionOffset) % titles.Length], TaskListId = taskListId, Description = descriptions[(i + descriptionOffset) % descriptions.Length], DurationInMinutes = random.Next(Math.Min(30, 8 * 60 / taskItemCount - 1), 8 * 60 / taskItemCount - 1)});

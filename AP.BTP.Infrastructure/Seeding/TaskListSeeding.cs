@@ -24,13 +24,18 @@ namespace AP.BTP.Infrastructure.Seeding
             DateTime middleDate = DateTime.Parse("2026-01-16");
             List<TaskList> taskLists = new List<TaskList>();
 
+            int dayoffset = 0;
             const int totalDates = 101;
 
             for (int i = 1; i <= totalDates + 1; i++)
             {
+                int weekday = i % 7;
+
+                if (weekday == 5) dayoffset += 2;  // Only 5 days/week
+
                 taskLists.Add(new TaskList() {
                     Id = i, 
-                    Date = middleDate.AddDays(i - totalDates / 2).Date, 
+                    Date = middleDate.AddDays(i - totalDates / 2 + dayoffset).Date, 
                     IsDeleted = false, 
                     UserId = 3, 
                     PlantationSiteId = i % 2 + 1, 
