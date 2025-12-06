@@ -811,6 +811,7 @@ else
 
             errorMessage = errorResponseInfo?.Message
                 ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
+            return;
         }
 
         await LoadTaskListsForWeek();
