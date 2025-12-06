@@ -71,10 +71,10 @@ namespace AP.BTP.Infrastructure.Context
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 3 },
                 new { PlantationSitesId = 2, UsersId = 3 },
-                new { PlantationSitesId = 1, UsersId = 4 },
-                new { PlantationSitesId = 2, UsersId = 4 },
-                new { PlantationSitesId = 1, UsersId = 5 },
-                new { PlantationSitesId = 2, UsersId = 5 }
+                new { PlantationSitesId = 3, UsersId = 4 },
+                new { PlantationSitesId = 4, UsersId = 4 },
+                new { PlantationSitesId = 5, UsersId = 5 },
+                new { PlantationSitesId = 6, UsersId = 5 }
             );
         }
     }
