@@ -52,6 +52,20 @@ namespace AP.BTP.WebAPI.Controllers
             return Created("", await mediator.Send(new AddTreePictureCommand() { TreePicture = treePicture }));
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/favourite")]
+        public async Task<ActionResult<TreePictureDTO>> PatchTaskListPlantationSite(int id, [FromBody] bool favourite)
+        {
+            PatchTreePictureCommand command = new PatchTreePictureCommand 
+            { 
+                TreePictureId = id, 
+                IsFavourite = favourite 
+            };
+            
+            TreePictureDTO result = await mediator.Send(command);
+            return Ok(result);
+        }
+
         /// <summary>
         /// Deletes a picture by its ID.
         /// </summary>
