@@ -34,7 +34,7 @@ namespace AP.BTP.Unittests.TaskList
                 TaskListDTO list = new TaskListDTO
                 {
                     Id = 0,
-                    UserId = 123, // REQUIRED
+                    UserId = 123,
                     PlantationSiteId = siteId,
                     Date = startDate.AddDays(d),
                     TaskItems = new List<TaskItemDTO>()
@@ -45,9 +45,9 @@ namespace AP.BTP.Unittests.TaskList
                     list.TaskItems.Add(new TaskItemDTO
                     {
                         Id = 0,
-                        TaskListId = 0, // REQUIRED
+                        TaskListId = 0,
                         Title = $"Task {t + 1}",
-                        Description = "Sample description", // REQUIRED
+                        Description = "Sample description",
                         DurationInMinutes = taskDuration,
                         IsDeleted = false
                     });
@@ -58,10 +58,6 @@ namespace AP.BTP.Unittests.TaskList
 
             return command;
         }
-
-        // --------------------------
-        // TESTS
-        // --------------------------
 
         [TestMethod]
         public async Task Should_Have_Error_When_TaskLists_Empty()
@@ -112,7 +108,6 @@ namespace AP.BTP.Unittests.TaskList
         [TestMethod]
         public async Task Should_Have_Error_When_Total_Minutes_Exceed_480()
         {
-            // 9 tasks × 60 minutes = 540 → too much
             var command = CreateValidCommand(tasksPerDay: 9, taskDuration: 60);
 
             var result = await validator.TestValidateAsync(command);
