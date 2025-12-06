@@ -45,28 +45,5 @@ namespace AP.BTP.Infrastructure.Seeding
 
             modelBuilder.HasData(taskLists);
         }
-
-        public static void RandomSeed(this EntityTypeBuilder<TaskList> modelBuilder)
-        {
-            Random random = new Random(1);
-            DateTime middleDate = DateTime.Parse("2025-12-06");
-            List<TaskList> taskLists = new List<TaskList>();
-
-            const int totalDates = 101;
-
-            for (int i = 1; i <= totalDates + 1; i++)
-            {
-                taskLists.Add(new TaskList() {
-                    Id = i, 
-                    Date = middleDate.AddDays(i - totalDates / 2).Date, 
-                    IsDeleted = false, 
-                    UserId = 3, 
-                    PlantationSiteId = i % 2 + 1, 
-                    ZoneId = ((i % 2) == 0? random.Next(1, 11): random.Next(16, 22))
-                });
-            }
-
-            modelBuilder.HasData(taskLists);
-        }
     }
 }
