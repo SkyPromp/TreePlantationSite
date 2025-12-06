@@ -37,7 +37,7 @@
                                 
                                 <div class="row h-100">
                                     <div class="col-9 d-flex justify-content-center align-items-center" style="height: 80%;">
-                                        @if(images.TryGetValue(item.Id.ToString(), out var imgUrl) && !string.IsNullOrWhiteSpace(imgUrl))
+                                        @if(images.TryGetValue(item.Id.ToString(), out string? imgUrl) && !string.IsNullOrWhiteSpace(imgUrl))
                                         {
                                             <Image Src="@imgUrl" Style="max-height: 100%; max-width: 100%; object-fit: contain;" />
                                         }

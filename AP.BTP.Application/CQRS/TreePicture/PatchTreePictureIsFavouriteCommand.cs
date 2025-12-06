@@ -38,7 +38,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
                 .WithMessage("TreePictureId must be greater than zero.")
                 .MustAsync(async (id, cancellation) =>
                 {
-                    var exists = await uow.TreePictureRepository.GetById(id) != null;
+                    bool exists = await uow.TreePictureRepository.GetById(id) != null;
                     return exists;
                 })
                 .WithMessage("TreePicture not found.");
