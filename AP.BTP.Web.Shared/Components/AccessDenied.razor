@@ -1,14 +1,14 @@
 ﻿@page "/access-denied"
 @inject NavigationManager Nav
 
-<PageTitle>Access Denied</PageTitle>
+<PageTitle>Toegang geweigerd</PageTitle>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg border-danger">
                 <div class="card-header bg-danger text-white text-center">
-                    <h4 class="mb-0">Access Denied</h4>
+                    <h4 class="mb-0">Toegang geweigerd</h4>
                 </div>
                 <div class="card-body text-center">
                     <div class="mb-3">
@@ -16,7 +16,7 @@
                     </div>
                     <p class="lead">@Message</p>
                     <a href="/welcome" class="btn btn-primary mt-3">
-                        <i class="bi bi-arrow-left-circle"></i>Return to Login
+                        <i class="bi bi-arrow-left-circle"></i>Terug naar login
                     </a>
                 </div>
             </div>
@@ -34,12 +34,12 @@
     /// </summary>
     /// <remarks>
     /// If <see cref="Message"/> is <c>null</c>, empty, or consists only of white-space characters,
-    /// it is set to the default message: "You do not have access to this application."
+    /// it is set to the default message: "Je hebt geen toegang tot deze applicatie."
     /// This method is called synchronously when the component is initialized.
     /// </remarks>
     protected override void OnInitialized()
     {
         if (string.IsNullOrWhiteSpace(Message))
-            Message = "You do not have access to this application.";
+            Message = "Je hebt geen toegang tot deze applicatie.";
     }
 }

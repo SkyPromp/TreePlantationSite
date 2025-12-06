@@ -2,13 +2,10 @@
 @page "/admin/tree"
 @page "/manager/tree"
 @rendermode InteractiveServer
-@using System.Drawing
 @using AP.BTP.Contracts.DTOs
-@using BlazorBootstrap.Components.Form.SelectInput
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
-@using Microsoft.Extensions.Logging.Abstractions
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
@@ -16,9 +13,9 @@
 
 <div class="d-flex justify-content-between px-4">
     @if(user != null && user.IsInRole("Admin")){
-        <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Add new</Button>
+        <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
     }
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Search..." Style="width: 25vw; height: 5vh"/>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
 
     <select class="form-select" @onchange="OnSortOrderChanged" style="width: 15vw; height: 5vh">
         <option value="true" selected>A-Z</option>
@@ -39,12 +36,12 @@
                                 <CardTitle Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Species</CardTitle>
                                 @if(user != null && user.IsInRole("Admin")){
                                     <div class="card-buttons d-flex justify-content-between">
-                                        <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Edit</Button>
+                                        <Button Color="ButtonColor.Dark" Style="width:85%; height: 5vh;"  @onclick="() => GoToUpdateForm(item.Id)">Bewerken</Button>
                                         <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.showDeleteConfirmation = true; selectedTree = item; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon></Button>
                                     </div>
                                 } else if (user != null && user.IsInRole("Manager")){
                                     <a href="@($"/manager/tree/{item.Id}")" class="d-flex justify-content-center" style="text-decoration:none;">
-                                        <Button Color="ButtonColor.Dark" Style="min-width: 80%; height: 5vh;">Bekijk</Button>
+                                        <Button Color="ButtonColor.Dark" Style="min-width: 80%; height: 5vh;">Bekijken</Button>
                                     </a>
                                 }
                             </CardBody>
@@ -57,7 +54,7 @@
     }
     else
     {
-        <p class="text-center mt-4">No results found.</p>
+        <p class="text-center mt-4">Geen resultaten gevonden.</p>
     }
 
     <Pagination 
@@ -73,32 +70,12 @@
     </Pagination>
 </div>
 
-@if (this.showDeleteConfirmation && user != null && user.IsInRole("Admin"))
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> boom wilt verwijderen?</h5>
-            @if (isLoading)
-            {
-
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            }
-            else
-            {
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelDeleteTree" class="btn btn-warning">Annuleer</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="DeleteTree" class="btn btn-danger">Bevestig</button>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="@(this.showDeleteConfirmation && user != null && user.IsInRole("Admin"))"
+    onCancellation="this.CancelDeleteTree"
+    onConfirmation="this.DeleteTree"
+    confirmationDescription="Bent u zeker dat u deze boom wilt verwijderen?"
+/>
 
 @code {
     /// <summary>
@@ -277,10 +254,12 @@
     /// <summary>
     /// Cancels the tree deletion process and resets related UI state.
     /// </summary>
-    private void CancelDeleteTree()
+    private Task CancelDeleteTree()
     {
         this.showDeleteConfirmation = false;
         this.selectedTree = null;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

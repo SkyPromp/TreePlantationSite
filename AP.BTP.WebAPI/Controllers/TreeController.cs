@@ -97,7 +97,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="id">The ID of the tree to delete.</param>
         /// <returns>No content on successful deletion.</returns>
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTree(int id)
         {
             Console.WriteLine($"Delete tree controller, delete: {id}");

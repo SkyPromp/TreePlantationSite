@@ -2,6 +2,7 @@
 @page "/admin/tree/edit/{Id:int?}"
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -14,7 +15,7 @@
         <Content>
             <EditForm Model="Tree" OnValidSubmit="ShowSecondTabAsync">
                 <DataAnnotationsValidator />
-                <div class="form-content">
+                <div class="form-content overflow-hidden">
                     <div class="row">
                         <div class="col-4 pe-3">
                             <div>
@@ -29,12 +30,11 @@
                         </div>
                             <div class="col-8">
                                 <label class="form-label">Overzicht</label>
-                                <div class="border rounded p-2" style="height: 80%; overflow-y: auto;">
+                                <div class="border rounded p-2" style="height: 50%; overflow-y: auto;">
                                     @if (previews.Count == 0)
                                     {
                                         <p class="text-muted">Nog geen afbeeldingen geselecteerd.</p>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <div class="d-flex flex-wrap">
                                             @foreach (KeyValuePair<string, string> kvp in previews)
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
                     <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Volgende</Button>
                 </div>
             </EditForm>
@@ -68,10 +68,17 @@
                         <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Lente</label>
-                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Spring)" />
+                                <div class="d-flex align-items-center gap-2">
+                                    <InputFile class="form-control mb-0" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Spring)" />
+
+                                    @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring))
+                                    {
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanSpring = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                    }
+                                </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)){
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)) {
                                     string fileKey = Tree.MaintenancePlanSpring;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -79,10 +86,9 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
                                     }
@@ -91,7 +97,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -99,10 +105,17 @@
                         <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Zomer</label>
-                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Summer)" />
+                                <div class="d-flex align-items-center gap-2">
+                                    <InputFile class="form-control mb-0" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Summer)" />
+
+                                    @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer))
+                                    {
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanSummer = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                    }
+                                </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)){
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
                                     string fileKey = Tree.MaintenancePlanSummer;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -110,10 +123,9 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
                                     }
@@ -122,7 +134,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -130,10 +142,17 @@
                         <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Herfst</label>
-                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Autumn)" />
+                                <div class="d-flex align-items-center gap-2">
+                                    <InputFile class="form-control mb-0" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Autumn)" />
+
+                                    @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn))
+                                    {
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanAutumn = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                    }
+                                </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)){
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
                                     string fileKey = Tree.MaintenancePlanAutumn;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -141,10 +160,9 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
                                     }
@@ -153,7 +171,7 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;"/>
                                     }                                    
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
@@ -161,10 +179,17 @@
                         <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
                             <div class="input-container d-flex flex-column w-100">
                                 <label class="form-label">Winter</label>
-                                <InputFile class="form-control" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Winter)" />
+                                <div class="d-flex align-items-center gap-2">
+                                    <InputFile class="form-control mb-0" OnChange="e => HandleFileUpload(e, FileType.Maintenance, Season.Winter)" />
+
+                                    @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter))
+                                    {
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanWinter = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                    }
+                                </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if(!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)){
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
                                     string fileKey = Tree.MaintenancePlanWinter!;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -172,10 +197,9 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">Preview PDF</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
                                         </div>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
                                     }
@@ -184,37 +208,45 @@
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }                                    
                                 } else {
-                                    <p>No preview yet.</p>
+                                    <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Annuleer</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaar</Button>
+                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</a>
+                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>
     </Tab>
 </Tabs>
 
-@if (this.showDeleteConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> afbeelding wilt verwijderen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelDeletePicture" class="btn btn-warning">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="DeletePicture" class="btn btn-danger">Bevestig</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmation"
+    onCancellation="this.CancelDeletePicture"
+    onConfirmation="this.DeletePicture"
+    confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?"
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
+    onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?"
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmLeaveForm"
+    onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
+    confirmationDescription="Bent u zeker dat u de pagina wilt verlaten? Onopgeslagen wijzigingen zullen ongedaan wordedn gemaakt."
+/>
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmSaveForm"
+    onConfirmation="this.Submit"
+/>
 
 @code {
     /// <summary>
@@ -251,7 +283,7 @@
     /// <summary>
     /// Represents the seasons of the year for maintenance plans.
     /// </summary>
-    public enum Season{
+    public enum Season {
         Spring,
         Summer,
         Autumn,
@@ -314,7 +346,17 @@
     /// <summary>
     /// Indicates whether the delete confirmation modal should be shown.
     /// </summary>
-    private bool showDeleteConfirmation = false;
+    private bool showDeleteConfirmation;
+
+    /// <summary>
+    /// Indicates whether the leave form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmLeaveForm;
+
+    /// <summary>
+    /// Indicates whether the save form confirmation modal should be shown.
+    /// </summary>
+    private bool showConfirmSaveForm;
 
     /// <summary>
     /// Represents the current tree being created or edited.
@@ -324,6 +366,22 @@
         Id = 0,
         Species = ""
     };
+
+    /// <summary>
+    /// Indicates whether the delete confirmation modal should be shown.
+    /// </summary>
+    private bool showDeleteConfirmationMaintenancePlan;
+
+    /// <summary>
+    /// The function that shall be run when the maintanceplan is deleted.
+    /// </summary>
+    private Action? ConfirmDeleteMaintenancePlan;
+
+    /// <summary>
+    /// Holds a list of all deleted tree pictures so they can be cancelled if the changes are not saved.
+    /// </summary>
+    List<int> deletedTreePics = new List<int>();
+
 
     /// <summary>
     /// The allowed content types for picture uploads.
@@ -353,7 +411,7 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
 
-        if (Id.HasValue){
+        if (Id.HasValue) {
             await LoadTree(Id.Value);
             await LoadExistingPictures(Id.Value);
             await LoadExistingMaintenanceFiles();
@@ -369,7 +427,7 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "No httpclient found.";
+            this.errorMessage = "Geen httpclient gevonden.";
 
             return;
         }
@@ -379,7 +437,7 @@
         if (response != null)
             this.Tree = response;
         else
-            this.errorMessage = "Couldn't load tree";
+            this.errorMessage = "Kon boom niet laden.";
 
         StateHasChanged();
     }
@@ -394,14 +452,14 @@
         {
             if (this.client == null)
             {
-                this.errorMessage = "No httpclient found.";
+                this.errorMessage = "Geen httpclient gevonden.";
 
                 return;
             }
 
             if (string.IsNullOrEmpty(this.Tree.Species))
             {
-                this.errorMessage = "The tree name is empty";
+                this.errorMessage = "De boomnaam is leeg";
 
                 return;
             }
@@ -425,7 +483,7 @@
 
                     if (!uploadResponse.IsSuccessStatusCode)
                     {
-                        this.errorMessage = $"Failed to upload maintenance file {file.Name}.";
+                        this.errorMessage = $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.";
                         continue;
                     }
 
@@ -434,7 +492,7 @@
                     if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
                     if (string.IsNullOrEmpty(fileName))
                     {
-                        errorMessage = $"Upload succeeded but no fileName returned for {file.Name}";
+                        errorMessage = $"Uploaden is gelukt, maar er is geen bestandsnaam geretourneerd voor {file.Name}";
                         continue;
                     }
 
@@ -473,7 +531,7 @@
             TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
             if (savedTree == null || savedTree.Id == 0)
             {
-                this.errorMessage = "Failed to get saved tree id.";
+                this.errorMessage = "Kan de opgeslagen boom-id niet ophalen.";
                 return;
             }
 
@@ -482,6 +540,8 @@
 
             List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();
             newPictures.Clear();
+
+            await this.DeleteAllQueuedPictures();
 
             foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
             {
@@ -505,7 +565,7 @@
 
                 if (string.IsNullOrEmpty(fileName))
                 {
-                    this.errorMessage = $"Failed to upload file {file.Name}";
+                    this.errorMessage = $"Kan bestand {file.Name} niet uploaden";
                     continue;
                 }
 
@@ -555,19 +615,19 @@
         {
             if (type == FileType.Picture && !ImageFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"File type '{file.ContentType}' is not permitted!";
+                errorMessage = $"Bestandstype '{file.ContentType}' is niet toegestaan!";
                 continue;
             }
 
             if (type == FileType.Maintenance && !AllowedMaintenanceFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"File type '{file.ContentType}' is not permitted for maintenance plans!";
+                errorMessage = $"Het bestandstype '{file.ContentType}' is niet toegestaan voor onderhoudsplannen!";
                 continue;
             }
 
             if (file.Size > 10_000_000)
             {
-                errorMessage = $"File '{file.Name}' exceeds the 10MB file size limit!";
+                errorMessage = $"Het bestand '{file.Name}' overschrijdt de maximale bestandsgrootte van 10 MB!";
                 continue;
             }
 
@@ -579,8 +639,7 @@
             {
                 newPictures[key] = (file, ms.ToArray());
                 previews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
-            }
-            else if (type == FileType.Maintenance)
+            } else if (type == FileType.Maintenance)
             {
                 newMaintenanceFiles[key] = (file, ms.ToArray());
                 maintenancePreviews[key] = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
@@ -605,7 +664,7 @@
     /// <param name="key">The key to associate with the QR code.</param>
     /// <param name="fileName">The file name or URL to encode in the QR code.</param>
     private void GenerateQRCode(string key, string fileName) {
-        try{
+        try {
             string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
 
             using QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -616,8 +675,8 @@
             qrCodes[key] = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
 
             StateHasChanged();
-        } catch (Exception e){
-            errorMessage = $"Failed to generate QR code: {e.Message}";
+        } catch (Exception e) {
+            errorMessage = $"Kan geen QR-code genereren: {e.Message}";
         }
     }
 
@@ -631,15 +690,14 @@
     {
         HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
 
-        if(!response.IsSuccessStatusCode) return;
+        if (!response.IsSuccessStatusCode) return;
 
         byte[] bytes = await response.Content.ReadAsByteArrayAsync();
         string type = response.Content.Headers.ContentType?.MediaType!;
 
-        if(fileType == FileType.Picture){
+        if (fileType == FileType.Picture) {
             previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
-        }
-        else if(fileType == FileType.Maintenance){
+        } else if (fileType == FileType.Maintenance) {
             maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
             maintenanceFileNames[key] = fileName;
 
@@ -695,10 +753,37 @@
     /// Cancels the delete picture operation.
     /// Hides the confirmation modal and clears the selected image.
     /// </summary>
-    private void CancelDeletePicture()
+    private Task CancelDeletePicture()
     {
         this.showDeleteConfirmation = false;
         this.selectedImage = null;
+
+        return Task.CompletedTask;
+    }
+
+    private async Task DeleteAllQueuedPictures(){
+        if (this.deletedTreePics.Count() == 0) return;
+
+        if(this.client == null)
+        {
+            this.errorMessage = "The client has not been initialized yet.";
+
+            return;
+        }
+
+        // Foreach instead of 1 large request because DeleteAsync doesn't take a body and if you want to create your own delete you need to Jsonify, which requires another package.
+        foreach (int picId in this.deletedTreePics)
+        {
+            HttpResponseMessage res = await this.client.DeleteAsync($"TreePicture/{picId}");
+
+            if (!res.IsSuccessStatusCode)
+            {
+                this.errorMessage = await res.Content.ReadAsStringAsync();
+                StateHasChanged();
+            }
+        }
+
+        StateHasChanged();
     }
 
     /// <summary>
@@ -713,18 +798,18 @@
             return;
         }
 
+        if(this.client == null)
+        {
+            this.errorMessage = "The client has not been initialized yet.";
+
+            return;
+        }
+
         if (int.TryParse(selectedImage, out int picId))
         {
-            HttpResponseMessage res = await client!.DeleteAsync($"TreePicture/{picId}");
-            if (res.IsSuccessStatusCode)
-            {
-                existingPictures.Remove(picId);
-                previews.Remove(selectedImage);
-            }
-            else
-            {
-                errorMessage = await res.Content.ReadAsStringAsync();
-            }
+            this.deletedTreePics.Add(picId);
+            existingPictures.Remove(picId);
+            previews.Remove(selectedImage);
         }
         else
         {
@@ -743,5 +828,15 @@
     private async Task ShowSecondTabAsync()
     {
         await tabs.ShowTabByIndexAsync(1);
+    }
+
+    /// <summary>
+    /// The function that shall be run when the maintanceplan deletion is cancelled
+    /// </summary>
+    private void CancelDeleteMaintenancePlan()
+    {
+        this.ConfirmDeleteMaintenancePlan = null;
+        this.showDeleteConfirmationMaintenancePlan = false;
+        StateHasChanged();
     }
 }

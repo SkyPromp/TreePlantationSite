@@ -1,0 +1,69 @@
+﻿@if (this.showConfirmationPopup)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index:10;">
+        <div class="card position-absolute align-self-center p-4">
+            <h1>@this.confirmationTitle</h1>
+            <p>@this.confirmationDescription</p>
+
+            @if (this.isLoading)
+            {
+                <div class="spinner-border align-self-center" role="status">
+                    <span class="visually-hidden">Laden...</span>
+                </div>
+            } else
+            {
+                <div class="row gap-3">
+                    <div class="col">
+                        <button @onclick="OnCancellation" class="btn btn-warning">Annuleer</button>
+                    </div>
+                    <div class="col">
+                        <button @onclick="this.OnConfirmation" class="btn btn-secondary">Bevestigen</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string? confirmationTitle { get; set; }
+    [Parameter] public string? confirmationDescription { get; set; }
+    [Parameter] public bool showConfirmationPopup { get; set; }
+    [Parameter] public Func<Task>? onConfirmation { get; set; }
+    [Parameter] public Func<Task>? onCancellation { get; set; }
+
+    private bool isLoading;
+
+    /// <summary>
+    /// Lifecycle method called when the component is initialized.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        this.isLoading = false;
+
+        if (this.confirmationDescription == null) this.confirmationDescription = "Wenst u om te bevestigen?";
+        if (this.confirmationTitle == null) this.confirmationTitle = "Bevestigen";
+    }
+
+    private async Task OnConfirmation()
+    {
+        this.isLoading = true;
+        StateHasChanged();
+        if (this.onConfirmation != null) await this.onConfirmation();
+        this.isLoading = false;
+
+        this.showConfirmationPopup = false;
+        StateHasChanged();
+    }
+
+    private async Task OnCancellation()
+    {
+        this.isLoading = true;
+        StateHasChanged();
+        if (this.onCancellation != null) await this.onCancellation();
+        this.isLoading = false;
+
+        this.showConfirmationPopup = false;
+        StateHasChanged();
+    }
+}

@@ -7,9 +7,9 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.Enums
 @inject IHttpClientFactory HttpClientFactory
-<PageTitle>Wachtende gebruikers</PageTitle>
+<PageTitle>Registratieaanvragen</PageTitle>
 
-<h3 class="text-center">Wachtende gebruikers goedkeuren</h3>
+<h3 class="text-center">Registratieaanvragen goedkeuren</h3>
 
 <div class="d-flex justify-content-between px-3">
     <a href="/admin/users" style="text-decoration: none;">
@@ -105,8 +105,8 @@
             </select>
             @if (selectedRole == UserRole.Operator.ToString())
             {
-                <h5>Selecteer de plantagelocaties die aan deze gebruiker moeten worden toegewezen</h5>
-                <p>Plantagelocatie 1</p>
+                <h5>Selecteer de kweeksites die aan deze gebruiker moeten worden toegewezen</h5>
+                <p>Kweeksite 1</p>
                 <select @bind="this.site1" class="form-select mb-3">
                     <option value=""></option>
                     @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
@@ -115,7 +115,7 @@
                     }
                 </select>
 
-                <p>Plantagelocatie 2</p>
+                <p>Kweeksite 2</p>
                 <select @bind="this.site2" class="form-select mb-3">
                     <option value=""></option>
                     @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
@@ -135,10 +135,10 @@
             {
                 <div class="row gap-3">
                     <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
+                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
-                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestig</button>
+                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestigen</button>
                     </div>
                 </div>
             }
@@ -146,32 +146,12 @@
     </div>
 }
 
-@if (this.showDeleteConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Ben je zeker dat je deze <br /> gebruiker wil afwijzen?</h5>
-            @if (isLoading)
-            {
-
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            }
-            else
-            {
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Annuleer</button>
-                    </div>
-                    <div class="col">
-                        <button @onclick="RejectUser" class="btn btn-danger">Bevestig</button>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmation"
+    onCancellation="this.CancelEditUser"
+    onConfirmation="this.RejectUser"
+    confirmationDescription="Ben je zeker dat je deze gebruiker wil afwijzen?"
+/>
 
 @if (this.showSuccessToast)
 {
@@ -410,7 +390,7 @@
             }
             else
             {
-                this.errorMessage = "Something went wrong when loading in the plantation sites";
+                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
             }
         }
         catch (Exception e)
@@ -422,7 +402,7 @@
     /// <summary>
     /// Cancels the current user edit or approval operation and resets form state.
     /// </summary>
-    private void CancelEditUser()
+    private Task CancelEditUser()
     {
         this.showEditUser = false;
         this.selectedUserId = null;
@@ -430,6 +410,8 @@
         this.site2 = null;
         this.selectedRole = "";
         this.showDeleteConfirmation = false;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

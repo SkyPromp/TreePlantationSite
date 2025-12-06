@@ -33,6 +33,14 @@ namespace AP.BTP.Application.CQRS.Zone
                 .NotEqual(0)
                 .WithMessage("Id should not be zero when updating a zone.");
 
+            RuleFor(command => string.IsNullOrWhiteSpace(command.Zone.Name))
+                .Equal(false)
+                .WithMessage("The zone name cannot be empty");
+
+            RuleFor(command => command.Zone.Size)
+                .NotNull()
+                .WithMessage("The zone size cannot be null");
+
             RuleFor(command => command.Zone.PlantationSiteId)
                 .NotEqual(0)
                 .WithMessage("The plantation site must already exist.");
@@ -51,6 +59,17 @@ namespace AP.BTP.Application.CQRS.Zone
                     return plantationSite.Zones.Count(z => (z.Id != zone.Id) && (z.Name == zone.Name)) == 0;
                 })
                 .WithMessage("The zone name must be unique within a plantationsite");
+
+            RuleFor(command => command.Zone)
+                .MustAsync(async (zone, cancellation) =>
+                {
+                    Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+
+                    if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
+
+                    return plantationSite.Size >= plantationSite.Zones.Where(z => z.Id != zone.Id).Sum(z => z.Size) + zone.Size;
+                })
+                .WithMessage("The sum of all the zone sizes must be smaller than the total plantationsite area.");
         }
     }
 
@@ -82,6 +101,8 @@ namespace AP.BTP.Application.CQRS.Zone
         /// <returns>The updated <see cref="ZoneDTO"/>.</returns>
         public async Task<ZoneDTO> Handle(UpdateZoneCommand request, CancellationToken cancellationToken)
         {
+            if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+
             Domain.Zone zone = mapper.Map<Domain.Zone>(request.Zone);
 
             uow.ZoneRepository.Update(zone);

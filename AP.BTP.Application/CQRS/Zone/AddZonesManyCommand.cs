@@ -3,6 +3,7 @@ using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using System.Linq;
 
 namespace AP.BTP.Application.CQRS.Zone
 {
@@ -33,6 +34,14 @@ namespace AP.BTP.Application.CQRS.Zone
                 .Equal(true)
                 .WithMessage("All id's should be zero when adding a zone.");
 
+            RuleFor(command => command.Zones.Any(zone => string.IsNullOrWhiteSpace(zone.Name)))
+                .Equal(false)
+                .WithMessage("The zone name cannot be empty");
+
+            RuleFor(command => command.Zones.Any(zone => zone.Size == null))
+                .Equal(false)
+                .WithMessage("The zone size cannot be null");
+
             RuleFor(command => command.Zones.All(zone => zone.PlantationSiteId != 0))
                 .Equal(true)
                 .WithMessage("All plantation sites must already exist.");
@@ -58,6 +67,30 @@ namespace AP.BTP.Application.CQRS.Zone
                 })
                 .WithMessage("The zone name must be unique within a plantationsite.");
 
+            RuleFor(command => command.Zones)
+                .MustAsync(async (zones, cancellation) =>
+                {
+                    Dictionary<int, double> remainingAreaOfPlantationSite = new Dictionary<int, double>();
+
+                    foreach (ZoneDTO zone in zones)
+                    {
+                        if (!remainingAreaOfPlantationSite.Keys.Contains(zone.PlantationSiteId))
+                        {
+                            Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+
+                            if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
+
+                            remainingAreaOfPlantationSite.Add(zone.PlantationSiteId, plantationSite.Size);
+
+                            foreach (Domain.Zone existingZone in plantationSite.Zones) remainingAreaOfPlantationSite[zone.PlantationSiteId] -= existingZone.Size ?? 0;
+                        }
+
+                        remainingAreaOfPlantationSite[zone.PlantationSiteId] -= zone.Size ?? 0;
+                    }
+
+                    return remainingAreaOfPlantationSite.Values.All(area => area >= 0);
+                })
+                .WithMessage("The sum of all the zone sizes must be smaller than the total plantationsite area.");
         }
     }
 
@@ -88,6 +121,8 @@ namespace AP.BTP.Application.CQRS.Zone
         /// <returns>The created zones as a <see cref="ZoneDTO"/>.</returns>
         public async Task<ZoneDTO> Handle(AddZonesManyCommand request, CancellationToken cancellationToken)
         {
+            foreach(ZoneDTO zone in request.Zones) if(zone.Name != null) zone.Name = zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+            
             IEnumerable<Domain.Zone> zones = mapper.Map<IEnumerable<Domain.Zone>>(request.Zones);
 
             foreach (Domain.Zone zone in zones) await uow.ZoneRepository.Create(zone);

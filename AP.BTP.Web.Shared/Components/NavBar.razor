@@ -3,21 +3,31 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
-<nav class="navbar navbar-expand-lg px-4">
-    <a class="navbar-brand" href="/admin/dashboard">
-        <img src="logo.png" alt="Logo" class="brand-logo">
-    </a>
-    <div class="collapse navbar-collapse" id="navbarNav">
+<nav class="navbar navbar-expand px-4">
+    @if(user != null && user.IsInRole("Admin")) {
+        <a class="navbar-brand" href="/admin/dashboard">
+            <img src="logo.png" alt="Logo" class="brand-logo">
+        </a>
+    } else if(user != null && user.IsInRole("Manager")) {
+        <a class="navbar-brand" href="/manager/dashboard">
+            <img src="logo.png" alt="Logo" class="brand-logo">
+        </a>
+    } else if(user != null && user.IsInRole("Operator")) {
+        <a class="navbar-brand" href="/operator/dashboard">
+            <img src="logo.png" alt="Logo" class="brand-logo">
+        </a>
+    }
+    <div class=" navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
         @if(user != null && user.IsInRole("Admin")){
             <li class="nav-item">
-                <a class="nav-link" href="/admin/users">Users</a>
+                <a class="nav-link" href="/admin/users">Gebruikers</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/plantation-site">Sites</a>
+                <a class="nav-link" href="/admin/plantation-site">Kweeksites</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/tree">Trees</a>
+                <a class="nav-link" href="/admin/tree">Bomen</a>
             </li>
         } else if(user != null && user.IsInRole("Manager")){
             <li class="nav-item">
@@ -30,6 +40,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/planning">Planning</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/plant-identification">Identificeren</a>
+            </li>            
         }
             <li class="nav-item position-relative">
                 <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" @onclick="ToggleProfileMenu">
@@ -42,7 +55,7 @@
                     <div class="profile-dropdown bg-white shadow-sm rounded">
                         <p>@user?.Identity?.Name</p>
                         <div class="d-flex justify-content-center">
-                            <a href="/logout"><Button Color="ButtonColor.Danger">Logout</Button></a>
+                            <a href="/logout"><Button Color="ButtonColor.Danger">Uitloggen</Button></a>
                         </div>
                     </div>
                 }

@@ -52,39 +52,19 @@
     </div>
 </div>
 
-@if (this.showStartConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> taak wilt starten?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelStartTask" class="btn btn-warning">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="StartTask" class="btn btn-danger">Bevestig</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showStartConfirmation"
+    onCancellation="this.CancelStartTask"
+    onConfirmation="this.StartTask"
+    confirmationDescription="Bent u zeker dat u deze taak wilt starten?"
+/>
 
-@if (this.showEndConfirmation)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> taak wilt stoppen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="CancelEndTask" class="btn btn-warning">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="EndTask" class="btn btn-danger">Bevestig</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup 
+    showConfirmationPopup="this.showEndConfirmation"
+    onCancellation="this.CancelEndTask"
+    onConfirmation="this.EndTask"
+    confirmationDescription="Bent u zeker dat u deze taak wilt stoppen?"
+/>
 
 @if (this.showGroundPlan)
 {
@@ -242,10 +222,12 @@
         this.showStartConfirmation = true;
     }
 
-    private void CancelStartTask()
+    private Task CancelStartTask()
     {
         this.selectedTask = null;
         this.showStartConfirmation = false;
+
+        return Task.CompletedTask;
     }
 
     private async Task StartTask()
@@ -308,19 +290,22 @@
         this.showEndConfirmation = true;
     }
 
-    private void CancelEndTask()
+    private Task CancelEndTask()
     {
         this.selectedTask = null;
         this.showEndConfirmation = false;
+
+        return Task.CompletedTask;
     }
 
     private async Task EndTask()
     {
         if (this.client == null)
         {
-            this.errorMessage = "The client could not be found!";
+            this.errorMessage = "Client is null";
             this.showEndConfirmation = false;
             StateHasChanged();
+
             return;
         }
 

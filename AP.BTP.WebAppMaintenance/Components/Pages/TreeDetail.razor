@@ -15,14 +15,6 @@
     <h3>"Boom niet gevonden"</h3>
 }
 
-@* @if (!string.IsNullOrWhiteSpace(this.maintenancePlan))
-{
-    <PdfViewer Class="mb-3"
-               Url="@this.maintenancePlan"
-               OnDocumentLoaded="OnDocumentLoaded"
-               OnPageChanged="OnPageChanged" />
-} *@
-
 @if (!string.IsNullOrEmpty(this.errorMessage))
 {
     <p>@errorMessage</p>
@@ -44,11 +36,6 @@
     /// Holds the details of the currently loaded tree.
     /// </summary>
     private TreeDTO? Tree;
-
-    @* /// <summary>
-    /// Base64-encoded maintenance plan PDF data to display in the UI.
-    /// </summary>
-    string maintenancePlan = ""; *@
 
     /// <summary>
     /// HTTP client used to call the backend API.
@@ -74,7 +61,7 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "No httpclient found.";
+            this.errorMessage = "Geen httpclient gevonden.";
 
             return;
         }
@@ -90,7 +77,7 @@
                 await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
             } *@
 
-        } else this.errorMessage = "Couldn't load tree";
+        } else this.errorMessage = "Kan boom niet laden";
 
         StateHasChanged();
     }
@@ -117,10 +104,7 @@
         } catch
         {
             @* this.maintenancePlan = ""; *@
-            this.errorMessage = "Something went wrong while loading the image";
+            this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
         }
     }
-
-    private void OnDocumentLoaded() { }
-    private void OnPageChanged() { }
 }

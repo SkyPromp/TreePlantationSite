@@ -63,6 +63,10 @@ namespace AP.BTP.Application.CQRS.PlantationSite
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Size must be zero or positive.");
 
+            RuleFor(command => command.PlantationSite)
+                .Must(plantationSite => plantationSite.Size >= (plantationSite.Zones?.Sum(zone => zone.Size) ?? 0))
+                .WithMessage("The sum of the area of the zones must be smaller or equal to the total size of the plantationSite");
+
             RuleFor(command => command.PlantationSite.GroundPlan)
                 .NotEmpty()
                 .WithMessage("Groundplan cannot be empty.");

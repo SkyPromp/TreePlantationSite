@@ -10,7 +10,7 @@
 
 @if (user == null)
 {
-    <p>Loading...</p>
+    <p>Laden...</p>
 }
 else
 {
@@ -42,7 +42,7 @@ else
                     </select>
                     @if (isPlantationSiteSelectionDisabled && selectedPlantationSiteId.HasValue)
                     {
-                        <small class="text-muted d-block mt-1">
+                        <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
                             Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                         </small>
                     }
@@ -83,19 +83,19 @@ else
                 bool isLast = i == WeekDays.Count - 1;
                 <div class="border flex-shrink-0 d-flex flex-column"
                      style="
-                                        max-width: 14%;
-                                        min-width: 14%;
-                                        font-size: 0.90rem;
-                                        @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                                        @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                                        @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                                     ">
+                                                max-width: 14%;
+                                                min-width: 14%;
+                                                font-size: 0.90rem;
+                                                @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                                                @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                                                @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                                             ">
                     <div class="text-center fw-bold p-3"
                          style="
-                                            background-color: #E3E3E3;
-                                            @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                                            @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                                         ">
+                                                    background-color: #E3E3E3;
+                                                    @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                                    @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                                                 ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -270,29 +270,16 @@ else
             }
 
             <div class="d-flex gap-2">
-                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Annuleer</button>
-                <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Opslaan</button>
+                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
+                <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Bewaren</button>
             </div>
         </div>
     </div>
 }
 
-@if (this.ShowDeleteConfirm)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u deze <br /> site wil verwijderen?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="this.CancelRemoveTask" class="btn btn-dark">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="() => this.DeleteTaskItem(this.selectedTaskItemId)" class="btn btn-danger">Bevestig</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup showConfirmationPopup="this.ShowDeleteConfirm"
+                   onCancellation="this.CancelRemoveTask"
+                   onConfirmation="() => this.DeleteTaskItem(this.selectedTaskItemId)" />
 
 @if (this.ShowSubmitChanges)
 {
@@ -304,7 +291,7 @@ else
                     <button @onclick="this.CancelSubmitChanges" class="btn btn-dark">Annuleer</button>
                 </div>
                 <div class="col">
-                    <button @onclick="this.SubmitAllLocalChanges" class="btn btn-success">Bevestig</button>
+                    <button @onclick="this.SubmitAllLocalChanges" class="btn btn-success">Bevestigen</button>
                 </div>
             </div>
         </div>
@@ -590,7 +577,7 @@ else
     /// Deletes a task item with the given ID locally.
     /// </summary>
     /// <param name="taskItem">The taskItem to be deleted.</param>
-    private void DeleteTaskItem(int? id)  // TODO add confirmation message
+    private async Task DeleteTaskItem(int? id)  // TODO add confirmation message
     {
         if ((id == null || id == 0) && selectedTaskItem != null)
         {
@@ -611,6 +598,7 @@ else
         this.ShowDeleteConfirm = false;
         StateHasChanged();
     }
+
 
     /// <summary>
     /// Prepares the UI to confirm the deletion of a specified task item.
@@ -707,7 +695,7 @@ else
         {
             if (this.client == null)
             {
-                this.errorMessage = "No httpclient found.";
+                this.errorMessage = "Geen httpclient gevonden.";
                 this.ShowAddTaskItem = false;
                 StateHasChanged();
 
@@ -716,7 +704,7 @@ else
 
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
-                this.errorMessage = "De titel en beschrijving zijn verplicht";
+                this.errorMessage = "De titel en beschrijving zijn verplicht.";
                 StateHasChanged();
                 return;
             }
@@ -725,7 +713,7 @@ else
 
             if (totalMinutes <= 0)
             {
-                this.errorMessage = "Duur moet minimaal 1 minuut zijn";
+                this.errorMessage = "Duur moet minimaal 1 minuut zijn.";
                 StateHasChanged();
                 return;
             }
@@ -880,10 +868,12 @@ else
     /// <summary>
     /// Cancels the remove task operation and hides the delete confirmation dialog.
     /// </summary>
-    private void CancelRemoveTask()
+    private Task CancelRemoveTask()
     {
         this.ShowDeleteConfirm = false;
         this.selectedTaskItemId = null;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -914,7 +904,6 @@ else
 
         await LoadZonesForPlantationSite(newSiteId);
 
-        StateHasChanged();
 
     }
 
