@@ -89,7 +89,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="request">The <see cref="SubmitWeekScheduleCommand"/> containing all task lists and task items.</param>
         /// <returns>The updated task lists after applying all changes.</returns>
         [Authorize(Roles = "Manager")]
-        [HttpPost("submit-changes")]
+        [HttpPost("weekschedule")]
         public async Task<IActionResult> SubmitWeekSchedule([FromBody] SubmitWeekScheduleDTO submitWeekScheduleDTO)
         {
             return Ok(await mediator.Send(new SubmitWeekScheduleCommand() { TaskLists = submitWeekScheduleDTO.TaskLists }));

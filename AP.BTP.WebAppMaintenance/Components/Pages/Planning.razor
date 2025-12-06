@@ -792,7 +792,7 @@ else
             TaskLists = taskLists
         };
 
-        HttpResponseMessage response = await client.PostAsJsonAsync("tasklist/submit-changes", request);
+        HttpResponseMessage response = await client.PostAsJsonAsync("tasklist/weekschedule", request);
 
         if (!response.IsSuccessStatusCode)
         {
