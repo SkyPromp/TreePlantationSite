@@ -777,7 +777,7 @@ else
         ShowSubmitChanges = false;
         if (client == null) return;
 
-        var taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
+        List<TaskListDTO> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
 
         string? validationError = ValidateWeekSchedule(taskLists);
         errorMessage = "";
@@ -787,12 +787,12 @@ else
             return;
         }
 
-        var request = new SubmitWeekScheduleDTO
+        SubmitWeekScheduleDTO request = new SubmitWeekScheduleDTO
         {
             TaskLists = taskLists
         };
 
-        var response = await client.PostAsJsonAsync("tasklist/submit-changes", request);
+        HttpResponseMessage response = await client.PostAsJsonAsync("tasklist/submit-changes", request);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -825,7 +825,7 @@ else
         if (dayCount > 5)
             return "Een medewerker mag maximaal 5 dagen per week werken.";
 
-        var siteIds = taskLists
+        List<int> siteIds = taskLists
             .Where(t => t.PlantationSiteId != null)
             .Select(t => t.PlantationSiteId!.Value)
             .Distinct()
@@ -834,7 +834,7 @@ else
         if (siteIds.Count > 1)
             return "Een medewerker moet de volledige week in dezelfde site werken.";
 
-        foreach (var tl in taskLists)
+        foreach (TaskListDTO tl in taskLists)
         {
             int activeTasks = tl.TaskItems?
                 .Where(t => !t.IsDeleted)
@@ -844,7 +844,7 @@ else
                 return $"Een medewerker mag maximaal 4 taken hebben per dag.";
         }
 
-        foreach (var tl in taskLists)
+        foreach (TaskListDTO tl in taskLists)
         {
             int totalMinutes = tl.TaskItems?
                 .Where(t => !t.IsDeleted)
