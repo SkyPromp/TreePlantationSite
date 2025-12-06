@@ -10,6 +10,8 @@
 @using System.Net.Http.Headers
 @using QRCoder
 
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Algemene informatie">
         <Content>
@@ -30,7 +32,7 @@
                         </div>
                             <div class="col-8">
                                 <label class="form-label">Overzicht</label>
-                                <div class="border rounded p-2" style="height: 50%; overflow-y: auto;">
+                                <div class="border rounded p-2" style="height: 100%; overflow-y: auto;">
                                     @if (previews.Count == 0)
                                     {
                                         <p class="text-muted">Nog geen afbeeldingen geselecteerd.</p>
@@ -40,6 +42,16 @@
                                             @foreach (KeyValuePair<string, string> kvp in previews)
                                             {
                                                 <div class="position-relative p-1" style="flex: 0 0 50%; height: 200px;">
+                                                    <Button Class="position-absolute" Style="box-shadow: none; top: 5px; left: 5px; background: none; border: none; z-index: 10;" @onclick="() => OnStarClicked(kvp.Key)">
+                                                        @if (IsPictureFavourite(kvp.Key))
+                                                        {
+                                                            <Icon Name="IconName.StarFill" Color="IconColor.Warning" Style="font-size: 4vh;" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <Icon Name="IconName.Star" Color="IconColor.Warning" Style="font-size: 4vh;" />
+                                                        }
+                                                    </Button>
                                                     <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; right: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
                                                         <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
                                                     </Button>
@@ -250,6 +262,16 @@
 
 @code {
     /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
+    private Toasts? toastContainer;
+
+    /// <summary>
     /// Reference to the tab component for switching between tabs.
     /// </summary>    
     private Tabs tabs = default!;
@@ -307,6 +329,12 @@
     /// Key is either the temporary GUID (for new images) or ID (for existing images), value is a base64 data URI.
     /// </summary>
     private Dictionary<string, string> previews = new();
+
+    /// <summary>
+    /// Tracks which tree pictures are marked as favourites. 
+    /// The key is the tree picture ID, and the value indicates whether it is a favourite (<c>true</c>) or not (<c>false</c>).
+    /// </summary>
+    private Dictionary<int, bool> favourites = new();
 
     /// <summary>
     /// Newly selected maintenance files that have not yet been uploaded.
@@ -722,6 +750,8 @@
             {
                 existingPictures[pic.Id] = pic.Path;
                 await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
+
+                favourites[pic.Id] = pic.IsFavourite;
             }
         }
     }
@@ -838,5 +868,102 @@
         this.ConfirmDeleteMaintenancePlan = null;
         this.showDeleteConfirmationMaintenancePlan = false;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Checks whether a picture is currently marked as favourite.
+    /// </summary>
+    /// <param name="key">The picture key, usually its ID as string.</param>
+    /// <returns><c>true</c> if the picture is favourite; otherwise <c>false</c>.</returns>
+    private bool IsPictureFavourite(string key)
+    {
+        if (int.TryParse(key, out int id))
+            return favourites.ContainsKey(id) && favourites[id];
+
+        return false;
+    }
+
+    /// <summary>
+    /// Toggles the favourite status of a picture.
+    /// Automatically unsets other favourites if a new one is being set.
+    /// </summary>
+    /// <param name="key">The picture key, usually its ID as string.</param>
+    private async Task ToggleFavourite(string key)
+    {
+        if (!int.TryParse(key, out int picId))
+            return;
+
+        bool newValue = !IsPictureFavourite(key);
+
+        if (newValue)
+        {
+            foreach (int otherId in favourites.Keys.ToList())
+            {
+                if (otherId != picId && favourites[otherId]) {
+                    favourites[otherId] = false;
+                    HttpResponseMessage responseMessage = await client!.PatchAsJsonAsync($"TreePicture/{otherId}/favourite", false);
+
+                    if (!responseMessage.IsSuccessStatusCode)
+                    {
+                        errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                        StateHasChanged();
+                        return;
+                    }
+                }
+            }
+        }
+
+        HttpResponseMessage response = await client!.PatchAsJsonAsync($"TreePicture/{picId}/favourite", newValue);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+            StateHasChanged();
+            return;
+        }
+
+        favourites[picId] = newValue;
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Determines if the picture key represents a temporary (unsaved) image.
+    /// </summary>
+    /// <param name="key">The picture key.</param>
+    /// <returns><c>true</c> if the image is temporary; otherwise <c>false</c>.</returns>
+    private bool IsTemporary(string key)
+    {
+        return !int.TryParse(key, out _);
+    }
+
+    /// <summary>
+    /// Handles star icon click. Shows a warning if the image is not yet saved.
+    /// </summary>
+    /// <param name="key">The picture key.</param>
+    private async Task OnStarClicked(string key)
+    {
+        if (IsTemporary(key))
+        {
+            ShowWarning("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.");
+            return;
+        }
+
+        await ToggleFavourite(key);
+    }
+
+    /// <summary>
+    /// Adds a warning toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    private void ShowWarning(string message)
+    {
+        toastMessages.Add(new ToastMessage
+        {
+            Type = ToastType.Warning,
+            Title = "Waarschuwing",
+            Message = message,
+            AutoHide = true
+        });
     }
 }
