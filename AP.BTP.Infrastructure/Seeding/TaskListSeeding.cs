@@ -24,11 +24,12 @@ namespace AP.BTP.Infrastructure.Seeding
             DateTime middleDate = DateTime.Parse("2026-01-16");
             List<TaskList> taskLists = new List<TaskList>();
 
-            int dayoffset = 0;
             const int totalDates = 101;
 
             for (int userIdOffset = 0; userIdOffset < 3; userIdOffset++)
             {
+                int dayoffset = 0;
+
                 for (int i = 1; i <= totalDates + 1; i++)
                 {
                     int weekday = i % 7;
