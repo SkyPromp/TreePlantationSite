@@ -43,7 +43,8 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <exception cref="NotImplementedException">Thrown because this method is not yet implemented.</exception>
         public void Delete(TaskList item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            this.dbSet.Update(item);
         }
 
         /// <summary>
