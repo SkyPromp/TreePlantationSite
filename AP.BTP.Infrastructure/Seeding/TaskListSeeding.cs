@@ -34,16 +34,19 @@ namespace AP.BTP.Infrastructure.Seeding
                 for (int i = 1; i <= totalDates + 1; i++)
                 {
                     int weekday = i % 7;
+                    
 
                     if (weekday == 5) dayoffset += 2;  // Only 5 days/week
+
+                    int plantationSiteBaseId = ((i - daysToSetDayToMonday) / 7) % 2 + 1;
 
                     taskLists.Add(new TaskList() {
                         Id = userIdOffset * (totalDates + 1) + i, 
                         Date = middleDate.AddDays(i - totalDates / 2 + dayoffset).Date, 
                         IsDeleted = false, 
                         UserId = 3 + userIdOffset, 
-                        PlantationSiteId = ((i - daysToSetDayToMonday) / 7) % 2 + 1 + userIdOffset * 2,
-                        ZoneId = ((i % 2) == 0? random.Next(1 + userIdOffset * 20, 11 + userIdOffset * 20): random.Next(11 + userIdOffset * 20, 21 + userIdOffset * 20))
+                        PlantationSiteId = plantationSiteBaseId + userIdOffset * 2,
+                        ZoneId = (plantationSiteBaseId == 1? random.Next(1, 11) + userIdOffset * 20: random.Next(11, 21) + userIdOffset * 20)
                     });
                 }
             }
