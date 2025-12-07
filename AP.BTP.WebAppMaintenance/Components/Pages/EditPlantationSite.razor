@@ -429,7 +429,7 @@
 
             this.showConfirmSaveForm = false;
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
-            else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite); // TODO implement update
+            else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite);
 
             if (response.IsSuccessStatusCode)
             {
@@ -545,25 +545,12 @@
             return;
         }
 
-        HttpResponseMessage? response;
-
         if (this.client != null)
         {
             if(this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
             else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
 
-            /*
-            response = await this.client.DeleteAsync($"Zone?id={id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                this.errorMessage = $"Het verwijderen van id={id} is niet gelukt.";
-            } else
-            {
-                this.errorMessage = $"{id} is succesvol verwijderd.";
-            */
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
-            //}
         }
 
         await this.LoadTrees();

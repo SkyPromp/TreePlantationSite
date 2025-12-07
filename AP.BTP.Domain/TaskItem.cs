@@ -38,9 +38,16 @@ namespace AP.BTP.Domain
         /// Gets or sets the task list associated with this task list.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public required TaskList TaskList { get; set; }
+        [JsonIgnore] public TaskList TaskList { get; set; }  // Not required because of seeding
 
+        /// <summary>
+        /// The time when a task is started, if this is null the task has not yet been started.
+        /// </summary>
         public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// The time when a task is ended, if this is null the task has not yet been ended.
+        /// </summary>
         public DateTime? EndTime { get; set; }
 
         /// <summary>
