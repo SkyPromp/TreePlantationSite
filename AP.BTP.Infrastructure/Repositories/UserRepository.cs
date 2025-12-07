@@ -2,9 +2,7 @@
 using AP.BTP.Contracts.Enums;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace AP.BTP.Infrastructure.Repositories
 {
