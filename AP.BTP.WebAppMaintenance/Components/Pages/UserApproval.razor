@@ -28,7 +28,11 @@
     </div>
 </div>
 <div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
-    @if (response?.Items != null)
+    @if (response?.Items == null || !response.Items.Any())
+    {
+        <p class="text-center mt-4">Er zijn momenteel geen gebruikers die een goedkeuring nodig hebben.</p>
+    }
+    else
     {
         <div class="d-grid p-1 fw-bold"
              style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
@@ -80,10 +84,6 @@
                 </div>
             }
         </div>
-    }
-    else
-    {
-        <p class="text-center mt-4">Geen resultaten gevonden.</p>
     }
 </div>
 
