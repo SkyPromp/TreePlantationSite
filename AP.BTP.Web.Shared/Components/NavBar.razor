@@ -52,8 +52,8 @@
                 @if(showProfileMenu)
                 {
                     <OutsideClickDetector MethodToCallOnClick="@ToggleProfileMenu" LowestInsideComponentZIndex="1000" />
-                    <div class="profile-dropdown bg-white shadow-sm rounded">
-                        <p>@user?.Identity?.Name</p>
+                    <div class="profile-dropdown bg-white shadow-sm rounded text-center">
+                        <p>@FullName</p>
                         <div class="d-flex justify-content-center">
                             <a href="/logout"><Button Color="ButtonColor.Danger">Uitloggen</Button></a>
                         </div>
@@ -79,4 +79,8 @@
     {
         showProfileMenu = !showProfileMenu;
     }
+
+    private string? FullName => user == null
+    ? null
+    : $"{user.FindFirst(ClaimTypes.GivenName)?.Value} {user.FindFirst(ClaimTypes.Surname)?.Value}";
 }
