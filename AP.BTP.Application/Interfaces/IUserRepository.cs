@@ -28,11 +28,13 @@ namespace AP.BTP.Application.Interfaces
         Task<User?> GetUserByAuth0Id(string auth0UserId);
 
         /// <summary>
-        /// Retrieves a paginated list of all approved users matching the specified search term.
+        /// Retrieves a paginated list of all approved users matching the specified search term and sort it.
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">A search term to filter users.</param>
+        /// <param name="sortBy">The property to sort the itens</param>
+        /// <param name="sortDirection">Indicates whether to sort ascending (asc) or descending (desc)</param>
         /// <returns>
         /// A task that returns a tuple containing:
         /// <list type="bullet">
@@ -40,14 +42,16 @@ namespace AP.BTP.Application.Interfaces
         /// <item><description>The total count of matching users.</description></item>
         /// </list>
         /// </returns>
-        Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection);
 
         /// <summary>
-        /// Retrieves a paginated list of all operator users matching the specified search term.
+        /// Retrieves a paginated list of all operator users matching the specified search term and sort it.
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">A search term to filter operator users.</param>
+        /// <param name="sortBy">The property to sort the itens</param>
+        /// <param name="sortDirection">Indicates whether to sort ascending (asc) or descending (desc)</param>
         /// <returns>
         /// A task that returns a tuple containing:
         /// <list type="bullet">
@@ -55,14 +59,16 @@ namespace AP.BTP.Application.Interfaces
         /// <item><description>The total count of matching operator users.</description></item>
         /// </list>
         /// </returns>
-        Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection);
 
         /// <summary>
-        /// Retrieves a paginated list of all unapproved users matching the specified search term.
+        /// Retrieves a paginated list of all unapproved users matching the specified search term and sort it.
         /// </summary>
         /// <param name="pageNr">The page number to retrieve (1-based).</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">A search term to filter approved users.</param>
+        /// <param name="sortBy">The property to sort the itens</param>
+        /// <param name="sortDirection">Indicates whether to sort ascending (asc) or descending (desc)</param>
         /// <returns>
         /// A task that returns a tuple containing:
         /// <list type="bullet">
@@ -70,7 +76,7 @@ namespace AP.BTP.Application.Interfaces
         /// <item><description>The total count of matching operator users.</description></item>
         /// </list>
         /// </returns>
-        Task<(IEnumerable<User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search);
+        Task<(IEnumerable<User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection);
 
         /// <summary>
         /// Soft deletes a <see cref="User"/> by its unique identifier.

@@ -2,7 +2,9 @@
 using AP.BTP.Contracts.Enums;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace AP.BTP.Infrastructure.Repositories
 {
@@ -72,7 +74,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by name or email.</param>
         /// <returns>A tuple containing the paged users and the total count.</returns>
-        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search)
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection)
         {
             IQueryable<User> query = dbSet
                 .Include(u => u.PlantationSites)
@@ -92,6 +94,20 @@ namespace AP.BTP.Infrastructure.Repositories
                    );
             }
 
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                bool ascending = sortDirection?.ToLower() != "desc";
+
+                query = sortBy.ToLower() switch
+                {
+                    "firstname" => ascending ? query.OrderBy(u => u.FirstName) : query.OrderByDescending(u => u.FirstName),
+                    "email" => ascending ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
+                    "phonenumber" => ascending ? query.OrderBy(u => u.PhoneNumber) : query.OrderByDescending(u => u.PhoneNumber),
+                    "role" => ascending ? query.OrderBy(u => u.Role) : query.OrderByDescending(u => u.Role),
+                    _ => query.OrderBy(u => u.FirstName)
+                };
+            }
+
             int totalCount = await query.CountAsync();
 
             List<User> items = await query.Skip((pageNr - 1) * pageSize)
@@ -108,7 +124,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by name or email.</param>
         /// <returns>A tuple containing the paged operator users and the total count.</returns>
-        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search)
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection)
         {
             IQueryable<User> query = dbSet
                 .Include(u => u.PlantationSites)
@@ -128,6 +144,19 @@ namespace AP.BTP.Infrastructure.Repositories
                    );
             }
 
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                bool ascending = sortDirection?.ToLower() != "desc";
+
+                query = sortBy.ToLower() switch
+                {
+                    "firstname" => ascending ? query.OrderBy(u => u.FirstName) : query.OrderByDescending(u => u.FirstName),
+                    "email" => ascending ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
+                    "phonenumber" => ascending ? query.OrderBy(u => u.PhoneNumber) : query.OrderByDescending(u => u.PhoneNumber),
+                    _ => query.OrderBy(u => u.FirstName)
+                };
+            }
+
             int totalCount = await query.CountAsync();
 
             List<User> items = await query.Skip((pageNr - 1) * pageSize)
@@ -144,7 +173,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="search">Optional search string to filter by name or email.</param>
         /// <returns>A tuple containing the paged users and the total count.</returns>
-        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search)
+        public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllUnapprovedUsersPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection)
         {
             IQueryable<User> query = dbSet
                 .Where(u => !u.IsDeleted && !u.IsApproved)
@@ -161,6 +190,19 @@ namespace AP.BTP.Infrastructure.Repositories
                         u.PhoneNumber.ToLower().Contains(search) ||
                         (u.Role != null && u.Role.ToString().ToLower().Contains(search))
                    );
+            }
+
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                bool ascending = sortDirection?.ToLower() != "desc";
+
+                query = sortBy.ToLower() switch
+                {
+                    "firstname" => ascending ? query.OrderBy(u => u.FirstName) : query.OrderByDescending(u => u.FirstName),
+                    "email" => ascending ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
+                    "phonenumber" => ascending ? query.OrderBy(u => u.PhoneNumber) : query.OrderByDescending(u => u.PhoneNumber),
+                    _ => query.OrderBy(u => u.FirstName)
+                };
             }
 
             int totalCount = await query.CountAsync();
@@ -205,7 +247,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// Retrieves a <see cref="User"/> by its Auth0 ID.
         /// </summary>
         /// <param name="Auth0Id">The Auth0 ID of the user.</param>
-        /// <returns>The <see cref="User"/> entity if found and not soft-deleted; otherwise, <c>null</c>.</returns>
+        /// <returns>The <see cref="User"/> entity if found; otherwise, <c>null</c>.</returns>
         public async Task<User?> GetUserByAuth0IdIncludingDeleted(string Auth0Id)
         {
             return await this.dbSet.FirstOrDefaultAsync(u => u.Auth0Id == Auth0Id);

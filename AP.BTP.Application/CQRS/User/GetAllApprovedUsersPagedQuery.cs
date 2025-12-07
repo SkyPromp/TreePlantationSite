@@ -24,6 +24,16 @@ namespace AP.BTP.Application.CQRS.User
         /// The search string used to filter users.
         /// </summary>
         public string? Search { get; set; }
+
+        /// <summary>
+        /// Column to sort by: "FirstName", "PhoneNumber", "Email o" or Role
+        /// </summary>
+        public string? SortBy { get; set; } = "FirstName";
+
+        /// <summary>
+        /// Sort direction: "asc" or "desc"
+        /// </summary>
+        public string? SortDirection { get; set; } = "asc";
     }
 
     /// <summary>
@@ -57,7 +67,7 @@ namespace AP.BTP.Application.CQRS.User
         {
             if (request.Search == null) request.Search = "";
 
-            (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllApprovedPaged(request.PageNr, request.PageSize, request.Search);
+            (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllApprovedPaged(request.PageNr, request.PageSize, request.Search, request.SortBy, request.SortDirection);
 
             IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
 

@@ -31,11 +31,19 @@
     {
         <div class="d-grid p-1 fw-bold"
              style="grid-template-columns: 1fr 2fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div>Naam</div>
-            <div>E-mail</div>
-            <div>Gsm-number</div>
+            <div @onclick='() => OnSortChanged("FirstName")' style="cursor:pointer;">
+                Naam @SortIndicator("FirstName")
+            </div>
+            <div @onclick='() => OnSortChanged("Email")' style="cursor:pointer;">
+                E-mail @SortIndicator("Email")
+            </div>
+            <div @onclick='() => OnSortChanged("PhoneNumber")' style="cursor:pointer;">
+                Gsm-number @SortIndicator("PhoneNumber")
+            </div>
             <div>Kweeksites</div>
-            <div>Rol</div>
+            <div @onclick='() => OnSortChanged("Role")' style="cursor:pointer;">
+                Rol @SortIndicator("Role")
+            </div>
             <div class="text-center">Beheren</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
@@ -278,6 +286,16 @@
     private bool showDeleteConfirmation = false;
 
     /// <summary>
+    /// Indicates the sorting direction
+    /// </summary>
+    private string sortDirection = "asc";
+
+    /// <summary>
+    /// Indicates what needs to be sorted
+    /// </summary>
+    private string sortBy = "FirstName";
+
+    /// <summary>
     /// Initializes the component and loads initial data such as users,
     /// pending requests, and plantation sites when the component first renders.
     /// </summary>
@@ -300,9 +318,9 @@
     {
         currentPage = page;
 
-        string url = $"user/approved?pageNr={page}&pageSize={pageSize}";
-
-        if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
+        string url = $"user/approved?pageNr={page}&pageSize={pageSize}&sortBy={sortBy}&sortDirection={sortDirection}";
+        if (!string.IsNullOrWhiteSpace(searchText))
+            url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
         StateHasChanged();
@@ -481,5 +499,34 @@
         }
         CancelEditUser();
         isLoading = false;
+    }
+
+    /// <summary>
+    /// Handles changes in the sorting direction.
+    /// </summary>
+    /// <param name="column">The column that needs to be sorted.</param>
+    private void OnSortChanged(string column)
+    {
+        if (sortBy == column)
+        {
+            sortDirection = sortDirection == "asc" ? "desc" : "asc";
+        }
+        else
+        {
+            sortBy = column;
+            sortDirection = "asc";
+        }
+
+        _ = LoadPage(1);
+    }
+
+    /// <summary>
+    /// Handles the icon to display for the sorting direction.
+    /// </summary>
+    /// <param name="column">The column that needs to be sorted.</param>
+    private string SortIndicator(string column)
+    {
+        if (sortBy != column) return "";
+        return sortDirection == "asc" ? "↑" : "↓";
     }
 }
