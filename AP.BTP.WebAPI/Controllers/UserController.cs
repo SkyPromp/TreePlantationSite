@@ -3,7 +3,6 @@ using AP.BTP.Contracts.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
 namespace AP.BTP.WebAPI.Controllers
 {
@@ -67,7 +66,8 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new LoginUserCommand
             {
                 Email = userDetails.Email,
-                Password = userDetails.Password
+                Password = userDetails.Password,
+                IsForMaintenance = userDetails.IsForMaintenance
             }));
         }
 
