@@ -34,11 +34,10 @@ namespace AP.BTP.Infrastructure.Seeding
                 for (int i = 1; i <= totalDates + 1; i++)
                 {
                     int weekday = i % 7;
-                    
 
-                    if (weekday == 5) dayoffset += 2;  // Only 5 days/week
+                    if ((weekday + dayoffset) % 7 == 5) dayoffset += 2;  // Only 5 days/week
 
-                    int plantationSiteBaseId = ((i - daysToSetDayToMonday) / 7) % 2 + 1;
+                    int plantationSiteBaseId = ((i - daysToSetDayToMonday - weekday) / 7) % 2 + 1;
 
                     taskLists.Add(new TaskList() {
                         Id = userIdOffset * (totalDates + 1) + i, 
