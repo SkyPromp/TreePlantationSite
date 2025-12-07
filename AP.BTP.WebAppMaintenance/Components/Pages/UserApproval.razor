@@ -396,13 +396,13 @@
 
         try
         {
-            PagedResponseDTO<PlantationSiteDTO>? response;
+            List<PlantationSiteDTO>? response;
 
-            response = await this.client.GetFromJsonAsync<PagedResponseDTO<PlantationSiteDTO>>("PlantationSite");
+            response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
 
             if (response != null)
             {
-                this.plantationSites = response.Items;
+                this.plantationSites = response;
                 StateHasChanged();
             }
             else

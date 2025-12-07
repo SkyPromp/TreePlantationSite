@@ -1,6 +1,7 @@
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
+using Azure;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -52,7 +53,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
         throw new NotImplementedException();
     }
 
-    // <summary>
+    /// <summary>
     /// Retrieves a paginated list of <see cref="PlantationSite"/> entities, optionally filtered by a search string.
     /// </summary>
     /// <param name="pageNr">The page number (1-based).</param>
@@ -85,6 +86,33 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
                             .ToListAsync();
                             
         return (items, totalCount);
+    }
+
+    /// <summary>
+    /// Retrieves a list of <see cref="PlantationSite"/> entities, optionally filtered by a search string.
+    /// </summary>
+    /// <param name="search">An optional search string to filter by <see cref="PlantationSite.Name"/>.</param>
+    /// <returns>A List containing the collection of <see cref="PlantationSite"/> items.</returns>
+    public async Task<IEnumerable<PlantationSite>> GetAllSearched(string search)
+    {
+        IQueryable<PlantationSite> query = dbSet
+            .Where(ps => !ps.IsDeleted)
+            .AsQueryable();
+
+        query = query.OrderBy(site => site.Name);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.ToLower();
+
+            query = query.Where(ps =>
+                ps.Name.ToLower().Contains(search));
+        }
+
+        List<PlantationSite> items = await query
+                            .ToListAsync();
+
+        return items;
     }
 
     /// <summary>
