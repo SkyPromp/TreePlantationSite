@@ -46,6 +46,8 @@ namespace AP.BTP.WebAppMaintenance
 
             builder.Services.AddControllers();
 
+            builder.Services.Configure<AppInfo>(builder.Configuration.GetSection("AppInfo"));
+
             builder.Services.AddHttpClient("BTPApi", client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"]!);

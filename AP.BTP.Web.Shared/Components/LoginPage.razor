@@ -1,12 +1,15 @@
 ﻿@page "/login"
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
+@using AP.BTP.Web.Shared.Authentication
 @using Microsoft.AspNetCore.Components.Forms
 @using System.Net.Http.Json;
 @using Microsoft.Extensions.Caching.Memory
+@using Microsoft.Extensions.Options
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager Navigation
 @inject IMemoryCache Cache
+@inject IOptions<AppInfo> AppInfoOptions
 
 <PageTitle>Login</PageTitle>
 
@@ -76,6 +79,12 @@
     {
         loginDetails = new LoginUserDTO();
         client = HttpClientFactory.CreateClient("BTPApi");
+
+        string? appType = AppInfoOptions.Value.AppType;
+        if (appType == "Maintenance")
+            loginDetails.IsForMaintenance = true;
+        else
+            loginDetails.IsForMaintenance = false;
     }
 
     /// <summary>
@@ -109,6 +118,8 @@
                     "NOT_APPROVED" => "Geen toegang. Je bent nog niet goedgekeurd",
                     "USER_REJECTED" => "Geen toegang. Je registratie werd afgewezen",
                     "USER_DELETED" => "Geen toegang. Je account werd verwijderd",
+                    "UNAUTHORIZED_ACCESS_MAINTENANCE" => "Als een operator heb je geen toegang tot dit platform",
+                    "UNAUTHORIZED_ACCESS_USER" => "Enkel operators hebben toegang tot dit platform",
                     _ => errorMessage
                 };
 
