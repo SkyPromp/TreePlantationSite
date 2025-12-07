@@ -77,7 +77,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllApprovedPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection)
         {
             IQueryable<User> query = dbSet
-                .Include(u => u.PlantationSites)
+                .Include(u => u.PlantationSites.Where(site => !site.IsDeleted))
                 .Where(u => !u.IsDeleted && u.IsApproved)
                 .AsQueryable();
 
@@ -127,7 +127,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<(IEnumerable<User> Items, int TotalCount)> GetAllOperatorsPaged(int pageNr, int pageSize, string search, string? sortBy, string? sortDirection)
         {
             IQueryable<User> query = dbSet
-                .Include(u => u.PlantationSites)
+                .Include(u => u.PlantationSites.Where(site => !site.IsDeleted))
                 .Where(u => !u.IsDeleted && u.Role == UserRole.Operator)
                 .AsQueryable();
 
