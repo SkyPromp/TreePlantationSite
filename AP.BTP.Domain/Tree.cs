@@ -19,6 +19,8 @@ namespace AP.BTP.Domain
         /// </summary>
         public required string Species { get; set; }
 
+        public string? Description { get; set;}
+
         /// <summary>
         /// Gets or sets the collection of zones where this tree is planted.
         /// This property is ignored during JSON serialization.

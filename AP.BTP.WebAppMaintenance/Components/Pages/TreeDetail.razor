@@ -6,19 +6,62 @@
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 
-
-@if(!string.IsNullOrWhiteSpace(this.Tree?.Species))
-{
-    <h3>@($"{Tree.Species} overzicht")</h3>
-} else
-{
-    <h3>"Boom niet gevonden"</h3>
-}
-
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+    <Tab Title="Overzicht">
+        <Content>
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Soort</h6>
+                            <p class="fs-5 fw-semibold mb-0">@(Tree?.Species ?? "Onbekend")</p>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-2">Beschrijving</h6>
+                            <p class="mb-0">@(Tree?.Description ?? "Geen beschrijving beschikbaar")</p>
+                        </div>
+                    </div>
+                    <div class="col-8 d-flex justify-content-center align-items-center">
+                        @if (images.Count > 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-center w-100 gap-3">
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled="@(images.Count <= 1)">
+                                    <Icon Name="IconName.ArrowLeft"></Icon>                                    
+                                </Button>
+                                <div class="position-relative d-flex justify-content-center align-items-center bg-light rounded border" 
+                                     style="flex: 1; max-width: 600px; min-height: 300px; max-height: 400px;">
+                                    <img src="@GetCurrentImage()" alt="Boom afbeelding" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;" />
+                                    <span class="position-absolute bottom-0 end-0 badge bg-dark m-3 fs-6">
+                                        @(currentImageIndex + 1) / @images.Count
+                                    </span>
+                                </div>
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled="@(images.Count <= 1)">
+                                    <Icon Name="IconName.ArrowRight"></Icon>
+                                </Button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <p class="mb-0 fst-italic">Geen afbeeldingen beschikbaar</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab Title="Onderhoudsplannen">
+        <Content>
+            <div class="form-content">
+                
+            </div>
+        </Content>
+    </Tab>
+</Tabs>
+<div class="buttons d-flex justify-content-end mt-4">
+    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => null">Verlaten</Button> 
+</div>
 
 @code {
     /// <summary>
@@ -42,6 +85,10 @@
     /// </summary>
     HttpClient? client;
 
+    private Dictionary<string, string> images = new();
+
+    private int currentImageIndex = 0;
+
     /// <summary>
     /// Lifecycle method called when the component is initialized.
     /// Creates an HTTP client and loads the tree if <see cref="Id"/> is provided.
@@ -51,6 +98,7 @@
         client = HttpClientFactory.CreateClient("BTPApi");
 
         if (Id.HasValue) await LoadTree(Id.Value);
+        await GetTreePictures();
     }
 
     /// <summary>
@@ -105,6 +153,79 @@
         {
             @* this.maintenancePlan = ""; *@
             this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
+        }
+    }
+
+    private async Task GetTreePictures(){
+        if (this.client == null)
+        {
+            this.errorMessage = "Geen httpclient gevonden.";
+
+            return;
+        }
+
+        if(Tree == null){
+            this.errorMessage = "Geen boom gevonden";
+            return;
+        }
+
+        List<TreePictureDTO>? response = await this.client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{Tree.Id}");
+
+        if (response != null)
+        {
+            foreach (TreePictureDTO pic in response){
+                if(pic == null){
+                    errorMessage = "Geen afbeelding gevonden";
+                    return;
+                }
+                await LoadTreePicture(pic.Path);
+            }
+        } else this.errorMessage = "Kan boom afbeedlingen niet laden";
+
+        StateHasChanged();
+    }
+
+    private async Task LoadTreePicture(string filename)
+    {
+        if (client == null || string.IsNullOrWhiteSpace(filename)) return;
+
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync($"File/{filename}");
+            response.EnsureSuccessStatusCode();
+
+            byte[] pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+
+            string b64Pdf = Convert.ToBase64String(pdfBytes);
+            this.images[filename] = $"data:{contentType};base64,{b64Pdf}";
+        } catch
+        {
+            this.images[filename] = "";
+            this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
+        }
+    }    
+
+    private string GetCurrentImage()
+    {
+        if (images.Count == 0) return "";
+        return images.Values.ElementAt(currentImageIndex);
+    }
+
+    private void NextImage()
+    {
+        if (images.Count > 0)
+        {
+            currentImageIndex = (currentImageIndex + 1) % images.Count;
+        }
+    }
+
+    private void PreviousImage()
+    {
+        if (images.Count > 0)
+        {
+            currentImageIndex = (currentImageIndex - 1 + images.Count) % images.Count;
         }
     }
 }

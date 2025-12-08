@@ -1382,11 +1382,11 @@ namespace AP.BTP.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("DurationInMinutes")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1450,6 +1450,9 @@ namespace AP.BTP.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1477,6 +1480,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Very detailed tree description explaining what tree number 1 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1487,6 +1491,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+                            Description = "Very detailed tree description explaining what tree number 2 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1497,6 +1502,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
+                            Description = "Very detailed tree description explaining what tree number 3 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1507,6 +1513,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
+                            Description = "Very detailed tree description explaining what tree number 4 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1517,6 +1524,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
+                            Description = "Very detailed tree description explaining what tree number 5 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1527,6 +1535,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
+                            Description = "Very detailed tree description explaining what tree number 6 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1537,6 +1546,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
+                            Description = "Very detailed tree description explaining what tree number 7 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1547,6 +1557,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
+                            Description = "Very detailed tree description explaining what tree number 8 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1557,6 +1568,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
+                            Description = "Very detailed tree description explaining what tree number 9 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1567,6 +1579,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
+                            Description = "Very detailed tree description explaining what tree number 10 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1577,6 +1590,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 11,
+                            Description = "Very detailed tree description explaining what tree number 11 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1587,6 +1601,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
+                            Description = "Very detailed tree description explaining what tree number 12 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1597,6 +1612,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 13,
+                            Description = "Very detailed tree description explaining what tree number 13 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1607,6 +1623,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
+                            Description = "Very detailed tree description explaining what tree number 14 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1617,6 +1634,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
+                            Description = "Very detailed tree description explaining what tree number 15 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1627,6 +1645,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
+                            Description = "Very detailed tree description explaining what tree number 16 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1637,6 +1656,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
+                            Description = "Very detailed tree description explaining what tree number 17 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1647,6 +1667,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
+                            Description = "Very detailed tree description explaining what tree number 18 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1657,6 +1678,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 19,
+                            Description = "Very detailed tree description explaining what tree number 19 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1667,6 +1689,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
+                            Description = "Very detailed tree description explaining what tree number 20 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1677,6 +1700,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 21,
+                            Description = "Very detailed tree description explaining what tree number 21 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1687,6 +1711,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 22,
+                            Description = "Very detailed tree description explaining what tree number 22 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1697,6 +1722,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 23,
+                            Description = "Very detailed tree description explaining what tree number 23 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1707,6 +1733,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 24,
+                            Description = "Very detailed tree description explaining what tree number 24 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1717,6 +1744,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 25,
+                            Description = "Very detailed tree description explaining what tree number 25 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1727,6 +1755,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 26,
+                            Description = "Very detailed tree description explaining what tree number 26 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1737,6 +1766,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 27,
+                            Description = "Very detailed tree description explaining what tree number 27 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1747,6 +1777,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 28,
+                            Description = "Very detailed tree description explaining what tree number 28 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1757,6 +1788,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 29,
+                            Description = "Very detailed tree description explaining what tree number 29 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1767,6 +1799,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 30,
+                            Description = "Very detailed tree description explaining what tree number 30 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1777,6 +1810,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 31,
+                            Description = "Very detailed tree description explaining what tree number 31 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1787,6 +1821,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 32,
+                            Description = "Very detailed tree description explaining what tree number 32 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1797,6 +1832,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 33,
+                            Description = "Very detailed tree description explaining what tree number 33 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1807,6 +1843,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 34,
+                            Description = "Very detailed tree description explaining what tree number 34 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1817,6 +1854,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 35,
+                            Description = "Very detailed tree description explaining what tree number 35 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1827,6 +1865,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 36,
+                            Description = "Very detailed tree description explaining what tree number 36 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1837,6 +1876,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 37,
+                            Description = "Very detailed tree description explaining what tree number 37 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1847,6 +1887,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 38,
+                            Description = "Very detailed tree description explaining what tree number 38 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1857,6 +1898,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 39,
+                            Description = "Very detailed tree description explaining what tree number 39 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1867,6 +1909,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 40,
+                            Description = "Very detailed tree description explaining what tree number 40 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1877,6 +1920,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 41,
+                            Description = "Very detailed tree description explaining what tree number 41 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1887,6 +1931,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 42,
+                            Description = "Very detailed tree description explaining what tree number 42 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1897,6 +1942,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 43,
+                            Description = "Very detailed tree description explaining what tree number 43 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1907,6 +1953,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 44,
+                            Description = "Very detailed tree description explaining what tree number 44 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1917,6 +1964,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 45,
+                            Description = "Very detailed tree description explaining what tree number 45 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1927,6 +1975,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 46,
+                            Description = "Very detailed tree description explaining what tree number 46 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1937,6 +1986,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 47,
+                            Description = "Very detailed tree description explaining what tree number 47 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1947,6 +1997,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 48,
+                            Description = "Very detailed tree description explaining what tree number 48 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1957,6 +2008,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 49,
+                            Description = "Very detailed tree description explaining what tree number 49 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",
@@ -1967,6 +2019,7 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 50,
+                            Description = "Very detailed tree description explaining what tree number 50 is and all kinds of details",
                             IsDeleted = false,
                             MaintenancePlanAutumn = "",
                             MaintenancePlanSpring = "",

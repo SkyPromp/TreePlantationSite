@@ -36,6 +36,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 {
                     Id = i,
                     Species = $"Tree {i}",
+                    Description = $"Very detailed tree description explaining what tree number {i} is and all kinds of details",
                     MaintenancePlanSpring = $"",
                     MaintenancePlanSummer = $"",
                     MaintenancePlanAutumn = $"",
