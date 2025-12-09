@@ -215,8 +215,14 @@
     /// </summary>
     HttpClient? client;
 
+    /// <summary>
+    /// Stores image identifiers mapped to their corresponding image paths or URLs.
+    /// </summary>
     private Dictionary<string, string> images = new();
 
+    /// <summary>
+    /// Tracks the index of the currently displayed image within the collection.
+    /// </summary>
     private int currentImageIndex = 0;
 
     /// <summary>
@@ -269,16 +275,14 @@
         {
             this.Tree = response;
 
-            @* if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
-            {
-                await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
-            } *@
-
         } else this.errorMessage = "Kan boom niet laden";
 
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Loads tree pictures from the API and stores them as base64 encoded images.
+    /// </summary>
     private async Task GetTreePictures(){
         if (this.client == null)
         {
@@ -308,6 +312,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Loads a single tree picture from the API and converts it to a base64 data URI.
+    /// </summary>
+    /// <param name="filename">The filename of the picture to load.</param>
     private async Task LoadTreePicture(string filename)
     {
         if (client == null || string.IsNullOrWhiteSpace(filename)) return;
@@ -330,12 +338,19 @@
         }
     }    
 
+    /// <summary>
+    /// Gets the current image data URI from the images dictionary.
+    /// </summary>
+    /// <returns>The base64 data URI of the current image, or empty string if no images exist.</returns>
     private string GetCurrentImage()
     {
         if (images.Count == 0) return "";
         return images.Values.ElementAt(currentImageIndex);
     }
 
+    /// <summary>
+    /// Advances to the next image in the carousel.
+    /// </summary>
     private void NextImage()
     {
         if (images.Count > 0)
@@ -344,6 +359,9 @@
         }
     }
 
+    /// <summary>
+    /// Goes back to the previous image in the carousel.
+    /// </summary>
     private void PreviousImage()
     {
         if (images.Count > 0)
@@ -498,6 +516,9 @@
         }
     }
 
+    /// <summary>
+    /// Navigates back to the tree overview page.
+    /// </summary>
     private void NavigateBack()
     {
         NavigationManager.NavigateTo("/manager/tree");
