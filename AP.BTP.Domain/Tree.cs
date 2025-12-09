@@ -20,6 +20,11 @@ namespace AP.BTP.Domain
         public required string Species { get; set; }
 
         /// <summary>
+        /// Get or sets the description of the tree.
+        /// </summary>
+        public string? Description { get; set;}
+
+        /// <summary>
         /// Gets or sets the collection of zones where this tree is planted.
         /// This property is ignored during JSON serialization.
         /// </summary>

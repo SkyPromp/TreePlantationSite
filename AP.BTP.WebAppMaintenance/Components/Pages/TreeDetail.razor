@@ -2,23 +2,196 @@
 @page "/manager/tree/{Id:int?}"
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using QRCoder
 
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+    <Tab Title="Overzicht">
+        <Content>
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Soort</h6>
+                            <p class="fs-5 fw-semibold mb-0">@(Tree?.Species ?? "Onbekend")</p>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-2">Beschrijving</h6>
+                            <p class="mb-0">@(Tree?.Description ?? "Geen beschrijving beschikbaar")</p>
+                        </div>
+                    </div>
+                    <div class="col-8 d-flex justify-content-center align-items-center">
+                        @if (images.Count > 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-center w-100 gap-3">
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled="@(images.Count <= 1)">
+                                    <Icon Name="IconName.ArrowLeft"></Icon>                                    
+                                </Button>
+                                <div class="position-relative d-flex justify-content-center align-items-center bg-light rounded border" 
+                                     style="flex: 1; max-width: 600px; min-height: 300px; max-height: 400px;">
+                                    <img src="@GetCurrentImage()" alt="Boom afbeelding" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;" />
+                                    <span class="position-absolute bottom-0 end-0 badge bg-dark m-3 fs-6">
+                                        @(currentImageIndex + 1) / @images.Count
+                                    </span>
+                                </div>
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled="@(images.Count <= 1)">
+                                    <Icon Name="IconName.ArrowRight"></Icon>
+                                </Button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <p class="mb-0 fst-italic">Geen afbeeldingen beschikbaar</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab Title="Onderhoudsplannen">
+        <Content>
+            <div class="form-content d-flex">
+                <div class="row row-cols-2 g-5 w-100 d-flex justify-content-around">
+                    <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="input-container d-flex flex-column w-100">
+                            <label class="form-label">Lente</label>
+                        </div>
+                        <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
+                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)) {
+                                string fileKey = Tree.MaintenancePlanSpring;
+                                string? previewData = maintenancePreviews[fileKey];
+                                string filename = maintenanceFileNames[fileKey];
 
-@if(!string.IsNullOrWhiteSpace(this.Tree?.Species))
-{
-    <h3>@($"{Tree.Species} overzicht")</h3>
-} else
-{
-    <h3>"Boom niet gevonden"</h3>
-}
+                                if (filename.Contains(".pdf"))
+                                {
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                    </div>
+                                } else
+                                {
+                                    <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                }
+                                @if (qrCodes.ContainsKey(fileKey))
+                                {
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
+                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                    </div>
+                                }
+                            } else {
+                                <p>Nog geen preview beschikbaar.</p>
+                            }
+                        </div>
+                    </div>
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+                    <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="input-container d-flex flex-column w-100">
+                            <label class="form-label">Zomer</label>
+                        </div>
+                        <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
+                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
+                                string fileKey = Tree.MaintenancePlanSummer;
+                                string? previewData = maintenancePreviews[fileKey];
+                                string filename = maintenanceFileNames[fileKey];
+
+                                if (filename.Contains(".pdf"))
+                                {
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                    </div>
+                                } else
+                                {
+                                    <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                }
+                                @if (qrCodes.ContainsKey(fileKey))
+                                {
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
+                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                    </div>
+                                }
+                            } else {
+                                <p>Nog geen preview beschikbaar.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="input-container d-flex flex-column w-100">
+                            <label class="form-label">Herfst</label>
+                        </div>
+                        <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
+                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
+                                string fileKey = Tree.MaintenancePlanAutumn;
+                                string? previewData = maintenancePreviews[fileKey];
+                                string filename = maintenanceFileNames[fileKey];
+
+                                if (filename.Contains(".pdf"))
+                                {
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                    </div>
+                                } else
+                                {
+                                    <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                }
+                                @if (qrCodes.ContainsKey(fileKey))
+                                {
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
+                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                    </div>
+                                }                                    
+                            } else {
+                                <p>Nog geen preview beschikbaar.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-5 border p-3 d-flex flex-column align-items-center rounded">
+                        <div class="input-container d-flex flex-column w-100">
+                            <label class="form-label">Winter</label>
+                        </div>
+                        <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
+                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
+                                string fileKey = Tree.MaintenancePlanWinter!;
+                                string? previewData = maintenancePreviews[fileKey];
+                                string filename = maintenanceFileNames[fileKey];
+
+                                if (filename.Contains(".pdf"))
+                                {
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                    </div>
+                                } else
+                                {
+                                    <img src="@previewData" class="img-fluid rounded" style="max-height: 200px; object-fit: contain;" />
+                                }
+                                @if (qrCodes.ContainsKey(fileKey))
+                                {
+                                    <div class="d-flex flex-column align-items-center">
+                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
+                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                    </div>
+                                }                                    
+                            } else {
+                                <p>Nog geen preview beschikbaar.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+</Tabs>
+<div class="buttons d-flex justify-content-end mt-4">
+    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => NavigateBack()">Verlaten</Button> 
+</div>
 
 @code {
     /// <summary>
@@ -35,12 +208,40 @@
     /// <summary>
     /// Holds the details of the currently loaded tree.
     /// </summary>
-    private TreeDTO? Tree;
+    private TreeDTO? Tree = new TreeDTO(){ Species = ""};
 
     /// <summary>
     /// HTTP client used to call the backend API.
     /// </summary>
     HttpClient? client;
+
+    /// <summary>
+    /// Stores image identifiers mapped to their corresponding image paths or URLs.
+    /// </summary>
+    private Dictionary<string, string> images = new();
+
+    /// <summary>
+    /// Tracks the index of the currently displayed image within the collection.
+    /// </summary>
+    private int currentImageIndex = 0;
+
+    /// <summary>
+    /// Previews for maintenance files.
+    /// Key is the temporary GUID or filename, value is a base64 data URI.
+    /// </summary>    
+    private Dictionary<string, string> maintenancePreviews = new();
+
+    /// <summary>
+    /// Stores the original filenames for uploaded maintenance files.
+    /// Key is the temporary GUID or server filename, value is the original filename.
+    /// </summary>    
+    private Dictionary<string, string> maintenanceFileNames = new();
+
+    /// <summary>
+    /// Stores QR code images as base64 data URIs.
+    /// Key is the file key (same as maintenance previews), value is the QR code image data URI.
+    /// </summary>
+    private Dictionary<string, string> qrCodes = new();
 
     /// <summary>
     /// Lifecycle method called when the component is initialized.
@@ -51,6 +252,8 @@
         client = HttpClientFactory.CreateClient("BTPApi");
 
         if (Id.HasValue) await LoadTree(Id.Value);
+        await GetTreePictures();
+        await LoadExistingMaintenanceFiles();
     }
 
     /// <summary>
@@ -72,21 +275,48 @@
         {
             this.Tree = response;
 
-            @* if (!string.IsNullOrWhiteSpace(this.Tree.MaintenancePlan))
-            {
-                await this.LoadMaitenancePlan(this.Tree.MaintenancePlan);
-            } *@
-
         } else this.errorMessage = "Kan boom niet laden";
 
         StateHasChanged();
     }
 
     /// <summary>
-    /// Loads a maintenance plan file from the API, converts it to a base64 string for display in the UI.
+    /// Loads tree pictures from the API and stores them as base64 encoded images.
     /// </summary>
-    /// <param name="filename">The filename of the maintenance plan PDF to load.</param>
-    private async Task LoadMaitenancePlan(string filename)
+    private async Task GetTreePictures(){
+        if (this.client == null)
+        {
+            this.errorMessage = "Geen httpclient gevonden.";
+
+            return;
+        }
+
+        if(Tree == null){
+            this.errorMessage = "Geen boom gevonden";
+            return;
+        }
+
+        List<TreePictureDTO>? response = await this.client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{Tree.Id}");
+
+        if (response != null)
+        {
+            foreach (TreePictureDTO pic in response){
+                if(pic == null){
+                    errorMessage = "Geen afbeelding gevonden";
+                    return;
+                }
+                await LoadTreePicture(pic.Path);
+            }
+        } else this.errorMessage = "Kan boom afbeedlingen niet laden";
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Loads a single tree picture from the API and converts it to a base64 data URI.
+    /// </summary>
+    /// <param name="filename">The filename of the picture to load.</param>
+    private async Task LoadTreePicture(string filename)
     {
         if (client == null || string.IsNullOrWhiteSpace(filename)) return;
 
@@ -100,11 +330,197 @@
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
 
             string b64Pdf = Convert.ToBase64String(pdfBytes);
-            @* this.maintenancePlan = $"data:{contentType};base64,{b64Pdf}"; *@
+            this.images[filename] = $"data:{contentType};base64,{b64Pdf}";
         } catch
         {
-            @* this.maintenancePlan = ""; *@
+            this.images[filename] = "";
             this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
         }
+    }    
+
+    /// <summary>
+    /// Gets the current image data URI from the images dictionary.
+    /// </summary>
+    /// <returns>The base64 data URI of the current image, or empty string if no images exist.</returns>
+    private string GetCurrentImage()
+    {
+        if (images.Count == 0) return "";
+        return images.Values.ElementAt(currentImageIndex);
     }
+
+    /// <summary>
+    /// Advances to the next image in the carousel.
+    /// </summary>
+    private void NextImage()
+    {
+        if (images.Count > 0)
+        {
+            currentImageIndex = (currentImageIndex + 1) % images.Count;
+        }
+    }
+
+    /// <summary>
+    /// Goes back to the previous image in the carousel.
+    /// </summary>
+    private void PreviousImage()
+    {
+        if (images.Count > 0)
+        {
+            currentImageIndex = (currentImageIndex - 1 + images.Count) % images.Count;
+        }
+    }
+
+    /// <summary>
+    /// Loads existing maintenance plan files for the current tree and generates previews.
+    /// </summary>
+    private async Task LoadExistingMaintenanceFiles()
+    {
+        maintenancePreviews.Clear();
+        maintenanceFileNames.Clear();
+        qrCodes.Clear();
+
+        async Task LoadOne(string? fileKey)
+        {
+            if (string.IsNullOrWhiteSpace(fileKey))
+                return;
+
+            await GeneratePreview(fileKey, fileKey);
+        }
+
+        await LoadOne(Tree.MaintenancePlanSpring);
+        await LoadOne(Tree.MaintenancePlanSummer);
+        await LoadOne(Tree.MaintenancePlanAutumn);
+        await LoadOne(Tree.MaintenancePlanWinter);
+    }
+
+    /// <summary>
+    /// Generates a base64 preview for an uploaded file and updates the corresponding preview dictionary.
+    /// </summary>
+    /// <param name="key">The key to associate with the preview.</param>
+    /// <param name="fileName">The server file name of the image or maintenance file.</param>
+    /// <param name="fileType">The type of file being previewed.</param>
+    private async Task GeneratePreview(string key, string fileName)
+    {
+        HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+
+        if (!response.IsSuccessStatusCode) return;
+
+        byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+        string type = response.Content.Headers.ContentType?.MediaType!;
+    
+        maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+        maintenanceFileNames[key] = fileName;
+
+        GenerateQRCode(key, fileName);
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Generates a QR code for the given file URL and stores it as a base64 image.
+    /// </summary>
+    /// <param name="key">The key to associate with the QR code.</param>
+    /// <param name="fileName">The file name or URL to encode in the QR code.</param>
+    private void GenerateQRCode(string key, string fileName) {
+        try {
+            string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
+
+            using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
+            using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+
+            byte[] qrCodeBytes = qrCode.GetGraphic(20);
+            qrCodes[key] = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
+
+            StateHasChanged();
+        } catch (Exception e) {
+            errorMessage = $"Kan geen QR-code genereren: {e.Message}";
+        }
+    }
+    
+    /// <summary>
+    /// Downloads a PDF containing a large QR code for the specified maintenance file.
+    /// </summary>
+    /// <param name="fileKey">The key of the maintenance file.</param>
+    /// <param name="fileName">The name of the maintenance file.</param>
+    private async Task DownloadQRCodePdf(string fileKey, string fileName)
+    {
+        try
+        {
+            if (!qrCodes.ContainsKey(fileKey))
+            {
+                errorMessage = "QR-code niet gevonden";
+                return;
+            }
+
+            string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
+
+            using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
+            using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+
+            byte[] qrCodeBytes = qrCode.GetGraphic(40);
+            string base64QrCode = Convert.ToBase64String(qrCodeBytes);
+
+            string season = fileKey == Tree?.MaintenancePlanSpring ? "Lente" :
+                           fileKey == Tree?.MaintenancePlanSummer ? "Zomer" :
+                           fileKey == Tree?.MaintenancePlanAutumn ? "Herfst" :
+                           fileKey == Tree?.MaintenancePlanWinter ? "Winter" : "Onbekend";
+
+            string pdfFileName = $"QR_{Tree?.Species?.Replace(" ", "_") ?? "Boom"}_{season}.pdf";
+            string title = $"{Tree?.Species ?? "Boom"} - Onderhoudsplan {season}";
+
+            string jsCode = @"
+                (function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 595;
+                    canvas.height = 842;
+                    const ctx = canvas.getContext('2d');
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.fillStyle = 'black';
+                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('" + title.Replace("'", "\\'") + @"', canvas.width / 2, canvas.height / 2 - 200);
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        const imgSize = 300;
+                        const imgX = (canvas.width - imgSize) / 2;
+                        const imgY = (canvas.height - imgSize) / 2 - 50;
+                        ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+                        
+                        ctx.font = '14px Arial';
+                        ctx.fillText('Scan deze QR-code om het onderhoudsplan te bekijken', canvas.width / 2, imgY + imgSize + 40);
+                        
+                        canvas.toBlob(function(blob) {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = '" + pdfFileName.Replace("'", "\\'") + @"'.replace('.pdf', '.png');
+                            a.click();
+                            URL.revokeObjectURL(url);
+                        });
+                    };
+                    img.src = 'data:image/png;base64," + base64QrCode + @"';
+                })();
+            ";
+
+            await JSRuntime.InvokeVoidAsync("eval", jsCode);
+        }
+        catch (Exception e)
+        {
+            errorMessage = $"Kan QR-code niet downloaden: {e.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Navigates back to the tree overview page.
+    /// </summary>
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/manager/tree");
+    }    
 }

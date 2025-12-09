@@ -10040,6 +10040,9 @@ namespace AP.BTP.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -10067,1682 +10070,1962 @@ namespace AP.BTP.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "Kleine sierboom met vroege witte bloei en kleurrijke herfstverkleuring.",
                             IsDeleted = false,
                             Species = "Amerikaans krentenboompje"
                         },
                         new
                         {
                             Id = 2,
+                            Description = "Smalle variëteit met zachtroze bloemen die naar wit verkleuren.",
                             IsDeleted = false,
                             Species = "Amerikaans krentenboompje ‘Robin Hill’"
                         },
                         new
                         {
                             Id = 3,
+                            Description = "Boom met handvormige bladeren en intense herfstkleuren.",
                             IsDeleted = false,
                             Species = "Amerikaanse amberboom"
                         },
                         new
                         {
                             Id = 4,
+                            Description = "Opgaande selectie met roodpaarse herfstverkleuring.",
                             IsDeleted = false,
                             Species = "Amerikaanse amberboom ‘Worplesdon’"
                         },
                         new
                         {
                             Id = 5,
+                            Description = "Grote boom met gelobde bladeren en sterke groei.",
                             IsDeleted = false,
                             Species = "Amerikaanse eik"
                         },
                         new
                         {
                             Id = 6,
+                            Description = "Laanboom met geveerd blad en rechte stam.",
                             IsDeleted = false,
                             Species = "Amerikaanse es"
                         },
                         new
                         {
                             Id = 7,
+                            Description = "Piramidale boom met een gelijkmatige kroonopbouw.",
                             IsDeleted = false,
                             Species = "Amerikaanse es ‘Skyline’"
                         },
                         new
                         {
                             Id = 8,
+                            Description = "Luchtige boom met fijn geveerd blad.",
                             IsDeleted = false,
                             Species = "Amerikaanse gleditsia"
                         },
                         new
                         {
                             Id = 9,
+                            Description = "Compacte variëteit met sierlijk ingesneden blad.",
                             IsDeleted = false,
                             Species = "Amerikaanse gleditsia ‘Elegantissima’"
                         },
                         new
                         {
                             Id = 10,
+                            Description = "Doornloze cultivar met regelmatige piramidale groei.",
                             IsDeleted = false,
                             Species = "Amerikaanse gleditsia ‘Skyline’"
                         },
                         new
                         {
                             Id = 11,
+                            Description = "Variëteit met helder geel voorjaarsblad.",
                             IsDeleted = false,
                             Species = "Amerikaanse gleditsia ‘Sunburst’"
                         },
                         new
                         {
                             Id = 12,
+                            Description = "Doornloze vorm met open kroon en fijn blad.",
                             IsDeleted = false,
                             Species = "Amerikaanse gleditsia f. inermis"
                         },
                         new
                         {
                             Id = 13,
+                            Description = "Sierboom met roze bloei aan kale takken in het voorjaar.",
                             IsDeleted = false,
                             Species = "Amerikaanse Judasboom"
                         },
                         new
                         {
                             Id = 14,
+                            Description = "Boom met hartvormige bladeren en een brede kroon.",
                             IsDeleted = false,
                             Species = "Amerikaanse linde"
                         },
                         new
                         {
                             Id = 15,
+                            Description = "Boom met tulpvormige bloemen en opvallend gelobd blad.",
                             IsDeleted = false,
                             Species = "Amerikaanse tulpenboom"
                         },
                         new
                         {
                             Id = 16,
+                            Description = "Smalle zuilvormige tulpenboom.",
                             IsDeleted = false,
                             Species = "Amerikaanse tulpenboom ‘Fastigiatum’"
                         },
                         new
                         {
                             Id = 17,
+                            Description = "Boom met witte bloemtrossen en snelle groei.",
                             IsDeleted = false,
                             Species = "Amerikaanse vogelkers"
                         },
                         new
                         {
                             Id = 18,
+                            Description = "Boom met kurkachtige bast en geveerd blad.",
                             IsDeleted = false,
                             Species = "Amoer-kurkboom"
                         },
                         new
                         {
                             Id = 19,
+                            Description = "Sierboom met grote bladeren en paarse bloemen.",
                             IsDeleted = false,
                             Species = "Anna Paulownaboom"
                         },
                         new
                         {
                             Id = 20,
+                            Description = "Boom met fijne takstructuur en kleine bladeren.",
                             IsDeleted = false,
                             Species = "Antarctische schijnbeuk"
                         },
                         new
                         {
                             Id = 21,
+                            Description = "Stekelige boom met witte bloesem.",
                             IsDeleted = false,
                             Species = "Basterd meidoorn"
                         },
                         new
                         {
                             Id = 22,
+                            Description = "Sierboom met hangende gele bloemtrossen.",
                             IsDeleted = false,
                             Species = "Basterd-goudenregen"
                         },
                         new
                         {
                             Id = 23,
+                            Description = "Klassieke boom met gladde bast en dicht bladerdek.",
                             IsDeleted = false,
                             Species = "Beuk"
                         },
                         new
                         {
                             Id = 24,
+                            Description = "Slanke zuilvormige beuk.",
                             IsDeleted = false,
                             Species = "Beuk ‘Dawyck’"
                         },
                         new
                         {
                             Id = 25,
+                            Description = "Boom met witte trosbloemen die veel insecten aantrekken.",
                             IsDeleted = false,
                             Species = "Bijenboom"
                         },
                         new
                         {
                             Id = 26,
+                            Description = "Es met geveerd blad en rechte groei.",
                             IsDeleted = false,
                             Species = "Biltmoreana es"
                         },
                         new
                         {
                             Id = 27,
+                            Description = "Kegelvormige naaldboom met blauwgrijze naalden.",
                             IsDeleted = false,
                             Species = "Blauwe spar"
                         },
                         new
                         {
                             Id = 28,
+                            Description = "Kleine bolboom met frisgroen blad.",
                             IsDeleted = false,
                             Species = "Bolprunus"
                         },
                         new
                         {
                             Id = 29,
+                            Description = "Bolvormige kroon met groot blad.",
                             IsDeleted = false,
                             Species = "Boltrompetboom"
                         },
                         new
                         {
                             Id = 30,
+                            Description = "Iep met bontgekleurd blad.",
                             IsDeleted = false,
                             Species = "Bonte gladde iep"
                         },
                         new
                         {
                             Id = 31,
+                            Description = "Sierboom met groot, rond blad.",
                             IsDeleted = false,
                             Species = "Boomhazelaar"
                         },
                         new
                         {
                             Id = 32,
+                            Description = "Magnoliasoort met grote bloemen en stevig blad.",
                             IsDeleted = false,
                             Species = "Bosmagnolia"
                         },
                         new
                         {
                             Id = 33,
+                            Description = "Snelgroeiende wilg met langwerpig blad.",
                             IsDeleted = false,
                             Species = "Boswilg"
                         },
                         new
                         {
                             Id = 34,
+                            Description = "Boom met brede bladeren en witte bloei.",
                             IsDeleted = false,
                             Species = "Breedbladige meelbes"
                         },
                         new
                         {
                             Id = 35,
+                            Description = "Beuk met donkerbruin tot paars blad.",
                             IsDeleted = false,
                             Species = "Bruine beuk"
                         },
                         new
                         {
                             Id = 36,
+                            Description = "Treurvormige beuk met donker blad.",
                             IsDeleted = false,
                             Species = "Bruine treurbeuk"
                         },
                         new
                         {
                             Id = 37,
+                            Description = "Naaldboom met dichte, kegelvormige groei.",
                             IsDeleted = false,
                             Species = "Californische cipres"
                         },
                         new
                         {
                             Id = 38,
+                            Description = "Krachtige populier met snelle groei.",
                             IsDeleted = false,
                             Species = "Canada populier ‘Robusta’"
                         },
                         new
                         {
                             Id = 39,
+                            Description = "Snelgroeiende populier met brede kroon.",
                             IsDeleted = false,
                             Species = "Canadapopulier"
                         },
                         new
                         {
                             Id = 40,
+                            Description = "Smalle variëteit van de balsempopulier.",
                             IsDeleted = false,
                             Species = "Chinese balsempopulier ‘Fastigiata’"
                         },
                         new
                         {
                             Id = 41,
+                            Description = "Treurvormige wilg met lange hangende takken.",
                             IsDeleted = false,
                             Species = "Chinese treurwilg"
                         },
                         new
                         {
                             Id = 42,
+                            Description = "Esdoorn met breed blad en compacte groei.",
                             IsDeleted = false,
                             Species = "Colchische esdoorn"
                         },
                         new
                         {
                             Id = 43,
+                            Description = "Esdoornsoort met elegant blad en fijne structuur.",
                             IsDeleted = false,
                             Species = "Davids esdoorn"
                         },
                         new
                         {
                             Id = 44,
+                            Description = "Sierboom met grote samengestelde bladeren.",
                             IsDeleted = false,
                             Species = "Doodsbeenderenboom"
                         },
                         new
                         {
                             Id = 45,
+                            Description = "Grote naaldboom met een rechte stam.",
                             IsDeleted = false,
                             Species = "Douglasspar"
                         },
                         new
                         {
                             Id = 46,
+                            Description = "Esdoorn met karakteristiek driedelig blad.",
                             IsDeleted = false,
                             Species = "Drietandesdoorn"
                         },
                         new
                         {
                             Id = 47,
+                            Description = "Paardenkastanje met gevulde witte bloemen.",
                             IsDeleted = false,
                             Species = "Dubbelbloemige paardenkastanje"
                         },
                         new
                         {
                             Id = 48,
+                            Description = "Iep met grillige groei en kleine bladeren.",
                             IsDeleted = false,
                             Species = "Duiveltjesiep"
                         },
                         new
                         {
                             Id = 49,
+                            Description = "Es met enkelvoudig blad in plaats van geveerd blad.",
                             IsDeleted = false,
                             Species = "Eenbladige es"
                         },
                         new
                         {
                             Id = 50,
+                            Description = "Robinia met opvallend enkelvoudig blad.",
                             IsDeleted = false,
                             Species = "Eenbladige robinia"
                         },
                         new
                         {
                             Id = 51,
+                            Description = "Stekelige boom met witte voorjaarsbloesem.",
                             IsDeleted = false,
                             Species = "Eenstijlige meidoorn"
                         },
                         new
                         {
                             Id = 52,
+                            Description = "Smalle, opgaande vorm van de meidoorn.",
                             IsDeleted = false,
                             Species = "Eenstijlige meidoorn ‘Stricta’"
                         },
                         new
                         {
                             Id = 53,
+                            Description = "Fruitboom met eetbare appels.",
                             IsDeleted = false,
                             Species = "Eetappel"
                         },
                         new
                         {
                             Id = 54,
+                            Description = "Zuilvormige eik met smalle kroon.",
                             IsDeleted = false,
                             Species = "Eik ‘Columna’"
                         },
                         new
                         {
                             Id = 55,
+                            Description = "Laanboom met geveerd blad en sierlijke kroon.",
                             IsDeleted = false,
                             Species = "Es"
                         },
                         new
                         {
                             Id = 56,
+                            Description = "Selectie met gelijkmatige opgaande groei.",
                             IsDeleted = false,
                             Species = "Es ‘Altena’"
                         },
                         new
                         {
                             Id = 57,
+                            Description = "Sterk groeiende es met regelmatige kroon.",
                             IsDeleted = false,
                             Species = "Es ‘Atlas’"
                         },
                         new
                         {
                             Id = 58,
+                            Description = "Bolvormige es met compacte groei.",
                             IsDeleted = false,
                             Species = "Es ‘Nana’"
                         },
                         new
                         {
                             Id = 59,
+                            Description = "Es met forse groei en een brede kroon.",
                             IsDeleted = false,
                             Species = "Es ‘Westhof’s Glorie’"
                         },
                         new
                         {
                             Id = 60,
+                            Description = "Plataan met esdoornachtig blad.",
                             IsDeleted = false,
                             Species = "Esdoornbladige plataan"
                         },
                         new
                         {
                             Id = 61,
+                            Description = "Bolvormige variant van de plataan.",
                             IsDeleted = false,
                             Species = "Esdoornbladige plataan ‘Alphen’s Globe’"
                         },
                         new
                         {
                             Id = 62,
+                            Description = "Smalle, opgaande plataanvariëteit.",
                             IsDeleted = false,
                             Species = "Esdoornbladige plataan ‘Tremonia’"
                         },
                         new
                         {
                             Id = 63,
+                            Description = "Boom met hopachtige vruchtjes en fijne takstructuur.",
                             IsDeleted = false,
                             Species = "Europese hopbeuk"
                         },
                         new
                         {
                             Id = 64,
+                            Description = "Boom met roze voorjaarsbloesem aan kale takken.",
                             IsDeleted = false,
                             Species = "Europese judasboom"
                         },
                         new
                         {
                             Id = 65,
+                            Description = "Naaldboom die in de winter zijn naalden verliest.",
                             IsDeleted = false,
                             Species = "Europese larix"
                         },
                         new
                         {
                             Id = 66,
+                            Description = "Boom met breed blad en losse kroon.",
                             IsDeleted = false,
                             Species = "Europese netelboom"
                         },
                         new
                         {
                             Id = 67,
+                            Description = "Kegelvormige naaldboom met korte naalden.",
                             IsDeleted = false,
                             Species = "Fijnspar"
                         },
                         new
                         {
                             Id = 68,
+                            Description = "Meelbes-soort met witte bloei en brede bladeren.",
                             IsDeleted = false,
                             Species = "Finse meelbes ‘Gibbsii’"
                         },
                         new
                         {
                             Id = 69,
+                            Description = "Iep met karakteristiek omgekruld blad.",
                             IsDeleted = false,
                             Species = "Fladderiep"
                         },
                         new
                         {
                             Id = 70,
+                            Description = "Boom met gedeeld blad en witte bloei.",
                             IsDeleted = false,
                             Species = "Gedeelde meelbes"
                         },
                         new
                         {
                             Id = 71,
+                            Description = "Esdoorn met geel tot goudkleurig blad.",
                             IsDeleted = false,
-                            Species = "Geelbladige trompetboom"
+                            Species = "Geelbladige esdoorn"
                         },
                         new
                         {
                             Id = 72,
+                            Description = "Iep met warmgele bladkleur in het voorjaar.",
                             IsDeleted = false,
-                            Species = "Gele bergiep"
+                            Species = "Geelbladige iep"
                         },
                         new
                         {
                             Id = 73,
+                            Description = "Wilg met brede bladeren en vroege katjes.",
+                            IsDeleted = false,
+                            Species = "Geitenwilg"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Description = "Struik- of boomvorm met gele voorjaarsbloei.",
                             IsDeleted = false,
                             Species = "Gele kornoelje"
                         },
                         new
                         {
-                            Id = 74,
-                            IsDeleted = false,
-                            Species = "Gele pavia"
-                        },
-                        new
-                        {
                             Id = 75,
+                            Description = "Paardenkastanje met geelachtige bloemen.",
                             IsDeleted = false,
-                            Species = "Gele treurwilg"
+                            Species = "Gele paardenkastanje"
                         },
                         new
                         {
                             Id = 76,
+                            Description = "Treurvormige iep met geelgroen blad.",
                             IsDeleted = false,
-                            Species = "Gele zeepboom"
+                            Species = "Gele treuriep"
                         },
                         new
                         {
                             Id = 77,
+                            Description = "Boom met samengestelde bladeren en gevleugelde vruchten.",
                             IsDeleted = false,
-                            Species = "Gele zeepboom ‘Fastigiata’"
+                            Species = "Gele vleugelnoot"
                         },
                         new
                         {
                             Id = 78,
+                            Description = "Boom met geveerd blad en doorns.",
                             IsDeleted = false,
-                            Species = "Geveerdbladige esdoorn"
+                            Species = "Gewone acacia"
                         },
                         new
                         {
                             Id = 79,
-                            IsDeleted = false,
-                            Species = "Geveerdbladige lijsterbes"
-                        },
-                        new
-                        {
-                            Id = 80,
+                            Description = "Esdoorn met grote gelobde bladeren en snelle groei.",
                             IsDeleted = false,
                             Species = "Gewone esdoorn"
                         },
                         new
                         {
-                            Id = 81,
+                            Id = 80,
+                            Description = "Zuilvormige esdoorn met donkerrood blad.",
                             IsDeleted = false,
-                            Species = "Gewone esdoorn ‘Atropurpureum’"
+                            Species = "Gewone esdoorn ‘Crimson Sentry’"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Description = "Esdoorn met bontgekleurde witte bladranden.",
+                            IsDeleted = false,
+                            Species = "Gewone esdoorn ‘Drummondii’"
                         },
                         new
                         {
                             Id = 82,
+                            Description = "Bolvormige esdoorn met compacte kroon.",
                             IsDeleted = false,
-                            Species = "Gewone esdoorn ‘Leopoldii’"
+                            Species = "Gewone esdoorn ‘Globosum’"
                         },
                         new
                         {
                             Id = 83,
+                            Description = "Esdoorn met heldergeel blad in het voorjaar.",
                             IsDeleted = false,
-                            Species = "Gewone magnolia"
+                            Species = "Gewone esdoorn ‘Princeton Gold’"
                         },
                         new
                         {
                             Id = 84,
+                            Description = "Esdoorn met rood tot bronskleurig voorjaarsblad.",
                             IsDeleted = false,
-                            Species = "Gewone vijg"
+                            Species = "Gewone esdoorn ‘Schwedleri’"
                         },
                         new
                         {
                             Id = 85,
+                            Description = "Esdoorn met diep ingesneden blad en sierlijke vorm.",
                             IsDeleted = false,
-                            Species = "Gewone vlier"
+                            Species = "Gewone esdoorn ‘Trompenburg’"
                         },
                         new
                         {
                             Id = 86,
+                            Description = "Boom met dicht blad en sterke vertakking.",
+                            IsDeleted = false,
+                            Species = "Gewone haagbeuk"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Description = "Opgaande haagbeuk met smalle kroon.",
+                            IsDeleted = false,
+                            Species = "Gewone haagbeuk ‘Lucas’"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Description = "Iep met brede kroon en kenmerkend blad.",
+                            IsDeleted = false,
+                            Species = "Gewone iep"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Description = "Snelgroeiende iep met open kroon.",
+                            IsDeleted = false,
+                            Species = "Gewone iep ‘Belgica’"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Description = "Ziekteresistente iep met opgaande groei.",
+                            IsDeleted = false,
+                            Species = "Gewone iep ‘Lobel’"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Description = "Stekelige boom met witte bloesem en rode bessen.",
+                            IsDeleted = false,
+                            Species = "Gewone meidoorn"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Description = "Grote boom met schilferende bast en groen blad.",
+                            IsDeleted = false,
+                            Species = "Gewone plataan"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Description = "Sierboom met hangende klokvormige bloemen.",
+                            IsDeleted = false,
+                            Species = "Gewone sneeuwklokjesboom"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Description = "Boom met geurende witte bloemtrossen.",
                             IsDeleted = false,
                             Species = "Gewone vogelkers"
                         },
                         new
                         {
-                            Id = 87,
-                            IsDeleted = false,
-                            Species = "Gewone walnoot"
-                        },
-                        new
-                        {
-                            Id = 88,
+                            Id = 95,
+                            Description = "Boom met waaiervormig blad en opvallende herfstkleur.",
                             IsDeleted = false,
                             Species = "Ginkgo"
                         },
                         new
                         {
-                            Id = 89,
+                            Id = 96,
+                            Description = "Zuilvormige ginkgo met smalle groei.",
                             IsDeleted = false,
-                            Species = "Gladde iep"
+                            Species = "Ginkgo ‘Fastigiata’"
                         },
                         new
                         {
-                            Id = 90,
+                            Id = 97,
+                            Description = "Strakke zuilvormige selectie van ginkgo.",
                             IsDeleted = false,
-                            Species = "Goudberk ‘Blush’"
+                            Species = "Ginkgo ‘Princeton Sentry’"
                         },
                         new
                         {
-                            Id = 91,
+                            Id = 98,
+                            Description = "Boom met rood getint, fijn geveerd blad.",
                             IsDeleted = false,
-                            Species = "Goudberk ‘Holland’"
+                            Species = "Gleditsia ‘Ruby Lace’"
                         },
                         new
                         {
-                            Id = 92,
-                            IsDeleted = false,
-                            Species = "Goudels"
-                        },
-                        new
-                        {
-                            Id = 93,
-                            IsDeleted = false,
-                            Species = "Goudenregen"
-                        },
-                        new
-                        {
-                            Id = 94,
-                            IsDeleted = false,
-                            Species = "Goudes"
-                        },
-                        new
-                        {
-                            Id = 95,
+                            Id = 99,
+                            Description = "Iep met goudgeel blad in voorjaar en zomer.",
                             IsDeleted = false,
                             Species = "Goudiep"
                         },
                         new
                         {
-                            Id = 96,
-                            IsDeleted = false,
-                            Species = "Grauwe abeel"
-                        },
-                        new
-                        {
-                            Id = 97,
-                            IsDeleted = false,
-                            Species = "Grauwe abeel ‘De Moffart’"
-                        },
-                        new
-                        {
-                            Id = 98,
-                            IsDeleted = false,
-                            Species = "Grootbladige els"
-                        },
-                        new
-                        {
-                            Id = 99,
-                            IsDeleted = false,
-                            Species = "Grootbloemige trompetboom"
-                        },
-                        new
-                        {
                             Id = 100,
+                            Description = "Zuilvormige goudiep met compact blad.",
                             IsDeleted = false,
-                            Species = "Grove den"
+                            Species = "Goudiep ‘Wredei’"
                         },
                         new
                         {
                             Id = 101,
+                            Description = "Wilg met geelbruine takken en fris blad.",
                             IsDeleted = false,
-                            Species = "Haagbeuk"
+                            Species = "Goudwilg"
                         },
                         new
                         {
                             Id = 102,
+                            Description = "Boom met gele vruchten en vroege bloei.",
                             IsDeleted = false,
-                            Species = "Haagbeuk ‘Fastigiata’"
+                            Species = "Goudvruchtige kornoelje"
                         },
                         new
                         {
                             Id = 103,
+                            Description = "Esdoorn met gevleugelde vruchten en decoratief blad.",
                             IsDeleted = false,
-                            Species = "Haagbeuk ‘Frans Fontaine’"
+                            Species = "Grootvruchtige vederesdoorn"
                         },
                         new
                         {
                             Id = 104,
+                            Description = "Boomvormige klimop met compacte groei.",
                             IsDeleted = false,
-                            Species = "Hartbladige els"
+                            Species = "Hedera boom"
                         },
                         new
                         {
                             Id = 105,
+                            Description = "Naaldboom met brede kroon en hangende takken.",
                             IsDeleted = false,
-                            Species = "Hemelboom"
+                            Species = "Himalayaceder"
                         },
                         new
                         {
                             Id = 106,
+                            Description = "Boom met geveerd blad en late zomerse bloei.",
                             IsDeleted = false,
-                            Species = "Himalaya-berk ‘Doorenbos’"
+                            Species = "Honingboom"
                         },
                         new
                         {
                             Id = 107,
+                            Description = "Boom met hopachtige vruchten en ovaal blad.",
                             IsDeleted = false,
-                            Species = "Himalaya-ceder"
+                            Species = "Hopboom"
                         },
                         new
                         {
                             Id = 108,
+                            Description = "Boom met kenmerkende hopvormige vruchtkatjes.",
                             IsDeleted = false,
-                            Species = "Hollandse iep ‘Belgica’"
+                            Species = "Hopbeuk"
                         },
                         new
                         {
                             Id = 109,
+                            Description = "Ziekteresistente iep met brede kroon.",
                             IsDeleted = false,
-                            Species = "Hollandse linde"
+                            Species = "Iep ‘Amsterdam’"
                         },
                         new
                         {
                             Id = 110,
-                            IsDeleted = false,
-                            Species = "Hongaarse eik"
-                        },
-                        new
-                        {
-                            Id = 111,
-                            IsDeleted = false,
-                            Species = "Hulst"
-                        },
-                        new
-                        {
-                            Id = 112,
-                            IsDeleted = false,
-                            Species = "Huntingdons iep"
-                        },
-                        new
-                        {
-                            Id = 113,
-                            IsDeleted = false,
-                            Species = "Iep ‘Columella’"
-                        },
-                        new
-                        {
-                            Id = 114,
+                            Description = "Sterke cultivar met opgaande groei.",
                             IsDeleted = false,
                             Species = "Iep ‘Dodoens’"
                         },
                         new
                         {
-                            Id = 115,
+                            Id = 111,
+                            Description = "Groei- en ziektesterke soort met volle kroon.",
                             IsDeleted = false,
-                            Species = "Iep ‘Frontier’"
+                            Species = "Iep ‘Homestead’"
                         },
                         new
                         {
-                            Id = 116,
-                            IsDeleted = false,
-                            Species = "Iep ‘Lobel’"
-                        },
-                        new
-                        {
-                            Id = 117,
+                            Id = 112,
+                            Description = "Compacte iep met opgaande groei.",
                             IsDeleted = false,
                             Species = "Iep ‘New Horizon’"
                         },
                         new
                         {
-                            Id = 118,
-                            IsDeleted = false,
-                            Species = "Iep ‘Plantijn’"
-                        },
-                        new
-                        {
-                            Id = 119,
+                            Id = 113,
+                            Description = "Ziekteresistente iep met evenwichtige kroon.",
                             IsDeleted = false,
                             Species = "Iep ‘Rebona’"
                         },
                         new
                         {
-                            Id = 120,
+                            Id = 114,
+                            Description = "Iep met intense gele herfstkleur.",
                             IsDeleted = false,
-                            Species = "Ierse taxus"
+                            Species = "Iep ‘Sapporo Autumn Gold’"
                         },
                         new
                         {
-                            Id = 121,
-                            IsDeleted = false,
-                            Species = "Italiaanse populier"
-                        },
-                        new
-                        {
-                            Id = 122,
+                            Id = 115,
+                            Description = "Sierboom met fijn ingesneden blad.",
                             IsDeleted = false,
                             Species = "Japanse esdoorn"
                         },
                         new
                         {
-                            Id = 123,
+                            Id = 116,
+                            Description = "Zuilvormige sierkers met zachte roze bloesem.",
                             IsDeleted = false,
-                            Species = "Japanse grootbloemige kornoelje"
+                            Species = "Japanse kers ‘Amanogawa’"
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Description = "Sierkers met gevulde roze bloemtrossen.",
+                            IsDeleted = false,
+                            Species = "Japanse kers ‘Kanzan’"
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Description = "Kornoelje met stervormige bloemen.",
+                            IsDeleted = false,
+                            Species = "Japanse kornoelje"
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Description = "Boom met waaiervormig blad en opvallende herfstverkleuring.",
+                            IsDeleted = false,
+                            Species = "Japanse notenboom"
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Description = "Kleine boom met glad blad en zachte bloei.",
+                            IsDeleted = false,
+                            Species = "Japanse vuilboom"
+                        },
+                        new
+                        {
+                            Id = 121,
+                            Description = "Boomvormige variëteit met rode vruchtjes.",
+                            IsDeleted = false,
+                            Species = "Japanse wijnbes boomvorm"
+                        },
+                        new
+                        {
+                            Id = 122,
+                            Description = "Boom met fijne vertakking en gladde bast.",
+                            IsDeleted = false,
+                            Species = "Japanse zelkova"
+                        },
+                        new
+                        {
+                            Id = 123,
+                            Description = "Vaasvormige kroon en groen blad.",
+                            IsDeleted = false,
+                            Species = "Japanse zelkova ‘Green Vase’"
                         },
                         new
                         {
                             Id = 124,
+                            Description = "Elegante boom met fijne kroonstructuur.",
                             IsDeleted = false,
-                            Species = "Japanse honingboom"
+                            Species = "Japanse zelkova ‘Halka’"
                         },
                         new
                         {
                             Id = 125,
+                            Description = "Lage brede kroon en beperkte hoogtegroei.",
                             IsDeleted = false,
-                            Species = "Japanse honingboom ‘Harrie van Haaren’"
+                            Species = "Japanse zelkova ‘Wireless’"
                         },
                         new
                         {
                             Id = 126,
+                            Description = "Groenblijvende naaldboom met opgaande groei.",
                             IsDeleted = false,
-                            Species = "Japanse honingboom ‘Pendula’"
+                            Species = "Jeneverbes"
                         },
                         new
                         {
                             Id = 127,
+                            Description = "Boom met grote samengestelde bladeren.",
                             IsDeleted = false,
-                            Species = "Japanse larix"
+                            Species = "Juglandesdoorn"
                         },
                         new
                         {
                             Id = 128,
-                            IsDeleted = false,
-                            Species = "Japanse sierkers"
-                        },
-                        new
-                        {
-                            Id = 129,
-                            IsDeleted = false,
-                            Species = "Japanse sierkers ‘Amanogawa’"
-                        },
-                        new
-                        {
-                            Id = 130,
-                            IsDeleted = false,
-                            Species = "Japanse sierkers ‘Kanzan’"
-                        },
-                        new
-                        {
-                            Id = 131,
-                            IsDeleted = false,
-                            Species = "Katsuraboom"
-                        },
-                        new
-                        {
-                            Id = 132,
-                            IsDeleted = false,
-                            Species = "Kaukasische els"
-                        },
-                        new
-                        {
-                            Id = 133,
+                            Description = "Grote boom met brede kroon en gevleugelde vruchten.",
                             IsDeleted = false,
                             Species = "Kaukasische vleugelnoot"
                         },
                         new
                         {
-                            Id = 134,
+                            Id = 129,
+                            Description = "Sierboom met witte bloei en peervormige vruchten.",
                             IsDeleted = false,
-                            Species = "Kerspruim ‘Nigra’"
+                            Species = "Kersenpeer"
+                        },
+                        new
+                        {
+                            Id = 130,
+                            Description = "Iep met kleverige bladeren in het voorjaar.",
+                            IsDeleted = false,
+                            Species = "Kleefiep"
+                        },
+                        new
+                        {
+                            Id = 131,
+                            Description = "Treurvormige iep met gedrongen groei.",
+                            IsDeleted = false,
+                            Species = "Kleefiep ‘Camperdownii’"
+                        },
+                        new
+                        {
+                            Id = 132,
+                            Description = "Opgaande cultivar met gedraaide bladeren.",
+                            IsDeleted = false,
+                            Species = "Kleefiep ‘Exoniensis’"
+                        },
+                        new
+                        {
+                            Id = 133,
+                            Description = "Boomvormige klimplant met dichte groei.",
+                            IsDeleted = false,
+                            Species = "Klimboom"
+                        },
+                        new
+                        {
+                            Id = 134,
+                            Description = "Boom met hartvormig blad en luchtige kroon.",
+                            IsDeleted = false,
+                            Species = "Knikkende hartjesboom"
                         },
                         new
                         {
                             Id = 135,
+                            Description = "Hazelaarsoort met opvallende mannelijke katjes.",
                             IsDeleted = false,
-                            Species = "Kleverige robinia"
+                            Species = "Knolhazelaar"
                         },
                         new
                         {
                             Id = 136,
+                            Description = "Sierboom met gele bloei en papieren zaaddozen.",
                             IsDeleted = false,
-                            Species = "Kogelrobinia"
+                            Species = "Koelreuteria"
                         },
                         new
                         {
                             Id = 137,
+                            Description = "Boom met vroege bloei en kleine vruchten.",
                             IsDeleted = false,
-                            Species = "Koningslinde"
+                            Species = "Kornoelje"
                         },
                         new
                         {
                             Id = 138,
+                            Description = "Sierboom met witte bloemen en blauwe vruchten.",
+                            IsDeleted = false,
+                            Species = "Krentenboompje"
+                        },
+                        new
+                        {
+                            Id = 139,
+                            Description = "Linde met dichte kroon en ovaal blad.",
                             IsDeleted = false,
                             Species = "Krimlinde"
                         },
                         new
                         {
-                            Id = 139,
-                            IsDeleted = false,
-                            Species = "Krulwilg"
-                        },
-                        new
-                        {
                             Id = 140,
+                            Description = "Sierlijke linde met glanzend donkergroen blad.",
                             IsDeleted = false,
-                            Species = "Kust sequoia"
+                            Species = "Krimlinde ‘Euchlora’"
                         },
                         new
                         {
                             Id = 141,
+                            Description = "Laagblijvende iep met spreidende groei.",
                             IsDeleted = false,
-                            Species = "Libanonceder"
+                            Species = "Kruipiep"
                         },
                         new
                         {
                             Id = 142,
+                            Description = "Snelgroeiende naaldboom met zachte roodbruine bast.",
                             IsDeleted = false,
-                            Species = "Libanonceder ‘Glauca’"
+                            Species = "Kustmammoetboom"
                         },
                         new
                         {
                             Id = 143,
+                            Description = "Esdoorn met brede kroon en sterke groei.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn"
+                        },
+                        new
+                        {
+                            Id = 144,
+                            Description = "Zuilvormige variëteit met smalle kroon.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Columnare’"
+                        },
+                        new
+                        {
+                            Id = 145,
+                            Description = "Esdoorn met gelijkmatige groei en ovaal blad.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Eurostar’"
+                        },
+                        new
+                        {
+                            Id = 146,
+                            Description = "Boom met ronde kroon en stevige takken.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Fairview’"
+                        },
+                        new
+                        {
+                            Id = 147,
+                            Description = "Smalle kroon met frisgroen blad.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Green Column’"
+                        },
+                        new
+                        {
+                            Id = 148,
+                            Description = "Krachtige selectie met opgaande takstand.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Olmsted’"
+                        },
+                        new
+                        {
+                            Id = 149,
+                            Description = "Opvallende rode herfstverkleuring.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Sensation’"
+                        },
+                        new
+                        {
+                            Id = 150,
+                            Description = "Boom met kegelvormige kroon en rood blad in herfst.",
+                            IsDeleted = false,
+                            Species = "Laanesdoorn ‘Warrenred’"
+                        },
+                        new
+                        {
+                            Id = 151,
+                            Description = "Plataan met hoge, brede groei.",
+                            IsDeleted = false,
+                            Species = "Lange plataan"
+                        },
+                        new
+                        {
+                            Id = 152,
+                            Description = "Linde met gesloten kroon en donkergroen blad.",
+                            IsDeleted = false,
+                            Species = "Largo linde"
+                        },
+                        new
+                        {
+                            Id = 153,
+                            Description = "Esdoorn met intens rood blad in het voorjaar.",
+                            IsDeleted = false,
+                            Species = "Lava-esdoorn"
+                        },
+                        new
+                        {
+                            Id = 154,
+                            Description = "Boom met tulpachtige bloemen en opvallend blad.",
+                            IsDeleted = false,
+                            Species = "Lelieboom"
+                        },
+                        new
+                        {
+                            Id = 155,
+                            Description = "Zuilvormige linde met compacte takstructuur.",
+                            IsDeleted = false,
+                            Species = "Linde ‘Erecta’"
+                        },
+                        new
+                        {
+                            Id = 156,
+                            Description = "Veelgebruikte laanlinde met piramidale kroon.",
+                            IsDeleted = false,
+                            Species = "Linde ‘Greenspire’"
+                        },
+                        new
+                        {
+                            Id = 157,
+                            Description = "Opgaande linde met smalle groei.",
+                            IsDeleted = false,
+                            Species = "Linde ‘Rancho’"
+                        },
+                        new
+                        {
+                            Id = 158,
+                            Description = "Boom met brede kroon en glanzend blad.",
+                            IsDeleted = false,
+                            Species = "Linde ‘Varsaviensis’"
+                        },
+                        new
+                        {
+                            Id = 159,
+                            Description = "Boom met geurend blad en brede kroon.",
+                            IsDeleted = false,
+                            Species = "Lisodora"
+                        },
+                        new
+                        {
+                            Id = 160,
+                            Description = "Naaldboom met zachte, groengele naalden.",
+                            IsDeleted = false,
+                            Species = "Lork"
+                        },
+                        new
+                        {
+                            Id = 161,
+                            Description = "Boomvormige struik met glanzend groen blad.",
+                            IsDeleted = false,
+                            Species = "Maagdenpalmboom"
+                        },
+                        new
+                        {
+                            Id = 162,
+                            Description = "Grote roze bloemen in het voorjaar.",
+                            IsDeleted = false,
+                            Species = "Magnolia ‘Galaxy’"
+                        },
+                        new
+                        {
+                            Id = 163,
+                            Description = "Sierboom met witte, geurige bloemen.",
+                            IsDeleted = false,
+                            Species = "Magnolia kobus"
+                        },
+                        new
+                        {
+                            Id = 164,
+                            Description = "Voorjaarsbloeiende magnolia met grote tulpvormige bloemen.",
+                            IsDeleted = false,
+                            Species = "Magnolia soulangeana"
+                        },
+                        new
+                        {
+                            Id = 165,
+                            Description = "Compacte boom met stervormige bloemen.",
+                            IsDeleted = false,
+                            Species = "Magnolia stellata"
+                        },
+                        new
+                        {
+                            Id = 166,
+                            Description = "Boom met zeer groot blad en opvallende bloemen.",
+                            IsDeleted = false,
+                            Species = "Magnolia tripetala"
+                        },
+                        new
+                        {
+                            Id = 167,
+                            Description = "Halfgroenblijvende magnolia met geurende bloemen.",
+                            IsDeleted = false,
+                            Species = "Magnolia virginiana"
+                        },
+                        new
+                        {
+                            Id = 168,
+                            Description = "Massieve conifeer met dikke roodbruine bast.",
                             IsDeleted = false,
                             Species = "Mammoetboom"
                         },
                         new
                         {
-                            Id = 144,
+                            Id = 169,
+                            Description = "Boom met witviltig blad en witte bloei.",
                             IsDeleted = false,
                             Species = "Meelbes"
                         },
                         new
                         {
-                            Id = 145,
+                            Id = 170,
+                            Description = "Berk met meerdere stammen en lichte bast.",
                             IsDeleted = false,
-                            Species = "Mispel"
+                            Species = "Meerstammige berk"
                         },
                         new
                         {
-                            Id = 146,
+                            Id = 171,
+                            Description = "Boom met samengestelde bladeren en oranje bessen.",
+                            IsDeleted = false,
+                            Species = "Middelste lijsterbes"
+                        },
+                        new
+                        {
+                            Id = 172,
+                            Description = "Naaldboom die in de herfst koperbruin verkleurt.",
                             IsDeleted = false,
                             Species = "Moerascipres"
                         },
                         new
                         {
-                            Id = 147,
+                            Id = 173,
+                            Description = "Eik met dieplobbig blad en opgaande groei.",
                             IsDeleted = false,
                             Species = "Moeraseik"
                         },
                         new
                         {
-                            Id = 148,
+                            Id = 174,
+                            Description = "Compacte selectie met dichte kroon.",
                             IsDeleted = false,
-                            Species = "Moeraseik ‘Green Pillar’"
+                            Species = "Moeraseik ‘Green Dwarf’"
                         },
                         new
                         {
-                            Id = 149,
+                            Id = 175,
+                            Description = "Smalle zuilvormige variant van de moeraseik.",
+                            IsDeleted = false,
+                            Species = "Moeraseik ‘Hightower’"
+                        },
+                        new
+                        {
+                            Id = 176,
+                            Description = "Variëteit met frisgroen blad en opgaande vorm.",
+                            IsDeleted = false,
+                            Species = "Moeraseik ‘Pringreen’"
+                        },
+                        new
+                        {
+                            Id = 177,
+                            Description = "Stevige zuilvorm met opvallende bladstructuur.",
+                            IsDeleted = false,
+                            Species = "Moeraseik ‘Regal Prince’"
+                        },
+                        new
+                        {
+                            Id = 178,
+                            Description = "Slank groeiende cipres met fijne naalden.",
+                            IsDeleted = false,
+                            Species = "Moerascipres ‘Pondcypress’"
+                        },
+                        new
+                        {
+                            Id = 179,
+                            Description = "Linde met brede kroon en stevige groei.",
+                            IsDeleted = false,
+                            Species = "Moeraslinde"
+                        },
+                        new
+                        {
+                            Id = 180,
+                            Description = "Boom met hartvormig blad en gelijkmatige kroon.",
                             IsDeleted = false,
                             Species = "Mongoolse linde"
                         },
                         new
                         {
-                            Id = 150,
+                            Id = 181,
+                            Description = "Selectie met heldergele herfstkleur.",
                             IsDeleted = false,
-                            Species = "Monumentaal-iep"
+                            Species = "Mongoolse linde ‘Harvest Gold’"
                         },
                         new
                         {
-                            Id = 151,
+                            Id = 182,
+                            Description = "Sierboom met geurende bloeiwijzen.",
                             IsDeleted = false,
-                            Species = "Moseik"
+                            Species = "Nektarboom"
                         },
                         new
                         {
-                            Id = 152,
-                            IsDeleted = false,
-                            Species = "Noordelijke Japanse magnolia"
-                        },
-                        new
-                        {
-                            Id = 153,
-                            IsDeleted = false,
-                            Species = "Noorse bolesdoorn"
-                        },
-                        new
-                        {
-                            Id = 154,
+                            Id = 183,
+                            Description = "Esdoorn met breed blad en sterke groei.",
                             IsDeleted = false,
                             Species = "Noorse esdoorn"
                         },
                         new
                         {
-                            Id = 155,
+                            Id = 184,
+                            Description = "Vormvaste esdoorn met afgeronde kroon.",
                             IsDeleted = false,
-                            Species = "Noorse esdoorn ‘Crimson King’"
+                            Species = "Noorse esdoorn ‘Cleveland’"
                         },
                         new
                         {
-                            Id = 156,
+                            Id = 185,
+                            Description = "Zuilvormige esdoorn met smalle habitus.",
                             IsDeleted = false,
-                            Species = "Noorse esdoorn ‘Drumondii’"
+                            Species = "Noorse esdoorn ‘Columnare’"
                         },
                         new
                         {
-                            Id = 157,
+                            Id = 186,
+                            Description = "Roodbrons voorjaarsblad en sterke groei.",
+                            IsDeleted = false,
+                            Species = "Noorse esdoorn ‘Deborah’"
+                        },
+                        new
+                        {
+                            Id = 187,
+                            Description = "Veelgebruikte laanboom met grote kroon.",
+                            IsDeleted = false,
+                            Species = "Noorse esdoorn ‘Emerald Queen’"
+                        },
+                        new
+                        {
+                            Id = 188,
+                            Description = "Sterke selectie met egaal groen blad.",
+                            IsDeleted = false,
+                            Species = "Noorse esdoorn ‘Eurostar’"
+                        },
+                        new
+                        {
+                            Id = 189,
+                            Description = "Donkerpaars blad en sterke groei.",
                             IsDeleted = false,
                             Species = "Noorse esdoorn ‘Faassen’s Black’"
                         },
                         new
                         {
-                            Id = 158,
+                            Id = 190,
+                            Description = "Bolvormige esdoorn met compacte groei.",
                             IsDeleted = false,
-                            Species = "Olijf"
+                            Species = "Noorse esdoorn ‘Globosum’"
                         },
                         new
                         {
-                            Id = 159,
+                            Id = 191,
+                            Description = "Dieprood blad dat goed behouden blijft.",
                             IsDeleted = false,
-                            Species = "Oostelijke hemlockspar"
+                            Species = "Noorse esdoorn ‘Royal Red’"
                         },
                         new
                         {
-                            Id = 160,
+                            Id = 192,
+                            Description = "Krachtige esdoorn met dichte kroon.",
+                            IsDeleted = false,
+                            Species = "Noorse esdoorn ‘Summershade’"
+                        },
+                        new
+                        {
+                            Id = 193,
+                            Description = "Blad met opvallende bontgekleurde randen.",
+                            IsDeleted = false,
+                            Species = "Noorse esdoorn ‘Variegatum’"
+                        },
+                        new
+                        {
+                            Id = 194,
+                            Description = "Conifeer met overhangende takken en blauwgroen loof.",
+                            IsDeleted = false,
+                            Species = "Nootkaschijncipres"
+                        },
+                        new
+                        {
+                            Id = 195,
+                            Description = "Walnotenboom met groot samengesteld blad.",
+                            IsDeleted = false,
+                            Species = "Okkernoot"
+                        },
+                        new
+                        {
+                            Id = 196,
+                            Description = "Boom met zilverachtig blad en dichte groei.",
+                            IsDeleted = false,
+                            Species = "Olijfwilg"
+                        },
+                        new
+                        {
+                            Id = 197,
+                            Description = "Naaldboom met donkere naalden en stevige groei.",
                             IsDeleted = false,
                             Species = "Oostenrijkse den"
                         },
                         new
                         {
-                            Id = 161,
+                            Id = 198,
+                            Description = "Fruitboom met paarse pruimen en lichte bloei.",
                             IsDeleted = false,
-                            Species = "Oostenrijkse eik"
+                            Species = "Opal pruimenboom"
                         },
                         new
                         {
-                            Id = 162,
+                            Id = 199,
+                            Description = "Sierboom met opvallende schutbladen in de bloei.",
+                            IsDeleted = false,
+                            Species = "Oost-Amerikaanse kornoelje"
+                        },
+                        new
+                        {
+                            Id = 200,
+                            Description = "Boom met diep ingesneden blad en herfstkleuren.",
+                            IsDeleted = false,
+                            Species = "Oosterse amberboom"
+                        },
+                        new
+                        {
+                            Id = 201,
+                            Description = "Grote boom met kenmerkend gelobd blad.",
                             IsDeleted = false,
                             Species = "Oosterse plataan"
                         },
                         new
                         {
-                            Id = 163,
+                            Id = 202,
+                            Description = "Variëteit met diep ingesneden bladeren.",
                             IsDeleted = false,
                             Species = "Oosterse plataan ‘Digitata’"
                         },
                         new
                         {
-                            Id = 164,
+                            Id = 203,
+                            Description = "Boom met smal, myrteachtig blad.",
                             IsDeleted = false,
-                            Species = "Papierberk"
+                            Species = "Oosterse plataan ‘Myrtifolia’"
                         },
                         new
                         {
-                            Id = 165,
+                            Id = 204,
+                            Description = "Boom met afschilferende bast en fijn blad.",
                             IsDeleted = false,
-                            Species = "Papieresdoorn"
+                            Species = "Paperbark esdoorn"
                         },
                         new
                         {
-                            Id = 166,
-                            IsDeleted = false,
-                            Species = "Papiermoerbei"
-                        },
-                        new
-                        {
-                            Id = 167,
+                            Id = 205,
+                            Description = "Fruitboom met witte bloesem en peervruchten.",
                             IsDeleted = false,
                             Species = "Peer"
                         },
                         new
                         {
-                            Id = 168,
+                            Id = 206,
+                            Description = "Sierpeer met smalle kroon en witte bloei.",
                             IsDeleted = false,
                             Species = "Peer ‘Beech Hill’"
                         },
                         new
                         {
-                            Id = 169,
+                            Id = 207,
+                            Description = "Populaire sierpeer met vroege bloei.",
                             IsDeleted = false,
-                            Species = "Pennsylvaanse es"
+                            Species = "Peer ‘Chanticleer’"
                         },
                         new
                         {
-                            Id = 170,
+                            Id = 208,
+                            Description = "Sierpeer met dichte vertakking en smalle vorm.",
                             IsDeleted = false,
-                            Species = "Pennsylvaanse es ‘Zundert’"
+                            Species = "Peer ‘Dovyalis’"
                         },
                         new
                         {
-                            Id = 171,
+                            Id = 209,
+                            Description = "Sierpeer met glanzend blad en rode herfstkleur.",
                             IsDeleted = false,
-                            Species = "Perzisch ijzerhout"
+                            Species = "Peer ‘Redspire’"
                         },
                         new
                         {
-                            Id = 172,
+                            Id = 210,
+                            Description = "Zeer smalle sierpeer met opgaande groei.",
                             IsDeleted = false,
-                            Species = "Perzische slaapboom"
+                            Species = "Peer ‘Capital’"
                         },
                         new
                         {
-                            Id = 173,
+                            Id = 211,
+                            Description = "Bekende perenvariëteit met langwerpige vruchten.",
                             IsDeleted = false,
-                            Species = "Pluim-es"
+                            Species = "Perenboom ‘Conference’"
                         },
                         new
                         {
-                            Id = 174,
+                            Id = 212,
+                            Description = "Sierboom met spectaculaire herfstkleuren.",
                             IsDeleted = false,
-                            Species = "Pluim-es ‘Mecsek’"
+                            Species = "Perzische ijzerhout"
                         },
                         new
                         {
-                            Id = 175,
+                            Id = 213,
+                            Description = "Naaldboom met lange naalden en sterke groei.",
                             IsDeleted = false,
-                            Species = "Pluim-iep"
+                            Species = "Pijnboom"
                         },
                         new
                         {
-                            Id = 176,
+                            Id = 214,
+                            Description = "Grote boom met afbladderende bast.",
                             IsDeleted = false,
-                            Species = "Prieel-iep"
+                            Species = "Plataan"
                         },
                         new
                         {
-                            Id = 177,
+                            Id = 215,
+                            Description = "Compacte bolplataan voor stedelijke ruimtes.",
                             IsDeleted = false,
-                            Species = "Prieelberk"
+                            Species = "Plataan ‘Alphen’s Globe’"
                         },
                         new
                         {
-                            Id = 178,
+                            Id = 216,
+                            Description = "Sterke plataan met grote kroon.",
                             IsDeleted = false,
-                            Species = "Pruimbladige meidoorn ‘Splendens’"
+                            Species = "Plataan ‘Bloodgood’"
                         },
                         new
                         {
-                            Id = 179,
+                            Id = 217,
+                            Description = "Plataan met opgaande groei en smalle kroon.",
                             IsDeleted = false,
-                            Species = "Ratelpopulier"
+                            Species = "Plataan ‘Malburg’"
                         },
                         new
                         {
-                            Id = 180,
+                            Id = 218,
+                            Description = "Fruitboom met paarse of gele pruimen.",
                             IsDeleted = false,
-                            Species = "Reuzenkornoelje"
+                            Species = "Pruimenboom"
                         },
                         new
                         {
-                            Id = 181,
+                            Id = 219,
+                            Description = "Esdoorn met donkerpaars blad.",
+                            IsDeleted = false,
+                            Species = "Purperesdoorn"
+                        },
+                        new
+                        {
+                            Id = 220,
+                            Description = "Zeer donkerbladige esdoorn, populair als laanboom.",
+                            IsDeleted = false,
+                            Species = "Purperesdoorn ‘Crimson King’"
+                        },
+                        new
+                        {
+                            Id = 221,
+                            Description = "Compactere variëteit met donkere bladeren.",
+                            IsDeleted = false,
+                            Species = "Purperesdoorn ‘Crimson Sentry’"
+                        },
+                        new
+                        {
+                            Id = 222,
+                            Description = "Conifeer met dichte groei en schubvormig blad.",
                             IsDeleted = false,
                             Species = "Reuzenlevensboom"
                         },
                         new
                         {
-                            Id = 182,
+                            Id = 223,
+                            Description = "Zilverkleurige naaldboom met brede kroon.",
                             IsDeleted = false,
                             Species = "Reuzenzilverspar"
                         },
                         new
                         {
-                            Id = 183,
+                            Id = 224,
+                            Description = "Beuk met roodbruin blad.",
                             IsDeleted = false,
-                            Species = "Robinia"
+                            Species = "Rode beuk"
                         },
                         new
                         {
-                            Id = 184,
+                            Id = 225,
+                            Description = "Donkerrode beuk met brede kroon.",
                             IsDeleted = false,
-                            Species = "Robinia ‘Bessoniana’"
+                            Species = "Rode beuk ‘Atropunicea’"
                         },
                         new
                         {
-                            Id = 185,
+                            Id = 226,
+                            Description = "Zuilvormige variant met purper blad.",
                             IsDeleted = false,
-                            Species = "Robinia ‘Decaisneana’"
+                            Species = "Rode beuk ‘Dawyck Purple’"
                         },
                         new
                         {
-                            Id = 186,
-                            IsDeleted = false,
-                            Species = "Robinia ‘Frisia’"
-                        },
-                        new
-                        {
-                            Id = 187,
-                            IsDeleted = false,
-                            Species = "Robinia ‘Pink Cascade’"
-                        },
-                        new
-                        {
-                            Id = 188,
-                            IsDeleted = false,
-                            Species = "Robinia ‘Pyramidalis’"
-                        },
-                        new
-                        {
-                            Id = 189,
+                            Id = 227,
+                            Description = "Esdoorn met rood getinte jonge bladeren.",
                             IsDeleted = false,
                             Species = "Rode esdoorn"
                         },
                         new
                         {
-                            Id = 190,
+                            Id = 228,
+                            Description = "Zuilvormige selectie met smalle kroon.",
+                            IsDeleted = false,
+                            Species = "Rode esdoorn ‘Armstrong’"
+                        },
+                        new
+                        {
+                            Id = 229,
+                            Description = "Opvallende felrode herfstkleur.",
+                            IsDeleted = false,
+                            Species = "Rode esdoorn ‘October Glory’"
+                        },
+                        new
+                        {
+                            Id = 230,
+                            Description = "Esdoorn met intens rode herfsttinten.",
+                            IsDeleted = false,
+                            Species = "Rode esdoorn ‘Red Sunset’"
+                        },
+                        new
+                        {
+                            Id = 231,
+                            Description = "Boom met roodroze bloemen.",
                             IsDeleted = false,
                             Species = "Rode paardenkastanje"
                         },
                         new
                         {
-                            Id = 191,
+                            Id = 232,
+                            Description = "Kastanje met hangende takken en opvallende bloei.",
                             IsDeleted = false,
-                            Species = "Rode paardenkastanje ‘Briotii’"
+                            Species = "Rode ombuikastanje"
                         },
                         new
                         {
-                            Id = 192,
+                            Id = 233,
+                            Description = "Sierappel met rode bloesem en vruchten.",
                             IsDeleted = false,
-                            Species = "Rode pavia"
+                            Species = "Rode sierappel"
                         },
                         new
                         {
-                            Id = 193,
+                            Id = 234,
+                            Description = "Spar met roodbruine kegels en frisgroen loof.",
                             IsDeleted = false,
-                            Species = "Rondbladige beuk"
+                            Species = "Rode zilverspar"
                         },
                         new
                         {
-                            Id = 194,
+                            Id = 235,
+                            Description = "Iepensoort met rood getinte jonge scheuten.",
                             IsDeleted = false,
-                            Species = "Ruwe berk"
+                            Species = "Rodeiep"
                         },
                         new
                         {
-                            Id = 195,
+                            Id = 236,
+                            Description = "Boom met ruw blad en snelle groei.",
                             IsDeleted = false,
-                            Species = "Ruwe berk ‘Fastigiata’"
+                            Species = "Roughleaf esdoorn"
                         },
                         new
                         {
-                            Id = 196,
+                            Id = 237,
+                            Description = "Compacte appelboom met witte bloei.",
                             IsDeleted = false,
-                            Species = "Ruwe berk ‘Zwitsers Glorie’"
+                            Species = "Sargents sierappel"
                         },
                         new
                         {
-                            Id = 197,
-                            IsDeleted = false,
-                            Species = "Ruwe iep"
-                        },
-                        new
-                        {
-                            Id = 198,
-                            IsDeleted = false,
-                            Species = "Ruwvruchtige populier"
-                        },
-                        new
-                        {
-                            Id = 199,
-                            IsDeleted = false,
-                            Species = "Scharlaken eik ‘Splendens’"
-                        },
-                        new
-                        {
-                            Id = 200,
+                            Id = 238,
+                            Description = "Snelgroeiende wilg met smal blad.",
                             IsDeleted = false,
                             Species = "Schietwilg"
                         },
                         new
                         {
-                            Id = 201,
+                            Id = 239,
+                            Description = "Conifeer met waaiervormige takken.",
                             IsDeleted = false,
-                            Species = "Schietwilg ‘Chermesina’"
+                            Species = "Schijncipres"
                         },
                         new
                         {
-                            Id = 202,
+                            Id = 240,
+                            Description = "Boom met fijne nervatuur en sierlijke groei.",
                             IsDeleted = false,
-                            Species = "Servische spar"
+                            Species = "Schijnbeuk"
                         },
                         new
                         {
-                            Id = 203,
+                            Id = 241,
+                            Description = "Boom met iepachtig blad en brede kroon.",
                             IsDeleted = false,
-                            Species = "Siberische balsempopulier"
+                            Species = "Schijniepenboom"
                         },
                         new
                         {
-                            Id = 204,
+                            Id = 242,
+                            Description = "Esdoorn met kenmerkende afbladderende bast.",
                             IsDeleted = false,
-                            Species = "Sierappel"
+                            Species = "Schurfbast-esdoorn"
                         },
                         new
                         {
-                            Id = 205,
+                            Id = 243,
+                            Description = "Lariks met goudgele herfstkleur.",
                             IsDeleted = false,
-                            Species = "Sierappel"
+                            Species = "Siberische lariks"
                         },
                         new
                         {
-                            Id = 206,
+                            Id = 244,
+                            Description = "Spar met fijn naaldwerk en kegelvormige groei.",
                             IsDeleted = false,
-                            Species = "Sierappel"
+                            Species = "Siberische spar"
                         },
                         new
                         {
-                            Id = 207,
+                            Id = 245,
+                            Description = "Sierappel met witte bloemen en oranje vruchten.",
                             IsDeleted = false,
-                            Species = "Sierkers gondouinii ‘Schnee’"
+                            Species = "Sierappel ‘Evereste’"
                         },
                         new
                         {
-                            Id = 208,
+                            Id = 246,
+                            Description = "Boom met gele sierappeltjes.",
                             IsDeleted = false,
-                            Species = "Sierkers sargentii ‘Rancho’"
+                            Species = "Sierappel ‘Golden Hornet’"
                         },
                         new
                         {
-                            Id = 209,
+                            Id = 247,
+                            Description = "Boom met opgaande groei en rode vruchten.",
                             IsDeleted = false,
-                            Species = "Sierpeer ‘Chanticleer’"
+                            Species = "Sierappel ‘Red Sentinel’"
                         },
                         new
                         {
-                            Id = 210,
+                            Id = 248,
+                            Description = "Boom met witte of roze bloesem.",
                             IsDeleted = false,
-                            Species = "Sitka spar"
+                            Species = "Sierkers"
                         },
                         new
                         {
-                            Id = 211,
+                            Id = 249,
+                            Description = "Zuilvormige sierkers met pastelroze bloemen.",
                             IsDeleted = false,
-                            Species = "Slangenden"
+                            Species = "Sierkers ‘Amanogawa’"
                         },
                         new
                         {
-                            Id = 212,
+                            Id = 250,
+                            Description = "Dubbelbloemige roze kersenbloesem.",
                             IsDeleted = false,
-                            Species = "Sleedoorn"
+                            Species = "Sierkers ‘Kanzan’"
                         },
                         new
                         {
-                            Id = 213,
+                            Id = 251,
+                            Description = "Groengele bloesem in trossen.",
                             IsDeleted = false,
-                            Species = "Smalbladige es"
+                            Species = "Sierkers ‘Ukon’"
                         },
                         new
                         {
-                            Id = 214,
+                            Id = 252,
+                            Description = "Grote witte bloemen die naar roze verkleuren.",
                             IsDeleted = false,
-                            Species = "Smalbladige es ‘Raywood’"
+                            Species = "Sierkers ‘Shirofugen’"
                         },
                         new
                         {
-                            Id = 215,
+                            Id = 253,
+                            Description = "Smalle boom met witte bloei en harde vruchten.",
                             IsDeleted = false,
-                            Species = "Smalle olijfwilg"
+                            Species = "Sierpeer"
                         },
                         new
                         {
-                            Id = 216,
+                            Id = 254,
+                            Description = "Paars blad en roze bloesem.",
+                            IsDeleted = false,
+                            Species = "Sierpruim ‘Nigra’"
+                        },
+                        new
+                        {
+                            Id = 255,
+                            Description = "Esdoorn met zilverachtige bladonderzijde.",
+                            IsDeleted = false,
+                            Species = "Silver maple"
+                        },
+                        new
+                        {
+                            Id = 256,
+                            Description = "Boom met klokvormige witte bloemen.",
                             IsDeleted = false,
                             Species = "Sneeuwklokjesboom"
                         },
                         new
                         {
-                            Id = 217,
+                            Id = 257,
+                            Description = "Meelbes met opvallend zilvergrijs blad.",
                             IsDeleted = false,
-                            Species = "Spaanse aak"
+                            Species = "Sorbus aria ‘Lutescens’"
                         },
                         new
                         {
-                            Id = 218,
+                            Id = 258,
+                            Description = "Zeldzame esdoorn met opvallende zaden.",
                             IsDeleted = false,
-                            Species = "Spaanse aak ‘Elsrijk’"
+                            Species = "Spaans vitalesdoorn"
                         },
                         new
                         {
-                            Id = 219,
+                            Id = 259,
+                            Description = "Boom met scherpe takuitsteeksels.",
                             IsDeleted = false,
-                            Species = "Spaanse eik"
+                            Species = "Spijkerboom"
                         },
                         new
                         {
-                            Id = 220,
+                            Id = 260,
+                            Description = "Bladhoudende eik met leerachtig blad.",
                             IsDeleted = false,
                             Species = "Steeneik"
                         },
                         new
                         {
-                            Id = 221,
+                            Id = 261,
+                            Description = "Bron van esdoornsiroop, bekend om herfstkleuren.",
                             IsDeleted = false,
                             Species = "Suikeresdoorn"
                         },
                         new
                         {
-                            Id = 222,
+                            Id = 262,
+                            Description = "Sterke selectie met dikke kroon.",
                             IsDeleted = false,
-                            Species = "Tamme kastanje"
+                            Species = "Suikeresdoorn ‘Legacy’"
                         },
                         new
                         {
-                            Id = 223,
+                            Id = 263,
+                            Description = "Esdoorn met betrouwbare herfstkleur.",
                             IsDeleted = false,
-                            Species = "Tamme kastanje ‘Albomarginata’"
+                            Species = "Suikeresdoorn ‘Green Mountain’"
                         },
                         new
                         {
-                            Id = 224,
-                            IsDeleted = false,
-                            Species = "Taxus"
-                        },
-                        new
-                        {
-                            Id = 225,
-                            IsDeleted = false,
-                            Species = "Treurberk"
-                        },
-                        new
-                        {
-                            Id = 226,
-                            IsDeleted = false,
-                            Species = "Treurbeuk"
-                        },
-                        new
-                        {
-                            Id = 227,
-                            IsDeleted = false,
-                            Species = "Treures"
-                        },
-                        new
-                        {
-                            Id = 228,
-                            IsDeleted = false,
-                            Species = "Treuriep"
-                        },
-                        new
-                        {
-                            Id = 229,
+                            Id = 264,
+                            Description = "Boom met groot blad en opvallende bloei.",
                             IsDeleted = false,
                             Species = "Trompetboom"
                         },
                         new
                         {
-                            Id = 230,
+                            Id = 265,
+                            Description = "Bolvormige selectie van de trompetboom.",
                             IsDeleted = false,
-                            Species = "Tweestijlige meidoorn"
+                            Species = "Trompetboom ‘Nana’"
                         },
                         new
                         {
-                            Id = 231,
+                            Id = 266,
+                            Description = "Goudgekleurd blad in het voorjaar.",
                             IsDeleted = false,
-                            Species = "Vaantjesboom"
+                            Species = "Trompetboom ‘Aurea’"
                         },
                         new
                         {
-                            Id = 232,
+                            Id = 267,
+                            Description = "Boom met tulpvormige bloemen en frisgroen blad.",
                             IsDeleted = false,
-                            Species = "Varenbeuk"
+                            Species = "Tulpenboom"
                         },
                         new
                         {
-                            Id = 233,
+                            Id = 268,
+                            Description = "Boom met lichte schors en luchtige kroon.",
+                            IsDeleted = false,
+                            Species = "Valse christusdoorn"
+                        },
+                        new
+                        {
+                            Id = 269,
+                            Description = "Robinia met geurende witte bloemtrossen.",
+                            IsDeleted = false,
+                            Species = "Valse acacia"
+                        },
+                        new
+                        {
+                            Id = 270,
+                            Description = "Bolvormige selectie zonder doornen.",
+                            IsDeleted = false,
+                            Species = "Valse acacia ‘Umbraculifera’"
+                        },
+                        new
+                        {
+                            Id = 271,
+                            Description = "Esdoorn met fijn ingesneden bladeren.",
                             IsDeleted = false,
                             Species = "Vederesdoorn"
                         },
                         new
                         {
-                            Id = 234,
+                            Id = 272,
+                            Description = "Decoratieve boom met hangende twijgen.",
                             IsDeleted = false,
-                            Species = "Vederesdoorn ‘Variegatum’"
+                            Species = "Vederesdoorn ‘Wieri’"
                         },
                         new
                         {
-                            Id = 235,
+                            Id = 273,
+                            Description = "Boom die door het seizoen heen wisselt van bladkleur.",
                             IsDeleted = false,
-                            Species = "Vijvercipres"
+                            Species = "Verkleurende acacia"
                         },
                         new
                         {
-                            Id = 236,
+                            Id = 274,
+                            Description = "Esdoorn met handvormig blad.",
                             IsDeleted = false,
-                            Species = "Watercipres"
+                            Species = "Vijfvingeresdoorn"
                         },
                         new
                         {
-                            Id = 237,
+                            Id = 275,
+                            Description = "Kersensoort met geurende bloesem.",
                             IsDeleted = false,
-                            Species = "Westelijke hemlockspar"
+                            Species = "Vogelkers"
                         },
                         new
                         {
-                            Id = 238,
+                            Id = 276,
+                            Description = "Dubbelbloemige witte sierkers.",
                             IsDeleted = false,
-                            Species = "Westerse levensboom"
+                            Species = "Vogelkers ‘Plena’"
                         },
                         new
                         {
-                            Id = 239,
+                            Id = 277,
+                            Description = "Struik/boom met groene bessen.",
                             IsDeleted = false,
-                            Species = "Westerse netelboom"
+                            Species = "Wegedoorn"
                         },
                         new
                         {
-                            Id = 240,
+                            Id = 278,
+                            Description = "Zachte vijfnaaldige den.",
                             IsDeleted = false,
                             Species = "Weymouthden"
                         },
                         new
                         {
-                            Id = 241,
-                            IsDeleted = false,
-                            Species = "Wilde lijsterbes"
-                        },
-                        new
-                        {
-                            Id = 242,
-                            IsDeleted = false,
-                            Species = "Wilde lijsterbes ‘Fastigiata’"
-                        },
-                        new
-                        {
-                            Id = 243,
-                            IsDeleted = false,
-                            Species = "Wilgbladige peer"
-                        },
-                        new
-                        {
-                            Id = 244,
-                            IsDeleted = false,
-                            Species = "Winterbloeiende kers"
-                        },
-                        new
-                        {
-                            Id = 245,
-                            IsDeleted = false,
-                            Species = "Wintereik"
-                        },
-                        new
-                        {
-                            Id = 246,
-                            IsDeleted = false,
-                            Species = "Winterlinde"
-                        },
-                        new
-                        {
-                            Id = 247,
-                            IsDeleted = false,
-                            Species = "Winterlinde ‘Böhlje’"
-                        },
-                        new
-                        {
-                            Id = 248,
-                            IsDeleted = false,
-                            Species = "Winterlinde ‘Greenspire’"
-                        },
-                        new
-                        {
-                            Id = 249,
-                            IsDeleted = false,
-                            Species = "Winterlinde ‘Rancho’"
-                        },
-                        new
-                        {
-                            Id = 250,
-                            IsDeleted = false,
-                            Species = "Witte abeel"
-                        },
-                        new
-                        {
-                            Id = 251,
-                            IsDeleted = false,
-                            Species = "Witte bitternoot"
-                        },
-                        new
-                        {
-                            Id = 252,
-                            IsDeleted = false,
-                            Species = "Witte els"
-                        },
-                        new
-                        {
-                            Id = 253,
-                            IsDeleted = false,
-                            Species = "Witte esdoorn"
-                        },
-                        new
-                        {
-                            Id = 254,
-                            IsDeleted = false,
-                            Species = "Witte esdoorn ‘Laciniatum Wieri’"
-                        },
-                        new
-                        {
-                            Id = 255,
-                            IsDeleted = false,
-                            Species = "Witte esdoorn ‘Pyramidale’"
-                        },
-                        new
-                        {
-                            Id = 256,
-                            IsDeleted = false,
-                            Species = "Witte moerbei"
-                        },
-                        new
-                        {
-                            Id = 257,
-                            IsDeleted = false,
-                            Species = "Witte paardenkastanje"
-                        },
-                        new
-                        {
-                            Id = 258,
-                            IsDeleted = false,
-                            Species = "Yoshino kers"
-                        },
-                        new
-                        {
-                            Id = 259,
-                            IsDeleted = false,
-                            Species = "Zachte berk"
-                        },
-                        new
-                        {
-                            Id = 260,
-                            IsDeleted = false,
-                            Species = "Zelkova"
-                        },
-                        new
-                        {
-                            Id = 261,
-                            IsDeleted = false,
-                            Species = "Zilverlinde"
-                        },
-                        new
-                        {
-                            Id = 262,
-                            IsDeleted = false,
-                            Species = "Zilverlinde ‘Brabant’"
-                        },
-                        new
-                        {
-                            Id = 263,
-                            IsDeleted = false,
-                            Species = "Zoete kers"
-                        },
-                        new
-                        {
-                            Id = 264,
-                            IsDeleted = false,
-                            Species = "Zoete kers ‘Plena’"
-                        },
-                        new
-                        {
-                            Id = 265,
-                            IsDeleted = false,
-                            Species = "Zomereik"
-                        },
-                        new
-                        {
-                            Id = 266,
-                            IsDeleted = false,
-                            Species = "Zomereik ‘Fastigiate Koster’"
-                        },
-                        new
-                        {
-                            Id = 267,
-                            IsDeleted = false,
-                            Species = "Zomerlinde"
-                        },
-                        new
-                        {
-                            Id = 268,
-                            IsDeleted = false,
-                            Species = "Zuidelijke magnolia"
-                        },
-                        new
-                        {
-                            Id = 269,
-                            IsDeleted = false,
-                            Species = "Zwarte balsempopulier"
-                        },
-                        new
-                        {
-                            Id = 270,
-                            IsDeleted = false,
-                            Species = "Zwarte berk"
-                        },
-                        new
-                        {
-                            Id = 271,
-                            IsDeleted = false,
-                            Species = "Zwarte den"
-                        },
-                        new
-                        {
-                            Id = 272,
-                            IsDeleted = false,
-                            Species = "Zwarte els"
-                        },
-                        new
-                        {
-                            Id = 273,
-                            IsDeleted = false,
-                            Species = "Zwarte els ‘Laciniata’"
-                        },
-                        new
-                        {
-                            Id = 274,
-                            IsDeleted = false,
-                            Species = "Zwarte linde"
-                        },
-                        new
-                        {
-                            Id = 275,
-                            IsDeleted = false,
-                            Species = "Zwarte moerbei"
-                        },
-                        new
-                        {
-                            Id = 276,
-                            IsDeleted = false,
-                            Species = "Zwarte populier"
-                        },
-                        new
-                        {
-                            Id = 277,
-                            IsDeleted = false,
-                            Species = "Zwarte tupeloboom"
-                        },
-                        new
-                        {
-                            Id = 278,
-                            IsDeleted = false,
-                            Species = "Zwarte walnoot"
-                        },
-                        new
-                        {
                             Id = 279,
+                            Description = "Kleine boom met kleine zure vruchten.",
                             IsDeleted = false,
-                            Species = "Zweedse berk"
+                            Species = "Wilde appel"
                         },
                         new
                         {
                             Id = 280,
+                            Description = "Linde met zilverkleurige onderzijde van bladeren.",
                             IsDeleted = false,
-                            Species = "Zweedse lijsterbes ‘Brouwers’"
+                            Species = "Zilverlinde"
                         });
                 });
 

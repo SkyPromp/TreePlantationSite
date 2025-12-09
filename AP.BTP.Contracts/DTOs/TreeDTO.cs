@@ -13,6 +13,11 @@
         public required string Species { get; set; }
 
         /// <summary>
+        /// The description of the tree.
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
         /// An optional spring maintenance plan associated with the tree. Can be <c>null</c> if no plan exists.
         /// </summary>
         public string? MaintenancePlanSpring { get; set; }
