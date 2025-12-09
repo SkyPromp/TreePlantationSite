@@ -6,7 +6,7 @@ namespace AP.BTP.Application.Interfaces
     /// Defines a repository interface for managing <see cref="PlantationSite"/> entities,
     /// extending the generic repository with pagination support.
     /// </summary>
-    public interface IPlantationSiteRepository: IGenericRepository<PlantationSite>
+    public interface IPlantationSiteRepository : IGenericRepository<PlantationSite>
     {
         /// <summary>
         /// Retrieves a paginated list of <see cref="PlantationSite"/> entities that match the specified search term.
@@ -23,5 +23,15 @@ namespace AP.BTP.Application.Interfaces
         /// </list>
         /// </returns>
         Task<(IEnumerable<PlantationSite> Items, int TotalCount)> GetAllPaged(int pageNr, int pageSize, string search, bool sortAscending);
+
+        /// <summary>
+        /// Retrieves a list of <see cref="PlantationSite"/> entities that match the specified search term.
+        /// </summary>
+        /// <param name="search">A search term to filter plantation sites by name, city, or other criteria.</param>
+        /// <returns>
+        /// A task that returns a IEnumerable<PlantationSite>
+        /// </returns>
+        Task<IEnumerable<PlantationSite>> GetAllSearched(string search);
+
     }
 }

@@ -19,5 +19,10 @@ namespace AP.BTP.Contracts.DTOs
         /// </summary>
         [Required(ErrorMessage = "Wachtwoord is verplicht.")]
         public string Password { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Whether the login request is for the maintenance app.
+        /// </summary>
+        public bool? IsForMaintenance { get; set; } = null;
     }
 }

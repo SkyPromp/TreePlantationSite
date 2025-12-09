@@ -1,15 +1,26 @@
 ﻿@page "/welcome"
+@using AP.BTP.Web.Shared.Authentication
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
+@using Microsoft.Extensions.Options
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IOptions<AppInfo> AppInfoOptions
 
 <PageTitle>Welkom</PageTitle>
 
 <div class="container text-center mt-5">
     <div class="card shadow-lg p-4 mx-auto" style="max-width: 400px;">
-        <h2 class="mb-3">Welkom bij BTP</h2>
-        <p class="text-muted">Log in of maak een nieuw account aan om door te gaan.</p>
+        @if (AppInfoOptions.Value.AppType == "Maintenance")
+        {
+            <h2 class="mb-3">Welkom bij: <br /> BTP Maintenance</h2>
+            <p class="text-muted">Log in of maak een nieuw account aan om door te gaan met het inplannen van taken of beheren van: gebruikers, bomen, kweeksites en zones.</p>
+        }
+        else if (AppInfoOptions.Value.AppType == "User")
+        {
+            <h2 class="mb-3">Welkom bij: <br />  BTP</h2>
+            <p class="text-muted">Log in of maak een nieuw account aan om je taken te zien, starten, stoppen en meer info omptrent hun locatie teweten te komen.</p>
+        }
 
         <div class="d-grid gap-2 mt-4">
             <a class="btn btn-primary btn-lg" href="/login">Inloggen</a>

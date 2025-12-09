@@ -66,7 +66,8 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await _mediator.Send(new LoginUserCommand
             {
                 Email = userDetails.Email,
-                Password = userDetails.Password
+                Password = userDetails.Password,
+                IsForMaintenance = userDetails.IsForMaintenance
             }));
         }
 
@@ -92,9 +93,21 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>Paged list of unapproved users.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("pending")]
-        public async Task<IActionResult> GetAllUnapprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
+        public async Task<IActionResult> GetAllUnapprovedUsersPaged(
+            [FromQuery] int pageNr = 1,
+            [FromQuery] int pageSize = 6,
+            [FromQuery] string search = "",
+            [FromQuery] string sortBy = "FirstName",
+            [FromQuery] string sortDirection = "asc")
         {
-            return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+            return Ok(await _mediator.Send(new GetAllUnapprovedUsersPagedQuery() 
+            {
+                PageNr = pageNr,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                SortDirection = sortDirection
+            }));
         }
 
         /// Links a local user to multiple plantation sites.
@@ -126,9 +139,21 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>Paged list of approved users.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("approved")]
-        public async Task<IActionResult> GetAllApprovedUsersPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
+        public async Task<IActionResult> GetAllApprovedUsersPaged(
+            [FromQuery] int pageNr = 1,
+            [FromQuery] int pageSize = 6,
+            [FromQuery] string search = "",
+            [FromQuery] string sortBy = "FirstName",
+            [FromQuery] string sortDirection = "asc")
         {
-            return Ok(await _mediator.Send(new GetAllApprovedUsersPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+            return Ok(await _mediator.Send(new GetAllApprovedUsersPagedQuery() 
+            {
+                PageNr = pageNr,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                SortDirection = sortDirection
+            }));
         }
 
         /// <summary>
@@ -140,9 +165,21 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>Paged list of operators.</returns>
         [Authorize(Roles = "Admin, Manager")]
         [HttpGet("operators")]
-        public async Task<IActionResult> GetAllOperatorsPaged([FromQuery] int pageNr = 1, [FromQuery] int pageSize = 6, [FromQuery] string search = "")
+        public async Task<IActionResult> GetAllOperatorsPaged(
+            [FromQuery] int pageNr = 1,
+            [FromQuery] int pageSize = 6,
+            [FromQuery] string search = "",
+            [FromQuery] string sortBy = "FirstName",
+            [FromQuery] string sortDirection = "asc")
         {
-            return Ok(await _mediator.Send(new GetAllOperatorsPagedQuery() { PageNr = pageNr, PageSize = pageSize, Search = search }));
+            return Ok(await _mediator.Send(new GetAllOperatorsPagedQuery
+            {
+                PageNr = pageNr,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                SortDirection = sortDirection
+            }));
         }
 
         /// <summary>

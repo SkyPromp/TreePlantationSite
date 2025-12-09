@@ -46,6 +46,18 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Retrieves a list of plantation sites.
+        /// </summary>
+        /// <param name="search">Optional search string to filter plantation sites by name.</param>
+        /// <returns>A list of plantation sites.</returns>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllPlantationSites([FromQuery] string search = "")
+        {
+            return Ok(await mediator.Send(new GetAllPlantationSitesQuery() { Search = search }));
+        }
+
+        /// <summary>
         /// Retrieves a specific plantation site by its ID.
         /// </summary>
         /// <param name="id">The ID of the plantation site.</param>

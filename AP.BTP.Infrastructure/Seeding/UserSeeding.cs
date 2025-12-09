@@ -62,6 +62,30 @@ namespace AP.BTP.Infrastructure.Seeding
                     Role = UserRole.Operator,
                     IsDeleted = false,
                 },
+                new User
+                {
+                    Id = 4,
+                    Auth0Id = "auth0|6934b29bb240dfc03ff39189",
+                    FirstName = "Karl",
+                    LastName = "Ross",
+                    PhoneNumber = "0135456865",
+                    Email = "karlross@gmail.com",
+                    IsApproved = true,
+                    Role = UserRole.Operator,
+                    IsDeleted = false,
+                },
+                new User
+                {
+                    Id = 5,
+                    Auth0Id = "auth0|6934b2f91654205a1e8f2152",
+                    FirstName = "Bob",
+                    LastName = "Ross",
+                    PhoneNumber = "0535556913",
+                    Email = "bobross@gmail.com",
+                    IsApproved = true,
+                    Role = UserRole.Operator,
+                    IsDeleted = false,
+                },
             };
 
             builder.HasData(users);

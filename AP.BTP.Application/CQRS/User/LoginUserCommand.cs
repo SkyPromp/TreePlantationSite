@@ -1,6 +1,7 @@
 ﻿using AP.BTP.Application.Exceptions;
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
+using AP.BTP.Contracts.Enums;
 using FluentValidation;
 using MediatR;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,6 +22,11 @@ namespace AP.BTP.Application.CQRS.User
         /// The user's password used for login.
         /// </summary>
         public string Password { get; set; } = "";
+
+        /// <summary>
+        /// Whether the user that wants to login is for the maintenance app.
+        /// </summary>
+        public bool? IsForMaintenance { get; set; } = null;
     }
 
     /// <summary>
@@ -41,6 +47,9 @@ namespace AP.BTP.Application.CQRS.User
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required.");
+
+            RuleFor(x => x.IsForMaintenance)
+                .NotEmpty().WithMessage("IsForMaintenance is required.");
         }
     }
 
@@ -96,6 +105,12 @@ namespace AP.BTP.Application.CQRS.User
 
             if (!user.IsApproved && !user.IsDeleted)
                 throw new AuthenticationFailedException("User account is not approved.", "NOT_APPROVED");
+
+            if (request.IsForMaintenance == true && user.Role == UserRole.Operator)
+                throw new AuthenticationFailedException("User does not have access to the maintenance app.", "UNAUTHORIZED_ACCESS_MAINTENANCE");
+
+            if (request.IsForMaintenance == false && (user.Role == UserRole.Admin || user.Role == UserRole.Manager))
+                throw new AuthenticationFailedException("User does not have access to the operators app.", "UNAUTHORIZED_ACCESS_USER");
 
             LoginResponseDTO loginResponse = new LoginResponseDTO
             {
