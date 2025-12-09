@@ -19,6 +19,9 @@ namespace AP.BTP.Domain
         /// </summary>
         public required string Species { get; set; }
 
+        /// <summary>
+        /// Get or sets the description of the tree.
+        /// </summary>
         public string? Description { get; set;}
 
         /// <summary>
