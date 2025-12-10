@@ -8,7 +8,7 @@
 {
     <div class="page">
         <main>
-                <NavBar></NavBar>
+            <NavBar></NavBar>
             <section class="body overflow-scroll">
                 <div style="max-height: 96%">
                     @Body
@@ -19,7 +19,13 @@
 }
 else
 {
-    @Body
+    <div class="page">
+        <main>
+            <section class="body h-100">
+                    @Body
+            </section>
+        </main>
+    </div>
 }
 
 @code {
