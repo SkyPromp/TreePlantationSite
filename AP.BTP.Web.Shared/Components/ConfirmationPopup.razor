@@ -1,27 +1,24 @@
 ﻿@if (this.showConfirmationPopup)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index:10;">
-        <div class="card position-absolute align-self-center p-4">
-            <h1>@this.confirmationTitle</h1>
-            <p>@this.confirmationDescription</p>
-
-            @if (this.isLoading)
-            {
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            } else
-            {
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="OnCancellation" class="btn btn-warning">Annuleer</button>
+        <Card Class="position-absolute align-self-center p-4">
+            <CardTitle Class="text-center fw-bold">@confirmationTitle</CardTitle>
+            <CardBody Class="text-center">
+                <p>@confirmationDescription</p>
+            </CardBody>
+            <CardFooter Class="border-0 bg-white d-flex justify-content-around p-0">
+                @if (this.isLoading)
+                {
+                    <div class="spinner-border align-self-center" role="status">
+                        <span class="visually-hidden">Laden...</span>
                     </div>
-                    <div class="col">
-                        <button @onclick="this.OnConfirmation" class="btn btn-secondary">Bevestigen</button>
-                    </div>
-                </div>
-            }
-        </div>
+                } else
+                {
+                    <Button Color="ButtonColor.Dark" @onclick="OnCancellation">Annuleer</Button>
+                    <Button Color="ButtonColor.Success" @onclick="this.OnConfirmation">Bevestigen</Button>
+                }
+            </CardFooter>
+        </Card>
     </div>
 }
 

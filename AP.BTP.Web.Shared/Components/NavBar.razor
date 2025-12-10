@@ -3,7 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
-<nav class="navbar navbar-expand px-4">
+<nav class="navbar navbar-expand px-2">
     @if(user != null && user.IsInRole("Admin")) {
         <a class="navbar-brand" href="/admin/dashboard">
             <img src="logo.png" alt="Logo" class="brand-logo">
@@ -13,7 +13,7 @@
             <img src="logo.png" alt="Logo" class="brand-logo">
         </a>
     } else if(user != null && user.IsInRole("Operator")) {
-        <a class="navbar-brand" href="/operator/dashboard">
+        <a class="navbar-brand" href="/tasks">
             <img src="logo.png" alt="Logo" class="brand-logo">
         </a>
     }
@@ -38,7 +38,7 @@
             </li>
         } else if(user != null && user.IsInRole("Operator")){
             <li class="nav-item">
-                <a class="nav-link" href="/planning">Planning</a>
+                <a class="nav-link" href="/tasks">Taken</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/plant-identification">Identificeren</a>

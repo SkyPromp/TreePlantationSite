@@ -1,7 +1,5 @@
-@attribute [Authorize(Roles = "Admin, Manager, Operator")]
+@attribute [Authorize(Roles = "Admin")]
 @page "/admin/dashboard"
-@page "/manager/dashboard"
-@page "/operator/dashboard"
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -77,16 +75,6 @@
                     Description = "Bekijk bomen en hun details zoals onderhoudsplannen, foto's en beschrijving",
                     Url = "/manager/tree"
                 },
-            };
-        } else if (user.IsInRole("Operator")) {
-            DashboardCards = new List<DashboardCard>
-            {
-                new DashboardCard
-                {
-                    Title = "Takenoverzicht bekijken",
-                    Description = "Bekijk je persoonlijke takenoverzicht voor de dag.",
-                    Url = "/planning"
-                }
             };
         }
     }
