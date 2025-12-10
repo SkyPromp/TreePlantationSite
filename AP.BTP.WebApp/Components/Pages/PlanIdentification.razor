@@ -11,8 +11,8 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject IConfiguration Configuration
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
+@* TODO fix margin bottom with when overflowing *@
+<div class="row d-flex justify-content-center align-items-center h-100 overflow-scroll">
         @if (!string.IsNullOrEmpty(errorMessage))
         {
             <div class="alert alert-danger alert-dismissible">
@@ -27,7 +27,7 @@
                 {
                     <div class="text-center p-5 border border-2 border-dashed rounded">
                         <Icon Name="IconName.CloudUpload" Class="fs-1 text-muted mb-3" />
-                        <p class="text-muted mb-3">Upload een foto van de plant</p>
+                        <p class="text-muted mb-3">Upload een foto van de boom</p>
                         <InputFile OnChange="HandlePictureUpload" accept="image/*" class="d-none" id="fileInput" />
                         <label for="fileInput" class="btn btn-dark">
                             <Icon Name="IconName.Camera" Class="me-2" />
@@ -38,7 +38,7 @@
                 else
                 {
                     <div class="position-relative">
-                        <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3" style="max-height: 50vh; width: 100%; object-fit: cover;" />
+                        <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3" style="max-height: 40vh; width: 100%; object-fit: cover;" />
                         <Button Class="position-absolute end-0 m-2" Color="ButtonColor.Danger" @onclick="ClearImage">
                             <Icon Name="IconName.X" />
                         </Button>
@@ -58,7 +58,7 @@
                         <h5 class="mb-3">Resultaten:</h5>
                         @foreach (PlantResultDTO result in plantResults.Take(5))
                         {
-                            <Card class="mb-2">
+                            <Card Class="mb-2">
                                 <CardBody>
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
@@ -90,7 +90,6 @@
                 }
             </CardBody>
         </Card>
-    </div>
 </div>
 
 @code {
