@@ -10,12 +10,25 @@
 
 @if (user == null)
 {
-    <p>Laden...</p>
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border align-self-center text-success">
+            <span class="visually-hidden">Laden...</span>
+        </div>
+    </div>
 }
 else
 {
+    <div class="d-flex justify-content-between mb-3">
+        <a href="/manager/planning" style="text-decoration: none;">
+            <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
+                    Style=" box-shadow: none; border: none; text-decoration: none;">
+                <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
+                Medewerkerselectie
+            </Button>
+        </a>
+    </div>
     <div class="d-flex">
-        <div class="p-4 mb-4 bg-white border d-flex flex-column " style="height: 80vh; border-radius: 15px 0 0 15px; width: 15vw; min-width: 15vw; max-width: 15vw;">
+        <div class="p-4 mb-4 bg-white border d-flex flex-column " style="height: 75vh; border-radius: 15px 0 0 15px; width: 15vw; min-width: 15vw; max-width: 15vw;">
             <div class="mb-3 text-center">
                 <h2 class="fw-bold border-bottom">@user.FirstName</h2>
             </div>
@@ -23,9 +36,9 @@ else
             <div class="mb-4">
                 <label class="form-label fw-semibold">Kies de week</label>
                 <div class="d-flex justify-content-between align-items-center">
-                    <Button class="p-0" @onclick="PreviousWeek">←</Button>
+                    <Button Class="p-0" Style=" box-shadow: none; border: none; text-decoration: none;" @onclick="PreviousWeek"><Icon Name="IconName.ArrowLeft"></Icon></Button>
                     <span class="fw-medium border p-1 m-0" style="font-size: 0.9rem">@WeekRangeText</span>
-                    <Button class="p-0" @onclick="NextWeek">→</Button>
+                    <Button Class="p-0" Style=" box-shadow: none; border: none; text-decoration: none;" @onclick="NextWeek"><Icon Name="IconName.ArrowRight"></Icon></Button>
                 </div>
             </div>
 
@@ -54,17 +67,13 @@ else
                     </small>
                 }
             </div>
-            <div>
-                <div class="mb-3">
-                    <button @onclick="this.LoadTaskListsForWeek" class="btn btn-danger"><small>Wijzigingen ongedaan maken</small></button>
-                </div>
-                <div class="mt-auto text-center mb-0">
-                    <Button class="btn btn-success" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
-                </div>
+            <div class="d-flex flex-column align-items-center gap-2">
+                    <Button Class="w-100" Color="ButtonColor.Danger" @onclick="() => { ShowDeleteConfirm = true; }"><small>Wijzigingen ongedaan maken</small></Button>
+                    <Button Class="w-100" Color="ButtonColor.Success" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
             </div>
         </div>
 
-        <div class="d-flex bg-light p-4 w-100 border position-relative" style="height: 80vh; border-radius: 0 15px 15px 0">
+        <div class="d-flex bg-light p-4 w-100 border position-relative" style="height: 75vh; border-radius: 0 15px 15px 0">
             @if (!selectedPlantationSiteId.HasValue)
             {
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
@@ -203,13 +212,15 @@ else
                             }
                         }
 
-                        <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
-                            <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
-                                 style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
-                                <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
-                                <div class="fw-normal" style="color: #5FC66D">Taak toevoegen</div>
-                            </div>
-                        </Button>
+                        @if(taskList != null && taskList.Date >= DateTime.Today){
+                            <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
+                                <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
+                                    style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
+                                    <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
+                                    <div class="fw-normal" style="color: #5FC66D">Taak toevoegen</div>
+                                </div>
+                            </Button>
+                        }
                     </div>
                 </div>
             }
@@ -289,24 +300,16 @@ else
 
 <ConfirmationPopup showConfirmationPopup="this.ShowDeleteConfirm"
                    onCancellation="this.CancelRemoveTask"
-                   onConfirmation="() => this.DeleteTaskItem(this.selectedTaskItemId)" />
+                   onConfirmation="this.LoadTaskListsForWeek"
+                   confirmationTitle="Wijzigingen ongedaan maken"
+                   confirmationDescription="Bent u zeker dat u de aangebrachte aanpassingen ongedaan wil maken?"
+                    />
 
-@if (this.ShowSubmitChanges)
-{
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Bent u zeker dat u de aangebrachte <br /> aanpassingen wil opslaan?</h5>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="this.CancelSubmitChanges" class="btn btn-dark">Annuleer</button>
-                </div>
-                <div class="col">
-                    <button @onclick="this.SubmitAllLocalChanges" class="btn btn-success">Bevestigen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<ConfirmationPopup showConfirmationPopup="this.ShowSubmitChanges"
+                   onCancellation="this.CancelSubmitChanges"
+                   onConfirmation="this.SubmitAllLocalChanges"
+                   confirmationTitle="Wijzigingen opslaan"
+                   confirmationDescription="Bent u zeker dat u de aangebrachte aanpassingen wil opslaan?" />
 
 @if (this.errorMessage != "")
 {
@@ -890,7 +893,7 @@ else
     /// <summary>
     /// Cancels the submit changes operation and hides the confirmation dialog.
     /// </summary>
-    private void CancelSubmitChanges()
+    private async Task CancelSubmitChanges()
     {
         this.ShowSubmitChanges = false;
     }

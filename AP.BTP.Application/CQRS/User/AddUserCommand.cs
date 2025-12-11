@@ -74,7 +74,7 @@ namespace AP.BTP.Application.CQRS.User
 
         public async Task<UserDTO> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            Auth0UserDTO? auth0User = await auth0.CreateUserAsync(request.User.FirstName, request.User.Email, request.User.Password);
+            Auth0UserDTO? auth0User = await auth0.CreateUserAsync(request.User.FirstName+request.User.LastName, request.User.Email, request.User.Password);
 
             Domain.User userEntity = mapper.Map<Domain.User>(request.User);
             userEntity.Auth0Id = auth0User.user_id;

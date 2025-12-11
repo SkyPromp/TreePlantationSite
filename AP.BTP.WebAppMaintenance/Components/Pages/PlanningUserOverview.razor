@@ -34,7 +34,7 @@
     </div>
     @if (response?.Items != null)
     {
-        <div class="p-0" style="overflow-x:hidden; height: 60vh;">
+        <div class="p-0" style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
             {
                 @foreach (UserDTO item in row)
@@ -117,7 +117,7 @@
     /// <summary>
     /// Maximum number of rows to display per page.
     /// </summary>
-    private int maxRows = 7;
+    private int maxRows = 6;
 
     /// <summary>
     /// Number of users to display per page (calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>).

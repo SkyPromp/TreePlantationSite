@@ -1,7 +1,7 @@
 ﻿@if (this.showConfirmationPopup)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index:10;">
-        <Card Class="position-absolute align-self-center p-4">
+        <Card Class="position-absolute align-self-center p-4" Style="max-width: 25vw">
             <CardTitle Class="text-center fw-bold">@confirmationTitle</CardTitle>
             <CardBody Class="text-center">
                 <p>@confirmationDescription</p>
@@ -14,7 +14,7 @@
                     </div>
                 } else
                 {
-                    <Button Color="ButtonColor.Dark" @onclick="OnCancellation">Annuleer</Button>
+                    <Button Color="ButtonColor.Dark" @onclick="OnCancellation">Annuleren</Button>
                     <Button Color="ButtonColor.Success" @onclick="this.OnConfirmation">Bevestigen</Button>
                 }
             </CardFooter>
