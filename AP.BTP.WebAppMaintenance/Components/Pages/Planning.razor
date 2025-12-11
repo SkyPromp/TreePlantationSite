@@ -84,30 +84,30 @@ else
 
                 <div class="border flex-shrink-0 d-flex flex-column position-relative @(IsPastDay(day) ? "past-day" : "")"
                      style="
-                                    max-width: 14%;
-                                    min-width: 14%;
-                                    font-size: 0.90rem;
-                                    @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                                    @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                                    @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                             ">
+                                            max-width: 14%;
+                                            min-width: 14%;
+                                            font-size: 0.90rem;
+                                            @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                                            @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                                            @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                                     ">
                     @if (IsPastDay(day))
                     {
                         <div class="position-absolute top-0 start-0 w-100 h-100"
                              style="
-                                                background-color: rgba(200, 200, 200, 0.45);
-                                                border-radius: inherit;
-                                                pointer-events: none;
-                                         ">
+                                                            background-color: rgba(200, 200, 200, 0.45);
+                                                            border-radius: inherit;
+                                                            pointer-events: none;
+                                                     ">
                         </div>
                     }
 
                     <div class="text-center fw-bold p-3"
                          style="
-                                        background-color: #E3E3E3;
-                                        @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                                        @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                                 ">
+                                                background-color: #E3E3E3;
+                                                @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                                @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                                         ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -151,7 +151,7 @@ else
                             <select class="form-select form-select-sm"
                                     value="@zoneId"
                                     @onchange="(e) => OnZoneChangedForDay(day, e)"
-                                    disabled="@(!selectedPlantationSiteId.HasValue || DayHasTasks(day))">
+                                    disabled=@( !selectedPlantationSiteId.HasValue || DayHasTasks(day) )>
                                 <option value="" disabled selected hidden>--- Zone ---</option>
                                 @foreach (ZoneDto zone in availableZones)
                                 {
@@ -210,7 +210,7 @@ else
                             }
                         }
 
-                        <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
+                        <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled=@( !selectedPlantationSiteId.HasValue )>
                             <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
                                  style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
                                 <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
@@ -336,7 +336,7 @@ else
     /// <summary>
     /// HttpClient used to call the backend API.
     /// </summary>
-    private HttpClient? client = default!;
+    private HttpClient client = default!;
 
     /// <summary>
     /// The user details retrieved from the API.

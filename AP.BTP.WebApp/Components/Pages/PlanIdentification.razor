@@ -81,7 +81,7 @@
                     @if (!isLoading && string.IsNullOrEmpty(errorMessage))
                     {
                         <div class="d-flex mt-3">
-                            <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled="@(selectedFile == null)">
+                            <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled=@( selectedFile == null )>
                                 <Icon Name="IconName.Search" Class="me-2" />
                                 Identificeer Plant
                             </Button>

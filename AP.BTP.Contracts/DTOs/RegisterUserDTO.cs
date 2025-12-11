@@ -72,7 +72,7 @@ namespace AP.BTP.Contracts.DTOs
         /// <param name="value">The value of the password field being validated.</param>
         /// <param name="validationContext">The context in which the validation is performed.</param>
         /// <returns>A <see cref="ValidationResult"/> indicating success or describing the validation error.</returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             string? password = value as string;
 

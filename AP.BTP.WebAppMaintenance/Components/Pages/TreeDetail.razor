@@ -27,7 +27,7 @@
                         @if (images.Count > 0)
                         {
                             <div class="d-flex align-items-center justify-content-center w-100 gap-3">
-                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled="@(images.Count <= 1)">
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled=@( images.Count <= 1 )>
                                     <Icon Name="IconName.ArrowLeft"></Icon>                                    
                                 </Button>
                                 <div class="position-relative d-flex justify-content-center align-items-center bg-light rounded border" 
@@ -37,7 +37,7 @@
                                         @(currentImageIndex + 1) / @images.Count
                                     </span>
                                 </div>
-                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled="@(images.Count <= 1)">
+                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled=@( images.Count <= 1 )>
                                     <Icon Name="IconName.ArrowRight"></Icon>
                                 </Button>
                             </div>
@@ -127,7 +127,7 @@
                             <label class="form-label">Herfst</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
                                 string fileKey = Tree.MaintenancePlanAutumn;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -159,7 +159,7 @@
                             <label class="form-label">Winter</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
                                 string fileKey = Tree.MaintenancePlanWinter!;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -214,7 +214,7 @@
     /// <summary>
     /// HTTP client used to call the backend API.
     /// </summary>
-    HttpClient? client = default!;
+    HttpClient client = default!;
 
     /// <summary>
     /// Stores image identifiers mapped to their corresponding image paths or URLs.
