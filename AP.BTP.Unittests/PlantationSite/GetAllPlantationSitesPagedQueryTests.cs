@@ -106,7 +106,6 @@ namespace AP.BTP.Unittests.PlantationSite
 
             PagedResponseDto<PlantationSiteDto> result = await handler.Handle(query, CancellationToken.None);
 
-            Assert.IsNotNull(result);
             Assert.AreEqual(query.PageNr, result.PageNumber);
             Assert.AreEqual(query.PageSize, result.PageSize);
             Assert.AreEqual(domainItems.Count, result.TotalItems);
@@ -132,7 +131,6 @@ namespace AP.BTP.Unittests.PlantationSite
 
             PagedResponseDto<PlantationSiteDto> result = await handler.Handle(query, CancellationToken.None);
 
-            Assert.IsNotNull(result);
             Assert.AreEqual(0, result.TotalItems);
             Assert.AreEqual(0, result.Items.Count());
         }
