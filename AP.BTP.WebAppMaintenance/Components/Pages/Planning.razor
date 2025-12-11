@@ -288,7 +288,7 @@ else
 
             <div class="d-flex gap-2">
                 <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
-                <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Bewaren</button>
+                <button @onclick="AddTaskItem" class="btn btn-success flex-fill">Bewaren</button>
             </div>
         </div>
     </div>
@@ -697,7 +697,7 @@ else
     /// Add the current task item locally.
     /// If the task item is new, it is created; otherwise, it is updated.
     /// </summary>
-    private void AddTaskItem(TaskItemDto? existingTaskItem)
+    private void AddTaskItem()
     {
         try
         {
