@@ -96,7 +96,7 @@
                 <div class="container">
                     <div class="row d-flex justify-content-end">
                         <div class="col-auto">
-                            <button @onclick="OpenZoneCreation" class="btn btn-secondary">+ Toevoegen</button>
+                            <Button Class="green-btn" @onclick="OpenZoneCreation"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
                         </div>
                     </div>
                 </div>
@@ -117,8 +117,8 @@
                                 <td>@zone.Size</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "Er werd geen soortnaam gevonden.")</td>
                                 <td>
-                                    <i @onclick="() => OpenEditZone(zone)" class="bi bi-pencil-square"></i>
-                                    <i @onclick="() => ConfirmDeleteZone(zone.Id)" class="bi bi-trash"></i>
+                                    <Button Class="green-icon py-0 px-1" @onclick="() => OpenEditZone(zone)"><Icon Name="IconName.Pencil"></Icon></Button>
+                                    <Button Class="red-icon py-0 px-1" @onclick="() => ConfirmDeleteZone(zone.Id)"><Icon Name="IconName.Trash"></Icon></Button>
                                 </td>
                             </tr>
                         }
@@ -147,31 +147,33 @@
 @if (this.showZoneCreation && this.newZone != null)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Zone naam</h5>
-            <input type="text" @bind="this.newZone.Name" />
-
-            <h5>Oppervlakte</h5>
-            <input type="number" @bind="this.newZone.Size" min="0" step="1" max="@((this.plantationSite?.Size ?? 0) - (this.plantationSite?.Zones?.Sum(zone => zone.Size) ?? 0))" />
-
-            <h5>Boomsoort</h5>
-            <p>Welke boomsoort wilt u aan deze zone toewijzen?</p>
-            <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
-            <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
-                @foreach(TreeDTO tree in this.Trees ?? [])
-                {
-                    <option value="@tree.Id">@tree.Species</option>
-                }
-            </select>
-            <div class="row gap-3">
-                <div class="col">
-                    <button @onclick="this.CancelZoneCreation" class="btn btn-warning">Verlaten</button>
-                </div>
-                <div class="col">
-                    <button @onclick="this.CreateZone" class="btn btn-secondary">Bewaren</button>
-                </div>
+        <Card Class="position-absolute align-self-center p-4">
+            <div class="mb-3"> 
+                <label class="label">Naam</label>
+                <TextInput @bind-Value="@newZone.Name"></TextInput>
             </div>
-        </div>
+
+            <div class="mb-3">
+                <label class="label">Oppervlakte</label>
+                <NumberInput @bind-Value="@newZone.Size" Min="0" Max="GetMaxSize()" Step="1"></NumberInput>
+            </div>
+            @* TODO add correct validation handling *@
+
+            <div class="mb-3">
+                <label class="label">Boomsoort</label>
+                <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
+                <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
+                    @foreach(TreeDTO tree in this.Trees ?? [])
+                    {
+                        <option value="@tree.Id">@tree.Species</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <Button Color="ButtonColor.Secondary" @onclick="this.CancelZoneCreation">Verlaten</Button>
+                <Button Class="green-btn" @onclick="this.CreateZone">Bewaren</Button>
+            </div>
+        </Card>
     </div>
 }
 
@@ -755,5 +757,14 @@
         }
 
         StateHasChanged();
+    }
+
+    private int GetMaxSize()
+    {
+        double maxSize = (plantationSite?.Size ?? 0) - (plantationSite?.Zones?.Sum(z => z.Size) ?? 0);
+
+        int rounded = (int)Math.Round(maxSize);
+
+        return Math.Max(rounded, 0);
     }
 }
