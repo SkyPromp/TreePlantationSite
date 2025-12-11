@@ -63,6 +63,7 @@ namespace AP.BTP.Contracts.DTOs
     /// </list>
     /// If the password does not meet these requirements, a validation error message is returned.
     /// </remarks>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class PasswordRequirementsAttribute : ValidationAttribute
     {
         /// <summary>
