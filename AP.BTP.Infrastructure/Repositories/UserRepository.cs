@@ -234,7 +234,7 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             int totalCount = await query.CountAsync();
 
-            var items = await query
+            List<User> items = await query
                 .Skip((pageNr - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

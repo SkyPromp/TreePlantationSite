@@ -71,7 +71,7 @@ namespace AP.BTP.Application.CQRS.Zone
 
             foreach (ZoneDto zone in zones)
             {
-                var plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+                Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
                 if (plantationSite == null)
                     throw new ValidationException("Plantationsite must not be null when adding a zone.");
 
@@ -96,13 +96,13 @@ namespace AP.BTP.Application.CQRS.Zone
             {
                 if (!remainingAreaOfPlantationSite.ContainsKey(zone.PlantationSiteId))
                 {
-                    var plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
+                    Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
                     if (plantationSite == null)
                         throw new ValidationException("Plantationsite must not be null when adding a zone.");
 
                     remainingAreaOfPlantationSite[zone.PlantationSiteId] = plantationSite.Size;
 
-                    foreach (var existingZone in plantationSite.Zones)
+                    foreach (Domain.Zone existingZone in plantationSite.Zones)
                     {
                         remainingAreaOfPlantationSite[zone.PlantationSiteId] -= existingZone.Size ?? 0;
                     }
