@@ -53,13 +53,24 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Specifies password requirements for a data field.
     /// </summary>
-    /// <remarks>This attribute validates that a password meets certain complexity requirements, including:
-    /// <list type="bullet"> <item><description>At least one lowercase letter.</description></item>
-    /// <item><description>At least one uppercase letter.</description></item> <item><description>At least one numeric
-    /// digit.</description></item> <item><description>At least one special character.</description></item> </list> If
-    /// the password does not meet these requirements, a validation error message is returned.</remarks>
+    /// <remarks>
+    /// This attribute validates that a password meets certain complexity requirements, including:
+    /// <list type="bullet">
+    ///   <item><description>At least one lowercase letter.</description></item>
+    ///   <item><description>At least one uppercase letter.</description></item>
+    ///   <item><description>At least one numeric digit.</description></item>
+    ///   <item><description>At least one special character.</description></item>
+    /// </list>
+    /// If the password does not meet these requirements, a validation error message is returned.
+    /// </remarks>
     public class PasswordRequirementsAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Validates the specified password value according to the defined complexity rules.
+        /// </summary>
+        /// <param name="value">The value of the password field being validated.</param>
+        /// <param name="validationContext">The context in which the validation is performed.</param>
+        /// <returns>A <see cref="ValidationResult"/> indicating success or describing the validation error.</returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             string? password = value as string;
@@ -67,19 +78,49 @@ namespace AP.BTP.Contracts.DTOs
             if (string.IsNullOrWhiteSpace(password))
                 return new ValidationResult("Wachtwoord is verplicht.");
 
-            if (!Regex.IsMatch(password, @"[a-z]"))
+            if (!Regexes.Lowercase().IsMatch(password))
                 return new ValidationResult("Wachtwoord moet minimaal 1 kleine letter bevatten.");
 
-            if (!Regex.IsMatch(password, @"[A-Z]"))
+            if (!Regexes.Uppercase().IsMatch(password))
                 return new ValidationResult("Wachtwoord moet minimaal 1 hoofdletter bevatten.");
 
-            if (!Regex.IsMatch(password, @"\d"))
+            if (!Regexes.Digit().IsMatch(password))
                 return new ValidationResult("Wachtwoord moet minimaal 1 nummer bevatten.");
 
-            if (!Regex.IsMatch(password, @"[\W_]"))
+            if (!Regexes.Special().IsMatch(password))
                 return new ValidationResult("Wachtwoord moet minimaal 1 speciaal teken bevatten.");
 
             return ValidationResult.Success;
         }
+    }
+
+    /// <summary>
+    /// Contains precompiled regular expressions used to validate password components.
+    /// </summary>
+    public static partial class Regexes
+    {
+        /// <summary>
+        /// Matches any lowercase ASCII letter.
+        /// </summary>
+        [GeneratedRegex("[a-z]")]
+        public static partial Regex Lowercase();
+
+        /// <summary>
+        /// Matches any uppercase ASCII letter.
+        /// </summary>
+        [GeneratedRegex("[A-Z]")]
+        public static partial Regex Uppercase();
+
+        /// <summary>
+        /// Matches any numeric digit.
+        /// </summary>
+        [GeneratedRegex(@"\d")]
+        public static partial Regex Digit();
+
+        /// <summary>
+        /// Matches any special character (non-word character or underscore).
+        /// </summary>
+        [GeneratedRegex(@"[\W_]")]
+        public static partial Regex Special();
     }
 }
