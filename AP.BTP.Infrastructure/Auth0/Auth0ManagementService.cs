@@ -20,6 +20,10 @@ namespace AP.BTP.Infrastructure.Auth0
         private DateTime _tokenExpiry;
         private const string HeaderContentType = "content-type";
         private const string JsonContentType = "application/json";
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Auth0ManagementService"/> class with configuration values.
@@ -126,9 +130,7 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
-            List<Auth0RoleDto>? roles = JsonSerializer.Deserialize<List<Auth0RoleDto>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-
-            return roles ?? new List<Auth0RoleDto>();
+            return JsonSerializer.Deserialize<List<Auth0RoleDto>>(response.Content!, _jsonOptions) ?? new List<Auth0RoleDto>();
         }
 
         /// <summary>
@@ -168,8 +170,7 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException(
                     $"Failed to create user: {response.StatusCode} - {response.Content}");
             }
-
-            return JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, _jsonOptions);
         }
     }
 }

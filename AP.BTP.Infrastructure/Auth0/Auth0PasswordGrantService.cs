@@ -12,6 +12,10 @@ namespace AP.BTP.Infrastructure.Auth0
     public class Auth0PasswordGrantService : IAuth0PasswordGrantService
     {
         private readonly IConfiguration _config;
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace AP.BTP.Infrastructure.Auth0
             if (!response.IsSuccessful)
                 return null;
 
-            TokenResponseDto? tokenResponse = JsonSerializer.Deserialize<TokenResponseDto>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            TokenResponseDto? tokenResponse = JsonSerializer.Deserialize<TokenResponseDto>(response.Content!, _jsonOptions);
 
             return tokenResponse;
         }
