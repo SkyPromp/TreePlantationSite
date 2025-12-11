@@ -44,6 +44,18 @@ namespace AP.BTP.WebAPI.Middleware
                         Message = validationException.Message,
                         ErrorCode = "VALIDATION_ERROR"
                     },
+                    Auth0UserCreationException auth0UserCreationException => new ErrorResponseInfoDto
+                    {
+                        StatusCode = auth0UserCreationException.ErrorCode switch
+                        {
+                            "USER_ALREADY_EXISTS" => StatusCodes.Status409Conflict,
+                            "AUTH0_EMPTY_RESPONSE" => StatusCodes.Status502BadGateway,
+                            "AUTH0_USER_CREATION_FAILED" => StatusCodes.Status502BadGateway, // Recommended
+                            _ => StatusCodes.Status500InternalServerError
+                        },
+                        Message = auth0UserCreationException.Message,
+                        ErrorCode = auth0UserCreationException.ErrorCode
+                    },
                     AuthenticationFailedException authenticationFailedException => new ErrorResponseInfoDto
                     {
                         StatusCode = StatusCodes.Status401Unauthorized,

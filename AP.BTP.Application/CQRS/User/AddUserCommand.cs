@@ -74,18 +74,14 @@ namespace AP.BTP.Application.CQRS.User
 
         public async Task<UserDto> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            Auth0UserDto? auth0User = await auth0.CreateUserAsync(request.User.FirstName, request.User.Email, request.User.Password);
+            Auth0UserDto auth0User = await auth0.CreateUserAsync(request.User.FirstName, request.User.Email, request.User.Password);
 
             Domain.User userEntity = mapper.Map<Domain.User>(request.User);
-
-            if (auth0User == null)
-                throw new Exception("Er is een fout opgetreden bij het aanmaken van de gebruiker.");
 
             userEntity.Auth0Id = auth0User.user_id;
 
             await uow.UserRepository.Create(userEntity);
             await uow.Commit();
-
 
             return mapper.Map<UserDto>(userEntity);
         }

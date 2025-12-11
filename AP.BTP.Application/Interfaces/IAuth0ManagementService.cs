@@ -15,7 +15,7 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="email">The email of the user to be created.</param>
         /// <param name="password">The password of the user to be created.</param>
         /// <returns>A task that returns the <see cref="Auth0User"/> if created; otherwise, null.</returns>
-        Task<Auth0UserDto?> CreateUserAsync(string username, string email, string password);
+        Task<Auth0UserDto> CreateUserAsync(string username, string email, string password);
 
         /// <summary>
         /// assigns a role to a user in Auth0.

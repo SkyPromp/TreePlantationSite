@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Exceptions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
@@ -141,7 +142,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="password">The user's password.</param>
         /// <returns>A <see cref="Task{Auth0UserDTO}"/> containing the created user.</returns>
         /// <exception cref="InvalidOperationException">Thrown if user creation fails.</exception>
-        public async Task<Auth0UserDto?> CreateUserAsync(
+        public async Task<Auth0UserDto> CreateUserAsync(
             string username,
             string email,
             string password)
@@ -165,12 +166,16 @@ namespace AP.BTP.Infrastructure.Auth0
 
             RestResponse response = await client.ExecuteAsync(request);
 
-            if (response.StatusCode != HttpStatusCode.Created)
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Auth0UserCreationException("Auth0 could not create the user because it already exists", "USER_ALREADY_EXISTS");
+            if (response.StatusCode == HttpStatusCode.Created)
             {
-                throw new InvalidOperationException(
-                    $"Failed to create user: {response.StatusCode} - {response.Content}");
+                Auth0UserDto? auth0UserDto = JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, _jsonOptions);
+
+                return auth0UserDto ?? throw new Auth0UserCreationException("Auth0 returned an empty response when creating user.", "AUTH0_EMPTY_RESPONSE");
             }
-            return JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, _jsonOptions);
+            else
+                throw new Auth0UserCreationException($"Auth0 user creation failed: {response.StatusCode} - {response.Content}", "AUTH0_USER_CREATION_FAILED");
         }
     }
 }
