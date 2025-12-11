@@ -10,12 +10,22 @@ namespace AP.BTP.Unittests.User
     public class AddUserCommandTests
     {
         private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<IUserRepository> userRepoMock = null!;
         private AddUserCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
         {
             uowMock = new Mock<IUnitOfWork>();
+            userRepoMock = new Mock<IUserRepository>();
+
+            userRepoMock.Setup(x => x.IsEmailUnique(It.IsAny<string>()))
+                        .ReturnsAsync(true);
+            userRepoMock.Setup(x => x.IsFullNameUnique(It.IsAny<string>(), It.IsAny<string>()))
+                        .ReturnsAsync(true);
+
+            uowMock.Setup(u => u.UserRepository).Returns(userRepoMock.Object);
+
             validator = new AddUserCommandValidator(uowMock.Object);
         }
 
@@ -30,7 +40,7 @@ namespace AP.BTP.Unittests.User
                     Email = "john@example.com",
                     PhoneNumber = "+32123456789",
                     Password = "Password1!",
-                    ConfirmPassword = "Password1!"
+                    ConfirmPassword = "Password1!",
                 }
             };
         }
@@ -155,6 +165,45 @@ namespace AP.BTP.Unittests.User
             TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_Email_Not_Unique()
+        {
+            AddUserCommand command = CreateValidCommand();
+
+            userRepoMock.Setup(x => x.IsEmailUnique(command.User.Email))
+                        .ReturnsAsync(false);
+
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(x => x.User.Email)
+                .WithErrorMessage("E-mailadres is al in gebruik.");
+        }
+
+        [TestMethod]
+        public async Task Should_Have_Error_When_FullName_Not_Unique()
+        {
+            AddUserCommand command = CreateValidCommand();
+
+            userRepoMock.Setup(x => x.IsFullNameUnique(command.User.FirstName, command.User.LastName))
+                        .ReturnsAsync(false);
+
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(x => x)
+                .WithErrorMessage("Een gebruiker met deze voornaam en achternaam bestaat al.");
+        }
+
+        [TestMethod]
+        public async Task Should_Not_Have_Error_When_Email_And_FullName_Are_Unique()
+        {
+            AddUserCommand command = CreateValidCommand();
+
+            TestValidationResult<AddUserCommand> result = await validator.TestValidateAsync(command);
+
+            result.ShouldNotHaveValidationErrorFor(x => x.User.Email);
+            result.ShouldNotHaveValidationErrorFor(x => x.User.FirstName);
         }
     }
 }
