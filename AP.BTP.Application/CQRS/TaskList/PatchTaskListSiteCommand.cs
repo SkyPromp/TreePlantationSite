@@ -43,18 +43,17 @@ namespace AP.BTP.Application.CQRS.TaskList
                 })
                 .WithMessage("Task list does not exist or has been deleted");
 
-            When(x => x.PlantationSiteId.HasValue, () =>
-            {
-                RuleFor(x => x.PlantationSiteId.Value)
-                    .GreaterThan(0)
-                    .WithMessage("Plantation site ID must be greater than 0 when specified")
-                    .MustAsync(async (siteId, cancellation) => 
-                    {
-                        Domain.PlantationSite? site = await uow.PlantationSiteRepository.GetById(siteId);
-                        return site != null && !site.IsDeleted;
-                    })
-                    .WithMessage("Plantation site does not exist or has been deleted");
-            });
+            RuleFor(x => x.PlantationSiteId)
+                .GreaterThan(0)
+                .When(x => x.PlantationSiteId.HasValue)
+                .WithMessage("Plantation site ID must be greater than 0 when specified")
+                .MustAsync(async (siteId, cancellation) =>
+                {
+                    if (!siteId.HasValue) return true;
+                    Domain.PlantationSite? site = await uow.PlantationSiteRepository.GetById(siteId.Value);
+                    return site != null && !site.IsDeleted;
+                })
+                .WithMessage("Plantation site does not exist or has been deleted");
         }
     }
 

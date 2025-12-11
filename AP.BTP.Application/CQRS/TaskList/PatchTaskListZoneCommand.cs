@@ -43,18 +43,17 @@ namespace AP.BTP.Application.CQRS.TaskList
                 })
                 .WithMessage("Task list does not exist or has been deleted");
 
-            When(x => x.ZoneId.HasValue, () =>
-            {
-                RuleFor(x => x.ZoneId.Value)
-                    .GreaterThan(0)
-                    .WithMessage("Zone ID must be greater than 0 when specified")
-                    .MustAsync(async (zoneId, cancellation) => 
-                    {
-                        Domain.Zone? zone = await uow.ZoneRepository.GetById(zoneId);
-                        return zone != null && !zone.IsDeleted;
-                    })
-                    .WithMessage("Zone does not exist or has been deleted");
-            });
+            RuleFor(x => x.ZoneId)
+                .GreaterThan(0)
+                .When(x => x.ZoneId.HasValue)
+                .WithMessage("Zone ID must be greater than 0 when specified")
+                .MustAsync(async (zoneId, cancellation) =>
+                {
+                    if (!zoneId.HasValue) return true; // skip if null
+                    Domain.Zone? zone = await uow.ZoneRepository.GetById(zoneId.Value);
+                    return zone != null && !zone.IsDeleted;
+                })
+                .WithMessage("Zone does not exist or has been deleted");
         }
     }
 
