@@ -11,11 +11,11 @@
 @inject IHttpClientFactory HttpClientFactory
 
 
-<div class="d-flex justify-content-between px-4">
+<div class="row d-flex justify-content-between px-4">
     @if(user != null && user.IsInRole("Admin")){
         <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
     }
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
+    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; height: 5vh"/>
 
     <select class="form-select" @onchange="OnSortOrderChanged" style="width: 15vw; height: 5vh">
         <option value="true" selected>A-Z</option>
@@ -33,7 +33,7 @@
                     <div class="col-md-4" style="padding: 2vh">
                         <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 2vh 4vh">
                             <CardBody Class="p-0 m-0" Style="height: 27vh;">
-                                <CardTitle Class="mb-2" Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Species</CardTitle>
+                                <CardTitle Class="mb-2" Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh; height: 5vh;">@item.Species</CardTitle>
                                 
                                 <div class="row h-100">
                                     <div class="col-9 d-flex justify-content-center align-items-center" style="height: 80%;">
@@ -44,7 +44,7 @@
                                         else
                                         {
                                             <div class="d-flex align-items-center justify-content-center w-100 h-100">
-                                                Nog geen afbeelding
+                                                Nog geen afbeeldingen
                                             </div>
                                         }
                                     </div>

@@ -8,6 +8,16 @@
 @using Microsoft.AspNetCore.Authorization
 @using QRCoder
 
+<div class="d-flex justify-content-between mb-3">
+    <a href="/manager/tree" style="text-decoration: none;">
+        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
+                Style=" box-shadow: none; border: none; text-decoration: none;">
+            <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
+            Terug naar overzicht
+        </Button>
+    </a>
+</div>
+
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Overzicht">
         <Content>
@@ -189,9 +199,6 @@
         </Content>
     </Tab>
 </Tabs>
-<div class="buttons d-flex justify-content-end mt-4">
-    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => NavigateBack()">Verlaten</Button> 
-</div>
 
 @code {
     /// <summary>
