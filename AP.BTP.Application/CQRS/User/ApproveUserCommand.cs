@@ -71,7 +71,7 @@ namespace AP.BTP.Application.CQRS.User
 
             await uow.Commit();
 
-            return mapper.Map<UserDto>(user); ;
+            return mapper.Map<UserDto>(user);
         }
     }
 }

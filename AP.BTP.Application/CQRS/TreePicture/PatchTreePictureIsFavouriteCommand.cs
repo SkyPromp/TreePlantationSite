@@ -54,7 +54,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
                     ICollection<Domain.TreePicture> pictures = await uow.TreePictureRepository
                         .GetAllByTreeId(treePicture.TreeId);
 
-                    return !pictures.Any(p => p.IsFavourite && p.Id != command.TreePictureId);;
+                    return !pictures.Any(p => p.IsFavourite && p.Id != command.TreePictureId);
                 })
                 .WithMessage("Only one picture per tree can be set as favourite.");
             }
