@@ -261,11 +261,11 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <summary>
         /// Retrieves a <see cref="User"/> by its Auth0 ID.
         /// </summary>
-        /// <param name="Auth0UserId">The Auth0 ID of the user.</param>
+        /// <param name="auth0UserId">The Auth0 ID of the user.</param>
         /// <returns>The <see cref="User"/> entity if found and not soft-deleted; otherwise, <c>null</c>.</returns>
-        public async Task<User?> GetUserByAuth0Id(string Auth0UserId)
+        public async Task<User?> GetUserByAuth0Id(string auth0UserId)
         {
-            User? user = await this.dbSet.Include(u => u.PlantationSites.Where(p => !p.IsDeleted)).FirstOrDefaultAsync(u => u.Auth0Id == Auth0UserId);
+            User? user = await this.dbSet.Include(u => u.PlantationSites.Where(p => !p.IsDeleted)).FirstOrDefaultAsync(u => u.Auth0Id == auth0UserId);
 
             return (user?.IsDeleted ?? true) ? null : user;
         }
@@ -274,11 +274,11 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <summary>
         /// Retrieves a <see cref="User"/> by its Auth0 ID.
         /// </summary>
-        /// <param name="Auth0Id">The Auth0 ID of the user.</param>
+        /// <param name="auth0UserId">The Auth0 ID of the user.</param>
         /// <returns>The <see cref="User"/> entity if found; otherwise, <c>null</c>.</returns>
-        public async Task<User?> GetUserByAuth0IdIncludingDeleted(string Auth0UserId)
+        public async Task<User?> GetUserByAuth0IdIncludingDeleted(string auth0UserId)
         {
-            return await this.dbSet.FirstOrDefaultAsync(u => u.Auth0Id == Auth0UserId);
+            return await this.dbSet.FirstOrDefaultAsync(u => u.Auth0Id == auth0UserId);
         }
 
         /// <summary>
