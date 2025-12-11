@@ -271,14 +271,6 @@ else
                 }
             </div>
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    @errorMessage
-                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
-                </div>
-            }
-
             <div class="d-flex gap-2">
                 <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
                 <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Bewaren</button>
@@ -310,23 +302,12 @@ else
     </div>
 }
 
-@if (this.errorMessage != "")
-{
-    <p>@this.errorMessage</p>
-}
-
 @code {
     /// <summary>
     /// The ID of the user whose details and tasks are being displayed.
     /// This is passed as a parameter to the component.
     /// </summary>
     [Parameter] public int userId { get; set; }
-
-    /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.
-    /// This is passed as a parameter to the component.
-    /// </summary>
-    private string errorMessage = "";
 
     /// <summary>
     /// HttpClient used to call the backend API.

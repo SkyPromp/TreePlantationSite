@@ -416,9 +416,21 @@
 
         if (this.DeleteZonesAction != null)
         {
-            await this.DeleteZonesAction();
-            this.DeleteZonesAction = null;
-            EnqueueToast(message: "De geselecteerde zones zijn succesvol verwijderd.", ToastType.Success);
+            try
+            {
+                await this.DeleteZonesAction();
+                this.DeleteZonesAction = null;
+                EnqueueToast(message: "De geselecteerde zones zijn succesvol verwijderd.", ToastType.Success);
+            } catch(InvalidOperationException e)
+            {
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+            } catch (HttpRequestException e)
+            {
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+            } catch (TaskCanceledException e)
+            {
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+            }
         }
 
         this.showConfirmSaveForm = false;
