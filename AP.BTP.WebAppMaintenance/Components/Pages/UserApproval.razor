@@ -220,7 +220,7 @@
     /// <summary>
     /// The HTTP client used for API communication. TODO: make optional and handle null cases.
     /// </summary>
-    HttpClient client;  // TODO make optional and check if null
+    HttpClient client = default!;
 
     /// <summary>
     /// Stores any error messages that occur during data fetching or API actions.

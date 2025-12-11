@@ -60,7 +60,7 @@
     /// <summary>
     /// Holds the data entered by the user for login.
     /// </summary>
-    private LoginUserDto loginDetails;
+    private LoginUserDto loginDetails = new LoginUserDto();
 
     /// <summary>
     /// The HTTP client used to communicate with the auth.
@@ -77,7 +77,6 @@
     /// </summary>
     protected override void OnInitialized()
     {
-        loginDetails = new LoginUserDto();
         client = HttpClientFactory.CreateClient("BTPApi");
 
         string? appType = AppInfoOptions.Value.AppType;

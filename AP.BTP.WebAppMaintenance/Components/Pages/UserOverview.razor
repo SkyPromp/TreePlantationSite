@@ -228,7 +228,7 @@
     /// <summary>
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
-    private HttpClient client;  // TODO make nullable and check if null when used
+    private HttpClient client = default!;
 
     /// <summary>
     /// Stores an error message for display if something goes wrong.
