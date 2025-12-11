@@ -136,7 +136,7 @@
     /// </summary>
     protected override void OnInitialized(){
         plantApiKey = Configuration["PLANT_API"] 
-                ?? throw new Exception("PLANT_API is missing");
+                ?? throw new InvalidOperationException("Configuration key 'PLANT_API' is missing.");
     }
 
     /// <summary>
