@@ -160,8 +160,8 @@ namespace AP.BTP.Unittests.Tree
 
                 (IEnumerable<Domain.Tree> Items, int totalCount) = await treeRepo.GetAllPaged(pageNr:1, pageSize:pageSize, search:null, sortAscending:false);
 
-                Assert.AreEqual(totalCount, totalTrees);
-                Assert.AreEqual(Items.Count(), pageSize);
+                Assert.AreEqual(totalTrees, totalCount);
+                Assert.AreEqual(pageSize, Items.Count());
             }
         }
 
@@ -191,8 +191,8 @@ namespace AP.BTP.Unittests.Tree
 
                 (IEnumerable<Domain.Tree> Items, int totalCount) = await treeRepo.GetAllPaged(pageNr:pageNr, pageSize:pageSize, search:null, sortAscending:false);
 
-                Assert.AreEqual(totalCount, totalTrees);
-                Assert.AreEqual(Items.Count(), 4);
+                Assert.AreEqual(totalTrees, totalCount);
+                Assert.AreEqual(4, Items.Count());
             }
         }
 
