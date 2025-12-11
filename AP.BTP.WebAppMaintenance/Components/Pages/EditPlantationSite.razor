@@ -178,37 +178,37 @@
 }
 
 @code {
-    /// <summary>
-    /// The ID of the plantation site to load. This is a component parameter.
-    /// </summary>
-    [Parameter] public int id { get; set; }
+        /// <summary>
+        /// The ID of the plantation site to load. This is a component parameter.
+        /// </summary>
+        [Parameter] public int id { get; set; }
 
-    /// <summary>
-    /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
-    /// </summary>
-    readonly string[] allowedGroundplanFileTypes = {
+        /// <summary>
+        /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
+        /// </summary>
+        readonly string[] allowedGroundplanFileTypes = {
         "image/jpeg",
         "image/png",
         "image/webp",
         "image/bmp"
     };
 
-    /// <summary>
-    /// The ID of the plantation site to load. This is a component parameter.
-    /// </summary>
-    PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
-    {
-        Id = 0,
-        Name = "",
-        Street = "",
-        HouseNumber = "",
-        City = "",
-        Country = "",
-        PostalCode = 0,
-        Size = 0.0,
-        GroundPlan = "",
-        Zones = new List<ZoneDTO>()
-    };
+        /// <summary>
+        /// The ID of the plantation site to load. This is a component parameter.
+        /// </summary>
+        PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+        {
+            Id = 0,
+            Name = "",
+            Street = "",
+            HouseNumber = "",
+            City = "",
+            Country = "",
+            PostalCode = 0,
+            Size = 0.0,
+            GroundPlan = "",
+            Zones = new List<ZoneDTO>()
+        };
 
     /// <summary>
     /// Current search text entered by the user for filtering trees.
@@ -590,13 +590,21 @@
             string base64Image = Convert.ToBase64String(imageBytes);
             this.groundPlanPreview = $"data:{contentType};base64,{base64Image}";
             EnqueueToast(message: "De afbeelding is correct opgeslagen.", ToastType.Success);
-        }
-        catch(HttpRequestException e)
+        } catch (InvalidOperationException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, het was geannuleerd: {e}", ToastType.Warning);
+
+        } catch (UriFormatException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, de Uri was ongeldig: {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
         {
             EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
             this.groundPlanPreview = string.Empty;
-        }
-        catch(ArgumentNullException e)
+        } catch (ArgumentNullException e)
         {
             EnqueueToast(message: $"Kon de afbeelding niet omzetten naar base64: {e}", ToastType.Warning);
             this.groundPlanPreview = string.Empty;
