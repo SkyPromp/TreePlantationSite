@@ -84,30 +84,30 @@ else
 
                 <div class="border flex-shrink-0 d-flex flex-column position-relative @(IsPastDay(day) ? "past-day" : "")"
                      style="
-                            max-width: 14%;
-                            min-width: 14%;
-                            font-size: 0.90rem;
-                            @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
-                            @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
-                            @(isLast ? "border-radius: 0 15px 15px 0;" : "")
-                     ">
+                                    max-width: 14%;
+                                    min-width: 14%;
+                                    font-size: 0.90rem;
+                                    @(!selectedPlantationSiteId.HasValue ? "opacity: 0.5;" : "")
+                                    @(isFirst ? "border-radius: 15px 0 0 15px;" : "")
+                                    @(isLast ? "border-radius: 0 15px 15px 0;" : "")
+                             ">
                     @if (IsPastDay(day))
                     {
                         <div class="position-absolute top-0 start-0 w-100 h-100"
                              style="
-                                    background-color: rgba(200, 200, 200, 0.45);
-                                    border-radius: inherit;
-                                    pointer-events: none;
-                             ">
+                                                background-color: rgba(200, 200, 200, 0.45);
+                                                border-radius: inherit;
+                                                pointer-events: none;
+                                         ">
                         </div>
                     }
 
                     <div class="text-center fw-bold p-3"
                          style="
-                                background-color: #E3E3E3;
-                                @(isFirst ? "border-radius: 15px 0 0 0;" : "")
-                                @(isLast ? "border-radius: 0 15px 0 0;" : "")
-                         ">
+                                        background-color: #E3E3E3;
+                                        @(isFirst ? "border-radius: 15px 0 0 0;" : "")
+                                        @(isLast ? "border-radius: 0 15px 0 0;" : "")
+                                 ">
                         @day.ToString("ddd dd", new CultureInfo("nl-NL")).ToUpper()
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
@@ -751,12 +751,11 @@ else
 
             if (IsNewTask)
             {
-                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDto? taskList))
+                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDto? taskList)
+                    && taskList.TaskItems != null
+                    && taskToBeAdded != null)
                 {
-                    if (taskList.TaskItems != null && taskToBeAdded != null)
-                    {
-                        taskList.TaskItems.Add(taskToBeAdded);
-                    }
+                    taskList.TaskItems.Add(taskToBeAdded);
                 }
             }
             else if (selectedTaskItem != null)
