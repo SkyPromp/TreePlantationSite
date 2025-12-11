@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 
-namespace AP.BTP.WebAppMaintenance
+namespace AP.BTP.WebApp
 {
     /// <summary>
     /// Entry point and startup configuration for the Blazor Server application.
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Main entry point of the application. Configures and runs the web application host.

@@ -14,7 +14,7 @@ namespace AP.BTP.WebAPI
     /// The main entry point of the application.
     /// Configures services, middleware, authentication, authorization, database migrations, and runs the web application.
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Main method invoked at application startup.
