@@ -53,6 +53,18 @@ namespace AP.BTP.Application.CQRS.User
             RuleFor(x => x.User.ConfirmPassword)
                 .Equal(x => x.User.Password)
                 .WithMessage("Wachtwoorden komen niet overeen.");
+
+            RuleFor(x => x.User.Email)
+                .MustAsync(async (email, cancellation) =>
+                    await uow.UserRepository.IsEmailUnique(email))
+                .WithMessage("E-mailadres is al in gebruik.");
+
+            RuleFor(x => x)
+                .MustAsync(async (command, cancellation) =>
+                    await uow.UserRepository.IsFullNameUnique(
+                        command.User.FirstName,
+                        command.User.LastName))
+                .WithMessage("Een gebruiker met deze voornaam en achternaam bestaat al.");
         }
     }
 

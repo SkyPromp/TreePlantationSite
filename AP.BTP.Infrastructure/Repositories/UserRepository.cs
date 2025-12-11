@@ -290,5 +290,24 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             return this.dbSet.Update(modifiedItem).Entity;
         }
+
+        /// <summary>
+        /// Checks whether an email is unique.
+        /// </summary>
+        public async Task<bool> IsEmailUnique(string email)
+        {
+            return !await this.dbSet.AnyAsync(u =>
+                u.Email.ToLower() == email.ToLower());
+        }
+
+        /// <summary>
+        /// Checks whether the first/last name combination is unique.
+        /// </summary>
+        public async Task<bool> IsFullNameUnique(string firstName, string lastName)
+        {
+            return !await this.dbSet.AnyAsync(u =>
+                u.FirstName.ToLower() == firstName.ToLower() &&
+                u.LastName.ToLower() == lastName.ToLower());
+        }
     }
 }
