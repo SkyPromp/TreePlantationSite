@@ -10,10 +10,10 @@
 
 <h3 class="text-center">Gebruikerskeuze voor planningsbeheer</h3>
 
-<div class="row d-flex justify-content-start mb-3">
+<div class="row d-flex justify-content-end mb-3">
     <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
 </div>
-<div class="p-3 row" Style="background-color: #D9D9D9; border-radius: 15px;">
+<div class="p-3 row" style="background-color: #D9D9D9; border-radius: 15px;">
     <div class="col-2">
         <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
             Naam @SortIndicator("FirstName")
@@ -32,7 +32,7 @@
     <div class="col-4 fw-bold" style="padding: 0.375rem">
         Plantagelocaties
     </div>
-    @if (response?.Items != null)
+    @if (response?.Items != null && response?.Items.Count() > 0)
     {
         <div class="p-0" style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)

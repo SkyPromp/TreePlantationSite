@@ -11,76 +11,71 @@
 
 <h3 class="text-center">Gebruikersoverzicht</h3>
 
-<div class="d-flex justify-content-between px-3">
-    <a href="/admin/users/approve" style="text-decoration: none;">
-        <Button Class="btn btn-dark d-flex align-items-center justify-content-center px-4 py-2 mb-3"
-                Style=" box-shadow: none; border: none; text-decoration: none;">
-            Verzoeken (@this.requestsCount)
-        </Button>
-    </a>
-    <div class="d-flex flex-column align-items-end">
-        <TextInput @bind-Value="@searchText"
-                   @oninput="OnSearchChanged"
-                   TextAlignment="Alignment.Start"
-                   Placeholder="Zoek gebruikers"
-                   Style="width: 15vw; border-width: 2px;" />
+<div class="row mb-3">
+    <div class="p-0 d-flex justify-content-between">
+        <a href="/admin/users/approve" style="text-decoration: none;">
+            <Button Class="green-btn shadow">Verzoeken (@this.requestsCount)</Button>
+        </a>        
+        <TextInput Class="shadow" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
     </div>
 </div>
-<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
+
+<div class="p-3 mb-3 row border shadow" Style="background-color: white; border-radius: 15px; ">
+    <div class="col-2">
+        <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
+            Naam @SortIndicator("FirstName")
+        </Button>
+    </div>
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
+            E-mail @SortIndicator("Email")
+        </Button>
+    </div>
+    <div class="col-2">
+        <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("PhoneNumber")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
+            Gsm-number @SortIndicator("PhoneNumber")
+        </Button>
+    </div>
+    <div class="col-3 fw-bold" style="padding: 0.375rem">
+        Plantagelocaties
+    </div>
+    <div class="col-1 fw-bold" style="padding: 0.375rem">
+        <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("Role")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
+            Rol @SortIndicator("Role")
+        </Button>
+    </div>
     @if (response?.Items != null)
     {
-        <div class="d-grid p-1 fw-bold"
-             style="grid-template-columns: 1fr 2fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div @onclick='() => OnSortChanged("FirstName")' style="cursor:pointer;">
-                Naam @SortIndicator("FirstName")
-            </div>
-            <div @onclick='() => OnSortChanged("Email")' style="cursor:pointer;">
-                E-mail @SortIndicator("Email")
-            </div>
-            <div @onclick='() => OnSortChanged("PhoneNumber")' style="cursor:pointer;">
-                Gsm-number @SortIndicator("PhoneNumber")
-            </div>
-            <div>Kweeksites</div>
-            <div @onclick='() => OnSortChanged("Role")' style="cursor:pointer;">
-                Rol @SortIndicator("Role")
-            </div>
-            <div class="text-center">Beheren</div>
-        </div>
-        <div style="overflow-x:hidden; max-height: 55vh;">
+        <div style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
             {
                 <div class="row">
                     @foreach (UserDTO item in row)
                     {
                         <div class="p-2">
-                            <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
-                                <CardBody Class="p-0 d-grid align-items-center"
-                                          Style="grid-template-columns: 1fr 2fr 2fr 2fr 2fr auto; column-gap: 1rem;">
-                                    <CardText class="m-0">@item.FirstName @item.LastName</CardText>
-                                    <CardText class="m-0">
+                            <Card Class="py-2 px-3 mb-0 border shadow" Style="border-radius: 10px;">
+                                <CardBody Class="p-0 row align-items-center">
+                                    <CardText class="m-0 col-2">@item.FirstName @item.LastName</CardText>
+                                    <CardText class="m-0 col-3">
                                         <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
                                             @item.Email
                                         </a>
                                     </CardText>
-                                    <CardText class="m-0">@item.PhoneNumber</CardText>
-                                    @if (item.PlantationSites != null)
+                                    <CardText class="m-0 col-2">@item.PhoneNumber</CardText>
+                                    @if (item.PlantationSites != null && item.PlantationSites.Count > 0)
                                     {
-                                        <CardText class="m-0">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
+                                        <CardText class="m-0 col-3">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
                                     }
                                     else
                                     {
-                                        <CardText class="m-0">n.v.t.</CardText>
+                                        <CardText class="m-0 col-3"><Icon Name="IconName.Dash"></Icon></CardText>
                                     }
-                                    <CardText class="m-0">@item.Role.ToString()</CardText>
-                                    <div class="p-1">
-                                        <Button title="Bewerk gebruiker"
-                                                Class="btn btn-dark btn-sm px-3"
-                                                @onclick="() => OnEditUser(item)">
-                                            <Icon Name="IconName.PencilFill" />
+                                    <CardText class="m-0 col-1">@item.Role.ToString()</CardText>
+                                    <div class="col-1 d-flex justify-content-between">
+                                        <Button Class="green-icon" @onclick="() => OnEditUser(item)">
+                                            <Icon Name="IconName.Pencil" />
                                         </Button>
-                                        <Button title="Verwijder gebruiker"
-                                                Class="btn btn-danger btn-sm"
-                                                @onclick="() => { this.showDeleteConfirmation = true; selectedUser = item; }">
+                                        <Button Class="red-icon" @onclick="() => { this.showDeleteConfirmation = true; selectedUser = item; }">
                                             <Icon Name="IconName.Trash" />
                                         </Button>
                                     </div>
@@ -100,7 +95,6 @@
 </div>
 
 <Pagination Class="justify-content-center"
-            Style="margin-top: 10px"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"
@@ -208,7 +202,7 @@
     /// <summary>
     /// The maximum number of rows shown per page.
     /// </summary>
-    private int maxRows = 7;
+    private int maxRows = 5;
 
     /// <summary>
     /// Calculates the total number of users per page based on layout configuration.

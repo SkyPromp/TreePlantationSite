@@ -9,45 +9,49 @@
 @inject IHttpClientFactory HttpClientFactory
 <PageTitle>Registratieaanvragen</PageTitle>
 
-<h3 class="text-center">Registratieaanvragen goedkeuren</h3>
+<h3 class="text-center">Registratieaanvragen</h3>
 
-<div class="d-flex justify-content-between px-3">
-    <a href="/admin/users" style="text-decoration: none;">
-        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
-                Style=" box-shadow: none; border: none; text-decoration: none;">
-            <Icon class="me-3" Name="IconName.ArrowLeft" Style="font-size: 2.5rem;"></Icon>
-            Goedgekeurde gebruikers
-        </Button>
-    </a>
-    <div class="d-flex flex-column align-items-end">
-        <TextInput @bind-Value="@searchText"
-                   @oninput="OnSearchChanged"
-                   TextAlignment="Alignment.Start"
-                   Placeholder="Zoek gebruikers"
-                   Style="width: 15vw; border-width: 2px;" />
+<div class="row">
+    <div class="d-flex justify-content-between mb-3 p-0">
+        <a href="/admin/users" style="text-decoration: none;">
+            <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" Style=" box-shadow: none; border: none; text-decoration: none;">
+                <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
+                Goedgekeurde gebruikers
+            </Button>
+        </a>
+        <div class="d-flex flex-column align-items-end">
+            <TextInput @bind-Value="@searchText"
+                    @oninput="OnSearchChanged"
+                    TextAlignment="Alignment.Start"
+                    Placeholder="Zoeken..."
+                    Style="width: 15vw; border-width: 2px;" />
+        </div>
     </div>
 </div>
-<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
-    @if (response?.Items == null || !response.Items.Any())
+<div class="p-3 mb-3 row" style="background-color: #D9D9D9; border-radius: 15px;">
+    <div class="col-4">
+        <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
+            Naam @SortIndicator("FirstName")
+        </Button>
+    </div>
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
+            E-mail @SortIndicator("Email")
+        </Button>
+    </div>
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("PhoneNumber")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
+            Gsm-number @SortIndicator("PhoneNumber")
+        </Button>
+    </div>
+
+    <div class="col-2 fw-bold" style="padding: 0.375rem">
+        Goedkeuring
+    </div>
+
+    @if (response?.Items != null && response?.Items.Count() > 0)
     {
-        <p class="text-center mt-4">Er zijn momenteel geen gebruikers die een goedkeuring nodig hebben.</p>
-    }
-    else
-    {
-        <div class="d-grid p-1 fw-bold"
-             style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div @onclick='() => OnSortChanged("FirstName")' style="cursor:pointer;">
-                Naam @SortIndicator("FirstName")
-            </div>
-            <div @onclick='() => OnSortChanged("Email")' style="cursor:pointer;">
-                E-mail @SortIndicator("Email")
-            </div>
-            <div @onclick='() => OnSortChanged("PhoneNumber")' style="cursor:pointer;">
-                Gsm-number @SortIndicator("PhoneNumber")
-            </div>
-            <div class="text-center">Goedkeuring</div>
-        </div>
-        <div style="overflow-x:hidden; max-height: 55vh;">
+        <div style="overflow-x:hidden; max-height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
             {
                 <div class="row">
@@ -84,11 +88,14 @@
                 </div>
             }
         </div>
+    } else {
+        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 60vh;">
+            Er zijn momenteel geen registratieaanvragen in afwachting
+        </div>
     }
 </div>
 
 <Pagination Class="justify-content-center"
-            Style="margin-top: 10px"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"

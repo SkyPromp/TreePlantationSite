@@ -17,7 +17,8 @@
             <img src="logo.png" alt="Logo" class="brand-logo">
         </a>
     }
-    <div class=" navbar-collapse" id="navbarNav">
+
+    <div class="navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
         @if(user != null && user.IsInRole("Admin")){
             <li class="nav-item">
@@ -45,15 +46,14 @@
             </li>            
         }
             <li class="nav-item position-relative">
-                <button class="btn p-0 d-flex justify-content-center align-items-center border-0 shadow-none" @onclick="ToggleProfileMenu">
-                    <Icon Name="IconName.PersonCircle" Class="fs-2"/>
+                <button class="btn btn-profile p-0 d-flex justify-content-center align-items-center border-0 shadow-none" @onclick="ToggleProfileMenu">
+                    <Icon Name="IconName.PersonCircle" Class="fs-2" Color="IconColor.White"/>
                 </button>
-
                 @if(showProfileMenu)
                 {
                     <OutsideClickDetector MethodToCallOnClick="@ToggleProfileMenu" LowestInsideComponentZIndex="1000" />
                     <div class="profile-dropdown bg-white shadow-sm rounded text-center">
-                        <p>@FullName</p>
+                        <p class="mb-2 text-dark">@FullName</p>
                         <div class="d-flex justify-content-center">
                             <a href="/logout"><Button Color="ButtonColor.Danger">Uitloggen</Button></a>
                         </div>
@@ -67,13 +67,12 @@
 @code {
     private ClaimsPrincipal? user;
     private bool showProfileMenu = false;
-
+    
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
     }
-
     
     private void ToggleProfileMenu()
     {
