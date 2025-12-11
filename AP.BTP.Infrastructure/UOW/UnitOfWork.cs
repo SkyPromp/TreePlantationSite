@@ -28,6 +28,7 @@ namespace AP.BTP.Infrastructure.UOW
         /// <param name="userRepo">Repository for user entities.</param>
         /// <param name="taskListRepo">Repository for task list entities.</param>
         /// <param name="taskItemRepo">Repository for task item entities.</param>
+        /// <param name="treePictureRepo">Repository for task item entities.</param>
         public UnitOfWork(
             BtpContext ctxt,
             ITreeRepository treeRepo,
