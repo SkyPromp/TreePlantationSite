@@ -220,7 +220,7 @@ namespace AP.BTP.Unittests.Zone
 
                 ICollection<Domain.Zone> result = await zoneRepo.GetAll(pageNr:1, pageSize:pageSize);
 
-                Assert.AreEqual(pageSize, result.Count());
+                Assert.AreEqual(pageSize, result.Count);
             }
         }
 
@@ -262,7 +262,7 @@ namespace AP.BTP.Unittests.Zone
 
                 ICollection<Domain.Zone> result = await zoneRepo.GetAll(pageNr:2, pageSize:pageSize);
 
-                Assert.AreEqual(4, result.Count());
+                Assert.AreEqual(4, result.Count);
             }
         }
     }
