@@ -946,7 +946,7 @@
     {
         if (IsTemporary(key))
         {
-            this.EqueueToast("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.", ToastType.Warning);
+            this.EnqueueToast("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.", ToastType.Warning);
 
             return;
         }
@@ -954,13 +954,13 @@
         await ToggleFavourite(key);
     }
 
-    /// <summary>
-    /// Adds a warning toast message to the toast container.
+    /// Adds a toast message to the toast container.
     /// </summary>
     /// <param name="message">The message to display.</param>
-    private void EqueueToast(string message, ToastType type)
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
     {
-        toastMessages.Add(new ToastMessage
+        this.toastMessages.Add(new ToastMessage
         {
             Type = type,
             Title = ToastType.Warning.ToString(),

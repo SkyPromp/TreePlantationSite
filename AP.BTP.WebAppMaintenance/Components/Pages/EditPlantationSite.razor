@@ -764,12 +764,13 @@
     }
 
     /// <summary>
-    /// Adds a warning toast message to the toast container.
+    /// Adds a toast message to the toast container.
     /// </summary>
     /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
     private void EnqueueToast(string message, ToastType type)
     {
-        toastMessages.Add(new ToastMessage
+        this.toastMessages.Add(new ToastMessage
         {
             Type = type,
             Title = ToastType.Warning.ToString(),
