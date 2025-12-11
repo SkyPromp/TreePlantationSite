@@ -593,9 +593,8 @@ else
     {
         if ((id == null || id == 0) && selectedTaskItem != null)
         {
-            foreach (KeyValuePair<DateTime, TaskListDto> kv in CurrentWeekTaskListsByDayLocal)
+            foreach (TaskListDto taskList in CurrentWeekTaskListsByDayLocal.Values)
             {
-                TaskListDto taskList = kv.Value;
                 if (taskList?.TaskItems == null) continue;
 
                 if (taskList.TaskItems.Remove(selectedTaskItem))
