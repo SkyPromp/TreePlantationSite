@@ -12,11 +12,13 @@
     @if(DashboardCards != null){
         @foreach (DashboardCard card in DashboardCards)
         {
-            <Card Style="border-radius: 24px; border: none; padding: 4vh; width: 30%;">
-                <CardBody Class="p-0 m-0">
-                    <CardTitle Style="font-weight: bold; margin-bottom: 2vh; font-size: 2.25vw;">@card.Title</CardTitle>
-                    <CardText Style="font-size:1vw; margin-bottom: 2vh;">@card.Description</CardText>
-                    <a href=@card.Url><Button Class="green-btn" Style="height: 5vh; width:100%">Ga naar</Button></a>
+            <Card Class="border shadow" Style="border-radius: 24px; padding: 4vh; width: 30%;">
+                <CardBody Class="p-0">
+                    <CardTitle Class="fw-bold">@card.Title</CardTitle>
+                    <div class="d-flex align-items-center" style="height: 17.5vh">
+                        <CardText Class="text-muted">@card.Description</CardText>
+                    </div>
+                    <a href=@card.Url><Button Class="green-btn container-fluid">Ga naar</Button></a>
                 </CardBody>
             </Card>
         }
