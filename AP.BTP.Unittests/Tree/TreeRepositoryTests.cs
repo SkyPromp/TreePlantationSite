@@ -221,11 +221,8 @@ namespace AP.BTP.Unittests.Tree
             {
                 TreeRepository treeRepo = new TreeRepository(context);
 
-                try
-                {
-                    Domain.Tree? result = treeRepo.Update(new Domain.Tree() { Id = treeId + 1, Species = "Oak" });
-                    throw new Exception("No exception was raised.");
-                } catch(KeyNotFoundException ex) { }
+                Assert.ThrowsException<KeyNotFoundException>(() => 
+                treeRepo.Update(new Domain.Tree() { Id = treeId + 1, Species = "Oak" }));
             }
         }
 
