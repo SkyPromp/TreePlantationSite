@@ -10,7 +10,6 @@
 @using System.Net.Http.Headers
 @using QRCoder
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Algemene informatie">
@@ -234,6 +233,8 @@
         </Content>
     </Tab>
 </Tabs>
+
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmation"
@@ -945,7 +946,8 @@
     {
         if (IsTemporary(key))
         {
-            ShowWarning("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.");
+            this.EqueueToast("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.", ToastType.Warning);
+
             return;
         }
 
@@ -956,12 +958,12 @@
     /// Adds a warning toast message to the toast container.
     /// </summary>
     /// <param name="message">The message to display.</param>
-    private void ShowWarning(string message)
+    private void EqueueToast(string message, ToastType type)
     {
         toastMessages.Add(new ToastMessage
         {
-            Type = ToastType.Warning,
-            Title = "Waarschuwing",
+            Type = type,
+            Title = ToastType.Warning.ToString(),
             Message = message,
             AutoHide = true
         });
