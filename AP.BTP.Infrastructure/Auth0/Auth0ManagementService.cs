@@ -18,6 +18,8 @@ namespace AP.BTP.Infrastructure.Auth0
         private readonly string _audience;
         private string? _cachedToken;
         private DateTime _tokenExpiry;
+        private const string HeaderContentType = "content-type";
+        private const string JsonContentType = "application/json";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Auth0ManagementService"/> class with configuration values.
@@ -43,7 +45,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestClient client = new RestClient($"https://{_domain}/oauth/token");
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
 
             request.AddJsonBody(new
             {
@@ -93,7 +95,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
             request.AddJsonBody(new { roles = new[] { roleId } });
             RestResponse response = await client.ExecuteAsync(request);
 
@@ -115,7 +117,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestRequest request = new RestRequest();
             request.Method = Method.Get;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
             RestResponse response = await client.ExecuteAsync(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
@@ -148,7 +150,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
 
 
             request.AddJsonBody(new
