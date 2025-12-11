@@ -23,12 +23,12 @@ namespace AP.BTP.Infrastructure.Auth0
         /// Initializes a new instance of the <see cref="Auth0ManagementService"/> class with configuration values.
         /// </summary>
         /// <param name="config">The configuration containing Auth0 credentials.</param>
-        /// <exception cref="ArgumentNullException">Thrown if any required Auth0 configuration is missing.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if any required Auth0 configuration is missing.</exception>
         public Auth0ManagementService(IConfiguration config)
         {
-            _domain = config["AUTH0:DOMAIN"] ?? throw new ArgumentNullException("AUTH0:DOMAIN");
-            _clientId = config["AUTH0:MANAGEMENT_CLIENT_ID"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_ID");
-            _clientSecret = config["AUTH0:MANAGEMENT_CLIENT_SECRET"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_SECRET");
+            _domain = config["AUTH0:DOMAIN"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:DOMAIN' is missing.");
+            _clientId = config["AUTH0:MANAGEMENT_CLIENT_ID"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:MANAGEMENT_CLIENT_ID' is missing.");
+            _clientSecret = config["AUTH0:MANAGEMENT_CLIENT_SECRET"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:MANAGEMENT_CLIENT_SECRET' is missing.");
             _audience = $"https://{_domain}/api/v2/";
         }
 
