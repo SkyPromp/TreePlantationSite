@@ -297,7 +297,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<bool> IsEmailUnique(string email)
         {
             return !await this.dbSet.AnyAsync(u =>
-                u.Email.ToLower() == email.ToLower());
+                u.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -306,8 +306,8 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<bool> IsFullNameUnique(string firstName, string lastName)
         {
             return !await this.dbSet.AnyAsync(u =>
-                u.FirstName.ToLower() == firstName.ToLower() &&
-                u.LastName.ToLower() == lastName.ToLower());
+                u.FirstName.Equals(firstName, StringComparison.CurrentCultureIgnoreCase) &&
+                u.LastName.Equals(lastName, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
