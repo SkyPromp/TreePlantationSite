@@ -244,21 +244,6 @@
     private bool showConfirmSaveForm;
 
     /// <summary>
-    /// Returns a new, empty zone DTO associated with the current plantation site.
-    /// </summary>
-    private ZoneDto EmptyZone {
-        get
-        {
-            return new ZoneDto()
-            {
-                Id = 0,
-                PlantationSiteId = this.plantationSite?.Id ?? 0,
-                TreeId = 0
-            };
-        }
-    }
-
-    /// <summary>
     /// Temporary index used for newly added zones before they are saved to the backend.
     /// </summary>
     private int tempAddedZoneIndex = -1;

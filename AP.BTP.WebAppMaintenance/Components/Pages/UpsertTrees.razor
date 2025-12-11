@@ -343,12 +343,6 @@
     private readonly Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
 
     /// <summary>
-    /// Existing maintenance files associated with the tree.
-    /// Key is the file ID, value is the filename/path.
-    /// </summary>    
-    private readonly Dictionary<int, string> existingMaintenanceFiles = new();
-
-    /// <summary>
     /// Previews for maintenance files.
     /// Key is the temporary GUID or filename, value is a base64 data URI.
     /// </summary>    
