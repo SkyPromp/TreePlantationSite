@@ -244,8 +244,20 @@
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
-    onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
-    onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    onCancellation="() => { 
+        if (this.CancelDeleteMaintenancePlan != null)
+        {
+            this.CancelDeleteMaintenancePlan(); 
+        }
+        return Task.CompletedTask; 
+    }"
+    onConfirmation="() => { 
+        if (this.ConfirmDeleteMaintenancePlan != null) 
+        {
+            this.ConfirmDeleteMaintenancePlan();
+        }
+        return Task.CompletedTask; 
+    }"
     confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?"
 />
 
