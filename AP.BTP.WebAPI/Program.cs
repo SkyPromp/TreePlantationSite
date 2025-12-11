@@ -25,8 +25,6 @@ namespace AP.BTP.WebAPI
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            string? connectionString = builder.Configuration.GetConnectionString("Default");
-
             // Add services to the container.
             builder.Services.RegisterApplication();
             builder.Services.RegisterInfrastructure(builder.Configuration);
