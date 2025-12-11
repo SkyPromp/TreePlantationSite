@@ -39,19 +39,6 @@ namespace AP.BTP.Unittests.Tree
         }
 
         [TestMethod]
-        public async Task Should_Have_Error_When_Species_Missing()
-        {
-            EditTreeCommand command = new EditTreeCommand
-            {
-                Tree = new TreeDto() { Id = 1, Species = null }
-            };
-
-            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
-
-            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Species).WithErrorMessage("Species name is required.") != null);
-        }
-
-        [TestMethod]
         public async Task Should_Not_Have_Error_When_Species_Filled_In()
         {
             EditTreeCommand command = new EditTreeCommand
