@@ -18,6 +18,10 @@
             <CardBody>
                 <p class="text-muted">Log in of maak een nieuw account aan om door te gaan met het inplannen van taken of beheren van: gebruikers, bomen, kweeksites en zones.</p>
             </CardBody>
+            <CardFooter Class="border-0 bg-white d-flex justify-content-around">
+                <a href="/register"><Button Color="ButtonColor.Secondary" Size="ButtonSize.Large">Registreren</Button></a>
+                <a href="/login"><Button Color="ButtonColor.Success" Size="ButtonSize.Large">Inloggen</Button></a>
+            </CardFooter>
         }
         else if (AppInfoOptions.Value.AppType == "User")
         {
@@ -25,11 +29,10 @@
             <CardBody>
                 <p class="text-muted">Log in of maak een nieuw account aan om je taken te zien, starten, stoppen en meer info omptrent hun locatie te weten te komen.</p>
             </CardBody>
+            <CardFooter Class="border-0 bg-white d-flex flex-column gap-3">
+                <a href="/login"><Button Color="ButtonColor.Success" Size="ButtonSize.Large">Inloggen</Button></a>
+                <a href="/register"><Button Color="ButtonColor.Secondary" Size="ButtonSize.Large">Registreren</Button></a>
+            </CardFooter>
         }
-
-        <CardFooter Class="border-0 bg-white d-flex flex-column gap-3">
-            <a href="/login"><Button Color="ButtonColor.Success" Size="ButtonSize.Large">Inloggen</Button></a>
-            <a href="/register"><Button Color="ButtonColor.Secondary" Size="ButtonSize.Large">Registreren</Button></a>
-        </CardFooter>
     </Card>
 </div>
