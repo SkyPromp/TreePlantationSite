@@ -170,14 +170,6 @@
     /// </summary>
     private async Task LoadUser()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Client is null";
-            StateHasChanged();
-
-            return;
-        }
-
         try
         {
             TaskListDto? response = await this.client.GetFromJsonAsync<TaskListDto>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
@@ -232,14 +224,6 @@
 
     private async Task StartTask()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "De client kon niet gevonden worden!";
-            this.showStartConfirmation = false;
-            StateHasChanged();
-            return;
-        }
-
         if (this.selectedTask == null)
         {
             this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
@@ -300,15 +284,6 @@
 
     private async Task EndTask()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Client is null";
-            this.showEndConfirmation = false;
-            StateHasChanged();
-
-            return;
-        }
-
         if (this.selectedTask == null)
         {
             this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
@@ -360,12 +335,6 @@
 
     private async Task ShowGroundPlan()
     {
-        if (client == null)
-        {
-            errorMessage = "Client is null";
-            return;
-        }
-
         if (todayTasks == null)
         {
             errorMessage = "Geen locatie beschikbaar op deze datum";

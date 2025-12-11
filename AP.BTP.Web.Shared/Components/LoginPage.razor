@@ -95,12 +95,6 @@
     {
         try
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen http client gevonden";
-                return;
-            }
-
             HttpResponseMessage? response = await client.PostAsJsonAsync("user/auth/login", loginDetails);
             if (!response.IsSuccessStatusCode)
             {

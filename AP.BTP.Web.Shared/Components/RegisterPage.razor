@@ -150,12 +150,6 @@
     {
         try
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen httpclient gevonden";
-                return;
-            }
-
             var response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
 
             if (response.IsSuccessStatusCode)

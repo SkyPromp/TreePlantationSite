@@ -263,13 +263,6 @@
     /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Geen httpclient gevonden.";
-
-            return;
-        }
-
         TreeDto? response = await this.client.GetFromJsonAsync<TreeDto>($"Tree/{id}");
 
         if (response != null)
@@ -285,13 +278,6 @@
     /// Loads tree pictures from the API and stores them as base64 encoded images.
     /// </summary>
     private async Task GetTreePictures(){
-        if (this.client == null)
-        {
-            this.errorMessage = "Geen httpclient gevonden.";
-
-            return;
-        }
-
         if(Tree == null){
             this.errorMessage = "Geen boom gevonden";
             return;
@@ -319,7 +305,7 @@
     /// <param name="filename">The filename of the picture to load.</param>
     private async Task LoadTreePicture(string filename)
     {
-        if (client == null || string.IsNullOrWhiteSpace(filename)) return;
+        if (string.IsNullOrWhiteSpace(filename)) return;
 
         try
         {

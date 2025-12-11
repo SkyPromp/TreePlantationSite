@@ -459,13 +459,6 @@
     /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Geen httpclient gevonden.";
-
-            return;
-        }
-
         TreeDto? response = await this.client.GetFromJsonAsync<TreeDto>($"Tree/{id}");
 
         if (response != null)
@@ -499,18 +492,6 @@
         {
             this.errorMessage = e.Message;
         }
-    }
-
-    /// <summary>
-    /// Validates that an HttpClient is available.
-    /// </summary>
-    /// <returns>True if valid; otherwise sets an error and returns false.</returns>
-    private bool ValidateClient()
-    {
-        if (this.client != null) return true;
-
-        this.errorMessage = "Geen httpclient gevonden.";
-        return false;
     }
 
     /// <summary>
@@ -865,13 +846,6 @@
     private async Task DeleteAllQueuedPictures(){
         if (!this.deletedTreePics.Any()) return;
 
-        if(this.client == null)
-        {
-            this.errorMessage = "The client has not been initialized yet.";
-
-            return;
-        }
-
         // Foreach instead of 1 large request because DeleteAsync doesn't take a body and if you want to create your own delete you need to Jsonify, which requires another package.
         foreach (int picId in this.deletedTreePics)
         {
@@ -896,13 +870,6 @@
         if (selectedImage == null)
         {
             showDeleteConfirmation = false;
-            return;
-        }
-
-        if(this.client == null)
-        {
-            this.errorMessage = "The client has not been initialized yet.";
-
             return;
         }
 

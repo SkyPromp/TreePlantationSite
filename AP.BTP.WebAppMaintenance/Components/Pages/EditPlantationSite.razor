@@ -17,64 +17,64 @@
                 <div class="form-content">
                     <div class="row">
                         <div class="col-4">
-                                <div>
-                                    <label class="form-label">Naam</label>
-                                    <TextInput @bind-Value="@plantationSite.Name"></TextInput>
-                                    <ValidationMessage For="@(() => plantationSite.Name)" />
+                            <div>
+                                <label class="form-label">Naam</label>
+                                <TextInput @bind-Value="@plantationSite.Name"></TextInput>
+                                <ValidationMessage For="@(() => plantationSite.Name)" />
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <div style="width: 45%">
+                                    <label class="form-label">Straat</label>
+                                    <TextInput @bind-Value="@plantationSite.Street"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.Street)" />
                                 </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <div style="width: 45%">
-                                        <label class="form-label">Straat</label>
-                                        <TextInput @bind-Value="@plantationSite.Street"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.Street)" />
-                                    </div>
-
-                                    <div style="width: 45%">
-                                        <label class="form-label">Huisnummer</label>
-                                        <TextInput @bind-Value="@plantationSite.HouseNumber"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.HouseNumber)" />
-                                    </div>
+                                <div style="width: 45%">
+                                    <label class="form-label">Huisnummer</label>
+                                    <TextInput @bind-Value="@plantationSite.HouseNumber"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.HouseNumber)" />
                                 </div>
+                            </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <div style="width: 45%">
-                                        <label class="form-label">Stad</label>
-                                        <TextInput @bind-Value="@plantationSite.City"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.City)" />
-                                    </div>
-                                    <div style="width: 45%">
-                                        <label class="form-label">Postcode</label>
-                                        <NumberInput TValue="int" Min="1000" Max="9999" @bind-Value="@plantationSite.PostalCode"></NumberInput>
-                                        <ValidationMessage For="@(() => plantationSite.PostalCode)" />   
-                                    </div>
+                            <div class="d-flex justify-content-between">
+                                <div style="width: 45%">
+                                    <label class="form-label">Stad</label>
+                                    <TextInput @bind-Value="@plantationSite.City"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.City)" />
                                 </div>
-
-                                <div>
-                                    <label class="form-label">Land</label>
-                                    <TextInput @bind-Value="@plantationSite.Country"></TextInput>
-                                    <ValidationMessage For="@(() => plantationSite.Country)" />  
-                                </div> 
-
-                                <div>
-                                    <label class="form-label">Grootte</label>
-                                    <div id="size-input" class="d-flex justify-content-between">
-                                        <NumberInput TValue="double" @bind-Value="@plantationSite.Size" Style="width: 85%"></NumberInput>
-                                        <p style="font-size: 1.5rem; font-weight: 500; color: #5f5f5f">m²</p>
-                                    </div>
-                                    <ValidationMessage For="@(() => plantationSite.Size)" />
+                                <div style="width: 45%">
+                                    <label class="form-label">Postcode</label>
+                                    <NumberInput TValue="int" Min="1000" Max="9999" @bind-Value="@plantationSite.PostalCode"></NumberInput>
+                                    <ValidationMessage For="@(() => plantationSite.PostalCode)" />
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label class="form-label">Plattegrond</label>
-                                    <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
-                                    <ValidationMessage For="@(() => plantationSite.GroundPlan)" />
+                            <div>
+                                <label class="form-label">Land</label>
+                                <TextInput @bind-Value="@plantationSite.Country"></TextInput>
+                                <ValidationMessage For="@(() => plantationSite.Country)" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">Grootte</label>
+                                <div id="size-input" class="d-flex justify-content-between">
+                                    <NumberInput TValue="double" @bind-Value="@plantationSite.Size" Style="width: 85%"></NumberInput>
+                                    <p style="font-size: 1.5rem; font-weight: 500; color: #5f5f5f">m²</p>
                                 </div>
+                                <ValidationMessage For="@(() => plantationSite.Size)" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">Plattegrond</label>
+                                <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
+                                <ValidationMessage For="@(() => plantationSite.GroundPlan)" />
+                            </div>
                         </div>
                         <div class="col-8 d-flex justify-content-center align-items-center">
                             @if (!string.IsNullOrEmpty(groundPlanPreview))
                             {
-                                <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;"/>
+                                <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;" />
                             }
                             else
                             {
@@ -125,24 +125,20 @@
                     </tbody>
                 </table>
             </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Verlaten</Button>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
-                </div>
+            <div class="buttons d-flex justify-content-end mt-4">
+                <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Verlaten</Button>
+                <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+            </div>
         </Content>
     </Tab>
 </Tabs>
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showConfirmSaveForm"
-    onConfirmation="this.HandleValidSubmit"
-/>
+<ConfirmationPopup showConfirmationPopup="this.showConfirmSaveForm"
+                   onConfirmation="this.HandleValidSubmit" />
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showConfirmZoneDeletion && this.SelectedZoneId != 0"
-    onCancellation="this.CancelZoneDeletion"
-    onConfirmation="() => this.DeleteZone(this.SelectedZoneId)"
-/>
+<ConfirmationPopup showConfirmationPopup="this.showConfirmZoneDeletion && this.SelectedZoneId != 0"
+                   onCancellation="this.CancelZoneDeletion"
+                   onConfirmation="() => this.DeleteZone(this.SelectedZoneId)" />
 
 @if (this.showZoneCreation && this.newZone != null)
 {
@@ -156,9 +152,9 @@
 
             <h5>Boomsoort</h5>
             <p>Welke boomsoort wilt u aan deze zone toewijzen?</p>
-            <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
-            <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
-                @foreach(TreeDto tree in this.Trees ?? [])
+            <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh" />
+            <select @bind="this.newZone.TreeId" size="3" class="form-select mb-3">
+                @foreach (TreeDto tree in this.Trees ?? [])
                 {
                     <option value="@tree.Id">@tree.Species</option>
                 }
@@ -291,8 +287,10 @@
         client = HttpClientFactory.CreateClient("BTPApi");
         this.SelectedZoneId = 0;
 
-        if (this.id != 0) {
-            try {
+        if (this.id != 0)
+        {
+            try
+            {
                 HttpResponseMessage response = await this.client.GetAsync($"PlantationSite/{this.id}");
                 if (!response.IsSuccessStatusCode)
                 {
@@ -313,7 +311,9 @@
                 {
                     await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
                 }
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 // TODO implement snackbar
             }
         }
@@ -329,8 +329,6 @@
     {
         if (this.plantationSite == null || this.plantationSite.Id == 0) return;
 
-        //if (this.client == null) return;
-
         try
         {
             ICollection<ZoneDto>? response;
@@ -341,7 +339,8 @@
             {
                 this.plantationSite.Zones = response;
                 StateHasChanged();
-            } else
+            }
+            else
             {
                 this.errorMessage = "Er is iets misgegaan bij het laden van de zones";
             }
@@ -357,19 +356,18 @@
     /// </summary>
     private async Task LoadTrees()
     {
-        if (this.client == null) return;
-
         try
         {
             IEnumerable<TreeDto>? response;
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDto>>("Tree/all" + (this.searchTreeText != null? $"?search={this.searchTreeText}": ""));
+            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDto>>("Tree/all" + (this.searchTreeText != null ? $"?search={this.searchTreeText}" : ""));
 
             if (response != null)
             {
                 this.Trees = response;
                 StateHasChanged();
-            } else
+            }
+            else
             {
                 this.errorMessage = "Er is iets misgegaan bij het laden van de bomen";
             }
@@ -408,9 +406,11 @@
     /// <summary>
     /// Handles form submission for creating or updating a plantation site and its zones.
     /// </summary>
-    private async Task HandleValidSubmit(){
-        try {
-            if (this.client == null || this.plantationSite == null) return;
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            if (this.plantationSite == null) return;
 
             HttpResponseMessage response;
 
@@ -462,13 +462,6 @@
     private async Task HandleGroundPlanUpload(InputFileChangeEventArgs e)
     {
         IBrowserFile file = e.File;
-
-        if (this.client == null)
-        {
-            this.errorMessage = "De http-client is niet geïnstantieerd!";
-
-            return;
-        }
 
         if (!this.allowedGroundplanFileTypes.Contains(file.ContentType))
         {
@@ -535,20 +528,17 @@
         if (this.plantationSite == null || this.plantationSite.Zones == null) return;
 
         // If the plantationSite id is 0 or smaller, this means the the zone hasn't been sent to the backend yet, so it can just be removed from the frontend.
-        if(this.plantationSite.Id <= 0)
+        if (this.plantationSite.Id <= 0)
         {
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
 
             return;
         }
 
-        if (this.client != null)
-        {
-            if(this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
-            else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
+        if (this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
+        else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
 
-            this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
-        }
+        this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
 
         await this.LoadTrees();
         this.SelectedZoneId = 0;
@@ -629,7 +619,7 @@
             return;
         }
 
-        if(this.newZone.Size == null)
+        if (this.newZone.Size == null)
         {
             this.errorMessage = "De zone moet een oppervlakte hebben.";
             StateHasChanged();
@@ -637,7 +627,7 @@
             return;
         }
 
-        if((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone? 0: this.newZone.Size) >= this.plantationSite.Size)
+        if ((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone ? 0 : this.newZone.Size) >= this.plantationSite.Size)
         {
             this.errorMessage = "De som van de oppervlaktes van de zones moet kleiner zijn dan het oppervlakte van de kweeksite.";
             StateHasChanged();
@@ -647,7 +637,7 @@
 
         if (this.IsEditZone)
         {
-            if(this.plantationSite.Zones == null)
+            if (this.plantationSite.Zones == null)
             {
                 this.errorMessage = "De kweeksite had geen zones, dus er konden geen zones worden bijgewerkt.";
                 StateHasChanged();
@@ -658,7 +648,7 @@
             List<ZoneDto> zones = this.plantationSite.Zones.ToList();
             int index = zones.FindIndex(zone => zone.Id == newZone.Id);
 
-            if(index == -1)
+            if (index == -1)
             {
                 this.errorMessage = "Zone kon niet worden bijgewerkt omdat deze niet meer kon worden gevonden in de lijst met zones van de kweeksite.";
                 StateHasChanged();
@@ -668,7 +658,8 @@
 
             zones[index] = newZone;
             this.plantationSite.Zones = zones;
-        } else
+        }
+        else
         {
             if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDto>();
 
@@ -739,7 +730,7 @@
         this.showZoneCreation = true;
         this.IsEditZone = true;
 
-        if(this.newZone == null)
+        if (this.newZone == null)
         {
             this.newZone = new ZoneDto()
             {

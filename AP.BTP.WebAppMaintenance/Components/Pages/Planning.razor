@@ -464,9 +464,6 @@ else
     /// </summary>
     private async Task LoadUser()
     {
-        if (this.client == null)
-            return;
-
         try
         {
             UserDto? response = await this.client.GetFromJsonAsync<UserDto>($"user/{this.userId}");
@@ -493,7 +490,7 @@ else
     private async Task LoadTaskListsForWeek()
     {
         ShowSubmitChanges = false;
-        if (this.client == null || this.user == null)
+        if (this.user == null)
             return;
 
         try
@@ -704,15 +701,6 @@ else
     {
         try
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen httpclient gevonden.";
-                this.ShowAddTaskItem = false;
-                StateHasChanged();
-
-                return;
-            }
-
             if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
             {
                 this.errorMessage = "De titel en beschrijving zijn verplicht.";
@@ -785,7 +773,6 @@ else
     private async Task SubmitAllLocalChanges()
     {
         ShowSubmitChanges = false;
-        if (client == null) return;
 
         List<TaskListDto> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
 
@@ -921,9 +908,6 @@ else
     /// </summary>
     private async Task LoadZonesForPlantationSite(int plantationSiteId)
     {
-        if (client == null)
-            return;
-
         try
         {
             IEnumerable<ZoneDto>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDto>>($"Zone?plantationSiteId={plantationSiteId}");
