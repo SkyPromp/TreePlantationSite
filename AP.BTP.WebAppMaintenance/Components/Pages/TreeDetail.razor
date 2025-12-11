@@ -95,7 +95,7 @@
                             <label class="form-label">Zomer</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
                                 string fileKey = Tree.MaintenancePlanSummer;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
