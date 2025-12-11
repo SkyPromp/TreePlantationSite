@@ -11,8 +11,8 @@
 
 <h3 class="text-center">Registratieaanvragen</h3>
 
-<div class="row">
-    <div class="d-flex justify-content-between mb-3 p-0">
+<div class="row mb-3">
+    <div class="d-flex justify-content-between p-0">
         <a href="/admin/users" style="text-decoration: none;">
             <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" Style=" box-shadow: none; border: none; text-decoration: none;">
                 <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
@@ -20,21 +20,17 @@
             </Button>
         </a>
         <div class="d-flex flex-column align-items-end">
-            <TextInput @bind-Value="@searchText"
-                    @oninput="OnSearchChanged"
-                    TextAlignment="Alignment.Start"
-                    Placeholder="Zoeken..."
-                    Style="width: 15vw; border-width: 2px;" />
+            <TextInput Class="shadow border" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
         </div>
     </div>
 </div>
-<div class="p-3 mb-3 row" style="background-color: #D9D9D9; border-radius: 15px;">
-    <div class="col-4">
+<div class="p-3 mb-3 row shadow border" style="background-color: white; border-radius: 15px;">
+    <div class="col-3">
         <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
             Naam @SortIndicator("FirstName")
         </Button>
     </div>
-    <div class="col-3">
+    <div class="col-4">
         <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
             E-mail @SortIndicator("Email")
         </Button>
@@ -45,37 +41,34 @@
         </Button>
     </div>
 
-    <div class="col-2 fw-bold" style="padding: 0.375rem">
+    <div class="col-2 fw-bold d-flex justify-content-end" style="padding: 0.375rem">
         Goedkeuring
     </div>
 
     @if (response?.Items != null && response?.Items.Count() > 0)
     {
-        <div style="overflow-x:hidden; max-height: 52vh;">
+        <div style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
             {
                 <div class="row">
                     @foreach (UserDTO item in row)
                     {
                         <div class="p-2">
-                            <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
-                                <CardBody Class="p-0 d-grid align-items-center"
-                                          Style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem;">
-                                    <CardText class="m-0">@item.FirstName @item.LastName</CardText>
-                                    <CardText class="m-0">
-                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                            <Card Class="py-2 px-3 mb-0 border shadow" Style="border-radius: 10px;">
+                                <CardBody Class="p-0 row align-items-center">
+                                    <CardText class="m-0 col-3">@item.FirstName @item.LastName</CardText>
+                                    <CardText class="m-0 col-4">
+                                        <a href="mailto:@item.Email">
                                             @item.Email
                                         </a>
                                     </CardText>
-                                    <CardText class="m-0">@item.PhoneNumber</CardText>
-                                    <div class="p-1">
-                                        <Button title="Gebruiker goedkeuren"
-                                                Class="btn btn-success btn-sm"
+                                    <CardText class="m-0 col-3">@item.PhoneNumber</CardText>
+                                    <div class="d-flex justify-content-end gap-2 col-2">
+                                        <Button Class="green-btn" Size="ButtonSize.Small"
                                                 @onclick="() => { this.showEditUser = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.Check2" />
                                         </Button>
-                                        <Button title="Gebruiker afwijzen"
-                                                Class="btn btn-danger btn-sm"
+                                        <Button Class="red-btn" Size="ButtonSize.Small"
                                                 @onclick="() => { this.showDeleteConfirmation = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.X" />
                                         </Button>
@@ -89,7 +82,7 @@
             }
         </div>
     } else {
-        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 60vh;">
+        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 52vh;">
             Er zijn momenteel geen registratieaanvragen in afwachting
         </div>
     }

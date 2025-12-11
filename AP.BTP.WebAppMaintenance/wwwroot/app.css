@@ -69,6 +69,14 @@ a.nav-link:hover {
     border: none !important;
 }
 
+.red-btn {
+    background-color: rgb(238, 73, 73) !important; 
+    color: white !important;
+    box-shadow: none !important;
+    text-decoration: none !important; 
+    border: none !important;
+}
+
 .pagination .page-item.active .page-link {
     background-color: rgb(85, 193, 85);
     border-color: rgb(85, 193, 85);

@@ -16,7 +16,7 @@
         <a href="/admin/users/approve" style="text-decoration: none;">
             <Button Class="green-btn shadow">Verzoeken (@this.requestsCount)</Button>
         </a>        
-        <TextInput Class="shadow" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
+        <TextInput Class="shadow border" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
     </div>
 </div>
 
@@ -44,7 +44,7 @@
             Rol @SortIndicator("Role")
         </Button>
     </div>
-    @if (response?.Items != null)
+    @if (response?.Items != null && response?.Items.Count() > 0)
     {
         <div style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
@@ -57,7 +57,7 @@
                                 <CardBody Class="p-0 row align-items-center">
                                     <CardText class="m-0 col-2">@item.FirstName @item.LastName</CardText>
                                     <CardText class="m-0 col-3">
-                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                                        <a href="mailto:@item.Email">
                                             @item.Email
                                         </a>
                                     </CardText>
@@ -90,7 +90,9 @@
     }
     else
     {
-        <p class="text-center mt-4">Geen resultaten gevonden.</p>
+        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 52vh;">
+            Er zijn geen gebruikers gevonden
+        </div>
     }
 </div>
 
