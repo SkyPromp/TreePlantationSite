@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.Zone
     /// <summary>
     /// Represents a command to update an existing zone in the system.
     /// </summary>
-    public class UpdateZoneCommand: IRequest<ZoneDTO>
+    public class UpdateZoneCommand: IRequest<ZoneDto>
     {
         /// <summary>
         /// The zone data to update.
         /// </summary>
-        public required ZoneDTO Zone { get; set; }
+        public required ZoneDto Zone { get; set; }
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace AP.BTP.Application.CQRS.Zone
 
                     if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone!");
 
-                    return plantationSite.Zones.Count(z => (z.Id != zone.Id) && (z.Name == zone.Name)) == 0;
+                    return !plantationSite.Zones.Any(z => (z.Id != zone.Id) && (z.Name == zone.Name));
                 })
                 .WithMessage("The zone name must be unique within a plantationsite");
 
@@ -75,9 +75,9 @@ namespace AP.BTP.Application.CQRS.Zone
 
     /// <summary>
     /// Handles the <see cref="UpdateZoneCommand"/> by updating the specified zone in the repository
-    /// and returning the updated zone as a <see cref="ZoneDTO"/>.
+    /// and returning the updated zone as a <see cref="ZoneDto"/>.
     /// </summary>
-    public class UpdateZoneCommandHandler: IRequestHandler<UpdateZoneCommand, ZoneDTO>
+    public class UpdateZoneCommandHandler: IRequestHandler<UpdateZoneCommand, ZoneDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -98,8 +98,8 @@ namespace AP.BTP.Application.CQRS.Zone
         /// </summary>
         /// <param name="request">The command containing the zone to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="ZoneDTO"/>.</returns>
-        public async Task<ZoneDTO> Handle(UpdateZoneCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="ZoneDto"/>.</returns>
+        public async Task<ZoneDto> Handle(UpdateZoneCommand request, CancellationToken cancellationToken)
         {
             if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
 

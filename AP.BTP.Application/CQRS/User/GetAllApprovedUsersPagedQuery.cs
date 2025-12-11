@@ -8,7 +8,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a query to retrieve a paged list of all approved users with optional search functionality.
     /// </summary>
-    public class GetAllApprovedUsersPagedQuery: IRequest<PagedResponseDTO<UserDTO>>
+    public class GetAllApprovedUsersPagedQuery: IRequest<PagedResponseDto<UserDto>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -38,9 +38,9 @@ namespace AP.BTP.Application.CQRS.User
 
     /// <summary>
     /// Handles the <see cref="GetAllApprovedUsersPagedQuery"/> by retrieving a paged list of users from the repository,
-    /// mapping them to <see cref="UserDTO"/>.
+    /// mapping them to <see cref="UserDto"/>.
     /// </summary>
-    public class GetAllUsersPagedQueryHandler : IRequestHandler<GetAllApprovedUsersPagedQuery, PagedResponseDTO<UserDTO>>
+    public class GetAllUsersPagedQueryHandler : IRequestHandler<GetAllApprovedUsersPagedQuery, PagedResponseDto<UserDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -58,20 +58,20 @@ namespace AP.BTP.Application.CQRS.User
 
         /// <summary>
         /// Handles the <see cref="GetAllApprovedUsersPagedQuery"/> by fetching the requested page of users,
-        /// mapping them to <see cref="UserDTO"/>, and returning a paged response.
+        /// mapping them to <see cref="UserDto"/>, and returning a paged response.
         /// </summary>
         /// <param name="request">The query containing page number, page size, and search string.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="PagedResponse{UserDTO}"/> containing the paged list of users.</returns>
-        public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllApprovedUsersPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDto<UserDto>> Handle(GetAllApprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllApprovedPaged(request.PageNr, request.PageSize, request.Search, request.SortBy, request.SortDirection);
 
-            IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
+            IEnumerable<UserDto> users = mapper.Map<IEnumerable<UserDto>>(items);
 
-            return new PagedResponseDTO<UserDTO>
+            return new PagedResponseDto<UserDto>
             {
                 Items = users,
                 PageNumber = request.PageNr,

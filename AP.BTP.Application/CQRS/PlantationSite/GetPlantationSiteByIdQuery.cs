@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a query to retrieve a single plantation site by its unique identifier.
     /// </summary>
-    public class GetPlantationSiteByIdQuery: IRequest<PlantationSiteDTO>
+    public class GetPlantationSiteByIdQuery: IRequest<PlantationSiteDto>
     {
         /// <summary>
         /// The unique identifier of the plantation site to retrieve.
@@ -34,7 +34,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="GetPlantationSiteByIdQuery"/> by retrieving the plantation site with the specified Id from the database.
     /// </summary>
-    public class GetPlantationSiteByIdQueryHandler: IRequestHandler<GetPlantationSiteByIdQuery, PlantationSiteDTO>
+    public class GetPlantationSiteByIdQueryHandler: IRequestHandler<GetPlantationSiteByIdQuery, PlantationSiteDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -55,11 +55,11 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// </summary>
         /// <param name="request">The query containing the Id of the plantation site to retrieve.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="PlantationSiteDTO"/> representing the requested plantation site.</returns>
-        public async Task<PlantationSiteDTO> Handle(GetPlantationSiteByIdQuery request, CancellationToken cancellationToken)
+        /// <returns>A <see cref="PlantationSiteDto"/> representing the requested plantation site.</returns>
+        public async Task<PlantationSiteDto> Handle(GetPlantationSiteByIdQuery request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(id:request.Id);
-            PlantationSiteDTO plantationSiteDTO = mapper.Map<PlantationSiteDTO>(plantationSite);
+            PlantationSiteDto plantationSiteDTO = mapper.Map<PlantationSiteDto>(plantationSite);
 
             return plantationSiteDTO;
         }

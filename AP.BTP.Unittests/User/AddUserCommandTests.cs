@@ -9,8 +9,8 @@ namespace AP.BTP.Unittests.User
     [TestClass]
     public class AddUserCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private AddUserCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private AddUserCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -19,11 +19,11 @@ namespace AP.BTP.Unittests.User
             validator = new AddUserCommandValidator(uowMock.Object);
         }
 
-        private AddUserCommand CreateValidCommand()
+        private static AddUserCommand CreateValidCommand()
         {
             return new AddUserCommand
             {
-                User = new RegisterUserDTO
+                User = new RegisterUserDto
                 {
                     FirstName = "John",
                     LastName = "Doe",

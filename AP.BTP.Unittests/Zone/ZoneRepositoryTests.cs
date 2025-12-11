@@ -1,5 +1,4 @@
-﻿using AP.BTP.Application.Interfaces;
-using AP.BTP.Infrastructure.Context;
+﻿using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +7,13 @@ namespace AP.BTP.Unittests.Zone
     [TestClass]
     public class ZoneRepositoryTests
     {
-        private DbContextOptions<BTPContext> _options;
+        private DbContextOptions<BtpContext> _options = null!;
 
 
         [TestInitialize]
         public void Setup()
         {
-            _options = new DbContextOptionsBuilder<BTPContext>()
+            _options = new DbContextOptionsBuilder<BtpContext>()
            .UseInMemoryDatabase("TestDb")
            .Options;
 
@@ -23,11 +22,11 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_Zone_Is_Disabled_Do_Not_Return_It_With_GetAll()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -47,9 +46,9 @@ namespace AP.BTP.Unittests.Zone
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 IEnumerable<Domain.Zone> result = await zoneRepo.GetAll();
 
@@ -60,13 +59,13 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_Zone_Is_Disabled_Do_Not_Return_It_With_GetById()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int zoneId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -87,9 +86,9 @@ namespace AP.BTP.Unittests.Zone
                 zoneId = zone.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 Domain.Zone? result = await zoneRepo.GetById(zoneId);
 
@@ -100,13 +99,13 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_Zone_Is_Not_Disabled_Do_Return_It_With_GetById()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int zoneId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -127,9 +126,9 @@ namespace AP.BTP.Unittests.Zone
                 zoneId = zone.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 Domain.Zone? result = await zoneRepo.GetById(zoneId);
 
@@ -140,13 +139,13 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_Zone_Is_Not_Disabled_And_Has_PlantationSiteId_Do_Return_It_With_GetByPlantationSiteId()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int plantationSiteId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -173,9 +172,9 @@ namespace AP.BTP.Unittests.Zone
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 ICollection<Domain.Zone> result = await zoneRepo.GetAllByPlantationSiteId(plantationSiteId);
 
@@ -186,14 +185,14 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_GetAll_With_Pages_Size_Is_Correct()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             const int totalItems = 10;
             const int pageSize = 6;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -215,9 +214,9 @@ namespace AP.BTP.Unittests.Zone
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 ICollection<Domain.Zone> result = await zoneRepo.GetAll(pageNr:1, pageSize:pageSize);
 
@@ -228,14 +227,14 @@ namespace AP.BTP.Unittests.Zone
         [TestMethod]
         public async Task When_GetAll_With_Pages_Size_Is_Correct_At_Last_Page()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             const int totalItems = 10;
             const int pageSize = 6;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Zone> dbSet = context.Set<Domain.Zone>();
                 DbSet<Domain.PlantationSite> dbSetPlantationSite = context.Set<Domain.PlantationSite>();
@@ -257,9 +256,9 @@ namespace AP.BTP.Unittests.Zone
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                IZoneRepository zoneRepo = new ZoneRepository(context);
+                ZoneRepository zoneRepo = new ZoneRepository(context);
 
                 ICollection<Domain.Zone> result = await zoneRepo.GetAll(pageNr:2, pageSize:pageSize);
 

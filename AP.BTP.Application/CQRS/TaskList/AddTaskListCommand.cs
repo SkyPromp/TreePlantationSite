@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Represents a command to add a new task list to the system.
     /// </summary>
-    public class AddTaskListCommand: IRequest<TaskListDTO>
+    public class AddTaskListCommand: IRequest<TaskListDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the task list details to be added.
         /// </summary>
-        public required TaskListDTO TaskList { get; set; }
+        public required TaskListDto TaskList { get; set; }
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Handles the <see cref="AddTaskListCommand"/> by adding a new task list to the database and returning the resulting DTO.
     /// </summary>
-    public class AddTaskListCommandHandler: IRequestHandler<AddTaskListCommand, TaskListDTO>
+    public class AddTaskListCommandHandler: IRequestHandler<AddTaskListCommand, TaskListDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -56,8 +56,8 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// </summary>
         /// <param name="request">The command containing the task list details to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TaskListDTO"/> representing the newly added task list.</returns>
-        public async Task<TaskListDTO> Handle(AddTaskListCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TaskListDto"/> representing the newly added task list.</returns>
+        public async Task<TaskListDto> Handle(AddTaskListCommand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("ADD TASK LIST COMMAND");
             Domain.TaskList taskList = mapper.Map<Domain.TaskList>(request.TaskList);
@@ -67,7 +67,7 @@ namespace AP.BTP.Application.CQRS.TaskList
             await uow.Commit();
             Console.WriteLine(taskList.Id);
 
-            return mapper.Map<TaskListDTO>(taskList);
+            return mapper.Map<TaskListDto>(taskList);
         }
     }
 }

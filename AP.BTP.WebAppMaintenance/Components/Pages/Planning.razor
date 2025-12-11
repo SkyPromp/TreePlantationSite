@@ -35,7 +35,7 @@ else
                     <label class="form-label fw-semibold">Kies de kweeksite van deze week</label>
                     <select class="form-select" value="@selectedPlantationSiteId" @onchange="OnPlantationSiteChanged" disabled="@isPlantationSiteSelectionDisabled">
                         <option value="" disabled selected hidden>--- Site ---</option>
-                        @foreach (PlantationSiteDTO plantationSite in this.user.PlantationSites)
+                        @foreach (PlantationSiteDto plantationSite in this.user.PlantationSites)
                         {
                             <option value="@plantationSite.Id">@plantationSite.Name</option>
                         }
@@ -146,7 +146,7 @@ else
                                     @onchange="(e) => OnZoneChangedForDay(day, e)"
                                     disabled="@(!selectedPlantationSiteId.HasValue || DayHasTasks(day))">
                                 <option value="" disabled selected hidden>--- Zone ---</option>
-                                @foreach (ZoneDTO zone in availableZones)
+                                @foreach (ZoneDto zone in availableZones)
                                 {
                                     <option value="@zone.Id">@zone.Name</option>
                                 }
@@ -155,17 +155,17 @@ else
                     </div>
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
-                        @if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
+                        @if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDto? taskList)
                                         && taskList?.TaskItems?.Any() == true)
                         {
-                            TaskListDTO? originalTaskList = null;
+                            TaskListDto? originalTaskList = null;
                             CurrentWeekTaskListsByDay?.TryGetValue(day.Date, out originalTaskList);
 
-                            @foreach (TaskItemDTO taskItem in taskList.TaskItems)
+                            @foreach (TaskItemDto taskItem in taskList.TaskItems)
                             {
                                 string cssClass = "";
 
-                                TaskItemDTO? originalItem =
+                                TaskItemDto? originalItem =
                                 originalTaskList?.TaskItems?.FirstOrDefault(t => t.Id == taskItem.Id);
 
                                 if (originalItem == null)
@@ -334,7 +334,7 @@ else
     /// <summary>
     /// The user details retrieved from the API.
     /// </summary>
-    private UserDTO? user;
+    private UserDto? user;
 
     /// <summary>
     /// The currently selected plantation site ID for the current week.
@@ -357,14 +357,9 @@ else
     }
 
     /// <summary>
-    /// Dictionary mapping each day to its selected zone ID.
-    /// </summary>
-    private Dictionary<DateTime, int?> zonesByDay = new();
-
-    /// <summary>
     /// List of zones available for the currently selected plantation site.
     /// </summary>
-    private List<ZoneDTO> availableZones = new();
+    private List<ZoneDto> availableZones = new();
 
     /// <summary>
     /// Start date (Monday) of the currently displayed week.
@@ -377,9 +372,9 @@ else
     private List<DateTime> WeekDays = new();
 
     /// <summary>
-    /// Dictionary mapping each day of the current week to its corresponding TaskListDTO.
+    /// Dictionary mapping each day of the current week to its corresponding TaskListDto.
     /// </summary>
-    private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDay = new();
+    private Dictionary<DateTime, TaskListDto> CurrentWeekTaskListsByDay = new();
 
     /// <summary>
     /// Indicates whether the confirmation modal for deleting a task item is shown.
@@ -400,7 +395,7 @@ else
     /// Represents the task item currently being added or edited.
     /// Initialized with default values for a new task.
     /// </summary>
-    private TaskItemDTO taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+    private TaskItemDto taskToBeAdded = new TaskItemDto() { Id = 0, Description = "", Title = "", TaskListId = 0 };
 
     /// <summary>
     /// Stores the date associated with the task item being added.
@@ -422,7 +417,7 @@ else
     /// Stores the see <see cref="CurrentWeekTaskListsByDay"/> with the local changes made.
     /// This will eventually be send to the backend api
     /// </summary>
-    private Dictionary<DateTime, TaskListDTO> CurrentWeekTaskListsByDayLocal = new();
+    private Dictionary<DateTime, TaskListDto> CurrentWeekTaskListsByDayLocal = new();
 
     /// <summary>
     /// Indicated whether the selected task item is new.
@@ -432,7 +427,7 @@ else
     /// <summary>
     /// The currently selected task item.
     /// </summary>
-    private TaskItemDTO? selectedTaskItem;
+    private TaskItemDto? selectedTaskItem;
 
     /// <summary>
     /// Indicates whether the confirm dialog is currently visible to cancel or submit the changes.
@@ -454,7 +449,7 @@ else
         UpdateWeekDays();
         await LoadTaskListsForWeek();
 
-        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+        this.taskToBeAdded = new TaskItemDto() { Id = 0, Description = "", Title = "", TaskListId = 0 };
     }
 
     /// <summary>
@@ -467,7 +462,7 @@ else
 
         try
         {
-            UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"user/{this.userId}");
+            UserDto? response = await this.client.GetFromJsonAsync<UserDto>($"user/{this.userId}");
 
             if (response != null)
             {
@@ -499,7 +494,7 @@ else
             int year = ISOWeek.GetYear(currentWeekStart);
             int weekNumber = ISOWeek.GetWeekOfYear(currentWeekStart);
 
-            IEnumerable<TaskListDTO>? response = await client.GetFromJsonAsync<IEnumerable<TaskListDTO>>(
+            IEnumerable<TaskListDto>? response = await client.GetFromJsonAsync<IEnumerable<TaskListDto>>(
                 $"tasklist?userId={userId}&year={year}&weekNumber={weekNumber}");
 
             if (response != null)
@@ -515,7 +510,7 @@ else
                     }
                 );
 
-                TaskListDTO? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
+                TaskListDto? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
                 selectedPlantationSiteId = firstTaskListWithSite?.PlantationSiteId;
 
                 if (selectedPlantationSiteId.HasValue)
@@ -551,7 +546,7 @@ else
     /// </summary>
     /// <param name="date">The date to find the start of the week for.</param>
     /// <returns>The date of the Monday of the week.</returns>
-    private DateTime StartOfWeek(DateTime date)
+    private static DateTime StartOfWeek(DateTime date)
     {
         int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
 
@@ -591,9 +586,9 @@ else
     {
         if ((id == null || id == 0) && selectedTaskItem != null)
         {
-            foreach (KeyValuePair<DateTime, TaskListDTO> kv in CurrentWeekTaskListsByDayLocal)
+            foreach (KeyValuePair<DateTime, TaskListDto> kv in CurrentWeekTaskListsByDayLocal)
             {
-                TaskListDTO taskList = kv.Value;
+                TaskListDto taskList = kv.Value;
                 if (taskList?.TaskItems == null) continue;
 
                 if (taskList.TaskItems.Remove(selectedTaskItem))
@@ -613,12 +608,12 @@ else
     /// <summary>
     /// Prepares the UI to confirm the deletion of a specified task item.
     /// </summary>
-    /// <param name="task">The <see cref="TaskItemDTO"/> representing the task to be deleted.</param>
+    /// <param name="task">The <see cref="TaskItemDto"/> representing the task to be deleted.</param>
     /// <remarks>
     /// This method sets <c>ShowDeleteConfirm</c> to <c>true</c> to display a confirmation prompt,
     /// and stores the task's ID in <c>selectedTaskItemId</c> for reference during deletion.
     /// </remarks>
-    private void ConfirmDeletion(TaskItemDTO task)
+    private void ConfirmDeletion(TaskItemDto task)
     {
         selectedTaskItem = task;
         this.ShowDeleteConfirm = true;
@@ -629,7 +624,7 @@ else
     /// Opens the edit dialog for an existing task item.
     /// </summary>
     /// <param name="task">The task item to edit.</param>
-    private void EditTaskItem(TaskItemDTO task)
+    private void EditTaskItem(TaskItemDto task)
     {
         IsNewTask = false;
         selectedTaskItem = task;
@@ -643,17 +638,17 @@ else
     /// Creates a new task list for the specified day by adding it locally.
     /// </summary>
     /// <param name="day">The date for which the task list should be created.</param>
-    /// <returns>The created <see cref="TaskListDTO"/> if successful; otherwise, null.</returns>
+    /// <returns>The created <see cref="TaskListDto"/> if successful; otherwise, null.</returns>
     private void AddTaskList(DateTime day, int? zoneId = null)
     {
-        TaskListDTO newTaskList = new TaskListDTO()
+        TaskListDto newTaskList = new TaskListDto()
         {
             Id = 0,
             Date = day,
             UserId = this.userId,
             PlantationSiteId = selectedPlantationSiteId,
             ZoneId = zoneId,
-            TaskItems = new List<TaskItemDTO>()
+            TaskItems = new List<TaskItemDto>()
         };
 
         CurrentWeekTaskListsByDayLocal.Add(day, newTaskList);
@@ -666,7 +661,7 @@ else
     private void AddTaskItemConfirm(DateTime day)
     {
         IsNewTask = true;
-        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+        this.taskToBeAdded = new TaskItemDto() { Id = 0, Description = "", Title = "", TaskListId = 0 };
         if (!selectedPlantationSiteId.HasValue)
         {
             errorMessage = "Selecteer eerst een kweeksite voordat u taken toevoegt.";
@@ -699,7 +694,7 @@ else
     /// Add the current task item locally.
     /// If the task item is new, it is created; otherwise, it is updated.
     /// </summary>
-    private void AddTaskItem(TaskItemDTO? existingTaskItem)
+    private void AddTaskItem(TaskItemDto? existingTaskItem)
     {
         try
         {
@@ -750,7 +745,7 @@ else
 
             if (IsNewTask)
             {
-                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDTO? taskList))
+                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDto? taskList))
                 {
                     if (taskList.TaskItems != null && taskToBeAdded != null)
                     {
@@ -765,7 +760,7 @@ else
                 selectedTaskItem.DurationInMinutes = taskToBeAdded.DurationInMinutes;
             }
             this.errorMessage = "";
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+            this.taskToBeAdded = new TaskItemDto() { Id = 0, Description = "", Title = "", TaskListId = 0 };
             this.taskDurationHours = 0;
             this.taskDurationMinutes = 0;
         }
@@ -787,7 +782,7 @@ else
         ShowSubmitChanges = false;
         if (client == null) return;
 
-        List<TaskListDTO> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
+        List<TaskListDto> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
 
         string? validationError = ValidateWeekSchedule(taskLists);
         errorMessage = "";
@@ -797,7 +792,7 @@ else
             return;
         }
 
-        SubmitWeekScheduleDTO request = new SubmitWeekScheduleDTO
+        SubmitWeekScheduleDto request = new SubmitWeekScheduleDto
         {
             TaskLists = taskLists
         };
@@ -806,8 +801,8 @@ else
 
         if (!response.IsSuccessStatusCode)
         {
-            ErrorResponseInfoDTO? errorResponseInfo =
-                await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+            ErrorResponseInfoDto? errorResponseInfo =
+                await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
             errorMessage = errorResponseInfo?.Message
                 ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
@@ -820,7 +815,7 @@ else
     /// <summary>
     /// Validation rules. Gives a string with the rule that was broken or an empty string
     /// </summary>
-    private string? ValidateWeekSchedule(List<TaskListDTO> taskLists)
+    private static string? ValidateWeekSchedule(List<TaskListDto> taskLists)
     {
         if (taskLists.Count == 0)
         {
@@ -828,7 +823,7 @@ else
         }
         int dayCount = taskLists
             .Where(tl => tl.TaskItems != null &&
-                 tl.TaskItems.Any(item => item.IsDeleted == false))
+                 tl.TaskItems.Any(item => !item.IsDeleted))
             .Select(t => t.Date.Date)
             .Distinct()
             .Count();
@@ -845,7 +840,7 @@ else
         if (siteIds.Count > 1)
             return "Een medewerker moet de volledige week in dezelfde site werken.";
 
-        foreach (TaskListDTO tl in taskLists)
+        foreach (TaskListDto tl in taskLists)
         {
             int activeTasks = tl.TaskItems?
                 .Where(t => !t.IsDeleted)
@@ -855,7 +850,7 @@ else
                 return $"Een medewerker mag maximaal 4 taken hebben per dag.";
         }
 
-        foreach (TaskListDTO tl in taskLists)
+        foreach (TaskListDto tl in taskLists)
         {
             int totalMinutes = tl.TaskItems?
                 .Where(t => !t.IsDeleted)
@@ -928,7 +923,7 @@ else
 
         try
         {
-            IEnumerable<ZoneDTO>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={plantationSiteId}");
+            IEnumerable<ZoneDto>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDto>>($"Zone?plantationSiteId={plantationSiteId}");
 
             if (response != null)
             {
@@ -951,7 +946,7 @@ else
     /// </summary>
     private int? GetZoneForDay(DateTime day)
     {
-        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList))
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDto? taskList))
         {
             return taskList.ZoneId;
         }
@@ -975,7 +970,7 @@ else
             return;
         }
 
-        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList))
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDto? taskList))
         {
             taskList.ZoneId = zoneId;
         }
@@ -992,7 +987,7 @@ else
     /// </summary>
     private int GetTotalDurationForDay(DateTime day)
     {
-        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
+        if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDto? taskList)
             && taskList?.TaskItems != null)
         {
             return taskList.TaskItems
@@ -1005,7 +1000,7 @@ else
     /// <summary>
     /// Formats minutes into a readable "Xh Ym" format.
     /// </summary>
-    private string FormatDuration(int totalMinutes)
+    private static string FormatDuration(int totalMinutes)
     {
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
@@ -1037,7 +1032,7 @@ else
     /// </returns>
     private bool DayHasTasks(DateTime day)
     {
-        return CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
+        return CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDto? taskList)
                && taskList?.TaskItems?.Any(t => !t.IsDeleted) == true;
     }
 
@@ -1045,7 +1040,7 @@ else
     /// Determines whether the specified tasks share the same title description and durationInMinutes.
     /// This is used to indicate that a task has changed.
     /// </summary>
-    private bool HasTaskChanged(TaskItemDTO a, TaskItemDTO b)
+    private static bool HasTaskChanged(TaskItemDto a, TaskItemDto b)
     {
         if (a == null || b == null) return false;
 
@@ -1058,7 +1053,7 @@ else
     /// <summary>
     /// checks if the given day is in the past compared to today.
     /// </summary>
-    private bool IsPastDay(DateTime day)
+    private static bool IsPastDay(DateTime day)
     {
         return day.Date < DateTime.Today;
     }

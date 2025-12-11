@@ -65,7 +65,7 @@ namespace AP.BTP.WebAPI
             // Apply migrations at startup
             using (IServiceScope scope = app.Services.CreateScope())
             {
-                BTPContext db = scope.ServiceProvider.GetRequiredService<BTPContext>();
+                BtpContext db = scope.ServiceProvider.GetRequiredService<BtpContext>();
 
                 // Retry a few times if SQL Server isn't ready yet
                 int retryCount = 5;

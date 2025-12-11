@@ -38,10 +38,10 @@
             <div class="text-center">Beheren</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
-            @foreach (List<UserDTO> row in Rows)
+            @foreach (List<UserDto> row in Rows)
             {
                 <div class="row">
-                    @foreach (UserDTO item in row)
+                    @foreach (UserDto item in row)
                     {
                         <div class="p-2">
                             <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
@@ -110,7 +110,7 @@
     /// <summary>
     /// Holds the paged response containing operator users from the API.
     /// </summary>
-    PagedResponseDTO<UserDTO>? response;  // TODO why is this here? shouldn't be global or has a bad name
+    PagedResponseDto<UserDto>? response;  // TODO why is this here? shouldn't be global or has a bad name
 
     /// <summary>
     /// The current page number being displayed.
@@ -120,12 +120,12 @@
     /// <summary>
     /// Number of cards to display per row in the UI.
     /// </summary>
-    private int cardsPerRow = 1;
+    private readonly int cardsPerRow = 1;
 
     /// <summary>
     /// Maximum number of rows to display per page.
     /// </summary>
-    private int maxRows = 7;
+    private readonly int maxRows = 7;
 
     /// <summary>
     /// Number of users to display per page (calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>).
@@ -190,7 +190,7 @@
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDto<UserDto>>(url);
         StateHasChanged();
     }
 
@@ -220,10 +220,10 @@
 
     /// <summary>
     /// Groups the operator users into rows for display based on <see cref="cardsPerRow"/>.
-    /// Each row is represented as a list of <see cref="UserDTO"/>.
+    /// Each row is represented as a list of <see cref="UserDto"/>.
     /// </summary>
-    private IEnumerable<List<UserDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<UserDTO>())
+    private IEnumerable<List<UserDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<UserDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());

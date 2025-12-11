@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.Zone
     /// <summary>
     /// Represents a command to add a new zone to the system.
     /// </summary>
-    public class AddZoneCommand: IRequest<ZoneDTO>
+    public class AddZoneCommand: IRequest<ZoneDto>
     {
         /// <summary>
         /// The zone data to add.
         /// </summary>
-        public required ZoneDTO Zone { get; set; }
+        public required ZoneDto Zone { get; set; }
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace AP.BTP.Application.CQRS.Zone
 
                     if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
 
-                    return plantationSite.Zones.Count(z => z.Name == zone.Name) == 0;
+                    return !plantationSite.Zones.Any(z => z.Name == zone.Name);
                 })
                 .WithMessage("The zone name must be unique within a plantationsite.");
 
@@ -74,9 +74,9 @@ namespace AP.BTP.Application.CQRS.Zone
     }
 
     /// <summary>
-    /// Handles the <see cref="AddZoneCommand"/> by creating a new zone in the repository and returning it as a <see cref="ZoneDTO"/>.
+    /// Handles the <see cref="AddZoneCommand"/> by creating a new zone in the repository and returning it as a <see cref="ZoneDto"/>.
     /// </summary>
-    public class AddZoneCommandHandler: IRequestHandler<AddZoneCommand, ZoneDTO>
+    public class AddZoneCommandHandler: IRequestHandler<AddZoneCommand, ZoneDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -94,12 +94,12 @@ namespace AP.BTP.Application.CQRS.Zone
 
         /// <summary>
         /// Handles the <see cref="AddZoneCommand"/> by creating the specified zone in the database
-        /// and returning the newly created zone as a <see cref="ZoneDTO"/>.
+        /// and returning the newly created zone as a <see cref="ZoneDto"/>.
         /// </summary>
         /// <param name="request">The command containing the zone to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The newly created <see cref="ZoneDTO"/>.</returns>
-        public async Task<ZoneDTO> Handle(AddZoneCommand request, CancellationToken cancellationToken)
+        /// <returns>The newly created <see cref="ZoneDto"/>.</returns>
+        public async Task<ZoneDto> Handle(AddZoneCommand request, CancellationToken cancellationToken)
         {
             if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
 
@@ -108,7 +108,7 @@ namespace AP.BTP.Application.CQRS.Zone
             await uow.ZoneRepository.Create(zone);
             await uow.Commit();
 
-            return mapper.Map<ZoneDTO>(zone);
+            return mapper.Map<ZoneDto>(zone);
         }
     }
 }

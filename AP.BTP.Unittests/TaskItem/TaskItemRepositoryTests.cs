@@ -1,5 +1,4 @@
-﻿using AP.BTP.Application.Interfaces;
-using AP.BTP.Infrastructure.Context;
+﻿using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +7,13 @@ namespace AP.BTP.Unittests.TaskItem
     [TestClass]
     public class TaskItemRepositoryTests
     {
-        private DbContextOptions<BTPContext> _options;
+        private DbContextOptions<BtpContext> _options = null!;
 
 
         [TestInitialize]
         public void Setup()
         {
-            _options = new DbContextOptionsBuilder<BTPContext>()
+            _options = new DbContextOptionsBuilder<BtpContext>()
            .UseInMemoryDatabase("TestDb")
            .Options;
 
@@ -23,11 +22,11 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task When_TaskItem_Is_Disabled_Do_Not_Return_It_With_GetAll()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.TaskItem> dbSet = context.Set<Domain.TaskItem>();
                 DbSet<Domain.TaskList> dbSetTaskList = context.Set<Domain.TaskList>();
@@ -47,9 +46,9 @@ namespace AP.BTP.Unittests.TaskItem
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITaskItemRepository taskItemRepo = new TaskItemRepository(context);
+                TaskItemRepository taskItemRepo = new TaskItemRepository(context);
 
                 IEnumerable<Domain.TaskItem> result = await taskItemRepo.GetAll();
 
@@ -60,13 +59,13 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task When_TaskItem_Is_Disabled_Do_Not_Return_It_With_GetById()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int taskItemId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.TaskItem> dbSet = context.Set<Domain.TaskItem>();
                 DbSet<Domain.TaskList> dbSetTaskList = context.Set<Domain.TaskList>();
@@ -89,9 +88,9 @@ namespace AP.BTP.Unittests.TaskItem
                 taskItemId = taskItem.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITaskItemRepository taskItemRepo = new TaskItemRepository(context);
+                TaskItemRepository taskItemRepo = new TaskItemRepository(context);
 
                 Domain.TaskItem? result = await taskItemRepo.GetById(taskItemId);
 
@@ -102,13 +101,13 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task When_TaskItem_Is_Not_Disabled_Do_Return_It_With_GetById()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int taskItemId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.TaskItem> dbSet = context.Set<Domain.TaskItem>();
                 DbSet<Domain.TaskList> dbSetTaskList = context.Set<Domain.TaskList>();
@@ -131,9 +130,9 @@ namespace AP.BTP.Unittests.TaskItem
                 taskItemId = taskItem.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITaskItemRepository taskItemRepo = new TaskItemRepository(context);
+                TaskItemRepository taskItemRepo = new TaskItemRepository(context);
 
                 Domain.TaskItem? result = await taskItemRepo.GetById(taskItemId);
 

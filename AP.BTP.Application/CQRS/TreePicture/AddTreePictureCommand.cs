@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Represents a command to add a new picture for a tree in the system.
     /// </summary>
-    public class AddTreePictureCommand : IRequest<TreePictureDTO>
+    public class AddTreePictureCommand : IRequest<TreePictureDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the tree picture details to be added.
         /// </summary>
-        public required TreePictureDTO TreePicture { get; set; }
+        public required TreePictureDto TreePicture { get; set; }
     }
 
     /// <summary>
@@ -23,6 +23,11 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// </summary>
     public class AddTreePictureCommandValidator : AbstractValidator<AddTreePictureCommand>
     {
+        /// <summary>
+        /// Defines the set of allowed image file extensions for tree pictures.
+        /// Used to validate that <see cref="TreePicture.Path"/> has a supported format.
+        /// </summary>
+        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".bmp" };
         /// <summary>
         /// Initializes a new instance of the <see cref="AddTreePictureCommandValidator"/> class.
         /// </summary>
@@ -41,7 +46,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
                 .Must(path =>
                 {
                     string ext = Path.GetExtension(path).ToLower();
-                    return new[] { ".jpg", ".jpeg", ".png", ".webp", ".bmp" }.Contains(ext);
+                    return AllowedExtensions.Contains(ext);
                 })
                 .WithMessage("Unsupported image file type.");
         }
@@ -50,7 +55,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Handles the <see cref="AddTreePictureCommand"/> by adding a new tree picture to the database and returning the resulting DTO.
     /// </summary>    
-    public class AddTreePictureCommandHandler : IRequestHandler<AddTreePictureCommand, TreePictureDTO>
+    public class AddTreePictureCommandHandler : IRequestHandler<AddTreePictureCommand, TreePictureDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -72,15 +77,15 @@ namespace AP.BTP.Application.CQRS.TreePicture
         /// </summary>
         /// <param name="request">The command containing the tree picture details to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TreePictureDTO"/> representing the newly added tree picture.</returns>
-        public async Task<TreePictureDTO> Handle(AddTreePictureCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TreePictureDto"/> representing the newly added tree picture.</returns>
+        public async Task<TreePictureDto> Handle(AddTreePictureCommand request, CancellationToken cancellationToken)
         {
             Domain.TreePicture treePicture = mapper.Map<Domain.TreePicture>(request.TreePicture);
 
             await uow.TreePictureRepository.Create(treePicture);
             await uow.Commit();
 
-            return mapper.Map<TreePictureDTO>(treePicture);
+            return mapper.Map<TreePictureDto>(treePicture);
         }
     }
 }

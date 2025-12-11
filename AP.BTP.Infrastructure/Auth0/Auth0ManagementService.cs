@@ -80,7 +80,7 @@ namespace AP.BTP.Infrastructure.Auth0
         {
             string token = await GetManagementTokenAsync();
 
-            IEnumerable<Auth0RoleDTO> roles = await GetRoles();
+            IEnumerable<Auth0RoleDto> roles = await GetRoles();
 
             string? roleId = roles.FirstOrDefault(r => r.Name.Equals(role, StringComparison.OrdinalIgnoreCase))?.Id;
 
@@ -108,7 +108,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// </summary>
         /// <returns>A <see cref="Task{IEnumerable{Auth0Role}}"/> containing the list of roles.</returns>
         /// <exception cref="InvalidOperationException">Thrown if retrieving roles fails.</exception>
-        private async Task<IEnumerable<Auth0RoleDTO>> GetRoles()
+        private async Task<IEnumerable<Auth0RoleDto>> GetRoles()
         {
             string token = await GetManagementTokenAsync();
             RestClient client = new RestClient($"https://{_domain}/api/v2/roles");
@@ -124,9 +124,9 @@ namespace AP.BTP.Infrastructure.Auth0
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
-            List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0RoleDTO>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            List<Auth0RoleDto>? roles = JsonSerializer.Deserialize<List<Auth0RoleDto>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
 
-            return roles ?? new List<Auth0RoleDTO>();
+            return roles ?? new List<Auth0RoleDto>();
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="password">The user's password.</param>
         /// <returns>A <see cref="Task{Auth0UserDTO}"/> containing the created user.</returns>
         /// <exception cref="InvalidOperationException">Thrown if user creation fails.</exception>
-        public async Task<Auth0UserDTO?> CreateUserAsync(
+        public async Task<Auth0UserDto?> CreateUserAsync(
             string username,
             string email,
             string password)
@@ -167,7 +167,7 @@ namespace AP.BTP.Infrastructure.Auth0
                     $"Failed to create user: {response.StatusCode} - {response.Content}");
             }
 
-            return JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

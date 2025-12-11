@@ -47,10 +47,10 @@
             <div class="text-center">Beheren</div>
         </div>
         <div style="overflow-x:hidden; max-height: 55vh;">
-            @foreach (List<UserDTO> row in Rows)
+            @foreach (List<UserDto> row in Rows)
             {
                 <div class="row">
-                    @foreach (UserDTO item in row)
+                    @foreach (UserDto item in row)
                     {
                         <div class="p-2">
                             <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
@@ -118,7 +118,7 @@
             <p>Kweeksite 1</p>
             <select @bind="this.site1" class="form-select mb-3">
                 <option value=""></option>
-                @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                @foreach (PlantationSiteDto plantationSite in this.plantationSites)
                 {
                     <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
                 }
@@ -127,7 +127,7 @@
             <p>Kweeksite 2</p>
             <select @bind="this.site2" class="form-select mb-3">
                 <option value=""></option>
-                @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                @foreach (PlantationSiteDto plantationSite in this.plantationSites)
                 {
                     <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
                 }
@@ -146,7 +146,7 @@
                         <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
                     </div>
                     <div class="col">
-                        @if (selectedUser.Role == UserRole.Operator)
+                        @if (selectedUser != null && selectedUser.Role == UserRole.Operator)
                         {
                             <button @onclick="UpdateUserSites" class="btn btn-secondary">Bevestigen</button>
                         }
@@ -193,7 +193,7 @@
     /// <summary>
     /// The paginated response containing the list of users.
     /// </summary>
-    PagedResponseDTO<UserDTO>? response;  // TODO IEnumerable<...> not pagedResponse...
+    PagedResponseDto<UserDto>? response;  // TODO IEnumerable<...> not pagedResponse...
 
     /// <summary>
     /// The current page number being viewed.
@@ -203,12 +203,12 @@
     /// <summary>
     /// The number of user cards displayed per row.
     /// </summary>
-    private int cardsPerRow = 1;
+    private readonly int cardsPerRow = 1;
 
     /// <summary>
     /// The maximum number of rows shown per page.
     /// </summary>
-    private int maxRows = 7;
+    private readonly int maxRows = 7;
 
     /// <summary>
     /// Calculates the total number of users per page based on layout configuration.
@@ -248,7 +248,7 @@
     /// <summary>
     /// The list of plantation sites available for user assignment.
     /// </summary>
-    private IEnumerable<PlantationSiteDTO> plantationSites = new List<PlantationSiteDTO>();
+    private IEnumerable<PlantationSiteDto> plantationSites = new List<PlantationSiteDto>();
 
     /// <summary>
     /// The first plantation site assigned to the user.
@@ -263,7 +263,7 @@
     /// <summary>
     /// The currently selected user being edited.
     /// </summary>
-    private UserDTO? selectedUser;
+    private UserDto? selectedUser;
 
     /// <summary>
     /// Indicates whether a success toast message should be shown.
@@ -322,7 +322,7 @@
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDto<UserDto>>(url);
         StateHasChanged();
     }
 
@@ -352,8 +352,8 @@
     /// <summary>
     /// Organizes users into row groups for display.
     /// </summary>
-    private IEnumerable<List<UserDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<UserDTO>())
+    private IEnumerable<List<UserDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<UserDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
@@ -363,8 +363,8 @@
     /// </summary>
     private async Task LoadRequestsCount()
     {
-        PagedResponseDTO<UserDTO>? response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>("User/pending");
-        requestsCount = response?.TotalItems ?? 0;
+        PagedResponseDto<UserDto>? pagedResponseDto = await client.GetFromJsonAsync<PagedResponseDto<UserDto>>("User/pending");
+        requestsCount = pagedResponseDto?.TotalItems ?? 0;
         StateHasChanged();
     }
 
@@ -377,13 +377,13 @@
 
         try
         {
-            List<PlantationSiteDTO>? response;
+            List<PlantationSiteDto>? plantationSiteDtoListResponse;
 
-            response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
+            plantationSiteDtoListResponse = await this.client.GetFromJsonAsync<List<PlantationSiteDto>>("PlantationSite/all");
 
-            if (response != null)
+            if (plantationSiteDtoListResponse != null)
             {
-                this.plantationSites = response;
+                this.plantationSites = plantationSiteDtoListResponse;
                 StateHasChanged();
             }
             else
@@ -410,9 +410,9 @@
         if (site2.HasValue)
             selectedSites.Add(site2.Value);
 
-        await client.PutAsJsonAsync($"user/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
+        await client.PutAsJsonAsync($"user/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
 
-        CancelEditUser();
+        await CancelEditUser();
 
         await ShowSuccessToast();
         await LoadPage(currentPage);
@@ -422,7 +422,7 @@
     /// <summary>
     /// Opens the Edit User dialog for the specified user and pre-fills their plantation site assignments.
     /// </summary>
-    private void OnEditUser(UserDTO user)
+    private void OnEditUser(UserDto user)
     {
         selectedUser = user;
         showEditUser = true;
@@ -434,7 +434,7 @@
         // Preselect existing plantation sites if they exist
         if (user.PlantationSites != null && user.PlantationSites.Any())
         {
-            List<PlantationSiteDTO>? sites = user.PlantationSites.Take(2).ToList();
+            List<PlantationSiteDto>? sites = user.PlantationSites.Take(2).ToList();
             if (sites.Count > 0) site1 = sites[0].Id;
             if (sites.Count > 1) site2 = sites[1].Id;
         }
@@ -457,7 +457,7 @@
     /// <summary>
     /// Determines whether a plantation site dropdown option should be disabled.
     /// </summary>
-    private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
+    private static bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
     /// <summary>
     /// Displays a temporary success toast notification.
@@ -497,7 +497,7 @@
         {
             errorMessage = $"Fout bij het verwijderen van gebruiker: {ex.Message}";
         }
-        CancelEditUser();
+        await CancelEditUser();
         isLoading = false;
     }
 

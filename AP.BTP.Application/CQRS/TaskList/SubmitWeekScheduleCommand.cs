@@ -9,9 +9,9 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Command to submit multiple task lists and task items in a single call.
     /// </summary>
-    public class SubmitWeekScheduleCommand : IRequest<IEnumerable<TaskListDTO>>
+    public class SubmitWeekScheduleCommand : IRequest<IEnumerable<TaskListDto>>
     {
-        public List<TaskListDTO> TaskLists { get; set; } = new();
+        public List<TaskListDto> TaskLists { get; set; } = new();
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace AP.BTP.Application.CQRS.TaskList
                 })
                 .WithMessage("Een takenlijst mag maximaal 8 uur bevatten.");
         }
-        private bool AllSameSite(List<TaskListDTO> taskLists)
+        private static bool AllSameSite(List<TaskListDto> taskLists)
         {
             List<int> siteIds = taskLists
                 .Where(t => t.PlantationSiteId != null)
@@ -68,10 +68,10 @@ namespace AP.BTP.Application.CQRS.TaskList
             return siteIds.Count <= 1;
         }
 
-        private bool MaxFiveDays(List<TaskListDTO> taskLists)
+        private static bool MaxFiveDays(List<TaskListDto> taskLists)
         {
             int days = taskLists
-                .Where(t => t.TaskItems != null && t.TaskItems.Count(i => !i.IsDeleted) > 0)
+                .Where(t => t.TaskItems != null && t.TaskItems.Any(i => !i.IsDeleted))
                 .Select(t => t.Date.Date)
                 .Distinct()
                 .Count();
@@ -79,7 +79,7 @@ namespace AP.BTP.Application.CQRS.TaskList
             return days <= 5;
         }
 
-        private async Task<bool> NotEditingPastItemsAsync(TaskListDTO taskList, IUnitOfWork uow)
+        private static async Task<bool> NotEditingPastItemsAsync(TaskListDto taskList, IUnitOfWork uow)
         {
             if (taskList.Date.Date >= DateTime.Today)
                 return true;
@@ -87,7 +87,7 @@ namespace AP.BTP.Application.CQRS.TaskList
             if (taskList.TaskItems == null)
                 return true;
 
-            foreach (TaskItemDTO item in taskList.TaskItems)
+            foreach (TaskItemDto item in taskList.TaskItems)
             {
                 Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(item.Id);
                 if (existingItem == null)
@@ -108,9 +108,11 @@ namespace AP.BTP.Application.CQRS.TaskList
     }
 
     /// <summary>
-    /// Handles the <see cref="SubmitWeekScheduleCommand"/> by adding, updating and deleting the specified task lists and items in the database and returning the updated tasklists.
+    /// Handles the <see cref="SubmitWeekScheduleCommand"/> by adding, updating, 
+    /// and deleting the specified task lists and their items in the database, 
+    /// returning the updated task lists as DTOs.
     /// </summary>
-    public class SubmitWeekScheduleCommandHandler : IRequestHandler<SubmitWeekScheduleCommand, IEnumerable<TaskListDTO>>
+    public class SubmitWeekScheduleCommandHandler : IRequestHandler<SubmitWeekScheduleCommand, IEnumerable<TaskListDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -121,72 +123,129 @@ namespace AP.BTP.Application.CQRS.TaskList
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<TaskListDTO>> Handle(SubmitWeekScheduleCommand request, CancellationToken cancellationToken)
+        /// <summary>
+        /// Main handler method for processing the command.
+        /// Iterates through the provided task lists, creates/updates/deletes them and their items.
+        /// </summary>
+        public async Task<IEnumerable<TaskListDto>> Handle(SubmitWeekScheduleCommand request, CancellationToken cancellationToken)
         {
-            List<TaskListDTO> result = new List<TaskListDTO>();
+            var result = new List<TaskListDto>();
 
-            foreach (TaskListDTO taskListDto in request.TaskLists)
+            foreach (TaskListDto taskListDto in request.TaskLists)
             {
-                if (taskListDto.TaskItems == null || taskListDto.TaskItems.Count() == 0)
-                {
+                if (IsTaskListEmpty(taskListDto))
                     break;
-                }
-                Domain.TaskList? taskList = null;
 
-                if (taskListDto.Id > 0)
-                {
-                    taskList = await uow.TaskListRepository.GetById(taskListDto.Id);
-                }
+                Domain.TaskList taskList = await GetOrCreateTaskList(taskListDto);
 
-                if (taskList == null)
-                {
-                    taskList = mapper.Map<Domain.TaskList>(taskListDto);
-                    taskList.TaskItems.Clear();
-                    await uow.TaskListRepository.Create(taskList);
-                }
-                else
-                {
-                    uow.TaskListRepository.Update(mapper.Map<Domain.TaskList>(taskListDto));
-                }
+                await HandleTaskItems(taskListDto.TaskItems, taskList);
 
-                foreach (TaskItemDTO itemDto in taskListDto.TaskItems ?? new List<TaskItemDTO>())
-                {
-                    if (itemDto.IsDeleted)
-                    {
-                        if (itemDto.Id > 0)
-                        {
-                            Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(itemDto.Id);
-                            if (existingItem != null)
-                                existingItem.IsDeleted = true;
-                        }
-                    }
-                    else if (itemDto.Id == 0)
-                    {
-                        Domain.TaskItem newItem = mapper.Map<Domain.TaskItem>(itemDto);
-                        newItem.TaskList = taskList;
-                        await uow.TaskItemRepository.Create(newItem);
-                    }
-                    else
-                    {
-                        Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(itemDto.Id);
-                        if (existingItem != null)
-                        {
-                            existingItem.Title = itemDto.Title;
-                            existingItem.Description = itemDto.Description;
-                            existingItem.DurationInMinutes = itemDto.DurationInMinutes;
-                        }
-                    }
-                }
-                if (taskList.TaskItems.Where(item => item.IsDeleted == false).Count() == 0)
+                if (!taskList.TaskItems.Any(item => !item.IsDeleted))
                 {
                     uow.TaskListRepository.Delete(taskList);
                 }
 
-                result.Add(mapper.Map<TaskListDTO>(taskList));
+                result.Add(mapper.Map<TaskListDto>(taskList));
             }
 
             await uow.Commit();
             return result;
+        }
+
+        /// <summary>
+        /// Checks if a task list has no items.
+        /// </summary>
+        private static bool IsTaskListEmpty(TaskListDto taskListDto)
+        {
+            return taskListDto.TaskItems == null || taskListDto.TaskItems.Count == 0;
+        }
+
+        /// <summary>
+        /// Retrieves an existing task list by ID or creates a new one if it doesn't exist.
+        /// </summary>
+        private async Task<Domain.TaskList> GetOrCreateTaskList(TaskListDto taskListDto)
+        {
+            Domain.TaskList? taskList = null;
+
+            if (taskListDto.Id > 0)
+            {
+                taskList = await uow.TaskListRepository.GetById(taskListDto.Id);
+            }
+
+            if (taskList == null)
+            {
+                taskList = mapper.Map<Domain.TaskList>(taskListDto);
+                taskList.TaskItems.Clear();
+                await uow.TaskListRepository.Create(taskList);
+            }
+            else
+            {
+                uow.TaskListRepository.Update(mapper.Map<Domain.TaskList>(taskListDto));
+            }
+
+            return taskList;
+        }
+
+        /// <summary>
+        /// Processes each task item in a task list:
+        /// deletes, creates, or updates as necessary.
+        /// </summary>
+        private async Task HandleTaskItems(IEnumerable<TaskItemDto>? taskItems, Domain.TaskList taskList)
+        {
+            if (taskItems == null) return;
+
+            foreach (TaskItemDto itemDto in taskItems)
+            {
+                if (itemDto.IsDeleted)
+                {
+                    await MarkItemAsDeleted(itemDto);
+                }
+                else if (itemDto.Id == 0)
+                {
+                    await CreateTaskItem(itemDto, taskList);
+                }
+                else
+                {
+                    await UpdateTaskItem(itemDto);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Marks an existing task item as deleted.
+        /// </summary>
+        private async Task MarkItemAsDeleted(TaskItemDto itemDto)
+        {
+            if (itemDto.Id <= 0) return;
+
+            Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(itemDto.Id);
+            if (existingItem != null)
+            {
+                existingItem.IsDeleted = true;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new task item and associates it with the task list.
+        /// </summary>
+        private async Task CreateTaskItem(TaskItemDto itemDto, Domain.TaskList taskList)
+        {
+            Domain.TaskItem newItem = mapper.Map<Domain.TaskItem>(itemDto);
+            newItem.TaskList = taskList;
+            await uow.TaskItemRepository.Create(newItem);
+        }
+
+        /// <summary>
+        /// Updates an existing task item with new values from the DTO.
+        /// </summary>
+        private async Task UpdateTaskItem(TaskItemDto itemDto)
+        {
+            Domain.TaskItem? existingItem = await uow.TaskItemRepository.GetById(itemDto.Id);
+            if (existingItem == null) return;
+
+            existingItem.Title = itemDto.Title;
+            existingItem.Description = itemDto.Description;
+            existingItem.DurationInMinutes = itemDto.DurationInMinutes;
         }
     }
 }

@@ -3,19 +3,18 @@ using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using System.Linq;
 
 namespace AP.BTP.Application.CQRS.Zone
 {
     /// <summary>
     /// Represents a command to add multiple zones to the system at once.
     /// </summary>
-    public class AddZonesManyCommand: IRequest<ZoneDTO>
+    public class AddZonesManyCommand: IRequest<ZoneDto>
     {
         /// <summary>
         /// The collection of zones to add.
         /// </summary>
-        public required IEnumerable<ZoneDTO> Zones { get; set; }
+        public required IEnumerable<ZoneDto> Zones { get; set; }
     }
 
     /// <summary>
@@ -55,12 +54,12 @@ namespace AP.BTP.Application.CQRS.Zone
                 {
                     if (zones.GroupBy(z => z.Name).Any(zoneNames => zoneNames.Count() != 1)) return false;
 
-                    foreach (ZoneDTO zone in zones)
+                    foreach (ZoneDto zone in zones)
                     {
                         Domain.PlantationSite? plantationSite = await uow.PlantationSiteRepository.GetById(zone.PlantationSiteId);
 
                         if (plantationSite == null) throw new ValidationException("Plantationsite must not be null when adding a zone.");
-                        if(plantationSite.Zones.Count(z => z.Name == zone.Name) != 0) return false;
+                        if(plantationSite.Zones.Any(z => z.Name == zone.Name)) return false;
                     }
 
                     return true;
@@ -72,7 +71,7 @@ namespace AP.BTP.Application.CQRS.Zone
                 {
                     Dictionary<int, double> remainingAreaOfPlantationSite = new Dictionary<int, double>();
 
-                    foreach (ZoneDTO zone in zones)
+                    foreach (ZoneDto zone in zones)
                     {
                         if (!remainingAreaOfPlantationSite.Keys.Contains(zone.PlantationSiteId))
                         {
@@ -95,9 +94,9 @@ namespace AP.BTP.Application.CQRS.Zone
     }
 
     /// <summary>
-    /// Handles the <see cref="AddZonesManyCommand"/> by creating multiple zones in the repository and returning them as a <see cref="ZoneDTO"/>.
+    /// Handles the <see cref="AddZonesManyCommand"/> by creating multiple zones in the repository and returning them as a <see cref="ZoneDto"/>.
     /// </summary>
-    public class AddZonesManyCommandHandler: IRequestHandler<AddZonesManyCommand, ZoneDTO>
+    public class AddZonesManyCommandHandler: IRequestHandler<AddZonesManyCommand, ZoneDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -114,14 +113,14 @@ namespace AP.BTP.Application.CQRS.Zone
         }
 
         /// <summary>
-        /// Handles the command by creating each zone in the database and returning the created zones mapped as a <see cref="ZoneDTO"/>.
+        /// Handles the command by creating each zone in the database and returning the created zones mapped as a <see cref="ZoneDto"/>.
         /// </summary>
         /// <param name="request">The command containing the collection of zones to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The created zones as a <see cref="ZoneDTO"/>.</returns>
-        public async Task<ZoneDTO> Handle(AddZonesManyCommand request, CancellationToken cancellationToken)
+        /// <returns>The created zones as a <see cref="ZoneDto"/>.</returns>
+        public async Task<ZoneDto> Handle(AddZonesManyCommand request, CancellationToken cancellationToken)
         {
-            foreach(ZoneDTO zone in request.Zones) if(zone.Name != null) zone.Name = zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+            foreach(ZoneDto zone in request.Zones) if(zone.Name != null) zone.Name = zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
             
             IEnumerable<Domain.Zone> zones = mapper.Map<IEnumerable<Domain.Zone>>(request.Zones);
 
@@ -129,7 +128,7 @@ namespace AP.BTP.Application.CQRS.Zone
 
             await uow.Commit();
 
-            return mapper.Map<ZoneDTO>(zones);
+            return mapper.Map<ZoneDto>(zones);
         }
     }
 }

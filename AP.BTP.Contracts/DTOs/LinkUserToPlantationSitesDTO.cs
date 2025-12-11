@@ -3,7 +3,7 @@
     /// <summary>
     /// Data transfer object (DTO) used to specify plantation sites to link to a user.
     /// </summary>
-    public record LinkUserToPlantationSitesDTO
+    public record LinkUserToPlantationSitesDto
     {
         /// <summary>
         /// The list of plantation site IDs to link to the user.

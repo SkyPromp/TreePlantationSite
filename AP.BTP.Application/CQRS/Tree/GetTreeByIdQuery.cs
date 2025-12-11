@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a query to retrieve a tree by its unique identifier.
     /// </summary>
-    public class GetTreeByIdQuery: IRequest<TreeDTO>
+    public class GetTreeByIdQuery: IRequest<TreeDto>
     {
         /// <summary>
         /// The unique identifier of the tree to retrieve.
@@ -35,7 +35,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Handles the <see cref="GetTreeByIdQuery"/> by retrieving the specified tree from the repository and mapping it to a DTO.
     /// </summary>
-    public class GetTreeByIdQueryHandler: IRequestHandler<GetTreeByIdQuery, TreeDTO>
+    public class GetTreeByIdQueryHandler: IRequestHandler<GetTreeByIdQuery, TreeDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -52,15 +52,15 @@ namespace AP.BTP.Application.CQRS.Tree
         }
 
         /// <summary>
-        /// Handles the <see cref="GetTreeByIdQuery"/> by fetching the tree with the specified Id from the repository and returning it as a <see cref="TreeDTO"/>.
+        /// Handles the <see cref="GetTreeByIdQuery"/> by fetching the tree with the specified Id from the repository and returning it as a <see cref="TreeDto"/>.
         /// </summary>
         /// <param name="request">The query containing the Id of the tree to retrieve.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TreeDTO"/> representing the requested tree.</returns>
-        public async Task<TreeDTO> Handle(GetTreeByIdQuery request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TreeDto"/> representing the requested tree.</returns>
+        public async Task<TreeDto> Handle(GetTreeByIdQuery request, CancellationToken cancellationToken)
         {
             Domain.Tree? tree = await uow.TreeRepository.GetById(id:request.Id);
-            TreeDTO treeDTO = mapper.Map<TreeDTO>(tree);
+            TreeDto treeDTO = mapper.Map<TreeDto>(tree);
 
             return treeDTO;
         }

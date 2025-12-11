@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Zone
     /// <summary>
     /// Represents a query to retrieve all zones associated with a specific plantation site.
     /// </summary>
-    public class GetAllZonesByPlantationSiteIdQuery: IRequest<IEnumerable<ZoneDTO>>
+    public class GetAllZonesByPlantationSiteIdQuery: IRequest<IEnumerable<ZoneDto>>
     {
         /// <summary>
         /// The unique identifier of the plantation site whose zones should be retrieved.
@@ -34,9 +34,9 @@ namespace AP.BTP.Application.CQRS.Zone
 
     /// <summary>
     /// Handles the <see cref="GetAllZonesByPlantationSiteIdQuery"/> by retrieving all zones associated
-    /// with the specified plantation site and returning them as <see cref="ZoneDTO"/> instances.
+    /// with the specified plantation site and returning them as <see cref="ZoneDto"/> instances.
     /// </summary>
-    public class GetAllZonesQueryHandler: IRequestHandler<GetAllZonesByPlantationSiteIdQuery, IEnumerable<ZoneDTO>>
+    public class GetAllZonesQueryHandler: IRequestHandler<GetAllZonesByPlantationSiteIdQuery, IEnumerable<ZoneDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -54,16 +54,16 @@ namespace AP.BTP.Application.CQRS.Zone
 
         /// <summary>
         /// Handles the query by retrieving all zones for the given plantation site from the repository
-        /// and mapping them to <see cref="ZoneDTO"/> instances.
+        /// and mapping them to <see cref="ZoneDto"/> instances.
         /// </summary>
         /// <param name="request">The query containing the plantation site Id.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A collection of <see cref="ZoneDTO"/> representing all zones for the specified plantation site.</returns>
-        public async Task<IEnumerable<ZoneDTO>> Handle(GetAllZonesByPlantationSiteIdQuery request, CancellationToken cancellationToken)
+        /// <returns>A collection of <see cref="ZoneDto"/> representing all zones for the specified plantation site.</returns>
+        public async Task<IEnumerable<ZoneDto>> Handle(GetAllZonesByPlantationSiteIdQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<Domain.Zone> zones = await uow.ZoneRepository.GetAllByPlantationSiteId(request.PlantationSiteId);
 
-            IEnumerable<ZoneDTO> zoneDTOs = mapper.Map<IEnumerable<ZoneDTO>>(zones);
+            IEnumerable<ZoneDto> zoneDTOs = mapper.Map<IEnumerable<ZoneDto>>(zones);
 
             return zoneDTOs;
         }

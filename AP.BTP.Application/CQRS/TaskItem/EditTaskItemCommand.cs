@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Represents a command to edit an existing task item in the system.
     /// </summary>
-    public class EditTaskItemCommand: IRequest<TaskItemDTO>
+    public class EditTaskItemCommand: IRequest<TaskItemDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the updated task item details.
         /// </summary>
-        public required TaskItemDTO TaskItem { get; set; }
+        public required TaskItemDto TaskItem { get; set; }
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Handles the <see cref="EditTaskItemCommand"/> by updating the specified task item in the database and returning the updated DTO.
     /// </summary>
-    public class EditTaskItemCommandHandler: IRequestHandler<EditTaskItemCommand, TaskItemDTO>
+    public class EditTaskItemCommandHandler: IRequestHandler<EditTaskItemCommand, TaskItemDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -79,8 +79,8 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// </summary>
         /// <param name="request">The command containing the updated task item details.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TaskItemDTO"/> representing the updated task item.</returns>
-        public async Task<TaskItemDTO> Handle(EditTaskItemCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TaskItemDto"/> representing the updated task item.</returns>
+        public async Task<TaskItemDto> Handle(EditTaskItemCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 

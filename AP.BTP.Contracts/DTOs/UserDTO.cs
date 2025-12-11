@@ -6,7 +6,7 @@ namespace AP.BTP.Contracts.DTOs
     /// Data transfer object (DTO) representing a user in the system, including authentication information, personal details,
     /// and related plantation sites and task lists.
     /// </summary>
-    public record UserDTO
+    public record UserDto
     {
         /// <summary>
         /// The unique identifier of the user.
@@ -51,11 +51,11 @@ namespace AP.BTP.Contracts.DTOs
         /// <summary>
         /// A collection of plantation sites associated with the user. Can be <c>null</c> if none exist.
         /// </summary>
-        public ICollection<PlantationSiteDTO>? PlantationSites { get; set; }
+        public ICollection<PlantationSiteDto>? PlantationSites { get; set; }
 
         /// <summary>
         /// A collection of task lists associated with the user. Can be <c>null</c> if none exist.
         /// </summary>
-        public ICollection<TaskListDTO>? TaskLists { get; set; }
+        public ICollection<TaskListDto>? TaskLists { get; set; }
     }
 }

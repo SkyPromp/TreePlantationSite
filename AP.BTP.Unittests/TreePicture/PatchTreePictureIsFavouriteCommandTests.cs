@@ -1,19 +1,16 @@
 using AP.BTP.Application.CQRS.TreePicture;
 using AP.BTP.Application.Interfaces;
 using FluentValidation.TestHelper;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace AP.BTP.Unittests.TreePicture
 {
     [TestClass]
     public class PatchTreePictureCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreePictureRepository> treePictureRepoMock;
-        private PatchTreePictureCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITreePictureRepository> treePictureRepoMock = null!;
+        private PatchTreePictureCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()

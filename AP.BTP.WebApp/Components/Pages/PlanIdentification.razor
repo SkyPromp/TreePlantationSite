@@ -56,7 +56,7 @@
                     else if (plantResults != null && plantResults.Any())
                     {
                         <h5 class="mb-3">Resultaten:</h5>
-                        @foreach (PlantResultDTO result in plantResults.Take(5))
+                        @foreach (PlantResultDto result in plantResults.Take(5))
                         {
                             <Card class="mb-2">
                                 <CardBody>
@@ -117,7 +117,7 @@
     /// <summary>
     /// List of plant identification results returned from the Pl@ntNet API.
     /// </summary>    
-    private List<PlantResultDTO>? plantResults;
+    private List<PlantResultDto>? plantResults;
 
     /// <summary>
     /// Byte array containing the uploaded image data, used for both preview and API calls.
@@ -210,14 +210,14 @@
             if (response.IsSuccessStatusCode)
             {
                 string jsonResponse = await response.Content.ReadAsStringAsync();
-                PlantNetResponseDTO? apiResult = JsonSerializer.Deserialize<PlantNetResponseDTO>(jsonResponse, new JsonSerializerOptions 
+                PlantNetResponseDto? apiResult = JsonSerializer.Deserialize<PlantNetResponseDto>(jsonResponse, new JsonSerializerOptions 
                 { 
                     PropertyNameCaseInsensitive = true 
                 });
                 
                 if (apiResult?.Results != null && apiResult.Results.Any())
                 {
-                    plantResults = apiResult.Results.Select(r => new PlantResultDTO() {
+                    plantResults = apiResult.Results.Select(r => new PlantResultDto() {
                         ScientificName = r.Species?.ScientificNameWithoutAuthor ?? "Unknown",
                         CommonNames = r.Species?.CommonNames ?? new List<string>(),
                         Family = r.Species?.Family?.ScientificNameWithoutAuthor ?? "Unknown",
@@ -226,7 +226,7 @@
                 }
                 else
                 {
-                    plantResults = new List<PlantResultDTO>();
+                    plantResults = new List<PlantResultDto>();
                 }
             }
             else

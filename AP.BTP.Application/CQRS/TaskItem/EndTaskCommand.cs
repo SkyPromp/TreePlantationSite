@@ -10,12 +10,12 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Represents a command to end the task.
     /// </summary>
-    public class EndTaskCommand: IRequest<TaskItemDTO>
+    public class EndTaskCommand: IRequest<TaskItemDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the task item to be ended.
         /// </summary>
-        public required TaskItemDTO TaskItem { get; set; }
+        public required TaskItemDto TaskItem { get; set; }
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Handles the <see cref="EndTaskCommand"/> to end the task item and returning the resulting DTO.
     /// </summary>
-    public class EndTaskCommandHandler: IRequestHandler<EndTaskCommand, TaskItemDTO>
+    public class EndTaskCommandHandler: IRequestHandler<EndTaskCommand, TaskItemDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -57,8 +57,8 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// </summary>
         /// <param name="request">The command containing the task item to end.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TaskItemDTO"/> representing the newly ended task item.</returns>
-        public async Task<TaskItemDTO> Handle(EndTaskCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TaskItemDto"/> representing the newly ended task item.</returns>
+        public async Task<TaskItemDto> Handle(EndTaskCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
@@ -99,7 +99,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
             uow.TaskItemRepository.Update(taskItem);
             await uow.Commit();
 
-            return mapper.Map<TaskItemDTO>(taskItem);
+            return mapper.Map<TaskItemDto>(taskItem);
         }
     }
 }

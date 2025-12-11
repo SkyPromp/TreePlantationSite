@@ -10,9 +10,9 @@ namespace AP.BTP.Unittests.PlantationSite
     [TestClass]
     public class UpdatePlantationSiteCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<IPlantationSiteRepository> plantantationSiteRepoMock;
-        private UpdatePlantationSiteCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<IPlantationSiteRepository> plantantationSiteRepoMock = null!;
+        private UpdatePlantationSiteCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -25,33 +25,18 @@ namespace AP.BTP.Unittests.PlantationSite
             validator = new UpdatePlantationSiteCommandValidator(uowMock.Object);
         }
 
-        private TreeDTO TreeDTO 
+        private static TreeDto TreeDTO 
         {
             get
             {
-                return new TreeDTO() { Id = 1, Species = "Oak" };
+                return new TreeDto() { Id = 1, Species = "Oak" };
             }
         }
 
-        private Domain.Tree Tree
-        {
+        private static PlantationSiteDto PlantationSiteDTO { 
             get
             {
-                return new Domain.Tree() { Id = 1, Species = "Oak" };
-            }
-        }
-
-        private PlantationSiteDTO PlantationSiteDTO { 
-            get
-            {
-                return new PlantationSiteDTO() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<ZoneDTO>(), Size=100 };
-            }
-        }
-
-        private Domain.PlantationSite PlantationSite { 
-            get
-            {
-                return new Domain.PlantationSite() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<Domain.Zone>(), Size=100 };
+                return new PlantationSiteDto() { Id = 1, City = "", Country = "", GroundPlan = "", HouseNumber = "", Name = "", Street = "", Zones=new List<ZoneDto>(), Size=100 };
             }
         }
 
@@ -60,7 +45,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "",
@@ -84,7 +69,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -108,7 +93,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -132,7 +117,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -156,7 +141,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -180,7 +165,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -204,7 +189,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -228,7 +213,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -252,7 +237,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -276,7 +261,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -300,7 +285,7 @@ namespace AP.BTP.Unittests.PlantationSite
         {
             UpdatePlantationSiteCommand command = new UpdatePlantationSiteCommand
             {
-                UpdatedSite = new PlantationSiteDTO
+                UpdatedSite = new PlantationSiteDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -326,12 +311,12 @@ namespace AP.BTP.Unittests.PlantationSite
 
             uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
 
-            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
-            plantationSiteDTO.Zones = new List<ZoneDTO>();
+            PlantationSiteDto plantationSiteDTO = PlantationSiteDTO;
+            plantationSiteDTO.Zones = new List<ZoneDto>();
             plantationSiteDTO.Size = 100;
 
             plantationSiteDTO.Zones.Add(
-                new ZoneDTO()
+                new ZoneDto()
                 {
                     Id = 1,
                     Name = "Zone",
@@ -342,7 +327,7 @@ namespace AP.BTP.Unittests.PlantationSite
             );
 
             plantationSiteDTO.Zones.Add(
-                new ZoneDTO()
+                new ZoneDto()
                 {
                     Id = 2,
                     Name = "Zone 2",
@@ -369,12 +354,12 @@ namespace AP.BTP.Unittests.PlantationSite
 
             uowMock.Setup(u => u.PlantationSiteRepository).Returns(plantationRepoMock.Object);
 
-            PlantationSiteDTO plantationSiteDTO = PlantationSiteDTO;
-            plantationSiteDTO.Zones = new List<ZoneDTO>();
+            PlantationSiteDto plantationSiteDTO = PlantationSiteDTO;
+            plantationSiteDTO.Zones = new List<ZoneDto>();
             plantationSiteDTO.Size = 60;
 
             plantationSiteDTO.Zones.Add(
-                new ZoneDTO()
+                new ZoneDto()
                 {
                     Id = 1,
                     Name = "Zone",
@@ -385,7 +370,7 @@ namespace AP.BTP.Unittests.PlantationSite
             );
 
             plantationSiteDTO.Zones.Add(
-                new ZoneDTO()
+                new ZoneDto()
                 {
                     Id = 2,
                     Name = "Zone 2",

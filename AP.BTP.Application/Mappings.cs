@@ -10,27 +10,27 @@ namespace AP.BTP.Application
     /// <remarks>
     /// This profile sets up the following mappings:
     /// <list type="bullet">
-    /// <item><description><see cref="Tree"/> <-> <see cref="TreeDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="PlantationSite"/> <-> <see cref="PlantationSiteDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="Zone"/> <-> <see cref="ZoneDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="User"/> <-> <see cref="UserDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="TaskList"/> -> <see cref="TaskListDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="TaskItem"/> -> <see cref="TaskItemDTO"/> (bi-directional)</description></item>
-    /// <item><description><see cref="RegisterUserDTO"/> -> <see cref="User"/></description></item>
+    /// <item><description><see cref="Tree"/> <-> <see cref="TreeDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="PlantationSite"/> <-> <see cref="PlantationSiteDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="Zone"/> <-> <see cref="ZoneDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="User"/> <-> <see cref="UserDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="TaskList"/> -> <see cref="TaskListDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="TaskItem"/> -> <see cref="TaskItemDto"/> (bi-directional)</description></item>
+    /// <item><description><see cref="RegisterUserDto"/> -> <see cref="User"/></description></item>
     /// </list>
     /// </remarks>
     internal class Mappings : Profile
     {
         public Mappings()
         {
-            CreateMap<Tree, TreeDTO>().ReverseMap();
-            CreateMap<PlantationSite, PlantationSiteDTO>().ReverseMap();
-            CreateMap<Zone, ZoneDTO>().ReverseMap();
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<TreePicture, TreePictureDTO>().ReverseMap();
-            CreateMap<TaskList, TaskListDTO>().ReverseMap();
-            CreateMap<TaskItem, TaskItemDTO>().ReverseMap();
-            CreateMap<RegisterUserDTO, User>();
+            CreateMap<Tree, TreeDto>().ReverseMap();
+            CreateMap<PlantationSite, PlantationSiteDto>().ReverseMap();
+            CreateMap<Zone, ZoneDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<TreePicture, TreePictureDto>().ReverseMap();
+            CreateMap<TaskList, TaskListDto>().ReverseMap();
+            CreateMap<TaskItem, TaskItemDto>().ReverseMap();
+            CreateMap<RegisterUserDto, User>();
         }
     }
 }

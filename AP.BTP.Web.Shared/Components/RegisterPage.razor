@@ -89,7 +89,15 @@
     /// <summary>
     /// Holds the data entered by the user for registration.
     /// </summary>
-    private RegisterUserDTO newUser = new RegisterUserDTO();
+    private readonly RegisterUserDto newUser = new RegisterUserDto
+    {
+        FirstName = string.Empty,
+        LastName = string.Empty,
+        PhoneNumber = string.Empty,
+        Email = string.Empty,
+        Password = string.Empty,
+        ConfirmPassword = string.Empty
+    };
 
     /// <summary>
     /// The HTTP client used to communicate with the backend API.
@@ -148,7 +156,7 @@
                 return;
             }
 
-            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
+            var response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
 
             if (response.IsSuccessStatusCode)
             {
@@ -176,5 +184,5 @@
     /// Helper method that determines which CSS class to apply to password rule indicators.
     /// </summary>
     /// <param name="condition">Whether the rule is met.</param>
-    private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+    private static string GetClass(bool condition) => condition ? "text-success" : "text-muted";
 }

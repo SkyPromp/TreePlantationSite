@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using AP.BTP.Application.CQRS.TaskItem;
 using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
-using AP.BTP.Infrastructure.Migrations;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -11,9 +9,9 @@ namespace AP.BTP.Unittests.TaskItem
     [TestClass]
     public class AddTaskItemCommandValidatorTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITaskListRepository> taskListRepoMock;
-        private AddTaskItemCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITaskListRepository> taskListRepoMock = null!;
+        private AddTaskItemCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -34,7 +32,7 @@ namespace AP.BTP.Unittests.TaskItem
         {
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = id, Title = "Test", Description = "Beschrijving", DurationInMinutes = 30, TaskListId = 1 }
+                TaskItem = new TaskItemDto { Id = id, Title = "Test", Description = "Beschrijving", DurationInMinutes = 30, TaskListId = 1 }
             };
 
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);
@@ -48,7 +46,7 @@ namespace AP.BTP.Unittests.TaskItem
         {
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = 30, TaskListId = 1 }
+                TaskItem = new TaskItemDto { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = 30, TaskListId = 1 }
             };
 
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);
@@ -63,7 +61,7 @@ namespace AP.BTP.Unittests.TaskItem
         {
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = duration, TaskListId = 1 }
+                TaskItem = new TaskItemDto { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = duration, TaskListId = 1 }
             };
 
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);
@@ -77,7 +75,7 @@ namespace AP.BTP.Unittests.TaskItem
         {
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = 600, TaskListId = 1 }
+                TaskItem = new TaskItemDto { Id = 0, Title = "Test", Description = "Beschrijving", DurationInMinutes = 600, TaskListId = 1 }
             };
 
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);
@@ -107,7 +105,7 @@ namespace AP.BTP.Unittests.TaskItem
 
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = 0, Title = "Test", Description="Test", TaskListId = 1, DurationInMinutes = 100 }
+                TaskItem = new TaskItemDto { Id = 0, Title = "Test", Description="Test", TaskListId = 1, DurationInMinutes = 100 }
             };
 
             // Act
@@ -136,7 +134,7 @@ namespace AP.BTP.Unittests.TaskItem
 
             AddTaskItemCommand command = new AddTaskItemCommand
             {
-                TaskItem = new TaskItemDTO { Id = 0, TaskListId = 1, Title = "Test", Description = "Beschrijving", DurationInMinutes = 100 }
+                TaskItem = new TaskItemDto { Id = 0, TaskListId = 1, Title = "Test", Description = "Beschrijving", DurationInMinutes = 100 }
             };
 
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);

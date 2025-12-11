@@ -8,7 +8,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a query to retrieve a paged list of operators with optional search functionality.
     /// </summary>
-    public class GetAllOperatorsPagedQuery : IRequest<PagedResponseDTO<UserDTO>>
+    public class GetAllOperatorsPagedQuery : IRequest<PagedResponseDto<UserDto>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -38,43 +38,40 @@ namespace AP.BTP.Application.CQRS.User
 
     /// <summary>
     /// Handles the <see cref="GetAllOperatorsPagedQuery"/> by retrieving a paged list of operators from the repository,
-    /// mapping them to <see cref="UserDTO"/>, and enriching each user with Auth0 information.
+    /// mapping them to <see cref="UserDto"/>, and enriching each user with Auth0 information.
     /// </summary>
-    public class GetAllOperatorsPagedQueryHandler : IRequestHandler<GetAllOperatorsPagedQuery, PagedResponseDTO<UserDTO>>
+    public class GetAllOperatorsPagedQueryHandler : IRequestHandler<GetAllOperatorsPagedQuery, PagedResponseDto<UserDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
-        private readonly IAuth0ManagementService auth0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetAllOperatorsPagedQueryHandler"/> class.
         /// </summary>
         /// <param name="uow">The unit of work used for database operations.</param>
         /// <param name="mapper">The mapper used to convert domain entities to DTOs.</param>
-        /// <param name="auth0">The Auth0 management service used to enrich user information.</param>
-        public GetAllOperatorsPagedQueryHandler(IUnitOfWork uow, IMapper mapper, IAuth0ManagementService auth0)
+        public GetAllOperatorsPagedQueryHandler(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
             this.mapper = mapper;
-            this.auth0 = auth0;
         }
 
         /// <summary>
         /// Handles the <see cref="GetAllOperatorsPagedQuery"/> by fetching the requested page of operators,
-        /// mapping them to <see cref="UserDTO"/>, retrieving additional Auth0 information for each user, and returning a paged response.
+        /// mapping them to <see cref="UserDto"/>, retrieving additional Auth0 information for each user, and returning a paged response.
         /// </summary>
         /// <param name="request">The query containing page number, page size, and search string.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="PagedResponse{UserDTO}"/> containing the paged list of operators with enriched Auth0 information.</returns>
-        public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllOperatorsPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDto<UserDto>> Handle(GetAllOperatorsPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllOperatorsPaged(request.PageNr, request.PageSize, request.Search, request.SortBy, request.SortDirection);
 
-            IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
+            IEnumerable<UserDto> users = mapper.Map<IEnumerable<UserDto>>(items);
 
-            return new PagedResponseDTO<UserDTO>
+            return new PagedResponseDto<UserDto>
             {
                 Items = users,
                 PageNumber = request.PageNr,

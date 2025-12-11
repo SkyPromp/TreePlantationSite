@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Represents a query to retrieve all task lists for a specific user in a given week of a specified year.
     /// </summary>
-    public class GetAllTaskListsByUserIdAndWeekQuery : IRequest<IEnumerable<TaskListDTO>>
+    public class GetAllTaskListsByUserIdAndWeekQuery : IRequest<IEnumerable<TaskListDto>>
     {
         /// <summary>
         /// The unique identifier of the user whose task lists are being retrieved.
@@ -53,7 +53,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Handles the <see cref="GetAllTaskListsByUserIdAndWeekQuery"/> by retrieving the task lists for the specified user and week.
     /// </summary>
-    public class GetAllTaskListsByUserIdAndWeekQueryHandler : IRequestHandler<GetAllTaskListsByUserIdAndWeekQuery, IEnumerable<TaskListDTO>>
+    public class GetAllTaskListsByUserIdAndWeekQueryHandler : IRequestHandler<GetAllTaskListsByUserIdAndWeekQuery, IEnumerable<TaskListDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -75,13 +75,13 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// <param name="request">The query containing the user ID, year, and week number.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>
-        /// A collection of <see cref="TaskListDTO"/> objects representing the task lists for the user and week.
+        /// A collection of <see cref="TaskListDto"/> objects representing the task lists for the user and week.
         /// </returns>
-        public async Task<IEnumerable<TaskListDTO>> Handle(GetAllTaskListsByUserIdAndWeekQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TaskListDto>> Handle(GetAllTaskListsByUserIdAndWeekQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<Domain.TaskList> taskLists = await uow.TaskListRepository.GetAllByUserIdAndWeek(request.UserId, request.Year, request.WeekNumber);
 
-            IEnumerable<TaskListDTO> taskListsDTOs = mapper.Map<IEnumerable<TaskListDTO>>(taskLists);
+            IEnumerable<TaskListDto> taskListsDTOs = mapper.Map<IEnumerable<TaskListDto>>(taskLists);
 
             return taskListsDTOs;
         }

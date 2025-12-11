@@ -1,22 +1,19 @@
-﻿using AP.BTP.Application.CQRS.Tree;
-using AP.BTP.Application.Interfaces;
-using AP.BTP.Infrastructure.Context;
+﻿using AP.BTP.Infrastructure.Context;
 using AP.BTP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 
 namespace AP.BTP.Unittests.Tree
 {
     [TestClass]
     public class TreeRepositoryTests
     {
-        private DbContextOptions<BTPContext> _options;
+        private DbContextOptions<BtpContext> _options = null!;
 
 
         [TestInitialize]
         public void Setup()
         {
-            _options = new DbContextOptionsBuilder<BTPContext>()
+            _options = new DbContextOptionsBuilder<BtpContext>()
            .UseInMemoryDatabase("TestDb")
            .Options;
 
@@ -25,11 +22,11 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_Tree_Is_Disabled_Do_Not_Return_It_With_GetAll()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -39,9 +36,9 @@ namespace AP.BTP.Unittests.Tree
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 IEnumerable<Domain.Tree> result = await treeRepo.GetAll(search:"");
 
@@ -52,11 +49,11 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_Search_Is_Not_Null_Return_Only_Matches()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -66,9 +63,9 @@ namespace AP.BTP.Unittests.Tree
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 IEnumerable<Domain.Tree> result = await treeRepo.GetAll(search:"o");
 
@@ -79,13 +76,13 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_Tree_Is_Disabled_Do_Not_Return_It_With_GetById()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int treeId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -97,9 +94,9 @@ namespace AP.BTP.Unittests.Tree
                 treeId = tree.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 Domain.Tree? result = await treeRepo.GetById(treeId);
 
@@ -110,13 +107,13 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_Tree_Is_Not_Disabled_Do_Return_It_With_GetById()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int treeId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -128,9 +125,9 @@ namespace AP.BTP.Unittests.Tree
                 treeId = tree.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 Domain.Tree? result = await treeRepo.GetById(treeId);
 
@@ -141,14 +138,14 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_GetAllPages_Size_Is_Correct()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             const int totalTrees = 10;
             const int pageSize = 6;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -157,9 +154,9 @@ namespace AP.BTP.Unittests.Tree
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 (IEnumerable<Domain.Tree> Items, int totalCount) = await treeRepo.GetAllPaged(pageNr:1, pageSize:pageSize, search:null, sortAscending:false);
 
@@ -171,7 +168,7 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public async Task When_GetAllPages_Size_Is_Correct_On_Last_Page()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
@@ -179,7 +176,7 @@ namespace AP.BTP.Unittests.Tree
             const int pageSize = 6;
             const int pageNr = 2;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -188,9 +185,9 @@ namespace AP.BTP.Unittests.Tree
                 context.SaveChanges();
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 (IEnumerable<Domain.Tree> Items, int totalCount) = await treeRepo.GetAllPaged(pageNr:pageNr, pageSize:pageSize, search:null, sortAscending:false);
 
@@ -202,13 +199,13 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public void Should_Have_Error_When_Updating_Nonexistant_Id()
         {
-             this._options = new DbContextOptionsBuilder<BTPContext>()
+             this._options = new DbContextOptionsBuilder<BtpContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             int treeId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -220,9 +217,9 @@ namespace AP.BTP.Unittests.Tree
                 treeId = tree.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
 
                 try
                 {
@@ -235,13 +232,13 @@ namespace AP.BTP.Unittests.Tree
         [TestMethod]
         public void Should_Not_Have_Error_When_Updating_Existing_Id()
         {
-            this._options = new DbContextOptionsBuilder<BTPContext>()
+            this._options = new DbContextOptionsBuilder<BtpContext>()
                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                .Options;
 
             int treeId = 0;
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
                 DbSet<Domain.Tree> dbSet = context.Set<Domain.Tree>();
 
@@ -253,9 +250,9 @@ namespace AP.BTP.Unittests.Tree
                 treeId = tree.Id;
             }
 
-            using (BTPContext context = new BTPContext(_options))
+            using (BtpContext context = new BtpContext(_options))
             {
-                ITreeRepository treeRepo = new TreeRepository(context);
+                TreeRepository treeRepo = new TreeRepository(context);
                 Domain.Tree? result = treeRepo.Update(new Domain.Tree() { Id = treeId, Species = "Oak" });
             }
         }

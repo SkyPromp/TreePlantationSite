@@ -60,7 +60,7 @@
     /// <summary>
     /// Holds the data entered by the user for login.
     /// </summary>
-    private LoginUserDTO loginDetails;
+    private LoginUserDto loginDetails;
 
     /// <summary>
     /// The HTTP client used to communicate with the auth.
@@ -77,7 +77,7 @@
     /// </summary>
     protected override void OnInitialized()
     {
-        loginDetails = new LoginUserDTO();
+        loginDetails = new LoginUserDto();
         client = HttpClientFactory.CreateClient("BTPApi");
 
         string? appType = AppInfoOptions.Value.AppType;
@@ -107,7 +107,7 @@
             {
                 errorMessage = "Er is een fout opgetreden tijdens het inloggen.";
 
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo == null)
                     return;
@@ -126,7 +126,7 @@
                 return;
             }
 
-            LoginResponseDTO? token = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
+            LoginResponseDto? token = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
 
             string tempKey = Guid.NewGuid().ToString();
             Cache.Set(tempKey, token, TimeSpan.FromMinutes(5));

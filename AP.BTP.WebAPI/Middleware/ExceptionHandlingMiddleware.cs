@@ -36,32 +36,39 @@ namespace AP.BTP.WebAPI.Middleware
             }
             catch (Exception ex)
             {
-                ErrorResponseInfoDTO response = new ErrorResponseInfoDTO();
-                response.Message = ex.Message;
-                switch (ex)
+                ErrorResponseInfoDto response = ex switch
                 {
-                    case ValidationException validationException:
-                        response.StatusCode = StatusCodes.Status400BadRequest;
-                        response.Message = validationException.Message;
-                        response.ErrorCode = "VALIDATION_ERROR";
-                        break;
-                    case AuthenticationFailedException authenticationFailedException:
-                        response.StatusCode = StatusCodes.Status401Unauthorized;
-                        response.ErrorCode = authenticationFailedException.ErrorCode;
-                        break;
-                    case StartStopTaskFailedException startStopTaskFailedException:
-                        response.StatusCode = StatusCodes.Status409Conflict;
-                        response.ErrorCode = startStopTaskFailedException.ErrorCode;
-                        break;
-                    case NotFoundException:
-                        response.StatusCode = StatusCodes.Status404NotFound;
-                        response.ErrorCode = "NOT_FOUND";
-                        break;
-                    default:
-                        response.StatusCode = StatusCodes.Status500InternalServerError;
-                        response.ErrorCode = "INTERNAL_ERROR";
-                        break;
-                }
+                    ValidationException validationException => new ErrorResponseInfoDto
+                    {
+                        StatusCode = StatusCodes.Status400BadRequest,
+                        Message = validationException.Message,
+                        ErrorCode = "VALIDATION_ERROR"
+                    },
+                    AuthenticationFailedException authenticationFailedException => new ErrorResponseInfoDto
+                    {
+                        StatusCode = StatusCodes.Status401Unauthorized,
+                        Message = authenticationFailedException.Message,
+                        ErrorCode = authenticationFailedException.ErrorCode
+                    },
+                    StartStopTaskFailedException startStopTaskFailedException => new ErrorResponseInfoDto
+                    {
+                        StatusCode = StatusCodes.Status409Conflict,
+                        Message = startStopTaskFailedException.Message,
+                        ErrorCode = startStopTaskFailedException.ErrorCode
+                    },
+                    NotFoundException notFoundException => new ErrorResponseInfoDto
+                    {
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = notFoundException.Message,
+                        ErrorCode = "NOT_FOUND"
+                    },
+                    _ => new ErrorResponseInfoDto
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Message = ex.Message,
+                        ErrorCode = "INTERNAL_ERROR"
+                    }
+                };
                 context.Response.StatusCode = response.StatusCode;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));

@@ -3,14 +3,13 @@ using AP.BTP.Contracts.DTOs;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using System.Runtime.ExceptionServices;
 
 namespace AP.BTP.Application.CQRS.TaskList
 {
     /// <summary>
     /// Represents a query to retrieve all task lists for a specific user in a given week of a specified year.
     /// </summary>
-    public class GetTaskListByDayFromAuth0IdQuery : IRequest<TaskListDTO?>
+    public class GetTaskListByDayFromAuth0IdQuery : IRequest<TaskListDto?>
     {
         /// <summary>
         /// The unique auth0 identifier of the user whose task lists are being retrieved.
@@ -40,7 +39,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Handles the <see cref="GetTaskListByDayFromAuth0IdQuery"/> by retrieving the task lists for the specified user and week.
     /// </summary>
-    public class GetTaskListByDayFromAuth0IdQueryHandler : IRequestHandler<GetTaskListByDayFromAuth0IdQuery, TaskListDTO?>
+    public class GetTaskListByDayFromAuth0IdQueryHandler : IRequestHandler<GetTaskListByDayFromAuth0IdQuery, TaskListDto?>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -62,9 +61,9 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// <param name="request">The query containing the user ID, year, and week number.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>
-        /// A collection of <see cref="TaskListDTO"/> objects representing the task lists for the user and week.
+        /// A collection of <see cref="TaskListDto"/> objects representing the task lists for the user and week.
         /// </returns>
-        public async Task<TaskListDTO?> Handle(GetTaskListByDayFromAuth0IdQuery request, CancellationToken cancellationToken)
+        public async Task<TaskListDto?> Handle(GetTaskListByDayFromAuth0IdQuery request, CancellationToken cancellationToken)
         {
             Domain.User? user = await uow.UserRepository.GetUserByAuth0Id(request.Auth0Id);
 
@@ -74,7 +73,7 @@ namespace AP.BTP.Application.CQRS.TaskList
 
             if (taskList == null) return null;
 
-            TaskListDTO taskListDTO = mapper.Map<TaskListDTO>(taskList);
+            TaskListDto taskListDTO = mapper.Map<TaskListDto>(taskList);
 
             return taskListDTO;
         }

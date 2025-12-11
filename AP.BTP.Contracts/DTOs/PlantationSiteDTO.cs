@@ -5,7 +5,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) for a plantation site, including address, size, ground plan, zones, and deletion status.
     /// </summary>
-    public record PlantationSiteDTO
+    public record PlantationSiteDto
     {
         /// <summary>
         /// The unique identifier of the plantation site.
@@ -66,6 +66,6 @@ namespace AP.BTP.Contracts.DTOs
         /// <summary>
         /// The collection of zones associated with the plantation site.
         /// </summary>
-        public ICollection<ZoneDTO>? Zones { get; set; }
+        public ICollection<ZoneDto>? Zones { get; set; }
     }
 }

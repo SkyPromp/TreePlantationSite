@@ -15,8 +15,8 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
     /// <summary>
     /// Initializes a new instance of the <see cref="PlantationSiteRepository"/> class.
     /// </summary>
-    /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
-    public PlantationSiteRepository(BTPContext context)
+    /// <param name="context">The <see cref="BtpContext"/> used to access the database.</param>
+    public PlantationSiteRepository(BtpContext context)
 	{
         dbSet = context.Set<PlantationSite>();
 	}
@@ -75,7 +75,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
             search = search.ToLower();
 
             query = query.Where(ps =>
-                ps.Name.ToLower().Contains(search));
+                EF.Functions.Like(ps.Name, $"%{search}"));
         }
 
         int totalCount = await query.CountAsync();
@@ -105,7 +105,7 @@ public class PlantationSiteRepository: IPlantationSiteRepository  // TODO: shoul
             search = search.ToLower();
 
             query = query.Where(ps =>
-                ps.Name.ToLower().Contains(search));
+                EF.Functions.Like(ps.Name, $"%{search}"));
         }
 
         List<PlantationSite> items = await query

@@ -1,6 +1,6 @@
 ﻿namespace AP.BTP.Contracts.DTOs
 {
-    public record TreeDTO
+    public record TreeDto
     {
         /// <summary>
         /// The unique identifier of the tree.

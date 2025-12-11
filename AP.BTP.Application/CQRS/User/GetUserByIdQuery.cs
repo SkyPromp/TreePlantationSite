@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a query to retrieve a user by their unique identifier.
     /// </summary>
-    public class GetUserByIdQuery: IRequest<UserDTO>
+    public class GetUserByIdQuery: IRequest<UserDto>
     {
         /// <summary>
         /// The unique identifier of the user to retrieve.
@@ -33,9 +33,9 @@ namespace AP.BTP.Application.CQRS.User
     }
 
     /// <summary>
-    /// Handles the <see cref="GetUserByIdQuery"/> by retrieving the specified user from the repository and mapping it to a <see cref="UserDTO"/>.
+    /// Handles the <see cref="GetUserByIdQuery"/> by retrieving the specified user from the repository and mapping it to a <see cref="UserDto"/>.
     /// </summary>
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDTO>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -52,15 +52,15 @@ namespace AP.BTP.Application.CQRS.User
         }
 
         /// <summary>
-        /// Handles the <see cref="GetUserByIdQuery"/> by fetching the user with the specified Id and returning it as a <see cref="UserDTO"/>.
+        /// Handles the <see cref="GetUserByIdQuery"/> by fetching the user with the specified Id and returning it as a <see cref="UserDto"/>.
         /// </summary>
         /// <param name="request">The query containing the Id of the user to retrieve.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="UserDTO"/> representing the requested user.</returns>
-        public async Task<UserDTO> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="UserDto"/> representing the requested user.</returns>
+        public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             Domain.User? user = await uow.UserRepository.GetById(id: request.Id);
-            UserDTO userDTO = mapper.Map<UserDTO>(user);
+            UserDto userDTO = mapper.Map<UserDto>(user);
 
             return userDTO;
         }

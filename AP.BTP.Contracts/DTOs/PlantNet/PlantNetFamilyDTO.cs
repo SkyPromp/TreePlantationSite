@@ -3,7 +3,7 @@ namespace AP.BTP.Contracts.DTOs.PlantNet
     /// <summary>
     /// Represents botanical family information returned by the PlantNet service.
     /// </summary>    
-    public record PlantNetFamilyDTO
+    public record PlantNetFamilyDto
     {
         /// <summary>
         /// Gets or sets the scientific family name without the author citation.

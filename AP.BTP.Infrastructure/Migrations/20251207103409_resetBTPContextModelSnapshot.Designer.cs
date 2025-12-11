@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AP.BTP.Infrastructure.Migrations
 {
-    [DbContext(typeof(BTPContext))]
+    [DbContext(typeof(BtpContext))]
     [Migration("20251207103409_resetBTPContextModelSnapshot")]
     partial class resetBTPContextModelSnapshot
     {

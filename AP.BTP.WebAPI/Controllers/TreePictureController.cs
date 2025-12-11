@@ -1,4 +1,3 @@
-using AP.BTP.Application.CQRS.Tree;
 using AP.BTP.Application.CQRS.TreePicture;
 using AP.BTP.Contracts.DTOs;
 using MediatR;
@@ -33,7 +32,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// Retrieves picture by the unique tree ID.
         /// </summary>
         /// <param name="id">The ID of the tree to retrieve pictures for.</param>
-        /// <returns>The List<TreePictureDTO> matching the given ID, or 404 if not found.</returns>
+        /// <returns>The List<TreePictureDto> matching the given ID, or 404 if not found.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPicturesByTreeId(int id)
         {
@@ -43,11 +42,11 @@ namespace AP.BTP.WebAPI.Controllers
         /// <summary>
         /// Adds a new picture to the system.
         /// </summary>
-        /// <param name="picture">The <see cref="TreePictureDTO"/> representing the picture to add.</param>
-        /// <returns>The newly created <see cref="TreePictureDTO"/>.</returns>
+        /// <param name="picture">The <see cref="TreePictureDto"/> representing the picture to add.</param>
+        /// <returns>The newly created <see cref="TreePictureDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddTree([FromBody] TreePictureDTO treePicture)
+        public async Task<IActionResult> AddTree([FromBody] TreePictureDto treePicture)
         {
             return Created("", await mediator.Send(new AddTreePictureCommand() { TreePicture = treePicture }));
         }
@@ -58,14 +57,14 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="id">The ID of the tree picture to update.</param>
         /// <param name="favourite">A boolean indicating whether the picture should be marked as favourite.</param>
         /// <returns>
-        /// Returns an <see cref="ActionResult{TreePictureDTO}"/> containing the updated <see cref="TreePictureDTO"/>.
+        /// Returns an <see cref="ActionResult{TreePictureDTO}"/> containing the updated <see cref="TreePictureDto"/>.
         /// </returns>
         /// <remarks>
         /// Only users in the "Admin" role are authorized to call this endpoint.
         /// </remarks>
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/favourite")]
-        public async Task<ActionResult<TreePictureDTO>> PatchTaskListPlantationSite(int id, [FromBody] bool favourite)
+        public async Task<ActionResult<TreePictureDto>> PatchTaskListPlantationSite(int id, [FromBody] bool favourite)
         {
             PatchTreePictureCommand command = new PatchTreePictureCommand 
             { 
@@ -73,7 +72,7 @@ namespace AP.BTP.WebAPI.Controllers
                 IsFavourite = favourite 
             };
             
-            TreePictureDTO result = await mediator.Send(command);
+            TreePictureDto result = await mediator.Send(command);
             return Ok(result);
         }
 

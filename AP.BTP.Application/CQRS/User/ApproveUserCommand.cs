@@ -12,7 +12,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <remarks>
     /// This command requires the <see cref="UserId"/> of the user to be approved and the <see cref="Role"/> to assign.
     /// </remarks>
-    public class ApproveUserCommand : IRequest<UserDTO?>
+    public class ApproveUserCommand : IRequest<UserDto?>
     {
         /// <summary>
         /// The unique identifier of the user to approve.
@@ -28,7 +28,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Handles the <see cref="ApproveUserCommand"/> by approving the user in Auth0 and ensuring a corresponding domain user exists.
     /// </summary>
-    public class ApproveUserCommandHandler : IRequestHandler<ApproveUserCommand, UserDTO?>
+    public class ApproveUserCommandHandler : IRequestHandler<ApproveUserCommand, UserDto?>
     {
         private readonly IAuth0ManagementService auth0;
         private readonly IUnitOfWork uow;
@@ -53,9 +53,9 @@ namespace AP.BTP.Application.CQRS.User
         /// <param name="request">The command containing user approval details.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>
-        /// A <see cref="UserDTO"/> representing the approved user, or <c>null</c>.
+        /// A <see cref="UserDto"/> representing the approved user, or <c>null</c>.
         /// </returns>
-        public async Task<UserDTO?> Handle(ApproveUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto?> Handle(ApproveUserCommand request, CancellationToken cancellationToken)
         {
             Domain.User? user = await uow.UserRepository.GetById(request.UserId);
 
@@ -71,7 +71,7 @@ namespace AP.BTP.Application.CQRS.User
 
             await uow.Commit();
 
-            return mapper.Map<UserDTO>(user); ;
+            return mapper.Map<UserDto>(user); ;
         }
     }
 }

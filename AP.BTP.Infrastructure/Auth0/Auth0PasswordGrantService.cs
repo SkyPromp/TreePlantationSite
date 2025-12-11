@@ -29,10 +29,10 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="email">The email address of the user attempting to log in.</param>
         /// <param name="password">The password of the user attempting to log in.</param>
         /// <returns>
-        /// A task that returns a <see cref="TokenResponseDTO"/> containing the access token and related authentication information
+        /// A task that returns a <see cref="TokenResponseDto"/> containing the access token and related authentication information
         /// if the login is successful; otherwise, null.
         /// </returns>
-        public async Task<TokenResponseDTO?> LoginAsync(string email, string password)
+        public async Task<TokenResponseDto?> LoginAsync(string email, string password)
         {
             RestClient client = new RestClient($"https://{_config["AUTH0:DOMAIN"]}/oauth/token");
             RestRequest request = new RestRequest();
@@ -54,7 +54,7 @@ namespace AP.BTP.Infrastructure.Auth0
             if (!response.IsSuccessful)
                 return null;
 
-            TokenResponseDTO? tokenResponse = JsonSerializer.Deserialize<TokenResponseDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            TokenResponseDto? tokenResponse = JsonSerializer.Deserialize<TokenResponseDto>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return tokenResponse;
         }

@@ -24,7 +24,6 @@ else
 
 @code {
     private bool isAuthenticated;
-    private ClaimsPrincipal? user;
 
     /// <summary>
     /// Asynchronously initializes the component and retrieves the current authentication state.
@@ -38,7 +37,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        user = authState.User;
         isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
     }
 }

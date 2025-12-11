@@ -10,12 +10,12 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a command to edit an existing tree in the system.
     /// </summary>
-    public class EditTreeCommand: IRequest<TreeDTO>
+    public class EditTreeCommand: IRequest<TreeDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the updated tree details.
         /// </summary>
-        public required TreeDTO Tree { get; set; }
+        public required TreeDto Tree { get; set; }
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace AP.BTP.Application.CQRS.Tree
 
                     if (trees == null) return true;
 
-                    return trees.Count(t => (t.Id != tree.Id) && (t.Species == tree.Species)) == 0;
+                    return !trees.Any(t => (t.Id != tree.Id) && (t.Species == tree.Species));
                 })
                 .WithMessage("The tree species must be unique.");
 
@@ -85,7 +85,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Handles the <see cref="EditTreeCommand"/> by updating the specified tree in the database and returning the updated DTO.
     /// </summary>
-    public class EditTreeCommandHandler: IRequestHandler<EditTreeCommand, TreeDTO>
+    public class EditTreeCommandHandler: IRequestHandler<EditTreeCommand, TreeDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -106,8 +106,8 @@ namespace AP.BTP.Application.CQRS.Tree
         /// </summary>
         /// <param name="request">The command containing the updated tree details.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TreeDTO"/> representing the updated tree.</returns>
-        public async Task<TreeDTO> Handle(EditTreeCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TreeDto"/> representing the updated tree.</returns>
+        public async Task<TreeDto> Handle(EditTreeCommand request, CancellationToken cancellationToken)
         {
             Domain.Tree tree = mapper.Map<Domain.Tree>(request.Tree);
 

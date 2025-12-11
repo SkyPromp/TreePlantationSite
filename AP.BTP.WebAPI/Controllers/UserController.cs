@@ -31,9 +31,9 @@ namespace AP.BTP.WebAPI.Controllers
         /// <summary>
         /// Registers a new user in the system.
         /// </summary>
-        /// <param name="user">The <see cref="RegisterUserDTO"/> containing the details of the user to register.</param>
+        /// <param name="user">The <see cref="RegisterUserDto"/> containing the details of the user to register.</param>
         /// <returns>
-        /// An <see cref="IActionResult"/> containing the newly created <see cref="UserDTO"/> if successful.
+        /// An <see cref="IActionResult"/> containing the newly created <see cref="UserDto"/> if successful.
         /// Returns HTTP 201 Created on success.
         /// </returns>
         /// <remarks>
@@ -41,7 +41,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </remarks>
         [AllowAnonymous]
         [HttpPost("auth/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDTO user)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto user)
         {
             return Created("", await _mediator.Send(new AddUserCommand() { User = user }));
         }
@@ -50,10 +50,10 @@ namespace AP.BTP.WebAPI.Controllers
         /// <summary>
         /// Authenticates a user and returns authentication information.
         /// </summary>
-        /// <param name="userDetails">The <see cref="LoginUserDTO"/> containing the user's email and password.</param>
+        /// <param name="userDetails">The <see cref="LoginUserDto"/> containing the user's email and password.</param>
         /// <returns>
-        /// An <see cref="IActionResult"/> containing the newly created <see cref="UserDTO"/> if successful.
-        /// An <see cref="IActionResult"/> containing the auth0 response <see cref="TokenResponseDTO"/> if successful.
+        /// An <see cref="IActionResult"/> containing the newly created <see cref="UserDto"/> if successful.
+        /// An <see cref="IActionResult"/> containing the auth0 response <see cref="TokenResponseDto"/> if successful.
         /// Returns HTTP 200 OK on successful login.
         /// </returns>
         /// <remarks>
@@ -61,7 +61,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </remarks>
         [AllowAnonymous]
         [HttpPost("auth/login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO userDetails)
+        public async Task<IActionResult> Login([FromBody] LoginUserDto userDetails)
         {
             return Ok(await _mediator.Send(new LoginUserCommand
             {
@@ -76,10 +76,10 @@ namespace AP.BTP.WebAPI.Controllers
         /// </summary>
         /// <param name="userId">The ID of the user to approve.</param>
         /// <param name="approveUserDTO">DTO containing the role to assign.</param>
-        /// <returns>The approved <see cref="UserDTO"/>.</returns>
+        /// <returns>The approved <see cref="UserDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost("{userId}/approval")]
-        public async Task<IActionResult> Approve(int userId, [FromBody] ApproveUserDTO approveUserDTO)
+        public async Task<IActionResult> Approve(int userId, [FromBody] ApproveUserDto approveUserDTO)
         {
             return Ok(await _mediator.Send(new ApproveUserCommand() { UserId = userId, Role = approveUserDTO.Role }));
         }
@@ -114,14 +114,14 @@ namespace AP.BTP.WebAPI.Controllers
         /// </summary>
         /// <param name="userId">The ID of the user to link.</param>
         /// <param name="linkUserToPlantationSitesDto">DTO containing plantation site IDs to link.</param>
-        /// <returns>The updated <see cref="UserDTO"/>.</returns>
+        /// <returns>The updated <see cref="UserDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{userId}/sites")]
         public async Task<IActionResult> LinkUserToPlantationSites(
             int userId,
-            [FromBody] LinkUserToPlantationSitesDTO linkUserToPlantationSitesDto)
+            [FromBody] LinkUserToPlantationSitesDto linkUserToPlantationSitesDto)
         {
-            UserDTO user = await _mediator.Send(new LinkUserToPlantationSitesCommand
+            UserDto user = await _mediator.Send(new LinkUserToPlantationSitesCommand
             {
                 UserId = userId,
                 PlantationSiteIds = linkUserToPlantationSitesDto.PlantationSiteIds
@@ -186,7 +186,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// Retrieves a single user by their local ID.
         /// </summary>
         /// <param name="userId">The ID of the user to retrieve.</param>
-        /// <returns>The <see cref="UserDTO"/> or NotFound if the user does not exist.</returns>
+        /// <returns>The <see cref="UserDto"/> or NotFound if the user does not exist.</returns>
         [Authorize(Roles = "Admin, Manager")]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)

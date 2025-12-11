@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Represents a command to partially update a TreePicture (e.g., updating only the IsFavourite value).
     /// </summary>
-    public class PatchTreePictureCommand : IRequest<TreePictureDTO>
+    public class PatchTreePictureCommand : IRequest<TreePictureDto>
     {
         /// <summary>
         /// The ID of the TreePicture to update.
@@ -51,8 +51,6 @@ namespace AP.BTP.Application.CQRS.TreePicture
                     if (treePicture == null)
                         return false;
 
-                    int treeId = treePicture.TreeId;
-
                     ICollection<Domain.TreePicture> pictures = await uow.TreePictureRepository
                         .GetAllByTreeId(treePicture.TreeId);
 
@@ -65,7 +63,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Handles the <see cref="PatchTreePictureCommand"/> by partially updating the tree picture in the database.
     /// </summary>
-    public class PatchTreePictureCommandHandler : IRequestHandler<PatchTreePictureCommand, TreePictureDTO>
+    public class PatchTreePictureCommandHandler : IRequestHandler<PatchTreePictureCommand, TreePictureDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -86,8 +84,8 @@ namespace AP.BTP.Application.CQRS.TreePicture
         /// </summary>
         /// <param name="request">The command containing the tree picture ID and fields to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="TreePictureDTO"/>.</returns>
-        public async Task<TreePictureDTO> Handle(PatchTreePictureCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="TreePictureDto"/>.</returns>
+        public async Task<TreePictureDto> Handle(PatchTreePictureCommand request, CancellationToken cancellationToken)
         {
             Domain.TreePicture? treePicture = await uow.TreePictureRepository.GetById(request.TreePictureId);
             
@@ -99,7 +97,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
             uow.TreePictureRepository.Update(treePicture);
             await uow.Commit();
 
-            return mapper.Map<TreePictureDTO>(treePicture);
+            return mapper.Map<TreePictureDto>(treePicture);
         }
     }
 }

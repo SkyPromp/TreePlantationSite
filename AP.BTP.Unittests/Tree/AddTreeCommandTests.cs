@@ -10,9 +10,9 @@ namespace AP.BTP.Unittests.Tree
     [TestClass]
     public class AddTreeCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreeRepository> treeRepoMock;
-        private AddTreeCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITreeRepository> treeRepoMock = null!;
+        private AddTreeCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -30,7 +30,7 @@ namespace AP.BTP.Unittests.Tree
         {
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "" }
+                Tree = new TreeDto() { Id = 0, Species = "" }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -43,7 +43,7 @@ namespace AP.BTP.Unittests.Tree
         {
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = null }
+                Tree = new TreeDto() { Id = 0, Species = null }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -56,7 +56,7 @@ namespace AP.BTP.Unittests.Tree
         {
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+                Tree = new TreeDto() { Id = 0, Species = "Oak" }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -69,7 +69,7 @@ namespace AP.BTP.Unittests.Tree
         {
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -86,7 +86,7 @@ namespace AP.BTP.Unittests.Tree
 
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+                Tree = new TreeDto() { Id = 0, Species = "Oak" }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -100,7 +100,7 @@ namespace AP.BTP.Unittests.Tree
 
             AddTreeCommand command2 = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+                Tree = new TreeDto() { Id = 0, Species = "Oak" }
             };
 
             TestValidationResult<AddTreeCommand> result2 = await validator.TestValidateAsync(command2);
@@ -118,7 +118,7 @@ namespace AP.BTP.Unittests.Tree
 
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+                Tree = new TreeDto() { Id = 0, Species = "Oak" }
             };
 
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
@@ -132,7 +132,7 @@ namespace AP.BTP.Unittests.Tree
 
             AddTreeCommand command2 = new AddTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Birch" }
+                Tree = new TreeDto() { Id = 0, Species = "Birch" }
             };
 
             TestValidationResult<AddTreeCommand> result2 = await validator.TestValidateAsync(command2);
@@ -151,7 +151,7 @@ namespace AP.BTP.Unittests.Tree
             // Arrange
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO
+                Tree = new TreeDto
                 {
                     Id = 0,
                     Species = "Oak"
@@ -177,7 +177,7 @@ namespace AP.BTP.Unittests.Tree
             // Arrange
             AddTreeCommand command = new AddTreeCommand
             {
-                Tree = new TreeDTO
+                Tree = new TreeDto
                 {
                     Id = 0,
                     Species = "Oak"
@@ -193,9 +193,9 @@ namespace AP.BTP.Unittests.Tree
             result.ShouldNotHaveValidationErrorFor($"TreeDTO.{propertyName}");
         }
 
-        private static void SetProperty(TreeDTO tree, string propertyName, string value)
+        private static void SetProperty(TreeDto tree, string propertyName, string value)
         {
-            PropertyInfo property = typeof(TreeDTO).GetProperty(propertyName)
+            PropertyInfo property = typeof(TreeDto).GetProperty(propertyName)
                 ?? throw new ArgumentException($"Property {propertyName} not found on TreeDTO");
 
             property.SetValue(tree, value);

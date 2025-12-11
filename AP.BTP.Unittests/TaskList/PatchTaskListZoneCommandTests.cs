@@ -8,10 +8,10 @@ namespace AP.BTP.Unittests.TaskList
     [TestClass]
     public class PatchTaskListZoneCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITaskListRepository> taskListRepoMock;
-        private Mock<IZoneRepository> zoneRepoMock;
-        private PatchTaskListZoneCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITaskListRepository> taskListRepoMock = null!;
+        private Mock<IZoneRepository> zoneRepoMock = null!;
+        private PatchTaskListZoneCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()

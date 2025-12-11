@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Represents a command to add a new task item to the system.
     /// </summary>
-    public class AddTaskItemCommand: IRequest<TaskItemDTO>
+    public class AddTaskItemCommand: IRequest<TaskItemDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the task item details to be added.
         /// </summary>
-        public required TaskItemDTO TaskItem { get; set; }
+        public required TaskItemDto TaskItem { get; set; }
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Handles the <see cref="AddTaskItemCommand"/> by adding a new task item to the database and returning the resulting DTO.
     /// </summary>
-    public class AddTaskItemCommandHandler: IRequestHandler<AddTaskItemCommand, TaskItemDTO>
+    public class AddTaskItemCommandHandler: IRequestHandler<AddTaskItemCommand, TaskItemDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -79,15 +79,15 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// </summary>
         /// <param name="request">The command containing the task item details to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TaskItemDTO"/> representing the newly added task item.</returns>
-        public async Task<TaskItemDTO> Handle(AddTaskItemCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TaskItemDto"/> representing the newly added task item.</returns>
+        public async Task<TaskItemDto> Handle(AddTaskItemCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
             await uow.TaskItemRepository.Create(taskItem);
             await uow.Commit();
 
-            return mapper.Map<TaskItemDTO>(taskItem);
+            return mapper.Map<TaskItemDto>(taskItem);
         }
     }
 }

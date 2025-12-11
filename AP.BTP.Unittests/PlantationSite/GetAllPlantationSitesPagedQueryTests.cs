@@ -6,8 +6,8 @@ namespace AP.BTP.Unittests.PlantationSite
     [TestClass]
     public class GetAllPlantationSitesPagedQueryTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<IPlantationSiteRepository> plantationSiteRepoMock;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<IPlantationSiteRepository> plantationSiteRepoMock = null!;
 
         [TestInitialize]
         public void Setup()

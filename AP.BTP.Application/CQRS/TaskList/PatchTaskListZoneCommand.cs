@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Represents a command to partially update a task list (e.g., updating only the ZoneId).
     /// </summary>
-    public class PatchTaskListZoneCommand : IRequest<TaskListDTO>
+    public class PatchTaskListZoneCommand : IRequest<TaskListDto>
     {
         /// <summary>
         /// The ID of the task list to update.
@@ -61,7 +61,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Handles the <see cref="PatchTaskListZoneCommand"/> by partially updating the task list in the database.
     /// </summary>
-    public class PatchTaskListZoneCommandHandler : IRequestHandler<PatchTaskListZoneCommand, TaskListDTO>
+    public class PatchTaskListZoneCommandHandler : IRequestHandler<PatchTaskListZoneCommand, TaskListDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -82,8 +82,8 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// </summary>
         /// <param name="request">The command containing the task list ID and fields to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="TaskListDTO"/>.</returns>
-        public async Task<TaskListDTO> Handle(PatchTaskListZoneCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="TaskListDto"/>.</returns>
+        public async Task<TaskListDto> Handle(PatchTaskListZoneCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskList? taskList = await uow.TaskListRepository.GetById(request.TaskListId);
             
@@ -95,7 +95,7 @@ namespace AP.BTP.Application.CQRS.TaskList
             uow.TaskListRepository.Update(taskList);
             await uow.Commit();
 
-            return mapper.Map<TaskListDTO>(taskList);
+            return mapper.Map<TaskListDto>(taskList);
         }
     }
 }

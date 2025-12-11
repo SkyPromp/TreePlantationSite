@@ -3,7 +3,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Data transfer object representing a picture associated with a tree.
     /// </summary>
-    public record TreePictureDTO
+    public record TreePictureDto
     {
         /// <summary>
         /// The unique identifier of the tree picture.

@@ -13,9 +13,9 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="email">The email address of the user attempting to log in.</param>
         /// <param name="password">The password of the user attempting to log in.</param>
         /// <returns>
-        /// A task that returns a <see cref="TokenResponseDTO"/> containing the access token and related authentication information
+        /// A task that returns a <see cref="TokenResponseDto"/> containing the access token and related authentication information
         /// if the login is successful; otherwise, null.
         /// </returns>
-        Task<TokenResponseDTO?> LoginAsync(string email, string password);
+        Task<TokenResponseDto?> LoginAsync(string email, string password);
     }
 }

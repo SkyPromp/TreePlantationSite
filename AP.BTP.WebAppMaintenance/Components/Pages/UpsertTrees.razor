@@ -264,7 +264,7 @@
     /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
@@ -316,55 +316,55 @@
     /// Stores newly selected images that have not yet been uploaded.
     /// Key is a temporary GUID, value is a tuple of the file and its byte content.
     /// </summary>
-    private Dictionary<string, (IBrowserFile file, byte[] data)> newPictures = new();
+    private readonly Dictionary<string, (IBrowserFile file, byte[] data)> newPictures = new();
 
     /// <summary>
     /// Stores existing images for the tree.
     /// Key is the picture ID, value is the filename/path.
     /// </summary>
-    private Dictionary<int, string> existingPictures = new();
+    private readonly Dictionary<int, string> existingPictures = new();
 
     /// <summary>
     /// Stores image previews to display in the UI.
     /// Key is either the temporary GUID (for new images) or ID (for existing images), value is a base64 data URI.
     /// </summary>
-    private Dictionary<string, string> previews = new();
+    private readonly Dictionary<string, string> previews = new();
 
     /// <summary>
     /// Tracks which tree pictures are marked as favourites. 
     /// The key is the tree picture ID, and the value indicates whether it is a favourite (<c>true</c>) or not (<c>false</c>).
     /// </summary>
-    private Dictionary<int, bool> favourites = new();
+    private readonly Dictionary<int, bool> favourites = new();
 
     /// <summary>
     /// Newly selected maintenance files that have not yet been uploaded.
     /// Key is a temporary GUID, value is a tuple containing the file and its byte content.
     /// </summary>
-    private Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
+    private readonly Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
 
     /// <summary>
     /// Existing maintenance files associated with the tree.
     /// Key is the file ID, value is the filename/path.
     /// </summary>    
-    private Dictionary<int, string> existingMaintenanceFiles = new();
+    private readonly Dictionary<int, string> existingMaintenanceFiles = new();
 
     /// <summary>
     /// Previews for maintenance files.
     /// Key is the temporary GUID or filename, value is a base64 data URI.
     /// </summary>    
-    private Dictionary<string, string> maintenancePreviews = new();
+    private readonly Dictionary<string, string> maintenancePreviews = new();
 
     /// <summary>
     /// Stores the original filenames for uploaded maintenance files.
     /// Key is the temporary GUID or server filename, value is the original filename.
     /// </summary>    
-    private Dictionary<string, string> maintenanceFileNames = new();
+    private readonly Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
     /// Stores QR code images as base64 data URIs.
     /// Key is the file key (same as maintenance previews), value is the QR code image data URI.
     /// </summary>
-    private Dictionary<string, string> qrCodes = new();
+    private readonly Dictionary<string, string> qrCodes = new();
 
     /// <summary>
     /// Holds the currently selected image for deletion.
@@ -389,7 +389,7 @@
     /// <summary>
     /// Represents the current tree being created or edited.
     /// </summary>
-    private TreeDTO Tree = new TreeDTO()
+    private TreeDto Tree = new TreeDto()
     {
         Id = 0,
         Species = ""
@@ -408,13 +408,13 @@
     /// <summary>
     /// Holds a list of all deleted tree pictures so they can be cancelled if the changes are not saved.
     /// </summary>
-    List<int> deletedTreePics = new List<int>();
+    private readonly List<int> deletedTreePics = new List<int>();
 
 
     /// <summary>
     /// The allowed content types for picture uploads.
     /// </summary>
-    readonly string[] ImageFileTypes = {
+    private readonly string[] ImageFileTypes = {
         "image/jpeg",
         "image/png",
         "image/webp",
@@ -424,7 +424,7 @@
     /// <summary>
     /// The allowed content types for maintenance plan uploads.
     /// </summary>    
-    readonly string[] AllowedMaintenanceFileTypes = {
+    private readonly string[] AllowedMaintenanceFileTypes = {
         "application/pdf",
         "image/jpeg",
         "image/png",
@@ -460,7 +460,7 @@
             return;
         }
 
-        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
+        TreeDto? response = await this.client.GetFromJsonAsync<TreeDto>($"Tree/{id}");
 
         if (response != null)
             this.Tree = response;
@@ -478,156 +478,221 @@
     {
         try
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen httpclient gevonden.";
+            if (!ValidateClient() || !ValidateTree()) return;
 
-                return;
-            }
+            await ProcessMaintenanceFiles();
 
-            if (string.IsNullOrEmpty(this.Tree.Species))
-            {
-                this.errorMessage = "De boomnaam is leeg";
+            var saveResponse = await SaveTree();
+            if (!saveResponse) return;
 
-                return;
-            }
-
-            if (newMaintenanceFiles.Count > 0)
-            {
-                List<KeyValuePair<string, (IBrowserFile file, byte[] data)>>? maintenanceFilesToUpload = newMaintenanceFiles.ToList();
-                newMaintenanceFiles.Clear();
-
-                foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceFilesToUpload)
-                {
-                    string key = kvp.Key;
-                    (IBrowserFile file, byte[] data) = kvp.Value;
-
-                    using MultipartFormDataContent content = new MultipartFormDataContent();
-                    ByteArrayContent fileContent = new ByteArrayContent(data);
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                    content.Add(fileContent, "file", file.Name);
-
-                    HttpResponseMessage uploadResponse = await client.PostAsync("File/upload", content);
-
-                    if (!uploadResponse.IsSuccessStatusCode)
-                    {
-                        this.errorMessage = $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.";
-                        continue;
-                    }
-
-                    string? fileName = null;
-                    JsonElement json = await uploadResponse.Content.ReadFromJsonAsync<JsonElement>();
-                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        errorMessage = $"Uploaden is gelukt, maar er is geen bestandsnaam geretourneerd voor {file.Name}";
-                        continue;
-                    }
-
-                    if (Tree.MaintenancePlanSpring == key)
-                        Tree.MaintenancePlanSpring = fileName;
-                    if (Tree.MaintenancePlanSummer == key)
-                        Tree.MaintenancePlanSummer = fileName;
-                    if (Tree.MaintenancePlanAutumn == key)
-                        Tree.MaintenancePlanAutumn = fileName;
-                    if (Tree.MaintenancePlanWinter == key)
-                        Tree.MaintenancePlanWinter = fileName;
-
-                    maintenancePreviews.Remove(key);
-                    qrCodes.Remove(key);
-
-                    await GeneratePreview(fileName, fileName, FileType.Maintenance);
-                }
-            }
-
-            HttpResponseMessage response;
-
-            if (this.Id == null)
-            {
-                response = await this.client.PostAsJsonAsync<TreeDTO>("Tree", this.Tree);
-            } else
-            {
-                response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                this.errorMessage = await response.Content.ReadAsStringAsync();
-                return;
-            }
-
-            TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
-            if (savedTree == null || savedTree.Id == 0)
-            {
-                this.errorMessage = "Kan de opgeslagen boom-id niet ophalen.";
-                return;
-            }
-
-            this.Tree = savedTree;
-            this.Id = this.Tree.Id;
-
-            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();
-            newPictures.Clear();
-
-            await this.DeleteAllQueuedPictures();
-
-            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in picturesToUpload)
-            {
-                string tempKey = kvp.Key;
-                (IBrowserFile file, byte[] data) = kvp.Value;
-
-                using MultipartFormDataContent content = new MultipartFormDataContent();
-
-                ByteArrayContent fileContent = new ByteArrayContent(data);
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                content.Add(fileContent, "file", file.Name);
-
-
-                string? fileName = null;
-                HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
-                if (fileResponse.IsSuccessStatusCode)
-                {
-                    JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
-                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
-                }
-
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    this.errorMessage = $"Kan bestand {file.Name} niet uploaden";
-                    continue;
-                }
-
-                TreePictureDTO treePicture = new TreePictureDTO
-                {
-                    TreeId = this.Tree.Id,
-                    Path = fileName,
-                    IsFavourite = false
-                };
-
-                HttpResponseMessage addResponse = await client.PostAsJsonAsync("TreePicture", treePicture);
-                if (!addResponse.IsSuccessStatusCode)
-                {
-                    this.errorMessage = await addResponse.Content.ReadAsStringAsync();
-                    continue;
-                }
-
-                TreePictureDTO? created = await addResponse.Content.ReadFromJsonAsync<TreePictureDTO>();
-                if (created != null)
-                {
-                    existingPictures[created.Id] = created.Path;
-
-                    previews.Remove(tempKey);
-                    await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
-                }
-            }
+            await ProcessPictures();
 
             this.errorMessage = "";
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             this.errorMessage = e.Message;
         }
     }
+
+    /// <summary>
+    /// Validates that an HttpClient is available.
+    /// </summary>
+    /// <returns>True if valid; otherwise sets an error and returns false.</returns>
+    private bool ValidateClient()
+    {
+        if (this.client != null) return true;
+
+        this.errorMessage = "Geen httpclient gevonden.";
+        return false;
+    }
+
+    /// <summary>
+    /// Validates that the tree contains a species name.
+    /// </summary>
+    /// <returns>True if valid; otherwise sets an error and returns false.</returns>
+    private bool ValidateTree()
+    {
+        if (!string.IsNullOrEmpty(this.Tree.Species)) return true;
+
+        this.errorMessage = "De boomnaam is leeg";
+        return false;
+    }
+
+    /// <summary>
+    /// Processes all newly added maintenance files by uploading them
+    /// and updating the corresponding maintenance properties.
+    /// </summary>
+    private async Task ProcessMaintenanceFiles()
+    {
+        if (newMaintenanceFiles.Count == 0) return;
+
+        var maintenanceFilesToUpload = newMaintenanceFiles.ToList();
+        newMaintenanceFiles.Clear();
+
+        foreach (var kvp in maintenanceFilesToUpload)
+            await UploadMaintenanceFile(kvp);
+    }
+
+    /// <summary>
+    /// Uploads a single maintenance plan file and updates the tree model
+    /// with the newly generated file name.
+    /// Also refreshes previews and QR codes.
+    /// </summary>
+    /// <param name="kvp">The maintenance file entry.</param>
+    private async Task UploadMaintenanceFile(
+        KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp)
+    {
+        var key = kvp.Key;
+        var (file, data) = kvp.Value;
+
+        var fileName = await UploadFile(file, data);
+        if (fileName is null)
+        {
+            this.errorMessage = $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.";
+            return;
+        }
+
+        ReplaceMaintenanceKey(key, fileName);
+
+        maintenancePreviews.Remove(key);
+        qrCodes.Remove(key);
+
+        await GeneratePreview(fileName, fileName, FileType.Maintenance);
+    }
+
+    /// <summary>
+    /// Replaces the placeholder maintenance key (the original filename)
+    /// with the actual uploaded file name.
+    /// </summary>
+    /// <param name="key">The original placeholder key.</param>
+    /// <param name="fileName">The uploaded file name.</param>
+    private void ReplaceMaintenanceKey(string key, string fileName)
+    {
+        if (Tree.MaintenancePlanSpring == key) Tree.MaintenancePlanSpring = fileName;
+        if (Tree.MaintenancePlanSummer == key) Tree.MaintenancePlanSummer = fileName;
+        if (Tree.MaintenancePlanAutumn == key) Tree.MaintenancePlanAutumn = fileName;
+        if (Tree.MaintenancePlanWinter == key) Tree.MaintenancePlanWinter = fileName;
+    }
+
+    /// <summary>
+    /// Saves the tree by either creating a new entry or updating an existing one.
+    /// </summary>
+    /// <returns>
+    /// True if the save was successful; otherwise sets an error and returns false.
+    /// </returns>
+    private async Task<bool> SaveTree()
+    {
+        HttpResponseMessage response =
+            this.Id == null
+            ? await this.client.PostAsJsonAsync("Tree", this.Tree)
+            : await this.client.PutAsJsonAsync("Tree", this.Tree);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            this.errorMessage = await response.Content.ReadAsStringAsync();
+            return false;
+        }
+
+        var savedTree = await response.Content.ReadFromJsonAsync<TreeDto>();
+
+        if (savedTree?.Id is null or 0)
+        {
+            this.errorMessage = "Kan de opgeslagen boom-id niet ophalen.";
+            return false;
+        }
+
+        this.Tree = savedTree;
+        this.Id = savedTree.Id;
+        return true;
+    }
+
+    /// <summary>
+    /// Processes all newly added pictures, deletes queued pictures,
+    /// uploads new ones, and generates image previews.
+    /// </summary>
+    private async Task ProcessPictures()
+    {
+        var picturesToUpload = newPictures.ToList();
+        newPictures.Clear();
+
+        await DeleteAllQueuedPictures();
+
+        foreach (var kvp in picturesToUpload)
+            await UploadPicture(kvp);
+    }
+
+    /// <summary>
+    /// Uploads a single tree picture and stores the resulting path
+    /// in the database, then generates a preview.
+    /// </summary>
+    /// <param name="kvp">The queued picture entry.</param>
+    private async Task UploadPicture(
+        KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp)
+    {
+        var tempKey = kvp.Key;
+        var (file, data) = kvp.Value;
+
+        var fileName = await UploadFile(file, data);
+        if (fileName is null)
+        {
+            this.errorMessage = $"Kan bestand {file.Name} niet uploaden";
+            return;
+        }
+
+        var created = await SaveTreePicture(fileName);
+        if (created == null) return;
+
+        existingPictures[created.Id] = created.Path;
+        previews.Remove(tempKey);
+
+        await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
+    }
+
+    /// <summary>
+    /// Persists a newly uploaded picture as a TreePicture entity.
+    /// </summary>
+    /// <param name="fileName">The uploaded file name.</param>
+    /// <returns>The created TreePictureDto or null on error.</returns>
+    private async Task<TreePictureDto?> SaveTreePicture(string fileName)
+    {
+        var treePicture = new TreePictureDto
+        {
+            TreeId = this.Tree.Id,
+            Path = fileName,
+            IsFavourite = false
+        };
+
+        var addResponse = await client.PostAsJsonAsync("TreePicture", treePicture);
+        if (!addResponse.IsSuccessStatusCode)
+        {
+            this.errorMessage = await addResponse.Content.ReadAsStringAsync();
+            return null;
+        }
+
+        return await addResponse.Content.ReadFromJsonAsync<TreePictureDto>();
+    }
+
+    /// <summary>
+    /// Uploads a file to the backend 'File/upload' endpoint.
+    /// </summary>
+    /// <param name="file">The browser file object.</param>
+    /// <param name="data">The file data as bytes.</param>
+    /// <returns>The uploaded file name returned by the server, or null on failure.</returns>
+    private async Task<string?> UploadFile(IBrowserFile file, byte[] data)
+    {
+        using MultipartFormDataContent content = new();
+        var fileContent = new ByteArrayContent(data);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        content.Add(fileContent, "file", file.Name);
+
+        var response = await client.PostAsync("File/upload", content);
+        if (!response.IsSuccessStatusCode) return null;
+
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        return json.TryGetProperty("fileName", out var p) ? p.GetString() : null;
+    }
+
 
 
     /// <summary>
@@ -741,12 +806,12 @@
     /// <param name="treeId">The tree ID.</param>
     private async Task LoadExistingPictures(int treeId)
     {
-        List<TreePictureDTO>? response = await client!.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{treeId}");
+        List<TreePictureDto>? response = await client!.GetFromJsonAsync<List<TreePictureDto>>($"TreePicture/{treeId}");
         if (response != null)
         {
             existingPictures.Clear();
             previews.Clear();
-            foreach (TreePictureDTO pic in response)
+            foreach (TreePictureDto pic in response)
             {
                 existingPictures[pic.Id] = pic.Path;
                 await GeneratePreview(pic.Id.ToString(), pic.Path, FileType.Picture);
@@ -792,7 +857,7 @@
     }
 
     private async Task DeleteAllQueuedPictures(){
-        if (this.deletedTreePics.Count() == 0) return;
+        if (!this.deletedTreePics.Any()) return;
 
         if(this.client == null)
         {
@@ -932,7 +997,7 @@
     /// </summary>
     /// <param name="key">The picture key.</param>
     /// <returns><c>true</c> if the image is temporary; otherwise <c>false</c>.</returns>
-    private bool IsTemporary(string key)
+    private static bool IsTemporary(string key)
     {
         return !int.TryParse(key, out _);
     }

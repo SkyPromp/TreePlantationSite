@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a command to update an existing plantation site in the system.
     /// </summary>
-    public class UpdatePlantationSiteCommand : IRequest<PlantationSiteDTO>
+    public class UpdatePlantationSiteCommand : IRequest<PlantationSiteDto>
     {
         /// <summary>
         /// The DTO containing the updated details of the plantation site.
         /// </summary>
-        public required PlantationSiteDTO UpdatedSite { get; set; }
+        public required PlantationSiteDto UpdatedSite { get; set; }
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="UpdatePlantationSiteCommand"/> by updating the plantation site in the database and returning the updated DTO.
     /// </summary>
-    public class UpdatePlantationSitesQueryHandler: IRequestHandler<UpdatePlantationSiteCommand, PlantationSiteDTO>
+    public class UpdatePlantationSitesQueryHandler: IRequestHandler<UpdatePlantationSiteCommand, PlantationSiteDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -93,14 +93,14 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// </summary>
         /// <param name="request">The command containing the updated plantation site details.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="PlantationSiteDTO"/>.</returns>
-        public async Task<PlantationSiteDTO> Handle(UpdatePlantationSiteCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="PlantationSiteDto"/>.</returns>
+        public async Task<PlantationSiteDto> Handle(UpdatePlantationSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite plantationSite = mapper.Map<Domain.PlantationSite>(request.UpdatedSite);
             uow.PlantationSiteRepository.Update(plantationSite);  // If you really don't want to update is deleted (which shouldn't be in a DTO anyways) you can manually change the isDeleted value from plantationSite after the mapping
             await uow.Commit();
             
-            return mapper.Map<PlantationSiteDTO>(request.UpdatedSite);
+            return mapper.Map<PlantationSiteDto>(request.UpdatedSite);
         }
     }
 }

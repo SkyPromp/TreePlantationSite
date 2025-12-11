@@ -62,7 +62,8 @@
                             <label class="form-label">Lente</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)) {
+                            @if (Tree != null && !string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring))
+                            {
                                 string fileKey = Tree.MaintenancePlanSpring;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -208,7 +209,7 @@
     /// <summary>
     /// Holds the details of the currently loaded tree.
     /// </summary>
-    private TreeDTO? Tree = new TreeDTO(){ Species = ""};
+    private TreeDto? Tree = new TreeDto(){ Species = ""};
 
     /// <summary>
     /// HTTP client used to call the backend API.
@@ -218,7 +219,7 @@
     /// <summary>
     /// Stores image identifiers mapped to their corresponding image paths or URLs.
     /// </summary>
-    private Dictionary<string, string> images = new();
+    private readonly Dictionary<string, string> images = new();
 
     /// <summary>
     /// Tracks the index of the currently displayed image within the collection.
@@ -229,19 +230,19 @@
     /// Previews for maintenance files.
     /// Key is the temporary GUID or filename, value is a base64 data URI.
     /// </summary>    
-    private Dictionary<string, string> maintenancePreviews = new();
+    private readonly Dictionary<string, string> maintenancePreviews = new();
 
     /// <summary>
     /// Stores the original filenames for uploaded maintenance files.
     /// Key is the temporary GUID or server filename, value is the original filename.
     /// </summary>    
-    private Dictionary<string, string> maintenanceFileNames = new();
+    private readonly Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
     /// Stores QR code images as base64 data URIs.
     /// Key is the file key (same as maintenance previews), value is the QR code image data URI.
     /// </summary>
-    private Dictionary<string, string> qrCodes = new();
+    private readonly Dictionary<string, string> qrCodes = new();
 
     /// <summary>
     /// Lifecycle method called when the component is initialized.
@@ -269,7 +270,7 @@
             return;
         }
 
-        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
+        TreeDto? response = await this.client.GetFromJsonAsync<TreeDto>($"Tree/{id}");
 
         if (response != null)
         {
@@ -296,11 +297,11 @@
             return;
         }
 
-        List<TreePictureDTO>? response = await this.client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{Tree.Id}");
+        List<TreePictureDto>? response = await this.client.GetFromJsonAsync<List<TreePictureDto>>($"TreePicture/{Tree.Id}");
 
         if (response != null)
         {
-            foreach (TreePictureDTO pic in response){
+            foreach (TreePictureDto pic in response){
                 if(pic == null){
                     errorMessage = "Geen afbeelding gevonden";
                     return;
@@ -378,6 +379,9 @@
         maintenancePreviews.Clear();
         maintenanceFileNames.Clear();
         qrCodes.Clear();
+
+        if (Tree is null)
+            return;
 
         async Task LoadOne(string? fileKey)
         {

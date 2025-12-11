@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Zone
     /// <summary>
     /// Represents a query to retrieve a zone by its unique identifier.
     /// </summary>
-    public class GetZoneByIdQuery: IRequest<ZoneDTO>
+    public class GetZoneByIdQuery: IRequest<ZoneDto>
     {
         /// <summary>
         /// The unique identifier of the zone to retrieve.
@@ -34,9 +34,9 @@ namespace AP.BTP.Application.CQRS.Zone
 
     /// <summary>
     /// Handles the <see cref="GetZoneByIdQuery"/> by retrieving the specified zone from the repository
-    /// and returning it as a <see cref="ZoneDTO"/>.
+    /// and returning it as a <see cref="ZoneDto"/>.
     /// </summary>
-    public class GetZoneByIdQueryHandler: IRequestHandler<GetZoneByIdQuery, ZoneDTO>
+    public class GetZoneByIdQueryHandler: IRequestHandler<GetZoneByIdQuery, ZoneDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -54,15 +54,15 @@ namespace AP.BTP.Application.CQRS.Zone
 
         /// <summary>
         /// Handles the query by retrieving the zone with the specified Id from the database
-        /// and returning it as a <see cref="ZoneDTO"/>.
+        /// and returning it as a <see cref="ZoneDto"/>.
         /// </summary>
         /// <param name="request">The query containing the Id of the zone to retrieve.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The zone mapped as a <see cref="ZoneDTO"/>.</returns>
-        public async Task<ZoneDTO> Handle(GetZoneByIdQuery request, CancellationToken cancellationToken)
+        /// <returns>The zone mapped as a <see cref="ZoneDto"/>.</returns>
+        public async Task<ZoneDto> Handle(GetZoneByIdQuery request, CancellationToken cancellationToken)
         {
             Domain.Zone? zone = await uow.ZoneRepository.GetById(id:request.Id);
-            ZoneDTO zoneDTO = mapper.Map<ZoneDTO>(zone);
+            ZoneDto zoneDTO = mapper.Map<ZoneDto>(zone);
 
             return zoneDTO;
         }

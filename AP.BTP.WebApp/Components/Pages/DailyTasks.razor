@@ -20,7 +20,7 @@
 
 <div class="card border-0">
     <div class="p-3 d-flex flex-column gap-2">
-        @foreach (TaskItemDTO task in todayTasks?.TaskItems ?? [])
+        @foreach (TaskItemDto task in todayTasks?.TaskItems ?? [])
         {
             <div class="card py-2">
                 <div class="container">
@@ -88,7 +88,7 @@
                         @currentSite.PostalCode @currentSite.City
                     </p>
 
-                    <p><b>Zone: </b>@currentZone.Name</p>
+                    <p><b>Zone: </b>@(currentZone?.Name ?? "n.v.t.")</p>
 
                 </div>
             }
@@ -134,21 +134,21 @@
 
     private DateTime selectedDate;
 
-    private TaskListDTO? todayTasks;
+    private TaskListDto? todayTasks;
 
     private bool showStartConfirmation;
 
     private bool showEndConfirmation;
 
-    private TaskItemDTO? selectedTask;
+    private TaskItemDto? selectedTask;
 
     private bool showGroundPlan = false;
 
     private string groundPlanPreview = string.Empty;
 
-    private PlantationSiteDTO? currentSite;
+    private PlantationSiteDto? currentSite;
 
-    private ZoneDTO? currentZone;
+    private ZoneDto? currentZone;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -180,7 +180,7 @@
 
         try
         {
-            TaskListDTO? response = await this.client.GetFromJsonAsync<TaskListDTO>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
+            TaskListDto? response = await this.client.GetFromJsonAsync<TaskListDto>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
             this.todayTasks = response;
 
             if (response == null)
@@ -216,7 +216,7 @@
         StateHasChanged();
     }
 
-    private void ConfirmStartTask(TaskItemDTO task)
+    private void ConfirmStartTask(TaskItemDto task)
     {
         this.selectedTask = task;
         this.showStartConfirmation = true;
@@ -250,10 +250,10 @@
 
         try
         {
-            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/started", this.selectedTask);
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDto>("TaskItem/started", this.selectedTask);
             if (!response.IsSuccessStatusCode)
             {
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo == null)
                     return;
@@ -271,7 +271,7 @@
             }
 
             this.errorMessage = "";
-            this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
+            this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.StartTime;
         }
         catch (Exception e)
         {
@@ -284,7 +284,7 @@
         StateHasChanged();
     }
 
-    private void ConfirmEndTask(TaskItemDTO task)
+    private void ConfirmEndTask(TaskItemDto task)
     {
         this.selectedTask = task;
         this.showEndConfirmation = true;
@@ -319,11 +319,11 @@
 
         try
         {
-            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/ended", this.selectedTask);
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDto>("TaskItem/ended", this.selectedTask);
 
             if (!response.IsSuccessStatusCode)
             {
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo != null)
                 {
@@ -346,7 +346,7 @@
             }
 
             this.errorMessage = "";
-            this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
+            this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.EndTime;
         }
         catch (Exception e)
         {
@@ -375,7 +375,7 @@
         try
         {
             currentSite =
-                await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{todayTasks.PlantationSiteId}");
+                await client.GetFromJsonAsync<PlantationSiteDto>($"PlantationSite/{todayTasks.PlantationSiteId}");
 
             if (currentSite == null)
             {

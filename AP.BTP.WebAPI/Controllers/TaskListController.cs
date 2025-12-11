@@ -36,7 +36,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <param name="userId">The ID of the user.</param>
         /// <param name="year">The year to filter the task lists.</param>
         /// <param name="weekNumber">The ISO week number to filter the task lists.</param>
-        /// <returns>A list of <see cref="TaskListDTO"/> objects for the specified user and week.</returns>
+        /// <returns>A list of <see cref="TaskListDto"/> objects for the specified user and week.</returns>
         [Authorize(Roles = "Manager, Admin")]
         [HttpGet]
         public async Task<IActionResult> GetByUserAndWeek([FromQuery] int userId, [FromQuery] int year, [FromQuery] int weekNumber)
@@ -60,7 +60,7 @@ namespace AP.BTP.WebAPI.Controllers
 
             if (auth0Id == null) return BadRequest("User has not been found");
 
-            TaskListDTO? tasklist = await mediator.Send(new GetTaskListByDayFromAuth0IdQuery() { Auth0Id = auth0Id, Day = date });
+            TaskListDto? tasklist = await mediator.Send(new GetTaskListByDayFromAuth0IdQuery() { Auth0Id = auth0Id, Day = date });
 
             if (tasklist == null) return NotFound();
 
@@ -69,16 +69,16 @@ namespace AP.BTP.WebAPI.Controllers
 
         /// Adds a new task list.
         /// </summary>
-        /// <param name="taskList">The <see cref="TaskListDTO"/> object containing task list data to add.</param>
+        /// <param name="taskList">The <see cref="TaskListDto"/> object containing task list data to add.</param>
         /// <returns>
-        /// Returns an <see cref="IActionResult"/> containing the added <see cref="TaskListDTO"/>.
+        /// Returns an <see cref="IActionResult"/> containing the added <see cref="TaskListDto"/>.
         /// </returns>
         /// <remarks>
         /// This endpoint requires the caller to have the "Manager" role.
         /// </remarks>
         [Authorize(Roles = "Manager")]
         [HttpPost]
-        public async Task<IActionResult> AddTaskList([FromBody] TaskListDTO taskList)
+        public async Task<IActionResult> AddTaskList([FromBody] TaskListDto taskList)
         {
             return Ok(await mediator.Send(new AddTaskListCommand() { TaskList = taskList}));
         }
@@ -90,7 +90,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// <returns>The updated task lists after applying all changes.</returns>
         [Authorize(Roles = "Manager")]
         [HttpPost("weekschedule")]
-        public async Task<IActionResult> SubmitWeekSchedule([FromBody] SubmitWeekScheduleDTO submitWeekScheduleDTO)
+        public async Task<IActionResult> SubmitWeekSchedule([FromBody] SubmitWeekScheduleDto submitWeekScheduleDTO)
         {
             return Ok(await mediator.Send(new SubmitWeekScheduleCommand() { TaskLists = submitWeekScheduleDTO.TaskLists }));
         }
@@ -109,7 +109,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </remarks>
         [Authorize(Roles = "Manager")]
         [HttpPatch("{id}/plantation-site")]
-        public async Task<ActionResult<TaskListDTO>> PatchTaskListPlantationSite(int id, [FromBody] int? plantationSiteId)
+        public async Task<ActionResult<TaskListDto>> PatchTaskListPlantationSite(int id, [FromBody] int? plantationSiteId)
         {
             PatchTaskListSiteCommand command = new PatchTaskListSiteCommand 
             { 
@@ -117,7 +117,7 @@ namespace AP.BTP.WebAPI.Controllers
                 PlantationSiteId = plantationSiteId 
             };
             
-            TaskListDTO result = await mediator.Send(command);
+            TaskListDto result = await mediator.Send(command);
             return Ok(result);
         }
         
@@ -134,7 +134,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// </remarks>
         [Authorize(Roles = "Manager")]
         [HttpPatch("{id}/zone")]
-        public async Task<ActionResult<TaskListDTO>> PatchTaskListZone(int id, [FromBody] int? zoneId)
+        public async Task<ActionResult<TaskListDto>> PatchTaskListZone(int id, [FromBody] int? zoneId)
         {
             PatchTaskListZoneCommand command = new PatchTaskListZoneCommand 
             { 
@@ -142,7 +142,7 @@ namespace AP.BTP.WebAPI.Controllers
                 ZoneId = zoneId 
             };
             
-            TaskListDTO result = await mediator.Send(command);
+            TaskListDto result = await mediator.Send(command);
             return Ok(result);
         }
     }

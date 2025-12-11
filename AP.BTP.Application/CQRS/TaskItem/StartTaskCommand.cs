@@ -10,12 +10,12 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Represents a command to start the task.
     /// </summary>
-    public class StartTaskCommand : IRequest<TaskItemDTO>
+    public class StartTaskCommand : IRequest<TaskItemDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the task item to be started.
         /// </summary>
-        public required TaskItemDTO TaskItem { get; set; }
+        public required TaskItemDto TaskItem { get; set; }
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
     /// <summary>
     /// Handles the <see cref="StartTaskCommand"/> to start the task item and returning the resulting DTO.
     /// </summary>
-    public class StartTaskCommandHandler : IRequestHandler<StartTaskCommand, TaskItemDTO>
+    public class StartTaskCommandHandler : IRequestHandler<StartTaskCommand, TaskItemDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -57,8 +57,8 @@ namespace AP.BTP.Application.CQRS.TaskItem
         /// </summary>
         /// <param name="request">The command containing the task item to start.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TaskItemDTO"/> representing the newly started task item.</returns>
-        public async Task<TaskItemDTO> Handle(StartTaskCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TaskItemDto"/> representing the newly started task item.</returns>
+        public async Task<TaskItemDto> Handle(StartTaskCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskItem taskItem = mapper.Map<Domain.TaskItem>(request.TaskItem);
 
@@ -80,7 +80,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
             if (taskList == null)
                 throw new NotFoundException($"TaskList not found for taskItemId={request.TaskItem.Id}. taskListId={request.TaskItem.TaskListId}");
 
-            if (taskList.TaskItems.Count(ti => ti.StartTime != null && ti.EndTime == null) != 0)
+            if (taskList.TaskItems.Any(ti => ti.StartTime != null && ti.EndTime == null))
                 throw new StartStopTaskFailedException(
                     "Cannot start multiple tasks at the same time from the same tasklist.",
                     "TASK_MULTIPLE_ACTIVE_NOT_ALLOWED"
@@ -97,7 +97,7 @@ namespace AP.BTP.Application.CQRS.TaskItem
             uow.TaskItemRepository.Update(taskItem);
             await uow.Commit();
 
-            return mapper.Map<TaskItemDTO>(taskItem);
+            return mapper.Map<TaskItemDto>(taskItem);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace AP.BTP.Unittests.TaskList
     [TestClass]
     public class SubmitWeekScheduleCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private SubmitWeekScheduleCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private SubmitWeekScheduleCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -19,7 +19,7 @@ namespace AP.BTP.Unittests.TaskList
             validator = new SubmitWeekScheduleCommandValidator(uowMock.Object);
         }
 
-        private SubmitWeekScheduleCommand CreateValidCommand(
+        private static SubmitWeekScheduleCommand CreateValidCommand(
             int siteId = 1,
             int dayCount = 5,
             int tasksPerDay = 2,
@@ -31,18 +31,18 @@ namespace AP.BTP.Unittests.TaskList
 
             for (int d = 0; d < dayCount; d++)
             {
-                TaskListDTO list = new TaskListDTO
+                TaskListDto list = new TaskListDto
                 {
                     Id = 0,
                     UserId = 123,
                     PlantationSiteId = siteId,
                     Date = startDate.AddDays(d),
-                    TaskItems = new List<TaskItemDTO>()
+                    TaskItems = new List<TaskItemDto>()
                 };
 
                 for (int t = 0; t < tasksPerDay; t++)
                 {
-                    list.TaskItems.Add(new TaskItemDTO
+                    list.TaskItems.Add(new TaskItemDto
                     {
                         Id = 0,
                         TaskListId = 0,
@@ -123,17 +123,17 @@ namespace AP.BTP.Unittests.TaskList
 
             SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
-                TaskLists = new List<TaskListDTO>
+                TaskLists = new List<TaskListDto>
         {
-            new TaskListDTO
+            new TaskListDto
             {
                 Id = 1,
                 UserId = 123,
                 PlantationSiteId = 1,
                 Date = yesterday,
-                TaskItems = new List<TaskItemDTO>
+                TaskItems = new List<TaskItemDto>
                 {
-                    new TaskItemDTO
+                    new TaskItemDto
                     {
                         Id = 10,
                         TaskListId = 1,
@@ -172,17 +172,17 @@ namespace AP.BTP.Unittests.TaskList
 
             SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
-                TaskLists = new List<TaskListDTO>
+                TaskLists = new List<TaskListDto>
         {
-            new TaskListDTO
+            new TaskListDto
             {
                 Id = 1,
                 UserId = 123,
                 PlantationSiteId = 1,
                 Date = yesterday,
-                TaskItems = new List<TaskItemDTO>
+                TaskItems = new List<TaskItemDto>
                 {
-                    new TaskItemDTO
+                    new TaskItemDto
                     {
                         Id = 10,
                         TaskListId = 1,
@@ -221,17 +221,17 @@ namespace AP.BTP.Unittests.TaskList
 
             SubmitWeekScheduleCommand command = new SubmitWeekScheduleCommand
             {
-                TaskLists = new List<TaskListDTO>
+                TaskLists = new List<TaskListDto>
         {
-            new TaskListDTO
+            new TaskListDto
             {
                 Id = 1,
                 UserId = 123,
                 PlantationSiteId = 1,
                 Date = today,
-                TaskItems = new List<TaskItemDTO>
+                TaskItems = new List<TaskItemDto>
                 {
-                    new TaskItemDTO
+                    new TaskItemDto
                     {
                         Id = 10,
                         TaskListId = 1,

@@ -6,33 +6,33 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) for registering a new user, including personal details, email, and password.
     /// </summary>
-    public record RegisterUserDTO
+    public record RegisterUserDto
     {
         /// <summary>
         /// The first name of the user.
         /// </summary>
         [Required(ErrorMessage = "Voornaam is verplicht")]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         /// <summary>
         /// The last name of the user.
         /// </summary>
         [Required(ErrorMessage = "Achternaam is verplicht")]
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
 
         /// <summary>
         /// The phone number of the user. Must be a valid phone format
         /// </summary>
         [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
         [Phone(ErrorMessage = "Ongeldig telefoonnummer.")]
-        public string PhoneNumber { get; set; }
+        public required string PhoneNumber { get; set; }
 
         /// <summary>
         /// The email address of the user. Must be a valid email format.
         /// </summary>
         [Required(ErrorMessage = "E-mail is verplicht")]
         [EmailAddress(ErrorMessage = "Vul een geldig e-mailadres in.")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         /// <summary>
         /// The password for the user account.
@@ -40,14 +40,14 @@ namespace AP.BTP.Contracts.DTOs
         /// <remarks>The password must comply with the constraints defined by the <see
         /// cref="PasswordRequirements"/>.</remarks>
         [PasswordRequirements]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         /// <summary>
         /// Confirmation of the user's password. Must match the <see cref="Password"/> field.
         /// </summary>
         [Required(ErrorMessage = "Bevestig je wachtwoord.")]
         [Compare("Password", ErrorMessage = "Wachtwoorden komen niet overeen.")]
-        public string ConfirmPassword { get; set; }
+        public required string ConfirmPassword { get; set; }
     }
 
     /// <summary>

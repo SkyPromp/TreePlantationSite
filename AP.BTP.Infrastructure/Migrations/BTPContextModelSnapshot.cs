@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AP.BTP.Infrastructure.Migrations
 {
-    [DbContext(typeof(BTPContext))]
+    [DbContext(typeof(BtpContext))]
     partial class BTPContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
