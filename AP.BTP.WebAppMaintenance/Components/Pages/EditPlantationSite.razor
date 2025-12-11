@@ -429,15 +429,6 @@
             this.showConfirmSaveForm = false;
             if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
             else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite);
-
-            if (response.IsSuccessStatusCode)
-            {
-                // TODO add snackbar confirmation
-            }
-            else
-            {
-                // TODO add snackbar error
-            }
         }
         catch (Exception)
         {
