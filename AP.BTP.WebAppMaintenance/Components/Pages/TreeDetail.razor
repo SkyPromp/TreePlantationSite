@@ -466,10 +466,14 @@
             byte[] qrCodeBytes = qrCode.GetGraphic(40);
             string base64QrCode = Convert.ToBase64String(qrCodeBytes);
 
-            string season = fileKey == Tree?.MaintenancePlanSpring ? "Lente" :
-                           fileKey == Tree?.MaintenancePlanSummer ? "Zomer" :
-                           fileKey == Tree?.MaintenancePlanAutumn ? "Herfst" :
-                           fileKey == Tree?.MaintenancePlanWinter ? "Winter" : "Onbekend";
+            string season = fileKey switch
+            {
+                var key when key == Tree?.MaintenancePlanSpring => "Lente",
+                var key when key == Tree?.MaintenancePlanSummer => "Zomer",
+                var key when key == Tree?.MaintenancePlanAutumn => "Herfst",
+                var key when key == Tree?.MaintenancePlanWinter => "Winter",
+                _ => "Onbekend"
+            };
 
             string pdfFileName = $"QR_{Tree?.Species?.Replace(" ", "_") ?? "Boom"}_{season}.pdf";
             string title = $"{Tree?.Species ?? "Boom"} - Onderhoudsplan {season}";

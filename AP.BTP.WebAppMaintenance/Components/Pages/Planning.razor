@@ -112,7 +112,14 @@ else
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
                             int remainingMinutes = GetRemainingTimeForDay(day);
-                            string totalColor = totalMinutes > 480 ? "text-danger" : totalMinutes > 400 ? "text-warning" : "text-success";
+                            string totalColor;
+
+                            if (totalMinutes > 480)
+                                totalColor = "text-danger";
+                            else if (totalMinutes > 400)
+                                totalColor = "text-warning";
+                            else
+                                totalColor = "text-success";
                         }
                         <div class="@totalColor" style="font-size: 0.75rem; font-weight: normal;">
                             @FormatDuration(totalMinutes) / 8u
