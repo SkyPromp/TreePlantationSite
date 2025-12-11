@@ -849,9 +849,7 @@ else
 
         foreach (TaskListDto tl in taskLists)
         {
-            int activeTasks = tl.TaskItems?
-                .Where(t => !t.IsDeleted)
-                .Count() ?? 0;
+            int activeTasks = tl.TaskItems?.Count(t => !t.IsDeleted) ?? 0;
 
             if (activeTasks > 4)
                 return $"Een medewerker mag maximaal 4 taken hebben per dag.";

@@ -511,7 +511,7 @@
     /// <returns>The tree DTO or null if not found.</returns>
     private TreeDto? findTree(int? id)
     {
-        return id == null? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
+        return id == null ? null : this.Trees?.FirstOrDefault(tree => tree.Id == id);
     }
 
     /// <summary>
