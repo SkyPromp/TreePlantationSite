@@ -39,6 +39,7 @@ namespace AP.BTP.Contracts.DTOs
         /// </summary>
         /// <remarks>The password must comply with the constraints defined by the <see
         /// cref="PasswordRequirements"/>.</remarks>
+        [Required(ErrorMessage = "Wachtwoord is verplicht")]
         [PasswordRequirements]
         public string Password { get; set; }
 

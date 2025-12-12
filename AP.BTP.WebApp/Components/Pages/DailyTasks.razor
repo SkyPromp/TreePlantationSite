@@ -1,54 +1,70 @@
 ﻿@attribute [Authorize(Roles = "Operator")]
-@page "/planning"
+@page "/tasks"
 @rendermode InteractiveServer
 @using AP.BTP.Contracts.DTOs
 @using Microsoft.AspNetCore.Authorization
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
-<div class="d-flex mx-4 justify-content-between align-items-center gap-0">
-    <h3 class="p-0" @onclick="() => UpdateDate(-1)">←</h3>
+<div class="d-flex mx-4 justify-content-between align-items-center gap-2">
+    <Button Class="p-0 shadow-none" Size="ButtonSize.Large" @onclick="() => UpdateDate(-1)"><Icon Name="IconName.ArrowLeft"></Icon></Button>
     <h3 class="text-center">Takenlijst @($"{this.selectedDate:yyyy-MM-dd}")</h3>
-    <h3 class="p-0" @onclick="() => UpdateDate(1)">→</h3>
+    <Button Class="p-0 shadow-none" Size="ButtonSize.Large" @onclick="() => UpdateDate(1)"><Icon Name="IconName.ArrowRight"></Icon></Button>
 </div>
 
 <div class="text-center my-3">
-    <button class="btn btn-light" @onclick="ShowGroundPlan">
-        <i class="bi bi-map fs-5"></i>  Zie locatie
-    </button>
+    <Button Class="green-btn shadow" @onclick="ShowGroundPlan"> 
+        <Icon Name="IconName.Map"></Icon> Zie plattegrond
+    </Button>
 </div>
 
-<div class="card border-0">
-    <div class="p-3 d-flex flex-column gap-2">
-        @foreach (TaskItemDTO task in todayTasks?.TaskItems ?? [])
-        {
-            <div class="card py-2">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-7">
-                            <b class="text-truncate-multiline-1" title="@task.Title">@task.Title</b>
-                            <p class="small text-truncate-multiline-2" title="@task.Description">@task.Description</p>
-                        </div>
-                        <div class="d-flex flex-column align-items-center justify-content-center col-5">
-                            @if (task.StartTime == null)
-                            {
-                                <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
-                            } else if (task.EndTime == null)
-                            {
-                                <button @onclick="() => ConfirmEndTask(task)" class="btn btn-danger">Stop</button>
-                                <small>@($"Startuur: {task.StartTime:HH:mm:ss}")</small>
-                            } else
-                            {
-                                <button class="btn btn-secondary" disabled>Beëindigd</button>
-                                <small>@($"Totaalduur: {(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
-                            }
+<Card Class="border-0 shadow border" Style="height: 60vh">
+    @if(todayTasks != null){
+        <CardBody Class="p-3 d-flex flex-column gap-3 h-100">
+            @foreach (TaskItemDTO task in todayTasks.TaskItems ?? [])
+            {
+                <Card Class="py-2 h-25 shadow border">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-7" @onclick="() => {showTaskDetails = true; selectedTask = task;}">
+                                <p class="text-truncate-multiline-2 fw-bold mb-1" title="@task.Title">@task.Title</p>
+                            @* TODO: new card for details  *@
+                            </div>
+                            <div class="d-flex flex-column align-items-center justify-content-center col-5">
+                                @if(todayTasks.Date.Date < DateTime.Today && task.EndTime - task.StartTime == null) {
+                                    <Button Color="ButtonColor.Dark" Disabled="true">Vervallen</Button>
+                                } else if (todayTasks.Date.Date > DateTime.Today){
+                                    <Button Class="green-btn" Disabled>Start</Button>
+                                }
+                                else if (task.StartTime == null)
+                                {
+                                    <Button Class="green-btn" @onclick="() => ConfirmStartTask(task)">Start</Button>
+                                }
+                                else if (task.EndTime == null)
+                                {
+                                    <Button Class="red-btn" @onclick="() => ConfirmEndTask(task)">Stop</Button>
+                                    <p class="mt-2" style="font-size: 3vw">@($"Start: {task.StartTime:HH:mm}")</p>
+                                }
+                                else
+                                {
+                                    <Button Color="ButtonColor.Secondary" Disabled>Beëindigd</Button>
+                                    <small>@($"Duur: {(task.EndTime - task.StartTime):hh\\:mm}")</small>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
+                </Card>
+            }
+        </CardBody>
+    } else {
+        <CardBody Class="d-flex align-items-center justify-content-center text-center p-3">
+            <p class="text-muted mb-0">
+                Je hebt vandaag geen taken.<br />
+                Geniet van je dag!
+            </p>
+        </CardBody>
+    }
+</Card>
 
 <Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
@@ -67,26 +83,25 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
          style="background: rgba(0,0,0,0.5); z-index: 10">
 
-        <div class="card shadow-lg p-4"
-             style="max-width: 850px; width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 12px;">
-
-            <h4 class="text-center fw-bold mb-4">
-                @currentSite?.Name
-            </h4>
-
+        <Card Class="shadow-lg p-4" Style="width:90%">
             @if (currentSite != null)
             {
-                <div class="mb-4 p-3 border rounded bg-light">
+                <CardTitle Class="text-center fw-bold mb-4">@currentSite.Name</CardTitle>
 
-                    <p class="mb-1">
+                <CardBody Class="mb-4 p-3 border rounded bg-light">
+                    <div>
                         <b>Adres:</b>
                         @currentSite.Street @currentSite.HouseNumber,
                         @currentSite.PostalCode @currentSite.City
-                    </p>
+                    </div>
+                </CardBody>
+            } else {
+                <CardTitle Class="text-center fw-bold mb-4">Onbekend</CardTitle>
 
-                    <p><b>Zone: </b>@currentZone.Name</p>
-
-                </div>
+                
+                <CardBody Class="mb-4 p-3 border rounded bg-light">
+                    <div>Er werd geen site gevonden</div>
+                </CardBody>
             }
 
             <div class="text-center mb-3">
@@ -102,17 +117,35 @@
             </div>
 
             <div class="text-center mt-2">
-                <button class="btn btn-warning px-4" @onclick="() => showGroundPlan = false">Sluit</button>
+                <Button Class="px-4 red-btn" @onclick="() => showGroundPlan = false">Sluiten</Button>
             </div>
-
-        </div>
+        </Card>
     </div>
 }
 
+@if(showTaskDetails){
+        <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background: rgba(0,0,0,0.5); z-index: 10"> 
+            <Card Class="shadow-lg p-4" Style="width:90%">
+                @if(selectedTask != null) {
+                    <CardTitle Class="text-center fw-bold mb-4">@selectedTask.Title</CardTitle>
+
+                    <CardBody Class="mb-4 p-3 border rounded bg-light">
+                        @selectedTask.Description
+                    </CardBody>
+                } else {
+                    <p>Geen informatie gevonden over deze taak.</p>
+                }
+                <div class="text-center mt-2">
+                    <Button Class="px-4 red-btn" @onclick="() => {showTaskDetails = false; selectedTask = null; }">Sluiten</Button>
+                </div>
+            </Card>
+        </div>
+}
+
 @code {
-    /// <summary>
-    /// Holds the list of toast messages to display in the UI.
-    /// </summary>
+        /// <summary>
+        /// Holds the list of toast messages to display in the UI.
+        /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
@@ -120,7 +153,7 @@
     /// </summary>
     private HttpClient? client;
 
-    private DateTime selectedDate;
+    private DateTime selectedDate; // TODO fix initialisation issues
 
     private TaskListDTO? todayTasks;
 
@@ -132,11 +165,11 @@
 
     private bool showGroundPlan = false;
 
+    private bool showTaskDetails = false;
+
     private string groundPlanPreview = string.Empty;
 
     private PlantationSiteDTO? currentSite;
-
-    private ZoneDTO? currentZone;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -325,21 +358,6 @@
             this.EnqueueToast(message: "Kweeksite niet gevonden", type: ToastType.Warning);
 
             return;
-        }
-
-        if (todayTasks.ZoneId.HasValue && currentSite.Zones != null)
-        {
-            try
-            {
-                currentZone = currentSite.Zones.FirstOrDefault(z => z.Id == todayTasks.ZoneId.Value);
-            } catch (ArgumentNullException e)
-            {
-                this.EnqueueToast(message: $"Kon de huidige zone niet ophalen om in de plattegrond te tonen: {e}", type: ToastType.Warning);
-                this.currentZone = null;
-            }
-        } else
-        {
-            currentZone = null;
         }
 
         if (string.IsNullOrWhiteSpace(currentSite.GroundPlan))

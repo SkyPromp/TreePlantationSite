@@ -1,13 +1,14 @@
 ﻿@page "/access-denied"
-@inject NavigationManager Nav
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <PageTitle>Toegang geweigerd</PageTitle>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow-lg border-danger">
-                <div class="card-header bg-danger text-white text-center">
+            <div class="card shadow-lg">
+                <div class="card-header text-dark text-center">
                     <h4 class="mb-0">Toegang geweigerd</h4>
                 </div>
                 <div class="card-body text-center">
@@ -15,9 +16,9 @@
                         <i class="bi bi-exclamation-triangle-fill display-1 text-warning"></i>
                     </div>
                     <p class="lead">@Message</p>
-                    <a href="/welcome" class="btn btn-primary mt-3">
-                        <i class="bi bi-arrow-left-circle"></i>Terug naar login
-                    </a>
+                    <Button Class="red-btn mt-3" @onclick="() => NavigateToWelcome()">
+                        <i class="bi bi-arrow-left-circle"></i> Terug naar login
+                    </Button> 
                 </div>
             </div>
         </div>
@@ -63,5 +64,9 @@
             Message = message,
             AutoHide = true
         });
+    }
+
+    private void NavigateToWelcome(){
+        Navigation.NavigateTo("/welcome");
     }
 }

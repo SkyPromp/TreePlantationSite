@@ -8,18 +8,22 @@
 {
     <div class="page">
         <main>
-                <NavBar></NavBar>
-            <section class="body overflow-scroll">
-                <div style="max-height: 96%">
+            <NavBar></NavBar>
+            <section class="body overflow-hidden" style="height: 91vh">
                     @Body
-                </div>
             </section>
         </main>
     </div>
 }
 else
 {
-    @Body
+    <div class="page">
+        <main>
+            <section class="body vh-100">
+                    @Body
+            </section>
+        </main>
+    </div>
 }
 
 @code {

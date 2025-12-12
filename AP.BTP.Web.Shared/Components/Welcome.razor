@@ -3,28 +3,47 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 @using Microsoft.Extensions.Options
+@rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IOptions<AppInfo> AppInfoOptions
 
 <PageTitle>Welkom</PageTitle>
 
-<div class="container text-center mt-5">
-    <div class="card shadow-lg p-4 mx-auto" style="max-width: 400px;">
+<div class="container d-flex align-items-center justify-content-center h-100 text-center" style="max-width: 600px">
+    <Card Class="shadow-lg p-4">
         @if (AppInfoOptions.Value.AppType == "Maintenance")
         {
-            <h2 class="mb-3">Welkom bij: <br /> BTP Maintenance</h2>
-            <p class="text-muted">Log in of maak een nieuw account aan om door te gaan met het inplannen van taken of beheren van: gebruikers, bomen, kweeksites en zones.</p>
+            <CardTitle Class="text-center fw-bold fs-2">Welkom bij: <br /> BTP Maintenance</CardTitle>
+            
+            <CardBody>
+                <p class="text-muted">Log in of maak een nieuw account aan om door te gaan met het inplannen van taken of beheren van: gebruikers, bomen, kweeksites en zones.</p>
+            </CardBody>
+            <CardFooter Class="border-0 bg-white d-flex justify-content-around">
+                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" @onclick="() => NavigateToRegister()">Registreren</Button>
+                <Button Class="green-btn" Size="ButtonSize.Large" @onclick="() => NavigateToLogin()">Inloggen</Button>
+            </CardFooter>
         }
         else if (AppInfoOptions.Value.AppType == "User")
         {
-            <h2 class="mb-3">Welkom bij: <br />  BTP</h2>
-            <p class="text-muted">Log in of maak een nieuw account aan om je taken te zien, starten, stoppen en meer info omptrent hun locatie teweten te komen.</p>
+            <CardTitle Class="text-center fw-bold fs-2">Welkom bij: BTP</CardTitle>
+            <CardBody>
+                <p class="text-muted">Log in of maak een nieuw account aan om je taken te zien, starten, stoppen en meer info omptrent hun locatie te weten te komen.</p>
+            </CardBody>
+            <CardFooter Class="border-0 bg-white d-flex flex-column gap-3">
+                <Button Class="green-btn" Size="ButtonSize.Large" @onclick="() => NavigateToLogin()">Inloggen</Button>
+                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" @onclick="() => NavigateToRegister()">Registreren</Button>
+            </CardFooter>
         }
-
-        <div class="d-grid gap-2 mt-4">
-            <a class="btn btn-primary btn-lg" href="/login">Inloggen</a>
-            <a class="btn btn-outline-secondary btn-lg" href="/register">Registreer</a>
-        </div>
-    </div>
+    </Card>
 </div>
+
+@code{
+    private void NavigateToRegister(){
+        Navigation.NavigateTo("/register");
+    }
+
+    private void NavigateToLogin(){
+        Navigation.NavigateTo("/login");
+    }
+}

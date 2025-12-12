@@ -11,32 +11,33 @@
 @inject IHttpClientFactory HttpClientFactory
 
 
-<div class="d-flex justify-content-between px-4">
+<div class="d-flex justify-content-between px-2 mb-2"> 
+    <div class="d-flex gap-2">
+        <TextInput Class="shadow border" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; height: 5vh"/>
+        <select class="form-select shadow" @onchange="OnSortOrderChanged" style="width: 6vw; height: 5vh">
+            <option value="true" selected>A-Z</option>
+            <option value="false">Z-A</option>
+        </select> 
+    </div>
     @if(user != null && user.IsInRole("Admin")){
-        <Button Color="ButtonColor.Dark" Style="width: 10vw; height: 5vh" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
-    }
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
-
-    <select class="form-select" @onchange="OnSortOrderChanged" style="width: 15vw; height: 5vh">
-        <option value="true" selected>A-Z</option>
-        <option value="false">Z-A</option>
-    </select>    
+        <Button Class="green-btn shadow" @onclick="GoToAddForm"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
+    }  
 </div>
-<div class="container-fluid m-0">
+<div class="container-fluid">
     @if (response?.Items != null)
     {
         @foreach (List<TreeDTO> row in Rows)
         {
-            <div class="row">
+            <div class="row mb-2">
                 @foreach (TreeDTO item in row)
                 {
-                    <div class="col-md-4" style="padding: 2vh">
-                        <Card Style="background-color: #D9D9D9; border-radius: 24px; border: none; padding: 2vh 4vh">
-                            <CardBody Class="p-0 m-0" Style="height: 27vh;">
-                                <CardTitle Class="mb-2" Style="font-weight: bold; margin-bottom: 3vh; text-size: 5vh;">@item.Species</CardTitle>
+                    <div class="col-md-4 gap-2 my-1">
+                        <Card Class="shadow border" Style="border-radius: 24px; padding: 2vh 4vh">
+                            <CardBody Class="p-0 m-0" Style="height: 30vh;">
+                                <CardTitle Size="HeadingSize.H6" Class="mb-2 fw-bold" Style=" height:3vh" >@item.Species</CardTitle>
                                 
-                                <div class="row h-100">
-                                    <div class="col-9 d-flex justify-content-center align-items-center" style="height: 80%;">
+                                <div class="h-100">
+                                    <div class="d-flex justify-content-center align-items-center" style="height: 65%;">
                                         @if(images.TryGetValue(item.Id.ToString(), out string? imgUrl) && !string.IsNullOrWhiteSpace(imgUrl))
                                         {
                                             <Image Src="@imgUrl" Style="max-height: 100%; max-width: 100%; object-fit: contain;" />
@@ -44,30 +45,24 @@
                                         else
                                         {
                                             <div class="d-flex align-items-center justify-content-center w-100 h-100">
-                                                Nog geen afbeelding
+                                                Geen afbeelding beschikbaar
                                             </div>
                                         }
                                     </div>
 
-                                    <div class="col-3 d-flex flex-column justify-content-around" style="height: 80%;">
                                         @if(user != null && user.IsInRole("Admin"))
                                         {
-                                            <Button Class="p-0" Style="box-shadow: none; border: none; width:100%; height: 5vh;" @onclick="() => GoToUpdateForm(item.Id)" TooltipTitle="Bewerken" TooltipColor="TooltipColor.Dark">
-                                                <Icon Name="IconName.Pen" Color="IconColor.Dark" Style="font-size: 4vh;"></Icon>
-                                            </Button>
-                                            <Button Class="p-0" Style="box-shadow: none; border: none; width:100%; height: 5vh;" @onclick="() => { this.showDeleteConfirmation = true; selectedTree = item; }" TooltipTitle="Verwijderen" TooltipColor="TooltipColor.Danger">
-                                                <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
-                                            </Button>
+                                        <hr class="mb-1"/>
+                                        <div class="d-flex justify-content-end">
+                                            <Button Class="py-0 blue-icon" @onclick="() => GoToUpdateForm(item.Id)"><Icon Name="IconName.Pencil"></Icon></Button>
+                                            <Button Class="py-0 red-icon" @onclick="() => {showDeleteConfirmation = true; selectedTree = item;} "><Icon Name="IconName.Trash"></Icon></Button>
+                                        </div>
                                         }
                                         else if(user != null && user.IsInRole("Manager"))
                                         {
-                                            <a href="@($"/manager/tree/{item.Id}")" style="text-decoration:none;">
-                                                <Button Class="p-0" Style="box-shadow: none; border: none; width:100%; height: 5vh;" TooltipTitle="Details bekijken" TooltipColor="TooltipColor.Dark">
-                                                    <Icon Name="IconName.Eye" Color="IconColor.Dark" Style="font-size: 4vh;"></Icon>
-                                                </Button>
-                                            </a>
+                                            <Button Class="mt-2 green-btn container-fluid" @onclick="() => GoToDetailPage(item.Id)">Bekijken</Button>
                                         }
-                                    </div>
+
                                 </div>
 
                             </CardBody>
@@ -85,7 +80,6 @@
 
     <Pagination 
             Class="justify-content-center"
-            Style="margin-top: 2vh"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"
@@ -264,6 +258,15 @@
     private void GoToUpdateForm(int id)
     {
         Navigation.NavigateTo($"/admin/tree/edit/{id}");
+    }
+
+    /// <summary>
+    /// Navigates to the tree detail page.
+    /// </summary>
+    /// <param name="id">The ID of the tree to edit.</param>
+    private void GoToDetailPage(int id)
+    {
+        Navigation.NavigateTo($"/manager/tree/{id}");
     }
 
     /// <summary>
