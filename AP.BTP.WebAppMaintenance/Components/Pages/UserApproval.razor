@@ -81,7 +81,8 @@
                 </div>
             }
         </div>
-    } else {
+    } else
+    {
         <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 52vh;">
             Er zijn momenteel geen registratieaanvragen in afwachting
         </div>
@@ -101,81 +102,65 @@
 @if (this.showEditUser)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-    <Card Class="position-absolute align-self-center p-4" Style="width: 35vw">
-        <CardTitle>Selecteer de rol die aan deze gebruiker moet worden toegewezen</CardTitle>
-        <CardBody>
-            <select @bind="this.selectedRole" class="form-select mb-3">
-                @foreach (UserRole role in Enum.GetValues<UserRole>())
+        <Card Class="position-absolute align-self-center p-4" Style="width: 35vw">
+            <CardTitle>Selecteer de rol die aan deze gebruiker moet worden toegewezen</CardTitle>
+            <CardBody>
+                <select @bind="this.selectedRole" class="form-select mb-3">
+                    @foreach (UserRole role in Enum.GetValues<UserRole>())
+                    {
+                        <option value="@(role.ToString())">@role.ToString()</option>
+                    }
+                </select>
+                @if (selectedRole == UserRole.Operator.ToString())
                 {
-                    <option value="@(role.ToString())">@role.ToString()</option>
+                    <p>Kweeksite 1</p>
+                    <select @bind="this.site1" class="form-select mb-3">
+                        <option value=""></option>
+                        @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                        {
+                            <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
+                        }
+                    </select>
+
+                    <p>Kweeksite 2</p>
+                    <select @bind="this.site2" class="form-select mb-3">
+                        <option value=""></option>
+                        @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                        {
+                            <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
+                        }
+                    </select>
                 }
-            </select>
-            @if (selectedRole == UserRole.Operator.ToString())
-            {
-                <p>Kweeksite 1</p>
-                <select @bind="this.site1" class="form-select mb-3">
-                    <option value=""></option>
-                    @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
-                    {
-                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
-                    }
-                </select>
+                @if (isLoading)
+                {
 
-                <p>Kweeksite 2</p>
-                <select @bind="this.site2" class="form-select mb-3">
-                    <option value=""></option>
-                    @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
-                    {
-                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
-                    }
-                </select>
-            }
-            @if (isLoading)
-            {
-
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            }
-            else
-            {
-                <div class="d-flex justify-content-between ">
+                    <div class="spinner-border align-self-center" role="status">
+                        <span class="visually-hidden">Laden...</span>
+                    </div>
+                } else
+                {
+                    <div class="d-flex justify-content-between ">
                         <Button Color="ButtonColor.Secondary" @onclick="CancelEditUser">Verlaten</Button>
                         @if (selectedRole == UserRole.Operator.ToString())
                         {
                             <Button Class="green-btn" @onclick="ApproveUser" Disabled="GetEmptyField()">Bevestigen</Button>
-                        } else {
+                        } else
+                        {
                             <Button Class="green-btn" @onclick="ApproveUser" Disabled="@string.IsNullOrEmpty(selectedRole)">Bevestigen</Button>
                         }
-                </div>
-            }
+                    </div>
+                }
             </CardBody>
         </Card>
     </div>
 }
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showDeleteConfirmation"
-    onCancellation="this.CancelEditUser"
-    onConfirmation="this.RejectUser"
-    confirmationDescription="Bent u zeker dat u deze gebruiker wil afwijzen?"
-/>
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-@if (this.showSuccessToast)
-{
-    <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
-        <div class="toast show text-white bg-success shadow" style="opacity:@toastOpacity; transition: opacity 0.5s ease;">
-            <div class="toast-body">
-                ✅ Gebruiker is succesvol goedgekeurd!
-            </div>
-        </div>
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
+                   onCancellation="this.CancelEditUser"
+                   onConfirmation="this.RejectUser"
+                   confirmationDescription="Ben je zeker dat je deze gebruiker wil afwijzen?" />
 
 @code {
     /// <summary>
@@ -183,6 +168,11 @@
     /// Used to filter pending users by name or email.
     /// </summary>
     private string? searchText = null;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// The paginated response containing pending users retrieved from the backend.
@@ -225,11 +215,6 @@
     HttpClient client;  // TODO make optional and check if null
 
     /// <summary>
-    /// Stores any error messages that occur during data fetching or API actions.
-    /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
     /// Flag indicating whether the edit user modal or section is visible.
     /// </summary>
     private bool showEditUser;
@@ -259,16 +244,6 @@
     /// The selected user ID during approval.
     /// </summary>
     private int? selectedUserId;
-
-    /// <summary>
-    /// Indicates whether the success toast notification should be displayed.
-    /// </summary>
-    private bool showSuccessToast = false;
-
-    /// <summary>
-    /// The opacity level of the success toast for fade-in/out animation.
-    /// </summary>
-    private double toastOpacity = 1.0;
 
     /// <summary>
     /// Indicates whether the component is performing a background operation (e.g., approving a user).
@@ -332,25 +307,28 @@
 
         HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDTO() { Role = selectedRole });
 
-        if (responseMessage.IsSuccessStatusCode)
+        if (!responseMessage.IsSuccessStatusCode)
         {
-            await LoadPage(currentPage);
-            StateHasChanged();
+            EnqueueToast(message: "Er is iets misgegaan bij het goedkeuren van de gebruiker.", ToastType.Warning);
+            isLoading = false;
 
-            List<int> selectedSites = new List<int>();
-            if (site1.HasValue)
-                selectedSites.Add(site1.Value);
-            if (site2.HasValue)
-                selectedSites.Add(site2.Value);
-
-            UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
-
-            await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
-
-            CancelEditUser();
-
-            await ShowSuccessToast();
+            return;
         }
+
+        await LoadPage(currentPage);
+        StateHasChanged();
+
+        List<int> selectedSites = new List<int>();
+        if (site1.HasValue)
+            selectedSites.Add(site1.Value);
+        if (site2.HasValue)
+            selectedSites.Add(site2.Value);
+
+        UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
+
+        await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
+        await CancelEditUser();
+        this.EnqueueToast("Gebruiker is succesvol goedgekeurd!", ToastType.Success);
 
         isLoading = false;
     }
@@ -394,27 +372,20 @@
     /// </summary>
     private async Task LoadPlantationSites()
     {
-        if (this.client == null) return;
+        if (this.client == null)
+            return;
 
-        try
+        List<PlantationSiteDTO>? response;
+
+        response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
+
+        if (response != null)
         {
-            List<PlantationSiteDTO>? response;
-
-            response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
-
-            if (response != null)
-            {
-                this.plantationSites = response;
-                StateHasChanged();
-            }
-            else
-            {
-                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
-            }
-        }
-        catch (Exception e)
+            this.plantationSites = response;
+            StateHasChanged();
+        } else
         {
-            this.errorMessage = e.Message;
+            EnqueueToast(message: "Er is iets misgegaan bij het laden van de kweeksites.", ToastType.Warning);
         }
     }
 
@@ -442,25 +413,6 @@
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
     /// <summary>
-    /// Displays a temporary success toast message with fade-in and fade-out animations.
-    /// </summary>
-    private async Task ShowSuccessToast()
-    {
-        showSuccessToast = true;
-        toastOpacity = 1.0;
-        StateHasChanged();
-
-        await Task.Delay(2500);
-
-        toastOpacity = 0.0;
-        StateHasChanged();
-
-        await Task.Delay(500);
-        showSuccessToast = false;
-        StateHasChanged();
-    }
-
-    /// <summary>
     /// Rejects a pending user by sending a deletion request.
     /// Refreshes the user list afterward.
     /// </summary>
@@ -477,19 +429,24 @@
             if (response.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
+                EnqueueToast(message: "De gebruiker is correct afgewezen geweest.", ToastType.Success);
                 StateHasChanged();
-            }
-            else
+            } else
             {
-                errorMessage = $"Kon gebruiker niet afwijzen: {response.StatusCode}";
+                EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {response.StatusCode}", ToastType.Warning);
             }
-        }
-        catch (Exception ex)
+        } catch (InvalidOperationException e)
         {
-            errorMessage = $"Fout bij het afwijzen van gebruiker: {ex.Message}";
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
         }
 
-        CancelEditUser();
+        await CancelEditUser();
         isLoading = false;
     }
 
@@ -502,8 +459,7 @@
         if (sortBy == column)
         {
             sortDirection = sortDirection == "asc" ? "desc" : "asc";
-        }
-        else
+        } else
         {
             sortBy = column;
             sortDirection = "asc";
@@ -518,15 +474,32 @@
     /// <param name="column">The column that needs to be sorted.</param>
     private string SortIndicator(string column)
     {
-        if (sortBy != column) return "";
+        if (sortBy != column)
+            return "";
         return sortDirection == "asc" ? "↑" : "↓";
     }
 
-    private bool GetEmptyField(){
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
+    private bool GetEmptyField()
+    {
         return string.IsNullOrWhiteSpace(selectedRole) || site1 == null || site2 == null;
     }
 
-    private void  NavigateBack(){
+    private void NavigateBack()
+    {
         Navigation.NavigateTo("/admin/users");
     }
 }

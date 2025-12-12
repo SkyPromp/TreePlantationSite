@@ -66,14 +66,14 @@
                                     @if (item.PlantationSites != null && item.PlantationSites.Count > 0)
                                     {
                                         <CardText class="m-0 col-3">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
-                                    }
-                                    else
+                                    } else
                                     {
                                         <CardText class="m-0 col-3"><Icon Name="IconName.Dash"></Icon></CardText>
                                     }
                                     <CardText class="m-0 col-1">@item.Role.ToString()</CardText>
                                     <div class="col-1 d-flex justify-content-end">
-                                        @if (item.Role == UserRole.Operator){
+                                        @if (item.Role == UserRole.Operator)
+                                        {
                                             <Button Class="blue-icon" @onclick="() => OnEditUser(item)">
                                                 <Icon Name="IconName.Pencil" />
                                             </Button>
@@ -90,14 +90,15 @@
                 </div>
             }
         </div>
-    }
-    else
+    } else
     {
         <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 52vh;">
             Er zijn geen gebruikers gevonden
         </div>
     }
 </div>
+
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
 <Pagination Class="justify-content-center"
             ActivePageNumber="@currentPage"
@@ -142,34 +143,21 @@
     </div>
 }
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showDeleteConfirmation"
-    onCancellation="this.CancelEditUser"
-    onConfirmation="this.DeleteUser"
-    confirmationDescription="Ben je zeker dat je deze gebruiker wil verwijderen?"
-/>
-
-@if (this.showSuccessToast)
-{
-    <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
-        <div class="toast show text-white bg-success shadow" style="opacity:@toastOpacity; transition: opacity 0.5s ease;">
-            <div class="toast-body">
-                ✅ Gebruiker is succesvol bewerkt!
-            </div>
-        </div>
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
+                   onCancellation="this.CancelEditUser"
+                   onConfirmation="this.DeleteUser"
+                   confirmationDescription="Ben je zeker dat je deze gebruiker wil verwijderen?" />
 
 @code {
     /// <summary>
     /// The text used to search users.
     /// </summary>
     private string? searchText;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// The paginated response containing the list of users.
@@ -212,11 +200,6 @@
     private HttpClient client;  // TODO make nullable and check if null when used
 
     /// <summary>
-    /// Stores an error message for display if something goes wrong.
-    /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
     /// The number of pending user registration requests.
     /// </summary>
     private int requestsCount = 0;
@@ -245,16 +228,6 @@
     /// The currently selected user being edited.
     /// </summary>
     private UserDTO? selectedUser;
-
-    /// <summary>
-    /// Indicates whether a success toast message should be shown.
-    /// </summary>
-    private bool showSuccessToast = false;
-
-    /// <summary>
-    /// The opacity of the success toast message for fade animation.
-    /// </summary>
-    private double toastOpacity = 1.0;
 
     /// <summary>
     /// Indicates whether an API call or operation is in progress.
@@ -354,27 +327,20 @@
     /// </summary>
     private async Task LoadPlantationSites()
     {
-        if (this.client == null) return;
+        if (this.client == null)
+            return;
 
-        try
+        List<PlantationSiteDTO>? response;
+
+        response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
+
+        if (response != null)
         {
-            List<PlantationSiteDTO>? response;
-
-            response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
-
-            if (response != null)
-            {
-                this.plantationSites = response;
-                StateHasChanged();
-            }
-            else
-            {
-                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
-            }
-        }
-        catch (Exception e)
+            this.plantationSites = response;
+            StateHasChanged();
+        } else
         {
-            this.errorMessage = e.Message;
+            this.EnqueueToast(message: "Er is iets misgegaan bij het inladen van de kweeksites.", type: ToastType.Warning);
         }
     }
 
@@ -395,7 +361,7 @@
 
         await CancelEditUser();
 
-        await ShowSuccessToast();
+        this.EnqueueToast(message: "Gebruiker is succesvol bewerkt!", type: ToastType.Warning);
         await LoadPage(currentPage);
         isLoading = false;
     }
@@ -416,8 +382,10 @@
         if (user.PlantationSites != null && user.PlantationSites.Any())
         {
             List<PlantationSiteDTO>? sites = user.PlantationSites.Take(2).ToList();
-            if (sites.Count > 0) site1 = sites[0].Id;
-            if (sites.Count > 1) site2 = sites[1].Id;
+            if (sites.Count > 0)
+                site1 = sites[0].Id;
+            if (sites.Count > 1)
+                site2 = sites[1].Id;
         }
     }
 
@@ -441,44 +409,35 @@
     private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
     /// <summary>
-    /// Displays a temporary success toast notification.
-    /// </summary>
-    private async Task ShowSuccessToast()
-    {
-        showSuccessToast = true;
-        toastOpacity = 1.0;
-        StateHasChanged();
-
-        await Task.Delay(2500);
-
-        toastOpacity = 0.0;
-        StateHasChanged();
-
-        await Task.Delay(500);
-        showSuccessToast = false;
-        StateHasChanged();
-    }
-
-    /// <summary>
     /// Deletes the selected user.
     /// </summary>
     private async Task DeleteUser()
     {
         isLoading = true;
         if (selectedUser == null)
+        {
+            this.EnqueueToast(message: "Er is geen gebruiker geselecteerd, er kan dus geen gebruiker worden verwijdert.", type: ToastType.Warning);
+
             return;
+        }
 
         try
         {
             await client.DeleteAsync($"user/{selectedUser!.Id}");
             await LoadPage(currentPage);
             StateHasChanged();
-        }
-        catch (Exception ex)
+        } catch (InvalidOperationException e)
         {
-            errorMessage = $"Fout bij het verwijderen van gebruiker: {ex.Message}";
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {e.Message}", ToastType.Warning);
         }
-        CancelEditUser();
+
+        await CancelEditUser();
         isLoading = false;
     }
 
@@ -491,8 +450,7 @@
         if (sortBy == column)
         {
             sortDirection = sortDirection == "asc" ? "desc" : "asc";
-        }
-        else
+        } else
         {
             sortBy = column;
             sortDirection = "asc";
@@ -507,15 +465,32 @@
     /// <param name="column">The column that needs to be sorted.</param>
     private string SortIndicator(string column)
     {
-        if (sortBy != column) return "";
+        if (sortBy != column)
+            return "";
         return sortDirection == "asc" ? "↑" : "↓";
     }
 
-    private bool GetSiteIsEmpty(){
-        return site1 == null || site2 == null; 
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
+    private bool GetSiteIsEmpty()
+    {
+        return site1 == null || site2 == null;
     }
 
-    private void NavigateToRegisterRequests(){
+    private void NavigateToRegisterRequests()
+    {
         Navigation.NavigateTo("/admin/users/approve");
     }
 }

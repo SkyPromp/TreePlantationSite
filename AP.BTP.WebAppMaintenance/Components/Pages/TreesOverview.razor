@@ -90,6 +90,8 @@
     </Pagination>
 </div>
 
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 <ConfirmationPopup 
     showConfirmationPopup="@(this.showDeleteConfirmation && user != null && user.IsInRole("Admin"))"
     onCancellation="this.CancelDeleteTree"
@@ -102,6 +104,11 @@
     /// Indicates whether an API call or operation is in progress.
     /// </summary>
     private bool isLoading = false;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Indicates whether a delete confirmation modal should be displayed.
@@ -195,9 +202,13 @@
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
         response = await client.GetFromJsonAsync<PagedResponseDTO<TreeDTO>>(url);
-        
+
         if(response == null)
+        {
+            EnqueueToast(message: "De bomen konnen niet worden ingeladen.", ToastType.Success);
+
             return;
+        }
 
         foreach (TreeDTO tree in response.Items){
             await GetFavouriteTreePicture(tree.Id);
@@ -274,25 +285,33 @@
     private async Task DeleteTree()
     {
         isLoading = true;
-        if (selectedTree == null)
-            return;
+        if (selectedTree == null) return;
 
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         try
-        {   
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        {
             HttpResponseMessage response = await client.DeleteAsync($"Tree/{selectedTree.Id}");
 
             if (response.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
                 StateHasChanged();
+                EnqueueToast(message: "De boom is correct verwijdert geweest.", ToastType.Success);
             }
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
-            Console.WriteLine($"Fout bij het verwijderen van gebruiker: {ex.Message}");
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {ex.Message}", ToastType.Success);
         }
-        CancelDeleteTree();
+        catch (HttpRequestException ex)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {ex.Message}", ToastType.Success);
+        }
+        catch (TaskCanceledException ex)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker, de taak is geannuleerd: {ex.Message}", ToastType.Success);
+        }
+        await CancelDeleteTree();
         isLoading = false;
     }
 
@@ -329,11 +348,15 @@
     /// <param name="id">The ID of the tree to fetch pictures for.</param>
     private async Task GetFavouriteTreePicture(int id){
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-        
+
         List<TreePictureDTO>? pictures = await client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{id}");
 
-        if(pictures == null || pictures.Count <= 0)
+        if (pictures == null || pictures.Count <= 0)
+        {
+            EnqueueToast(message: "Geen foto kon worden gevonden.", ToastType.Warning);
+
             return;
+        }
 
         if(pictures.Any(p => p.IsFavourite == true)){
             TreePictureDTO? picture = pictures.Find(p => p.IsFavourite == true)!;
@@ -351,7 +374,12 @@
     /// <param name="path">The file path of the image to load from the API.</param>
     private async Task GenerateImage(int key, string path){
 
-        if (string.IsNullOrWhiteSpace(path)) return;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            EnqueueToast(message: "Een afbeelding kon niet worden gegenereerd. Het pad is leeg.", ToastType.Warning);
+
+            return;
+        }
 
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
@@ -359,17 +387,45 @@
         {
             HttpResponseMessage response = await client.GetAsync($"File/{path}");
             response.EnsureSuccessStatusCode();
-
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-
             string base64Image = Convert.ToBase64String(imageBytes);
             images[key.ToString()] = $"data:{contentType};base64,{base64Image}";
-        }
-        catch
+        } catch (InvalidOperationException e)
         {
             images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (UriFormatException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (ArgumentNullException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
         }
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }

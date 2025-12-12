@@ -15,8 +15,7 @@
             <span class="visually-hidden">Laden...</span>
         </div>
     </div>
-}
-else
+} else
 {
     <div class="d-flex justify-content-between mb-3">
         <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" @onclick="() => NavigateToPlanning()"
@@ -57,8 +56,7 @@ else
                             Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
                         </small>
                     }
-                }
-                else
+                } else
                 {
                     <small class="text-muted d-block mt-1" style="word-wrap: break-word; overflow-wrap: break-word;">
                         Deze week is al gekoppeld aan een kweeksite. Verwijder eerst alle taken om een andere site te selecteren.
@@ -66,8 +64,8 @@ else
                 }
             </div>
             <div class="d-flex flex-column align-items-center gap-2">
-                    <Button Class="w-100 red-btn" @onclick="() => { showCancelSubmit = true; }"><small>Wijzigingen ongedaan maken</small></Button>
-                    <Button Class="w-100 green-btn" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
+                <Button Class="w-100 red-btn" @onclick="() => { showCancelSubmit = true; }"><small>Wijzigingen ongedaan maken</small></Button>
+                <Button Class="w-100 green-btn" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
             </div>
         </div>
 
@@ -129,14 +127,12 @@ else
                             <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
                                 nog @FormatDuration(remainingMinutes)
                             </div>
-                        }
-                        else if (remainingMinutes <= 0)
+                        } else if (remainingMinutes <= 0)
                         {
                             <div class="text-danger" style="font-size: 0.7rem; font-weight: normal;">
                                 vol!
                             </div>
-                        }
-                        else
+                        } else
                         {
                             <div class="text-muted" style="font-size: 0.7rem; font-weight: normal;">
                                 nog @FormatDuration(480)
@@ -163,7 +159,7 @@ else
 
                     <div class="overflow-auto flex-grow-1" style="min-height: 0;">
                         @if (CurrentWeekTaskListsByDayLocal.TryGetValue(day.Date, out TaskListDTO? taskList)
-                                        && taskList?.TaskItems?.Any() == true)
+                                      && taskList?.TaskItems?.Any() == true)
                         {
                             TaskListDTO? originalTaskList = null;
                             CurrentWeekTaskListsByDay?.TryGetValue(day.Date, out originalTaskList);
@@ -178,12 +174,10 @@ else
                                 if (originalItem == null)
                                 {
                                     cssClass = "added-card";
-                                }
-                                else if (taskItem.IsDeleted)
+                                } else if (taskItem.IsDeleted)
                                 {
                                     cssClass = "deleted-card";
-                                }
-                                else if (HasTaskChanged(taskItem, originalItem))
+                                } else if (HasTaskChanged(taskItem, originalItem))
                                 {
                                     cssClass = "updated-card";
                                 }
@@ -210,10 +204,11 @@ else
                             }
                         }
 
-                        @if(taskList != null && taskList.Date >= DateTime.Today){
+                        @if (taskList != null && taskList.Date >= DateTime.Today)
+                        {
                             <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
                                 <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
-                                    style="background-color: transparent; height: 130px; border: 2px dashed rgb(85, 193, 85)">
+                                     style="background-color: transparent; height: 130px; border: 2px dashed rgb(85, 193, 85)">
                                     <i class="bi bi-plus-lg" style="color: rgb(85, 193, 85)"></i>
                                     <div class="fw-normal" style="color: rgb(85, 193, 85)">Taak toevoegen</div>
                                 </div>
@@ -280,14 +275,6 @@ else
                 }
             </div>
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    @errorMessage
-                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
-                </div>
-            }
-
             <div class="d-flex gap-2">
                 <Button Class="container-fluid" Color="ButtonColor.Secondary" @onclick="CancelAddTask">Verlaten</Button>
                 <Button Class="green-btn container-fluid" @onclick="() => AddTaskItem(selectedTaskItem)">Bewaren</Button>
@@ -295,6 +282,8 @@ else
         </div>
     </div>
 }
+
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
 <ConfirmationPopup showConfirmationPopup="this.showDeleteConfirm"
                    onCancellation="this.CancelRemoveTask"
@@ -315,11 +304,6 @@ else
                    confirmationTitle="Wijzigingen opslaan"
                    confirmationDescription="Bent u zeker dat u de aangebrachte aanpassingen wil opslaan?" />
 
-@if (this.errorMessage != "")
-{
-    <p>@this.errorMessage</p>
-}
-
 @code {
     /// <summary>
     /// The ID of the user whose details and tasks are being displayed.
@@ -328,15 +312,14 @@ else
     [Parameter] public int userId { get; set; }
 
     /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.
-    /// This is passed as a parameter to the component.
-    /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
     /// HttpClient used to call the backend API.
     /// </summary>
     private HttpClient? client;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// The user details retrieved from the API.
@@ -396,7 +379,7 @@ else
     /// <summary>
     /// Indicates whether the confirmation modal for deleting a task item is shown.
     /// </summary>
-    private bool showCancelSubmit;    
+    private bool showCancelSubmit;
 
     /// <summary>
     /// Stores the ID of the currently selected task item for deletion.
@@ -465,7 +448,6 @@ else
         currentWeekStart = StartOfWeek(DateTime.Today);
         UpdateWeekDays();
         await LoadTaskListsForWeek();
-
         this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
     }
 
@@ -475,25 +457,22 @@ else
     private async Task LoadUser()
     {
         if (this.client == null)
+        {
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+
             return;
-
-        try
-        {
-            UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"user/{this.userId}");
-
-            if (response != null)
-            {
-                this.user = response;
-                StateHasChanged();
-            }
-            else
-            {
-                this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de gebruiker.";
-            }
         }
-        catch (Exception e)
+
+        UserDTO? response = await this.client.GetFromJsonAsync<UserDTO>($"user/{this.userId}");
+
+        if (response != null)
         {
-            this.errorMessage = e.Message;
+            this.user = response;
+            StateHasChanged();
+        }
+        else
+        {
+            EnqueueToast(message: $"Er is iets misgegaan tijdens het ophalen van de gebruiker.", ToastType.Warning);
         }
     }
 
@@ -504,20 +483,24 @@ else
     {
         ShowSubmitChanges = false;
         if (this.client == null || this.user == null)
-            return;
-
-        try
         {
-            int year = ISOWeek.GetYear(currentWeekStart);
-            int weekNumber = ISOWeek.GetWeekOfYear(currentWeekStart);
+            EnqueueToast(message: "De http-client of de gebruiker is niet succesvol geïnstantieerd!", ToastType.Warning);
 
-            IEnumerable<TaskListDTO>? response = await client.GetFromJsonAsync<IEnumerable<TaskListDTO>>(
-                $"tasklist?userId={userId}&year={year}&weekNumber={weekNumber}");
+            return;
+        }
 
-            if (response != null)
+        int year = ISOWeek.GetYear(currentWeekStart);
+        int weekNumber = ISOWeek.GetWeekOfYear(currentWeekStart);
+
+        IEnumerable<TaskListDTO>? response = await client.GetFromJsonAsync<IEnumerable<TaskListDTO>>($"tasklist?userId={userId}&year={year}&weekNumber={weekNumber}");
+
+        if (response != null)
+        {
+            CurrentWeekTaskListsByDay = new();
+            CurrentWeekTaskListsByDayLocal = new();
+
+            try
             {
-                CurrentWeekTaskListsByDay = new();
-                CurrentWeekTaskListsByDayLocal = new();
                 CurrentWeekTaskListsByDay = response.ToDictionary(t => t.Date.Date, t => t);
                 CurrentWeekTaskListsByDayLocal = response.ToDictionary(
                     t => t.Date.Date,
@@ -529,26 +512,35 @@ else
 
                 TaskListDTO? firstTaskListWithSite = response.FirstOrDefault(t => t.PlantationSiteId.HasValue);
                 selectedPlantationSiteId = firstTaskListWithSite?.PlantationSiteId;
-
-                if (selectedPlantationSiteId.HasValue)
-                {
-                    await LoadZonesForPlantationSite(selectedPlantationSiteId.Value);
-                }
-            }
-            else
+            } catch(ArgumentNullException ex)
             {
-                CurrentWeekTaskListsByDay.Clear();
-                selectedPlantationSiteId = null;
+                EnqueueToast(message: $"Fout bij ophalen van taken: {ex.Message}", ToastType.Warning);
+
+                return;
+            } catch(ArgumentException ex)
+            {
+                EnqueueToast(message: $"Fout bij ophalen van taken: {ex.Message}", ToastType.Warning);
+
+                return;
+            }
+
+            if (selectedPlantationSiteId.HasValue)
+            {
+                await LoadZonesForPlantationSite(selectedPlantationSiteId.Value);
             }
 
             showCancelSubmit = false;
             StateHasChanged();
         }
-        catch (Exception ex)
+        else
         {
-            errorMessage = $"Fout bij ophalen van taken: {ex.Message}";
+            CurrentWeekTaskListsByDay.Clear();
+            selectedPlantationSiteId = null;
+            EnqueueToast(message: $"Fout bij ophalen van taken", ToastType.Warning);
             showCancelSubmit = false;
         }
+
+        StateHasChanged();
     }
 
     /// <summary>
@@ -601,7 +593,7 @@ else
     /// Deletes a task item with the given ID locally.
     /// </summary>
     /// <param name="taskItem">The taskItem to be deleted.</param>
-    private async Task DeleteTaskItem(int? id)  // TODO add confirmation message
+    private Task DeleteTaskItem(int? id)  // TODO add confirmation message
     {
         if ((id == null || id == 0) && selectedTaskItem != null)
         {
@@ -610,17 +602,30 @@ else
                 TaskListDTO taskList = kv.Value;
                 if (taskList?.TaskItems == null) continue;
 
-                if (taskList.TaskItems.Remove(selectedTaskItem))
-                    break;
+                try
+                {
+                    if (taskList.TaskItems.Remove(selectedTaskItem))
+                    {
+                        EnqueueToast(message: "De taak is succesvol verwijderd.", ToastType.Success);
+
+                        break;
+                    }
+                } catch(NotSupportedException e)
+                {
+                    EnqueueToast(message: $"Er ging iets mis bij het verwijderen van een taak: {e.Message}", ToastType.Warning);
+                }
             }
         }
         else if (selectedTaskItem != null)
         {
             selectedTaskItem.IsDeleted = true;
+            EnqueueToast(message: "De taak is succesvol verwijderd.", ToastType.Success);  // TODO Geen isDeleted in de DTO
         }
 
         this.showDeleteConfirm = false;
         StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
 
@@ -681,30 +686,33 @@ else
     {
         IsNewTask = true;
         this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+
         if (!selectedPlantationSiteId.HasValue)
         {
-            errorMessage = "Selecteer eerst een kweeksite voordat u taken toevoegt.";
+            EnqueueToast(message: "Selecteer eerst een kweeksite voordat u taken toevoegt.", ToastType.Warning);
             StateHasChanged();
+
             return;
         }
 
         if (!GetZoneForDay(day).HasValue && GetZoneForDay(day) == null)
         {
-            errorMessage = "Selecteer eerst een zone voor deze dag voordat u taken toevoegt.";
-            Console.WriteLine("Selecteer eerst een zone voor deze dag voordat u taken toevoegt.");
+            EnqueueToast(message: "Selecteer eerst een zone voor deze dag voordat u taken toevoegt.", ToastType.Warning);
             StateHasChanged();
+
             return;
         }
 
         this.taskToBeAddedDate = day;
-
         this.taskDurationHours = 0;
         this.taskDurationMinutes = 0;
 
         if (!CurrentWeekTaskListsByDayLocal.ContainsKey(taskToBeAddedDate.Date))
         {
             this.AddTaskList(taskToBeAddedDate.Date);
+            EnqueueToast(message: "De taak is correct toegevoegd geweest aan de takenlijst.", ToastType.Success);
         }
+
         this.ShowAddTaskItem = true;
         StateHasChanged();
     }
@@ -715,79 +723,81 @@ else
     /// </summary>
     private void AddTaskItem(TaskItemDTO? existingTaskItem)
     {
-        try
+        if (this.client == null)
         {
-            if (this.client == null)
+            this.ShowAddTaskItem = false;
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+            StateHasChanged();
+
+            return;
+        }
+
+        if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
+        {
+            EnqueueToast(message: "De titel en beschrijving zijn verplicht.", ToastType.Warning);
+            StateHasChanged();
+
+            return;
+        }
+
+        int totalMinutes = (taskDurationHours * 60) + taskDurationMinutes;
+
+        if (totalMinutes <= 0)
+        {
+            EnqueueToast(message: "Duur moet minimaal 1 minuut zijn.", ToastType.Warning);
+            StateHasChanged();
+
+            return;
+        }
+
+        if (totalMinutes > 480)
+        {
+            EnqueueToast(message: "Duur kan niet meer dan 8 uur zijn", ToastType.Warning);
+            StateHasChanged();
+
+            return;
+        }
+
+        int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
+        int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
+
+        if ((currentDayTotal - existingTaskDuration + totalMinutes) > 480)
+        {
+            int available = 480 - (currentDayTotal - existingTaskDuration);
+            EnqueueToast(message:$"Te veel uren voor deze dag. Nog beschikbaar: {FormatDuration(available)}", ToastType.Warning);
+            StateHasChanged();
+
+            return;
+        }
+
+        this.taskToBeAdded.DurationInMinutes = totalMinutes;
+
+        if (IsNewTask)
+        {
+            try
             {
-                this.errorMessage = "Geen httpclient gevonden.";
-                this.ShowAddTaskItem = false;
-                StateHasChanged();
-
-                return;
-            }
-
-            if (string.IsNullOrEmpty(this.taskToBeAdded?.Description) || string.IsNullOrEmpty(this.taskToBeAdded.Title))
-            {
-                this.errorMessage = "De titel en beschrijving zijn verplicht.";
-                StateHasChanged();
-                return;
-            }
-
-            int totalMinutes = (taskDurationHours * 60) + taskDurationMinutes;
-
-            if (totalMinutes <= 0)
-            {
-                this.errorMessage = "Duur moet minimaal 1 minuut zijn.";
-                StateHasChanged();
-                return;
-            }
-
-            if (totalMinutes > 480)
-            {
-                this.errorMessage = "Duur kan niet meer dan 8 uur zijn";
-                StateHasChanged();
-                return;
-            }
-
-            int currentDayTotal = GetTotalDurationForDay(taskToBeAddedDate);
-            int existingTaskDuration = (taskToBeAdded.Id > 0) ? taskToBeAdded.DurationInMinutes : 0;
-
-            if ((currentDayTotal - existingTaskDuration + totalMinutes) > 480)
-            {
-                int available = 480 - (currentDayTotal - existingTaskDuration);
-                this.errorMessage = $"Te veel uren voor deze dag. Nog beschikbaar: {FormatDuration(available)}";
-                StateHasChanged();
-                return;
-            }
-
-            this.taskToBeAdded.DurationInMinutes = totalMinutes;
-
-            if (IsNewTask)
-            {
-                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDTO? taskList))
+                if (CurrentWeekTaskListsByDayLocal.TryGetValue(taskToBeAddedDate, out TaskListDTO? taskList) && taskList.TaskItems != null && taskToBeAdded != null)
                 {
-                    if (taskList.TaskItems != null && taskToBeAdded != null)
-                    {
-                        taskList.TaskItems.Add(taskToBeAdded);
-                    }
+                    taskList.TaskItems.Add(taskToBeAdded);
+                    EnqueueToast(message: "De taak is correct toegevoegd geweest.", ToastType.Success);
                 }
-            }
-            else if (selectedTaskItem != null)
+            } catch(ArgumentNullException e)
             {
-                selectedTaskItem.Title = taskToBeAdded.Title;
-                selectedTaskItem.Description = taskToBeAdded.Description;
-                selectedTaskItem.DurationInMinutes = taskToBeAdded.DurationInMinutes;
+                EnqueueToast(message: $"Kon de huidige taken niet toevoegen: {e.Message}", ToastType.Warning);
             }
-            this.errorMessage = "";
-            this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
-            this.taskDurationHours = 0;
-            this.taskDurationMinutes = 0;
         }
-        catch (Exception e)
+        else if (selectedTaskItem != null)
         {
-            this.errorMessage = e.Message;
+            selectedTaskItem.Title = taskToBeAdded.Title;
+            selectedTaskItem.Description = taskToBeAdded.Description;
+            selectedTaskItem.DurationInMinutes = taskToBeAdded.DurationInMinutes;
+
+            EnqueueToast(message: "De taak is correct gewijzigd geweest.", ToastType.Success);
         }
 
+        this.taskToBeAdded = new TaskItemDTO() { Id = 0, Description = "", Title = "", TaskListId = 0 };
+        this.taskDurationHours = 0;
+        this.taskDurationMinutes = 0;
         this.ShowAddTaskItem = false;
         StateHasChanged();
     }
@@ -798,36 +808,41 @@ else
     /// </summary>
     private async Task SubmitAllLocalChanges()
     {
+        if (client == null)
+        {
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+
+            return;
+        }
+
         ShowSubmitChanges = false;
-        if (client == null) return;
 
         List<TaskListDTO> taskLists = CurrentWeekTaskListsByDayLocal.Values.ToList();
 
         string? validationError = ValidateWeekSchedule(taskLists);
-        errorMessage = "";
+
         if (!string.IsNullOrEmpty(validationError))
         {
-            errorMessage = validationError;
+            EnqueueToast(message: $"Er was een validatie error: {validationError}", ToastType.Warning);
+
             return;
         }
 
-        SubmitWeekScheduleDTO request = new SubmitWeekScheduleDTO
-        {
-            TaskLists = taskLists
-        };
+        SubmitWeekScheduleDTO request = new SubmitWeekScheduleDTO(){ TaskLists = taskLists };
 
         HttpResponseMessage response = await client.PostAsJsonAsync("tasklist/weekschedule", request);
 
-        if (!response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
-            ErrorResponseInfoDTO? errorResponseInfo =
-                await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+            await LoadTaskListsForWeek();
 
-            errorMessage = errorResponseInfo?.Message
-                ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
-            ShowSubmitChanges = false;
+            EnqueueToast(message: "De planning is succesvol geüpload.", ToastType.Success);
+
             return;
         }
+
+        ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+        EnqueueToast(message: $"Er is een fout opgetreden tijdens het opslagen van de weekplanning. {errorResponseInfo?.Message}", ToastType.Warning);
 
         ShowSubmitChanges = false;
         await LoadTaskListsForWeek();
@@ -930,6 +945,7 @@ else
             selectedPlantationSiteId = null;
             availableZones.Clear();
             StateHasChanged();
+
             return;
         }
 
@@ -948,24 +964,21 @@ else
     private async Task LoadZonesForPlantationSite(int plantationSiteId)
     {
         if (client == null)
+        {
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+
             return;
-
-        try
-        {
-            IEnumerable<ZoneDTO>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={plantationSiteId}");
-
-            if (response != null)
-            {
-                availableZones = response.ToList();
-            }
-            else
-            {
-                availableZones.Clear();
-            }
         }
-        catch (Exception ex)
+
+        IEnumerable<ZoneDTO>? response = await client.GetFromJsonAsync<IEnumerable<ZoneDTO>>($"Zone?plantationSiteId={plantationSiteId}");
+
+        if (response != null)
         {
-            errorMessage = $"Fout bij ophalen van zones: {ex.Message}";
+            availableZones = response.ToList();
+        }
+        else
+        {
+            EnqueueToast(message: "Er was een fout bij ophalen van zones.", ToastType.Warning);
             availableZones.Clear();
         }
     }
@@ -979,6 +992,7 @@ else
         {
             return taskList.ZoneId;
         }
+
         return null;
     }
 
@@ -1023,6 +1037,7 @@ else
                 .Where(t => !t.IsDeleted)
                 .Sum(t => t.DurationInMinutes);
         }
+
         return 0;
     }
 
@@ -1087,7 +1102,23 @@ else
         return day.Date < DateTime.Today;
     }
 
-    private void NavigateToPlanning(){
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
+
+    private void NavigateToPlanning()
+    {
         Navigation.NavigateTo("/manager/planning");
     }
 }

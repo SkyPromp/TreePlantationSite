@@ -10,7 +10,6 @@
 @using System.Net.Http.Headers
 @using QRCoder
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Algemene informatie">
@@ -94,7 +93,8 @@
                                 </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)) {
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring))
+                                {
                                     string fileKey = Tree.MaintenancePlanSpring;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -112,7 +112,8 @@
                                     {
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
-                                } else {
+                                } else
+                                {
                                     <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
@@ -131,7 +132,8 @@
                                 </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer))
+                                {
                                     string fileKey = Tree.MaintenancePlanSummer;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -149,7 +151,8 @@
                                     {
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
                                     }
-                                } else {
+                                } else
+                                {
                                     <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
@@ -168,7 +171,8 @@
                                 </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn))
+                                {
                                     string fileKey = Tree.MaintenancePlanAutumn;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -184,9 +188,10 @@
                                     }
                                     @if (qrCodes.ContainsKey(fileKey))
                                     {
-                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;"/>
-                                    }                                    
-                                } else {
+                                        <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
+                                    }
+                                } else
+                                {
                                     <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
@@ -205,7 +210,8 @@
                                 </div>
                             </div>
                             <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
+                                @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter))
+                                {
                                     string fileKey = Tree.MaintenancePlanWinter!;
                                     string? previewData = maintenancePreviews[fileKey];
                                     string filename = maintenanceFileNames[fileKey];
@@ -222,8 +228,9 @@
                                     @if (qrCodes.ContainsKey(fileKey))
                                     {
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                    }                                    
-                                } else {
+                                    }
+                                } else
+                                {
                                     <p>Nog geen preview beschikbaar.</p>
                                 }
                             </div>
@@ -239,23 +246,16 @@
     </Tab>
 </Tabs>
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showDeleteConfirmation"
-    onCancellation="this.CancelDeletePicture"
-    onConfirmation="this.DeletePicture"
-    confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?"
-/>
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
-    onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
-    onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
-    confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?"
-/>
+<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
+                   onCancellation="this.CancelDeletePicture"
+                   onConfirmation="this.DeletePicture"
+                   confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?" />
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showConfirmLeaveForm"
-    onCancellation="() => { showConfirmLeaveForm = false; return Task.CompletedTask; }"
+    onCancellation="() => { this.showConfirmLeaveForm = false; return Task.CompletedTask; }"
     onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
     confirmationTitle="Deze pagina verlaten?"
     confirmationDescription="Niet opgeslagen wijzingen zullen verloren gaan"
@@ -265,7 +265,7 @@
     showConfirmationPopup="this.showConfirmSaveForm"
     confirmationTitle="Boom opslaan?"
     confirmationDescription="Wenst u deze boom op te slaan?"
-    onCancellation="() => {showConfirmSaveForm = false; return Task.CompletedTask;}"
+    onCancellation="() => {this.showConfirmSaveForm = false; return Task.CompletedTask;}"
     onConfirmation="this.Submit"
 />
 
@@ -273,16 +273,11 @@
     /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private List<ToastMessage> toastMessages = new List<ToastMessage>();
-
-    /// <summary>
-    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
-    /// </summary>
-    private Toasts? toastContainer;
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Reference to the tab component for switching between tabs.
-    /// </summary>    
+    /// </summary>
     private Tabs tabs = default!;
 
     /// <summary>
@@ -290,12 +285,6 @@
     /// If no ID is provided, the component assumes creation mode.
     /// </summary>
     [Parameter] public int? Id { get; set; }
-
-    /// <summary>
-    /// Stores any error messages encountered during operations.
-    /// Used to display feedback to the user.
-    /// </summary>
-    string errorMessage = "";
 
     /// <summary>
     /// The HTTP client used to communicate with the backend API.
@@ -314,7 +303,8 @@
     /// <summary>
     /// Represents the seasons of the year for maintenance plans.
     /// </summary>
-    public enum Season {
+    public enum Season
+    {
         Spring,
         Summer,
         Autumn,
@@ -340,7 +330,7 @@
     private Dictionary<string, string> previews = new();
 
     /// <summary>
-    /// Tracks which tree pictures are marked as favourites. 
+    /// Tracks which tree pictures are marked as favourites.
     /// The key is the tree picture ID, and the value indicates whether it is a favourite (<c>true</c>) or not (<c>false</c>).
     /// </summary>
     private Dictionary<int, bool> favourites = new();
@@ -352,21 +342,15 @@
     private Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
 
     /// <summary>
-    /// Existing maintenance files associated with the tree.
-    /// Key is the file ID, value is the filename/path.
-    /// </summary>    
-    private Dictionary<int, string> existingMaintenanceFiles = new();
-
-    /// <summary>
     /// Previews for maintenance files.
     /// Key is the temporary GUID or filename, value is a base64 data URI.
-    /// </summary>    
+    /// </summary>
     private Dictionary<string, string> maintenancePreviews = new();
 
     /// <summary>
     /// Stores the original filenames for uploaded maintenance files.
     /// Key is the temporary GUID or server filename, value is the original filename.
-    /// </summary>    
+    /// </summary>
     private Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
@@ -432,7 +416,7 @@
 
     /// <summary>
     /// The allowed content types for maintenance plan uploads.
-    /// </summary>    
+    /// </summary>
     readonly string[] AllowedMaintenanceFileTypes = {
         "application/pdf",
         "image/jpeg",
@@ -448,7 +432,8 @@
     {
         client = HttpClientFactory.CreateClient("BTPApi");
 
-        if (Id.HasValue) {
+        if (Id.HasValue)
+        {
             await LoadTree(Id.Value);
             await LoadExistingPictures(Id.Value);
             await LoadExistingMaintenanceFiles();
@@ -462,21 +447,75 @@
     /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Geen httpclient gevonden.";
-
-            return;
-        }
-
         TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
 
-        if (response != null)
-            this.Tree = response;
+        if (response != null) this.Tree = response;
         else
-            this.errorMessage = "Kon boom niet laden.";
+            EnqueueToast(message: "Kon boom niet laden.", ToastType.Warning);
 
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles uploading of pictures and maintenance files.
+    /// </summary>
+    public async Task SubmitMaintenancePlans()
+    {
+        try
+        {
+            List<KeyValuePair<string, (IBrowserFile file, byte[] data)>>? maintenanceFilesToUpload = newMaintenanceFiles.ToList();
+            newMaintenanceFiles.Clear();
+
+            foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceFilesToUpload)
+            {
+                string key = kvp.Key;
+                (IBrowserFile file, byte[] data) = kvp.Value;
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                ByteArrayContent fileContent = new ByteArrayContent(data);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "file", file.Name);
+
+                HttpResponseMessage uploadResponse = await client.PostAsync("File/upload", content);
+
+                if (!uploadResponse.IsSuccessStatusCode)
+                {
+                    EnqueueToast(message: $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.", ToastType.Warning);
+
+                    continue;
+                }
+
+                string? fileName = null;
+                JsonElement json = await uploadResponse.Content.ReadFromJsonAsync<JsonElement>();
+
+                if (json.TryGetProperty("fileName", out JsonElement p))
+                    fileName = p.GetString();
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    EnqueueToast(message: $"Uploaden is gelukt, maar er is geen bestandsnaam geretourneerd voor {file.Name}", ToastType.Warning);
+
+                    continue;
+                }
+
+                if (Tree.MaintenancePlanSpring == key)  // TODO dictionary or switch case
+                    Tree.MaintenancePlanSpring = fileName;
+                if (Tree.MaintenancePlanSummer == key)
+                    Tree.MaintenancePlanSummer = fileName;
+                if (Tree.MaintenancePlanAutumn == key)
+                    Tree.MaintenancePlanAutumn = fileName;
+                if (Tree.MaintenancePlanWinter == key)
+                    Tree.MaintenancePlanWinter = fileName;
+
+                maintenancePreviews.Remove(key);
+                qrCodes.Remove(key);
+
+                await GeneratePreview(fileName, fileName, FileType.Maintenance);
+            }
+        } catch (ArgumentNullException e)
+        {
+            EnqueueToast(message: $"Er ging iets mis bij het opslagen van de foto's: {e}", ToastType.Warning);
+        }
     }
 
     /// <summary>
@@ -485,96 +524,52 @@
     /// </summary>
     private async Task Submit()
     {
+        if (string.IsNullOrEmpty(this.Tree.Species))
+        {
+            EnqueueToast(message: "Voeg een naam toe aan de boom voor het opslagen.", ToastType.Warning);
+
+            return;
+        }
+
+        if (newMaintenanceFiles.Count > 0)
+        {
+            await SubmitMaintenancePlans();
+        }
+
+        HttpResponseMessage response;
+
+        if (this.Id == null)
+        {
+            response = await this.client.PostAsJsonAsync<TreeDTO>("Tree", this.Tree);
+        } else
+        {
+            response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            EnqueueToast(message: $"De boom kon niet succesvol {(this.Id == null ? "toegevoegd" : "gewijzigd")} worden: {await response.Content.ReadAsStringAsync()}", ToastType.Warning);
+
+            return;
+        } else
+        {
+            EnqueueToast(message: $"De boom is succesvol {(this.Id == null ? "toegevoegd" : "gewijzigd")} geweest.", ToastType.Success);
+        }
+
+        TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
+
+        if (savedTree == null || savedTree.Id == 0)
+        {
+            EnqueueToast(message: "Kan de opgeslagen boom-id niet ophalen.", ToastType.Warning);
+
+            return;
+        }
+
+        this.Tree = savedTree;
+        this.Id = this.Tree.Id;
+
         try
         {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen httpclient gevonden.";
-
-                return;
-            }
-
-            if (string.IsNullOrEmpty(this.Tree.Species))
-            {
-                this.errorMessage = "De boomnaam is leeg";
-                showConfirmSaveForm = false;
-                return;
-            }
-
-            if (newMaintenanceFiles.Count > 0)
-            {
-                List<KeyValuePair<string, (IBrowserFile file, byte[] data)>>? maintenanceFilesToUpload = newMaintenanceFiles.ToList();
-                newMaintenanceFiles.Clear();
-
-                foreach (KeyValuePair<string, (IBrowserFile file, byte[] data)> kvp in maintenanceFilesToUpload)
-                {
-                    string key = kvp.Key;
-                    (IBrowserFile file, byte[] data) = kvp.Value;
-
-                    using MultipartFormDataContent content = new MultipartFormDataContent();
-                    ByteArrayContent fileContent = new ByteArrayContent(data);
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                    content.Add(fileContent, "file", file.Name);
-
-                    HttpResponseMessage uploadResponse = await client.PostAsync("File/upload", content);
-
-                    if (!uploadResponse.IsSuccessStatusCode)
-                    {
-                        this.errorMessage = $"Het uploaden van het onderhoudsbestand {file.Name} is mislukt.";
-                        continue;
-                    }
-
-                    string? fileName = null;
-                    JsonElement json = await uploadResponse.Content.ReadFromJsonAsync<JsonElement>();
-                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        errorMessage = $"Uploaden is gelukt, maar er is geen bestandsnaam geretourneerd voor {file.Name}";
-                        continue;
-                    }
-
-                    if (Tree.MaintenancePlanSpring == key)
-                        Tree.MaintenancePlanSpring = fileName;
-                    if (Tree.MaintenancePlanSummer == key)
-                        Tree.MaintenancePlanSummer = fileName;
-                    if (Tree.MaintenancePlanAutumn == key)
-                        Tree.MaintenancePlanAutumn = fileName;
-                    if (Tree.MaintenancePlanWinter == key)
-                        Tree.MaintenancePlanWinter = fileName;
-
-                    maintenancePreviews.Remove(key);
-                    qrCodes.Remove(key);
-
-                    await GeneratePreview(fileName, fileName, FileType.Maintenance);
-                }
-            }
-
-            HttpResponseMessage response;
-
-            if (this.Id == null)
-            {
-                response = await this.client.PostAsJsonAsync<TreeDTO>("Tree", this.Tree);
-            } else
-            {
-                response = await this.client.PutAsJsonAsync<TreeDTO>("Tree", this.Tree);
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                this.errorMessage = await response.Content.ReadAsStringAsync();
-                return;
-            }
-
-            TreeDTO? savedTree = await response.Content.ReadFromJsonAsync<TreeDTO>();
-            if (savedTree == null || savedTree.Id == 0)
-            {
-                this.errorMessage = "Kan de opgeslagen boom-id niet ophalen.";
-                return;
-            }
-
-            this.Tree = savedTree;
-            this.Id = this.Tree.Id;
-
             List<KeyValuePair<string, (IBrowserFile file, byte[] data)>> picturesToUpload = newPictures.ToList();
             newPictures.Clear();
 
@@ -591,18 +586,21 @@
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
                 content.Add(fileContent, "file", file.Name);
 
-
                 string? fileName = null;
                 HttpResponseMessage fileResponse = await client.PostAsync("File/upload", content);
+
                 if (fileResponse.IsSuccessStatusCode)
                 {
                     JsonElement json = await fileResponse.Content.ReadFromJsonAsync<JsonElement>();
-                    if (json.TryGetProperty("fileName", out JsonElement p)) fileName = p.GetString();
+
+                    if (json.TryGetProperty("fileName", out JsonElement p))
+                        fileName = p.GetString();
                 }
 
                 if (string.IsNullOrEmpty(fileName))
                 {
-                    this.errorMessage = $"Kan bestand {file.Name} niet uploaden";
+                    EnqueueToast(message: $"Kan bestand {file.Name} niet uploaden", ToastType.Warning);
+
                     continue;
                 }
 
@@ -616,7 +614,8 @@
                 HttpResponseMessage addResponse = await client.PostAsJsonAsync("TreePicture", treePicture);
                 if (!addResponse.IsSuccessStatusCode)
                 {
-                    this.errorMessage = await addResponse.Content.ReadAsStringAsync();
+                    EnqueueToast(message: $"Kan bestand {await addResponse.Content.ReadAsStringAsync()} niet uploaden", ToastType.Warning);
+
                     continue;
                 }
 
@@ -624,19 +623,13 @@
                 if (created != null)
                 {
                     existingPictures[created.Id] = created.Path;
-
                     previews.Remove(tempKey);
                     await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
                 }
             }
-
-            this.errorMessage = "";
-            showConfirmSaveForm = false;
-
-        } catch (Exception e)
+        } catch (ArgumentNullException e)
         {
-            this.errorMessage = e.Message;
-            showConfirmSaveForm = false;
+            EnqueueToast(message: $"Er ging iets mis bij het opslagen van de foto's: {e}", ToastType.Warning);
         }
     }
 
@@ -650,29 +643,34 @@
     /// <param name="season">Optional season for maintenance files.</param>
     private async Task HandleFileUpload(InputFileChangeEventArgs e, FileType type, Season? season)
     {
+        const int maxFileSizeB = 10_000_000;
+
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
             if (type == FileType.Picture && !ImageFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"Bestandstype '{file.ContentType}' is niet toegestaan!";
+                EnqueueToast(message: $"Bestandstype '{file.ContentType}' is niet toegestaan!", ToastType.Warning);
+
                 continue;
             }
 
             if (type == FileType.Maintenance && !AllowedMaintenanceFileTypes.Contains(file.ContentType))
             {
-                errorMessage = $"Het bestandstype '{file.ContentType}' is niet toegestaan voor onderhoudsplannen!";
+                EnqueueToast(message: $"Het bestandstype '{file.ContentType}' is niet toegestaan voor onderhoudsplannen!", ToastType.Warning);
+
                 continue;
             }
 
-            if (file.Size > 10_000_000)
+            if (file.Size >= maxFileSizeB)
             {
-                errorMessage = $"Het bestand '{file.Name}' overschrijdt de maximale bestandsgrootte van 10 MB!";
+                EnqueueToast(message: $"Het bestand '{file.Name}' overschrijdt de maximale bestandsgrootte van 10 MB!", ToastType.Warning);
+
                 continue;
             }
 
             string key = Guid.NewGuid().ToString();
             using MemoryStream ms = new MemoryStream();
-            await file.OpenReadStream(10_000_000).CopyToAsync(ms);
+            await file.OpenReadStream(maxFileSizeB).CopyToAsync(ms);
 
             if (type == FileType.Picture)
             {
@@ -686,10 +684,18 @@
 
                 switch (season)
                 {
-                    case Season.Spring: Tree.MaintenancePlanSpring = key; break;
-                    case Season.Summer: Tree.MaintenancePlanSummer = key; break;
-                    case Season.Autumn: Tree.MaintenancePlanAutumn = key; break;
-                    case Season.Winter: Tree.MaintenancePlanWinter = key; break;
+                    case Season.Spring:
+                        Tree.MaintenancePlanSpring = key;
+                        break;
+                    case Season.Summer:
+                        Tree.MaintenancePlanSummer = key;
+                        break;
+                    case Season.Autumn:
+                        Tree.MaintenancePlanAutumn = key;
+                        break;
+                    case Season.Winter:
+                        Tree.MaintenancePlanWinter = key;
+                        break;
                 }
             }
         }
@@ -702,21 +708,23 @@
     /// </summary>
     /// <param name="key">The key to associate with the QR code.</param>
     /// <param name="fileName">The file name or URL to encode in the QR code.</param>
-    private void GenerateQRCode(string key, string fileName) {
-        try {
-            string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
-
-            using QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
-            using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-
-            byte[] qrCodeBytes = qrCode.GetGraphic(20);
+    private void GenerateQRCode(string key, string fileName)
+    {
+        string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
+        using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
+        using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+        byte[] qrCodeBytes = qrCode.GetGraphic(20);
+        try
+        {
             qrCodes[key] = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
 
-            StateHasChanged();
-        } catch (Exception e) {
-            errorMessage = $"Kan geen QR-code genereren: {e.Message}";
+        } catch (ArgumentNullException e)
+        {
+            EnqueueToast(message: $"Kon geen preview aanmaken: {e}", ToastType.Warning);
         }
+
+        StateHasChanged();
     }
 
     /// <summary>
@@ -727,20 +735,50 @@
     /// <param name="fileType">The type of file being previewed.</param>
     private async Task GeneratePreview(string key, string fileName, FileType fileType)
     {
-        HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+        try
+        {
+            HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
 
-        if (!response.IsSuccessStatusCode) return;
+            if (!response.IsSuccessStatusCode)
+            {
+                EnqueueToast(message: "Kon geen preview genereren.", ToastType.Warning);
 
-        byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-        string type = response.Content.Headers.ContentType?.MediaType!;
+                return;
+            }
 
-        if (fileType == FileType.Picture) {
-            previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
-        } else if (fileType == FileType.Maintenance) {
-            maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
-            maintenanceFileNames[key] = fileName;
+            byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+            string type = response.Content.Headers.ContentType?.MediaType!;
 
-            GenerateQRCode(key, fileName);
+            if (fileType == FileType.Picture)
+            {
+                previews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+            } else if (fileType == FileType.Maintenance)
+            {
+                maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+                maintenanceFileNames[key] = fileName;
+
+                GenerateQRCode(key, fileName);
+            }
+        } catch (InvalidOperationException e)
+        {
+            EnqueueToast(message: $"Kon geen preview genereren: {e}", ToastType.Warning);
+
+            return;
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Kon geen preview genereren: {e}", ToastType.Warning);
+
+            return;
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Kon geen preview genereren: {e}", ToastType.Warning);
+
+            return;
+        } catch (UriFormatException e)
+        {
+            EnqueueToast(message: $"Kon geen preview genereren: {e}", ToastType.Warning);
+
+            return;
         }
 
         StateHasChanged();
@@ -757,6 +795,7 @@
         {
             existingPictures.Clear();
             previews.Clear();
+
             foreach (TreePictureDTO pic in response)
             {
                 existingPictures[pic.Id] = pic.Path;
@@ -802,12 +841,13 @@
         return Task.CompletedTask;
     }
 
-    private async Task DeleteAllQueuedPictures(){
-        if (this.deletedTreePics.Count() == 0) return;
+    private async Task DeleteAllQueuedPictures()
+    {
+        if (!this.deletedTreePics.Any()) return;
 
-        if(this.client == null)
+        if (this.client == null)
         {
-            this.errorMessage = "The client has not been initialized yet.";
+            EnqueueToast(message: "The client has not been initialized yet.", ToastType.Warning);
 
             return;
         }
@@ -819,7 +859,7 @@
 
             if (!res.IsSuccessStatusCode)
             {
-                this.errorMessage = await res.Content.ReadAsStringAsync();
+                EnqueueToast(message: $"Kon één foto niet verwijderen: {await res.Content.ReadAsStringAsync()}", ToastType.Warning);
                 StateHasChanged();
             }
         }
@@ -831,19 +871,21 @@
     /// Deletes the currently selected picture.
     /// Removes it from <see cref="existingPictures"/> or <see cref="newPictures"/> and updates <see cref="previews"/>.
     /// </summary>
-    private async Task DeletePicture()
+    private Task DeletePicture()
     {
         if (selectedImage == null)
         {
             showDeleteConfirmation = false;
-            return;
+            EnqueueToast(message: "Er was geen afbeelding geselecteerd.", ToastType.Warning);
+
+            return Task.CompletedTask;
         }
 
-        if(this.client == null)
+        if (this.client == null)
         {
-            this.errorMessage = "The client has not been initialized yet.";
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
 
-            return;
+            return Task.CompletedTask;
         }
 
         if (int.TryParse(selectedImage, out int picId))
@@ -851,8 +893,7 @@
             this.deletedTreePics.Add(picId);
             existingPictures.Remove(picId);
             previews.Remove(selectedImage);
-        }
-        else
+        } else
         {
             newPictures.Remove(selectedImage);
             previews.Remove(selectedImage);
@@ -860,7 +901,10 @@
 
         selectedImage = null;
         showDeleteConfirmation = false;
+        this.EnqueueToast("Het verwijderen van de foto wordt succesvol afgehandelt.", ToastType.Success);
         StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -888,10 +932,7 @@
     /// <returns><c>true</c> if the picture is favourite; otherwise <c>false</c>.</returns>
     private bool IsPictureFavourite(string key)
     {
-        if (int.TryParse(key, out int id))
-            return favourites.ContainsKey(id) && favourites[id];
-
-        return false;
+        return int.TryParse(key, out int id) && favourites.ContainsKey(id) && favourites[id];
     }
 
     /// <summary>
@@ -902,7 +943,11 @@
     private async Task ToggleFavourite(string key)
     {
         if (!int.TryParse(key, out int picId))
+        {
+            this.EnqueueToast("De foto kon niet geselecteerd worden.", ToastType.Warning);
+
             return;
+        }
 
         bool newValue = !IsPictureFavourite(key);
 
@@ -910,14 +955,16 @@
         {
             foreach (int otherId in favourites.Keys.ToList())
             {
-                if (otherId != picId && favourites[otherId]) {
+                if (otherId != picId && favourites[otherId])
+                {
                     favourites[otherId] = false;
                     HttpResponseMessage responseMessage = await client!.PatchAsJsonAsync($"TreePicture/{otherId}/favourite", false);
 
                     if (!responseMessage.IsSuccessStatusCode)
                     {
-                        errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                        this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await responseMessage.Content.ReadAsStringAsync()}", ToastType.Warning);
                         StateHasChanged();
+
                         return;
                     }
                 }
@@ -928,13 +975,14 @@
 
         if (!response.IsSuccessStatusCode)
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await response.Content.ReadAsStringAsync()}", ToastType.Warning);
             StateHasChanged();
+
             return;
         }
 
         favourites[picId] = newValue;
-
+        this.EnqueueToast("Deze foto is als favoriet toegevoegd geweest.", ToastType.Success);
         StateHasChanged();
     }
 
@@ -956,23 +1004,24 @@
     {
         if (IsTemporary(key))
         {
-            ShowWarning("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.");
+            this.EnqueueToast("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.", ToastType.Warning);
+
             return;
         }
 
         await ToggleFavourite(key);
     }
 
-    /// <summary>
-    /// Adds a warning toast message to the toast container.
+    /// Adds a toast message to the toast container.
     /// </summary>
     /// <param name="message">The message to display.</param>
-    private void ShowWarning(string message)
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
     {
-        toastMessages.Add(new ToastMessage
+        this.toastMessages.Add(new ToastMessage
         {
-            Type = ToastType.Warning,
-            Title = "Waarschuwing",
+            Type = type,
+            Title = type.ToString(),
             Message = message,
             AutoHide = true
         });

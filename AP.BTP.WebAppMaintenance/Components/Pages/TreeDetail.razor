@@ -78,7 +78,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="text-decoration: none;">PDF bekijken</a>
                                     </div>
                                 } else
                                 {
@@ -198,6 +198,12 @@
     </Tab>
 </Tabs>
 
+<div class="buttons d-flex justify-content-end mt-4">
+    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => NavigateBack()">Verlaten</Button> 
+</div>
+
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 @code {
     /// <summary>
     /// Optional parameter representing the ID of the tree to display. 
@@ -206,9 +212,9 @@
     [Parameter] public int? Id { get; set; }
 
     /// <summary>
-    /// Holds error messages for display if something goes wrong during API calls.
+    /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private string errorMessage = "";
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Holds the details of the currently loaded tree.
@@ -269,7 +275,7 @@
     {
         if (this.client == null)
         {
-            this.errorMessage = "Geen httpclient gevonden.";
+            EnqueueToast(message: "Geen httpclient gevonden.", ToastType.Warning);
 
             return;
         }
@@ -280,7 +286,7 @@
         {
             this.Tree = response;
 
-        } else this.errorMessage = "Kan boom niet laden";
+        } else EnqueueToast(message: "Kan boom niet laden", ToastType.Warning);
 
         StateHasChanged();
     }
@@ -291,13 +297,14 @@
     private async Task GetTreePictures(){
         if (this.client == null)
         {
-            this.errorMessage = "Geen httpclient gevonden.";
+            EnqueueToast(message: "Geen httpclient gevonden.", ToastType.Warning);
 
             return;
         }
 
         if(Tree == null){
-            this.errorMessage = "Geen boom gevonden";
+            EnqueueToast(message: "Geen boom gevonden", ToastType.Warning);
+
             return;
         }
 
@@ -307,12 +314,13 @@
         {
             foreach (TreePictureDTO pic in response){
                 if(pic == null){
-                    errorMessage = "Geen afbeelding gevonden";
+                    EnqueueToast(message: "Geen afbeelding gevonden", ToastType.Warning);
+
                     return;
                 }
                 await LoadTreePicture(pic.Path);
             }
-        } else this.errorMessage = "Kan boom afbeedlingen niet laden";
+        } else EnqueueToast(message: "Kan boom afbeedlingen niet laden", ToastType.Warning);
 
         StateHasChanged();
     }
@@ -327,21 +335,35 @@
 
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"File/{filename}");
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = (await client.GetAsync($"File/{filename}")).EnsureSuccessStatusCode();
 
             byte[] pdfBytes = await response.Content.ReadAsByteArrayAsync();
-
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-
             string b64Pdf = Convert.ToBase64String(pdfBytes);
             this.images[filename] = $"data:{contentType};base64,{b64Pdf}";
-        } catch
+        } catch (InvalidOperationException e)
         {
             this.images[filename] = "";
-            this.errorMessage = "Er is iets misgegaan tijdens het laden van de afbeelding";
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            this.images[filename] = "";
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, het was geannuleerd: {e}", ToastType.Warning);
+
+        } catch (UriFormatException e)
+        {
+            this.images[filename] = "";
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, de Uri was ongeldig: {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            this.images[filename] = "";
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch(ArgumentNullException e)
+        {
+            this.images[filename] = "";
+            EnqueueToast(message: $"Er is iets misgegaan tijdens het laden van de afbeelding: {e}", ToastType.Warning);
         }
-    }    
+    }
 
     /// <summary>
     /// Gets the current image data URI from the images dictionary.
@@ -358,10 +380,7 @@
     /// </summary>
     private void NextImage()
     {
-        if (images.Count > 0)
-        {
-            currentImageIndex = (currentImageIndex + 1) % images.Count;
-        }
+        if (images.Count > 0) currentImageIndex = (currentImageIndex + 1) % images.Count;
     }
 
     /// <summary>
@@ -386,10 +405,14 @@
 
         async Task LoadOne(string? fileKey)
         {
-            if (string.IsNullOrWhiteSpace(fileKey))
-                return;
+            if (!string.IsNullOrWhiteSpace(fileKey)) await GeneratePreview(fileKey, fileKey);
+        }
 
-            await GeneratePreview(fileKey, fileKey);
+        if (Tree == null)
+        {
+            EnqueueToast(message: "Kan de bestaande onderhoudsplannen niet ophalen, want er is geen boom gevonden.", ToastType.Warning);
+
+            return;
         }
 
         await LoadOne(Tree.MaintenancePlanSpring);
@@ -406,18 +429,39 @@
     /// <param name="fileType">The type of file being previewed.</param>
     private async Task GeneratePreview(string key, string fileName)
     {
-        HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+        try
+        {
+            HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
 
-        if (!response.IsSuccessStatusCode) return;
+            if (!response.IsSuccessStatusCode)
+            {
+                EnqueueToast(message: "Kan de preview niet genereren.", ToastType.Warning);
 
-        byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-        string type = response.Content.Headers.ContentType?.MediaType!;
-    
-        maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+                return;
+            }
+
+            byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+            string type = response.Content.Headers.ContentType?.MediaType!;
+            maintenancePreviews[key] = $"data:{type};base64,{Convert.ToBase64String(bytes)}";
+        } catch (InvalidOperationException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, het was geannuleerd: {e}", ToastType.Warning);
+
+        } catch (UriFormatException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, de Uri was ongeldig: {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch (ArgumentNullException e) {
+            EnqueueToast(message: $"Kan geen preview genereren: {e.Message}", ToastType.Warning);
+        }
+
         maintenanceFileNames[key] = fileName;
-
         GenerateQRCode(key, fileName);
-
         StateHasChanged();
     }
 
@@ -427,22 +471,22 @@
     /// <param name="key">The key to associate with the QR code.</param>
     /// <param name="fileName">The file name or URL to encode in the QR code.</param>
     private void GenerateQRCode(string key, string fileName) {
+        string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
+
+        using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
+        using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+        byte[] qrCodeBytes = qrCode.GetGraphic(20);
+
         try {
-            string fileUrl = $"{NavigationManager.BaseUri}view-file/{fileName}";
-
-            using QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            using QRCodeData qrCodeData = qrGenerator.CreateQrCode(fileUrl, QRCodeGenerator.ECCLevel.Q);
-            using PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-
-            byte[] qrCodeBytes = qrCode.GetGraphic(20);
             qrCodes[key] = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
-
-            StateHasChanged();
-        } catch (Exception e) {
-            errorMessage = $"Kan geen QR-code genereren: {e.Message}";
+        } catch (ArgumentNullException e) {
+            EnqueueToast(message: $"Kan geen QR-code genereren: {e.Message}", ToastType.Warning);
         }
+
+        StateHasChanged();
     }
-    
+
     /// <summary>
     /// Downloads a PDF containing a large QR code for the specified maintenance file.
     /// </summary>
@@ -454,7 +498,8 @@
         {
             if (!qrCodes.ContainsKey(fileKey))
             {
-                errorMessage = "QR-code niet gevonden";
+                EnqueueToast(message: $"QR-code niet gevonden", ToastType.Warning);
+
                 return;
             }
 
@@ -467,6 +512,7 @@
             byte[] qrCodeBytes = qrCode.GetGraphic(40);
             string base64QrCode = Convert.ToBase64String(qrCodeBytes);
 
+            // Todo use case/dictionary
             string season = fileKey == Tree?.MaintenancePlanSpring ? "Lente" :
                            fileKey == Tree?.MaintenancePlanSummer ? "Zomer" :
                            fileKey == Tree?.MaintenancePlanAutumn ? "Herfst" :
@@ -515,9 +561,13 @@
 
             await JSRuntime.InvokeVoidAsync("eval", jsCode);
         }
-        catch (Exception e)
+        catch (ArgumentNullException e)
         {
-            errorMessage = $"Kan QR-code niet downloaden: {e.Message}";
+            EnqueueToast(message: $"Kan QR-code niet downloaden: {e.Message}", ToastType.Warning);
+        }
+        catch (ArgumentException e)
+        {
+            EnqueueToast(message: $"Kan QR-code niet downloaden: {e.Message}", ToastType.Warning);
         }
     }
 
@@ -527,5 +577,20 @@
     private void NavigateBack()
     {
         NavigationManager.NavigateTo("/manager/tree");
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }

@@ -17,66 +17,65 @@
                 <div class="form-content">
                     <div class="row">
                         <div class="col-4">
-                                <div>
-                                    <label class="form-label">Naam</label>
-                                    <TextInput @bind-Value="@plantationSite.Name"></TextInput>
-                                    <ValidationMessage For="@(() => plantationSite.Name)" />
+                            <div>
+                                <label class="form-label">Naam</label>
+                                <TextInput @bind-Value="@plantationSite.Name"></TextInput>
+                                <ValidationMessage For="@(() => plantationSite.Name)" />
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <div style="width: 45%">
+                                    <label class="form-label">Straat</label>
+                                    <TextInput @bind-Value="@plantationSite.Street"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.Street)" />
                                 </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <div style="width: 45%">
-                                        <label class="form-label">Straat</label>
-                                        <TextInput @bind-Value="@plantationSite.Street"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.Street)" />
-                                    </div>
-
-                                    <div style="width: 45%">
-                                        <label class="form-label">Huisnummer</label>
-                                        <TextInput @bind-Value="@plantationSite.HouseNumber"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.HouseNumber)" />
-                                    </div>
+                                <div style="width: 45%">
+                                    <label class="form-label">Huisnummer</label>
+                                    <TextInput @bind-Value="@plantationSite.HouseNumber"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.HouseNumber)" />
                                 </div>
+                            </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <div style="width: 45%">
-                                        <label class="form-label">Stad</label>
-                                        <TextInput @bind-Value="@plantationSite.City"></TextInput>
-                                        <ValidationMessage For="@(() => plantationSite.City)" />
-                                    </div>
-                                    <div style="width: 45%">
-                                        <label class="form-label">Postcode</label>
-                                        <NumberInput TValue="int" Min="1000" Max="9999" @bind-Value="@plantationSite.PostalCode"></NumberInput>
-                                        <ValidationMessage For="@(() => plantationSite.PostalCode)" />   
-                                    </div>
+                            <div class="d-flex justify-content-between">
+                                <div style="width: 45%">
+                                    <label class="form-label">Stad</label>
+                                    <TextInput @bind-Value="@plantationSite.City"></TextInput>
+                                    <ValidationMessage For="@(() => plantationSite.City)" />
                                 </div>
-
-                                <div>
-                                    <label class="form-label">Land</label>
-                                    <TextInput @bind-Value="@plantationSite.Country"></TextInput>
-                                    <ValidationMessage For="@(() => plantationSite.Country)" />  
-                                </div> 
-
-                                <div>
-                                    <label class="form-label">Grootte</label>
-                                    <div id="size-input" class="d-flex justify-content-between">
-                                        <NumberInput TValue="double" @bind-Value="@plantationSite.Size" Style="width: 85%"></NumberInput>
-                                        <p style="font-size: 1.5rem; font-weight: 500; color: #5f5f5f">m²</p>
-                                    </div>
-                                    <ValidationMessage For="@(() => plantationSite.Size)" />
+                                <div style="width: 45%">
+                                    <label class="form-label">Postcode</label>
+                                    <NumberInput TValue="int" Min="1000" Max="9999" @bind-Value="@plantationSite.PostalCode"></NumberInput>
+                                    <ValidationMessage For="@(() => plantationSite.PostalCode)" />
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label class="form-label">Plattegrond</label>
-                                    <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
-                                    <ValidationMessage For="@(() => plantationSite.GroundPlan)" />
+                            <div>
+                                <label class="form-label">Land</label>
+                                <TextInput @bind-Value="@plantationSite.Country"></TextInput>
+                                <ValidationMessage For="@(() => plantationSite.Country)" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">Grootte</label>
+                                <div id="size-input" class="d-flex justify-content-between">
+                                    <NumberInput TValue="double" @bind-Value="@plantationSite.Size" Style="width: 85%"></NumberInput>
+                                    <p style="font-size: 1.5rem; font-weight: 500; color: #5f5f5f">m²</p>
                                 </div>
+                                <ValidationMessage For="@(() => plantationSite.Size)" />
+                            </div>
+
+                            <div>
+                                <label class="form-label">Plattegrond</label>
+                                <InputFile OnChange="HandleGroundPlanUpload" class="form-control mb-2" />
+                                <ValidationMessage For="@(() => plantationSite.GroundPlan)" />
+                            </div>
                         </div>
                         <div class="col-8 d-flex justify-content-center align-items-center">
                             @if (!string.IsNullOrEmpty(groundPlanPreview))
                             {
-                                <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;"/>
-                            }
-                            else
+                                <img src="@groundPlanPreview" alt="GroundPlan Preview" style="max-width:100%; max-height:50vh; border:1px solid #ccc;" />
+                            } else
                             {
                                 <p class="text-muted">Er is nog geen plattegrond geüpload.</p>
                             }
@@ -121,37 +120,33 @@
                     </tbody>
                 </table>
             </div>
-                <div class="buttons d-flex justify-content-end gap-3 mt-4">
-                    <Button Color="ButtonColor.Secondary" @onclick="() => showExitPopup = true">Verlaten</Button>
-                    <Button Class="green-btn" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
-                </div>
+            <div class="buttons d-flex justify-content-end gap-3 mt-4">
+                <Button Color="ButtonColor.Secondary" @onclick="() => showExitPopup = true">Verlaten</Button>
+                <Button Class="green-btn" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+            </div>
         </Content>
     </Tab>
 </Tabs>
 
-<ConfirmationPopup 
-    confirmationTitle="Kweeksite opslaan?"
-    confirmationDescription="Wenst u deze kweeksite op te slaan?"
-    showConfirmationPopup="showConfirmSaveForm"
-    onCancellation="CloseSave"
-    onConfirmation="HandleValidSubmit"
-/>
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-<ConfirmationPopup
-    confirmationTitle="Deze zone verwijderen?"
-    confirmationDescription="Wenst u deze zone te verwijderen?"
-    showConfirmationPopup="showConfirmZoneDeletion && SelectedZoneId != 0"
-    onCancellation="CancelZoneDeletion"
-    onConfirmation="() => DeleteZone(SelectedZoneId)"
-/>
+<ConfirmationPopup confirmationTitle="Kweeksite opslaan?"
+                   confirmationDescription="Wenst u deze kweeksite op te slaan?"
+                   showConfirmationPopup="showConfirmSaveForm"
+                   onCancellation="CloseSave"
+                   onConfirmation="HandleValidSubmit" />
 
-<ConfirmationPopup 
-    confirmationTitle="Deze pagina verlaten?"
-    confirmationDescription="Niet opgeslagen wijzingen zullen verloren gaan"
-    showConfirmationPopup="showExitPopup"
-    onCancellation="CloseExit"
-    onConfirmation="Cancel"
-/>
+<ConfirmationPopup confirmationTitle="Deze zone verwijderen?"
+                   confirmationDescription="Wenst u deze zone te verwijderen?"
+                   showConfirmationPopup="showConfirmZoneDeletion && SelectedZoneId != 0"
+                   onCancellation="CancelZoneDeletion"
+                   onConfirmation="() => DeleteZone(SelectedZoneId)" />
+
+<ConfirmationPopup confirmationTitle="Deze pagina verlaten?"
+                   confirmationDescription="Niet opgeslagen wijzingen zullen verloren gaan"
+                   showConfirmationPopup="showExitPopup"
+                   onCancellation="CloseExit"
+                   onConfirmation="Cancel" />
 
 @if (this.showZoneCreation && this.newZone != null)
 {
@@ -159,7 +154,7 @@
         <Card Class="position-absolute align-self-center p-4 border shadow">
             <EditForm Model="newZone" OnValidSubmit="SaveZone">
                 <DataAnnotationsValidator />
-                <div class="mb-3"> 
+                <div class="mb-3">
                     <label class="label">Naam</label>
                     <TextInput @bind-Value="@newZone.Name"></TextInput>
                     <ValidationMessage For="@(() => newZone.Name)" />
@@ -174,9 +169,9 @@
 
                 <div class="mb-3">
                     <label class="label">Boomsoort</label>
-                    <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
-                    <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
-                        @foreach(TreeDTO tree in this.Trees ?? [])
+                    <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh" />
+                    <select @bind="this.newZone.TreeId" size="3" class="form-select mb-3">
+                        @foreach (TreeDTO tree in this.Trees ?? [])
                         {
                             <option value="@tree.Id">@tree.Species</option>
                         }
@@ -191,27 +186,12 @@
     </div>
 }
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
-
 @code {
     /// <summary>
     /// The ID of the plantation site to load. This is a component parameter.
     /// </summary>
     [Parameter] public int id { get; set; }
 
-    /// <summary>
-    /// Reference to the tab component for switching between tabs.
-    /// </summary>    
-    private Tabs tabs = default!;
-
-
-    /// <summary>
-    /// The ID of the plantation site to load. This is a component parameter.
-    /// </summary>
-    private string errorMessage = "";
 
     /// <summary>
     /// The allowed filetypes of the plantation site's groundplan. This is a readonly component parameter.
@@ -222,6 +202,11 @@
         "image/webp",
         "image/bmp"
     };
+
+    /// <summary>
+    /// Reference to the tab component for switching between tabs.
+    /// </summary>
+    private Tabs tabs = default!;
 
     /// <summary>
     /// The ID of the plantation site to load. This is a component parameter.
@@ -256,6 +241,11 @@
     private bool showZoneCreation;
 
     /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
     /// If true this displays the zone deletion popup.
     /// </summary>
     private bool showConfirmZoneDeletion;
@@ -268,7 +258,8 @@
     /// <summary>
     /// Returns a new, empty zone DTO associated with the current plantation site.
     /// </summary>
-    private ZoneDTO EmptyZone {
+    private ZoneDTO EmptyZone
+    {
         get
         {
             return new ZoneDTO()
@@ -320,7 +311,7 @@
     /// </summary>
     HttpClient? client;
 
-    private bool showExitPopup = false; 
+    private bool showExitPopup = false;
 
     /// <summary>
     /// Initializes the component, loads plantation site data if editing, loads trees and zones.
@@ -330,16 +321,13 @@
         client = HttpClientFactory.CreateClient("BTPApi");
         this.SelectedZoneId = 0;
 
-        if (this.id != 0) {
-            try {
-                this.plantationSite = await this.client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{this.id}");
+        if (this.id != 0)
+        {
+            this.plantationSite = await this.client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{this.id}");
 
-                if (!string.IsNullOrEmpty(this.plantationSite?.GroundPlan))
-                {
-                    await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
-                }
-            } catch (Exception ex) {
-                // TODO implement snackbar
+            if (!string.IsNullOrEmpty(this.plantationSite?.GroundPlan))
+            {
+                await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
             }
         }
 
@@ -352,28 +340,23 @@
     /// </summary>
     private async Task LoadZones()
     {
-        if (this.plantationSite == null || this.plantationSite.Id == 0) return;
+        if (this.plantationSite == null || this.plantationSite.Id == 0)
+            return;  // No toast needed, because there are no zones when a new plantationsite is created.
 
-        if (this.client == null) return;
+        if (this.client == null)
+            return;
 
-        try
+        ICollection<ZoneDTO>? response;
+
+        response = await this.client.GetFromJsonAsync<ICollection<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
+
+        if (response != null)
         {
-            ICollection<ZoneDTO>? response;
-
-            response = await this.client.GetFromJsonAsync<ICollection<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
-
-            if (response != null)
-            {
-                this.plantationSite.Zones = response;
-                StateHasChanged();
-            } else
-            {
-                this.errorMessage = "Er is iets misgegaan bij het laden van de zones";
-            }
-        }
-        catch (Exception e)
+            this.plantationSite.Zones = response;
+            StateHasChanged();
+        } else
         {
-            this.errorMessage = e.Message;
+            EnqueueToast(message: "Er is iets misgegaan bij het laden van de zones", ToastType.Warning);
         }
     }
 
@@ -382,26 +365,24 @@
     /// </summary>
     private async Task LoadTrees()
     {
-        if (this.client == null) return;
-
-        try
+        if (this.client == null)
         {
-            IEnumerable<TreeDTO>? response;
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
 
-            response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree/all" + (this.searchTreeText != null? $"?search={this.searchTreeText}": ""));
-
-            if (response != null)
-            {
-                this.Trees = response;
-                StateHasChanged();
-            } else
-            {
-                this.errorMessage = "Er is iets misgegaan bij het laden van de bomen";
-            }
+            return;
         }
-        catch (Exception e)
+
+        IEnumerable<TreeDTO>? response;
+
+        response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree/all" + (this.searchTreeText != null ? $"?search={this.searchTreeText}" : ""));
+
+        if (response != null)
         {
-            this.errorMessage = e.Message;
+            this.Trees = response;
+            StateHasChanged();
+        } else
+        {
+            EnqueueToast(message: "Er is iets misgegaan bij het laden van de bomen", ToastType.Warning);
         }
     }
 
@@ -433,42 +414,60 @@
     /// <summary>
     /// Handles form submission for creating or updating a plantation site and its zones.
     /// </summary>
-    private async Task HandleValidSubmit(){
-        try {
-            if (this.client == null || this.plantationSite == null) return;
+    private async Task HandleValidSubmit()
+    {
+        if (this.client == null || this.plantationSite == null)
+        {
+            EnqueueToast(message: "De http-client of de kweeksite is niet succesvol geïnstantieerd!", ToastType.Warning);
 
-            HttpResponseMessage response;
+            return;
+        }
 
-            foreach (ZoneDTO zone in this.plantationSite.Zones ?? [])
-            {
-                if (zone.Id < 0) zone.Id = 0;
-                if (zone.PlantationSiteId == 0) zone.PlantationSiteId = this.plantationSite.Id;
-            }
+        HttpResponseMessage response;
 
-            if (this.DeleteZonesAction != null)
+        foreach (ZoneDTO zone in this.plantationSite.Zones ?? [])
+        {
+            if (zone.Id < 0)
+                zone.Id = 0;
+            if (zone.PlantationSiteId == 0)
+                zone.PlantationSiteId = this.plantationSite.Id;
+        }
+
+        if (this.DeleteZonesAction != null)
+        {
+            try
             {
                 await this.DeleteZonesAction();
                 this.DeleteZonesAction = null;
-            }
-
-            this.showConfirmSaveForm = false;
-            if (id == 0) response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
-            else response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite);
-
-            if (response.IsSuccessStatusCode)
+                EnqueueToast(message: "De geselecteerde zones zijn succesvol verwijderd.", ToastType.Success);
+            } catch (InvalidOperationException e)
             {
-                // TODO add snackbar confirmation
-            }
-            else
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+            } catch (HttpRequestException e)
             {
-                string error = await response.Content.ReadAsStringAsync();
-                // TODO add snackbar error
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+            } catch (TaskCanceledException e)
+            {
+                EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
             }
         }
-        catch (Exception ex)
+
+        this.showConfirmSaveForm = false;
+
+        if (id == 0)
+            response = await this.client.PostAsJsonAsync("PlantationSite", plantationSite);
+        else
+            response = await this.client.PutAsJsonAsync($"PlantationSite/{id}", plantationSite);
+
+        if (response.IsSuccessStatusCode)
         {
-            // TODO add snackbar exception
+            EnqueueToast(message: $"De kweeksite is succesvol {(id == 0 ? "toegevoegd" : "gewijzigd")}.", ToastType.Success);
+        } else
+        {
+            string error = await response.Content.ReadAsStringAsync();
+            EnqueueToast(message: $"Er ging iets mis bij het {(id == 0 ? "toegevoegen" : "wijzigen")} van de kweeksite: {error}", ToastType.Warning);
         }
+
         StateHasChanged();
     }
 
@@ -481,11 +480,13 @@
         Navigation.NavigateTo("/admin/plantation-site");
     }
 
-    private async Task CloseExit(){
+    private async Task CloseExit()
+    {
         showExitPopup = false;
     }
 
-    private async Task CloseSave(){
+    private async Task CloseSave()
+    {
         showConfirmSaveForm = false;
     }
 
@@ -500,14 +501,14 @@
 
         if (this.client == null)
         {
-            this.errorMessage = "De http-client is niet geïnstantieerd!";
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
 
             return;
         }
 
         if (!this.allowedGroundplanFileTypes.Contains(file.ContentType))
         {
-            this.errorMessage = "Dit bestandstype is niet toegestaan!";
+            EnqueueToast(message: $"Het bestandstype {file.ContentType} is niet toegestaan.", ToastType.Warning);
 
             return;
         }
@@ -532,11 +533,12 @@
                 plantationSite!.GroundPlan = fileName;
                 await LoadImagePreview(client, plantationSite.GroundPlan);
             }
-        }
-        else
+
+            EnqueueToast(message: $"Het bestand ({fileName}) is correct opgeslagen", ToastType.Success);
+        } else
         {
             string error = await response.Content.ReadAsStringAsync();
-            // TODO implement snackbar
+            EnqueueToast(message: $"Er ging iets mis met het uploaden met het bestand: {error}", ToastType.Warning);
         }
     }
 
@@ -547,7 +549,7 @@
     /// <returns>The tree DTO or null if not found.</returns>
     private TreeDTO? findTree(int? id)
     {
-        return id == null? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
+        return id == null ? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
     }
 
     /// <summary>
@@ -568,22 +570,31 @@
     {
         this.showConfirmZoneDeletion = false;
 
-        if (this.plantationSite == null || this.plantationSite.Zones == null) return;
+        if (this.plantationSite == null || this.plantationSite.Zones == null)
+        {
+            EnqueueToast(message: "De zone kon niet verwijdert worden. De kweeksite of zonelijst kon niet gevonden worden.", ToastType.Warning);
+
+            return;
+        }
 
         // If the plantationSite id is 0 or smaller, this means the the zone hasn't been sent to the backend yet, so it can just be removed from the frontend.
-        if(this.plantationSite.Id <= 0)
+        if (this.plantationSite.Id <= 0)
         {
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
+            EnqueueToast(message: "De zone is succesvol verwijdert geweest.", ToastType.Success);
 
             return;
         }
 
         if (this.client != null)
         {
-            if(this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
-            else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
+            if (this.DeleteZonesAction == null)
+                this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
+            else
+                this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
 
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
+            EnqueueToast(message: "Het verwijderen van de zone wordt correct afgehandelt. Druk op \"Bewaar\" om finaal te verwijderen.", ToastType.Success);
         }
 
         await this.LoadTrees();
@@ -598,23 +609,38 @@
     /// <param name="fileName">The filename of the ground plan image.</param>
     private async Task LoadImagePreview(HttpClient client, string fileName)
     {
-        if (string.IsNullOrWhiteSpace(fileName)) return;
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
 
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = (await client.GetAsync($"File/{fileName}")).EnsureSuccessStatusCode();
 
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
 
             string base64Image = Convert.ToBase64String(imageBytes);
-            groundPlanPreview = $"data:{contentType};base64,{base64Image}";
-        }
-        catch
+            this.groundPlanPreview = $"data:{contentType};base64,{base64Image}";
+            EnqueueToast(message: "De afbeelding is correct opgeslagen.", ToastType.Success);
+        } catch (InvalidOperationException e)
         {
-            groundPlanPreview = string.Empty;
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, het was geannuleerd: {e}", ToastType.Warning);
+
+        } catch (UriFormatException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol, de Uri was ongeldig: {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Het verzoek naar de server was onsuccesvol: {e}", ToastType.Warning);
+            this.groundPlanPreview = string.Empty;
+        } catch (ArgumentNullException e)
+        {
+            EnqueueToast(message: $"Kon de afbeelding niet omzetten naar base64: {e}", ToastType.Warning);
+            this.groundPlanPreview = string.Empty;
         }
     }
 
@@ -627,7 +653,7 @@
     {
         if (this.newZone == null)
         {
-            this.errorMessage = "Nieuwe zone kan niet worden gevonden, deze is null.";
+            EnqueueToast(message: "Nieuwe zone kan niet worden gevonden, deze is null.", ToastType.Warning);
             StateHasChanged();
 
             return;
@@ -635,7 +661,7 @@
 
         if (this.plantationSite == null)
         {
-            this.errorMessage = "De kweeksite kon niet worden gevonden, deze is null.";
+            EnqueueToast(message: "De kweeksite kon niet worden gevonden, deze is null.", ToastType.Warning);
             StateHasChanged();
 
             return;
@@ -643,7 +669,7 @@
 
         if (this.newZone.TreeId == 0)
         {
-            this.errorMessage = "De boom in de nieuwe zone is nog niet opgeslagen in de database.";
+            EnqueueToast(message: "De boom in de nieuwe zone is nog niet opgeslagen in de database.", ToastType.Warning);
             StateHasChanged();
 
             return;
@@ -651,7 +677,7 @@
 
         if (this.newZone.PlantationSiteId == 0)
         {
-            this.errorMessage = "De kweeksite in de nieuwe zone is nog niet opgeslagen in de database.";
+            EnqueueToast(message: "De kweeksite in de nieuwe zone is nog niet opgeslagen in de database.", ToastType.Warning);
             StateHasChanged();
 
             return;
@@ -659,23 +685,23 @@
 
         if (string.IsNullOrWhiteSpace(this.newZone.Name))
         {
-            this.errorMessage = "De naam van een zone kan niet leeg zijn.";
+            EnqueueToast(message: "De naam van een zone kan niet leeg zijn.", ToastType.Warning);
             StateHasChanged();
 
             return;
         }
 
-        if(this.newZone.Size == null)
+        if (this.newZone.Size == null)
         {
-            this.errorMessage = "De zone moet een oppervlakte hebben.";
+            EnqueueToast(message: "De zone moet een oppervlakte hebben.", ToastType.Warning);
             StateHasChanged();
 
             return;
         }
 
-        if((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone? 0: this.newZone.Size) >= this.plantationSite.Size)
+        if ((this.plantationSite.Zones?.Sum(zone => zone.Size) ?? 0) + (this.IsEditZone ? 0 : this.newZone.Size) >= this.plantationSite.Size)
         {
-            this.errorMessage = "De som van de oppervlaktes van de zones moet kleiner zijn dan het oppervlakte van de kweeksite.";
+            EnqueueToast(message: "De som van de oppervlaktes van de zones moet kleiner zijn dan het oppervlakte van de kweeksite.", ToastType.Warning);
             StateHasChanged();
 
             return;
@@ -683,9 +709,9 @@
 
         if (this.IsEditZone)
         {
-            if(this.plantationSite.Zones == null)
+            if (this.plantationSite.Zones == null)
             {
-                this.errorMessage = "De kweeksite had geen zones, dus er konden geen zones worden bijgewerkt.";
+                EnqueueToast(message: "De kweeksite had geen zones, dus er konden geen zones worden bijgewerkt.", ToastType.Warning);
                 StateHasChanged();
 
                 return;
@@ -694,9 +720,9 @@
             List<ZoneDTO> zones = this.plantationSite.Zones.ToList();
             int index = zones.FindIndex(zone => zone.Id == newZone.Id);
 
-            if(index == -1)
+            if (index == -1)
             {
-                this.errorMessage = "Zone kon niet worden bijgewerkt omdat deze niet meer kon worden gevonden in de lijst met zones van de kweeksite.";
+                EnqueueToast(message: "Zone kon niet worden bijgewerkt, omdat deze niet meer kon worden gevonden in de lijst met zones van de kweeksite.", ToastType.Warning);
                 StateHasChanged();
 
                 return;
@@ -706,7 +732,8 @@
             this.plantationSite.Zones = zones;
         } else
         {
-            if (this.plantationSite.Zones == null) this.plantationSite.Zones = new List<ZoneDTO>();
+            if (this.plantationSite.Zones == null)
+                this.plantationSite.Zones = new List<ZoneDTO>();
 
             this.plantationSite.Zones.Add(newZone);
         }
@@ -775,7 +802,7 @@
         this.showZoneCreation = true;
         this.IsEditZone = true;
 
-        if(this.newZone == null)
+        if (this.newZone == null)
         {
             this.newZone = new ZoneDTO()
             {
@@ -790,11 +817,27 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
+
     private int GetMaxSize()
     {
         double maxSize = (plantationSite?.Size ?? 0) - (plantationSite?.Zones?.Sum(z => z.Size) ?? 0);
 
-        int rounded = (int)Math.Round(maxSize);
+        int rounded = (int) Math.Round(maxSize);
 
         return Math.Max(rounded, 0);
     }

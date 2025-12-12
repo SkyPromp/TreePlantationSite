@@ -44,10 +44,7 @@
     </Card>
 </div>
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 @code {
     /// <summary>
@@ -61,9 +58,9 @@
     private HttpClient? client;
 
     /// <summary>
-    /// Stores any error messages encountered during operations.
+    /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    string errorMessage = "";
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Initializes the HTTP client.
@@ -74,10 +71,8 @@
         client = HttpClientFactory.CreateClient("BTPApi");
 
         string? appType = AppInfoOptions.Value.AppType;
-        if (appType == "Maintenance")
-            loginDetails.IsForMaintenance = true;
-        else
-            loginDetails.IsForMaintenance = false;
+        if (appType == "Maintenance") loginDetails.IsForMaintenance = true;
+        else loginDetails.IsForMaintenance = false;
     }
 
     /// <summary>
@@ -87,25 +82,16 @@
     /// </summary>
     private async Task HandleValidSubmit()
     {
-        try
-        {
-            if (this.client == null)
-            {
-                this.errorMessage = "Geen http client gevonden";
-                return;
-            }
-
             HttpResponseMessage? response = await client.PostAsJsonAsync("user/auth/login", loginDetails);
             if (!response.IsSuccessStatusCode)
             {
-                errorMessage = "Er is een fout opgetreden tijdens het inloggen.";
+                this.EnqueueToast(message: "Er is een fout opgetreden tijdens het inloggen.", type: ToastType.Warning);
 
                 ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
 
-                if (errorResponseInfo == null)
-                    return;
+                if (errorResponseInfo == null) return;
 
-                errorMessage = errorResponseInfo.ErrorCode switch
+                string errorMessage = errorResponseInfo.ErrorCode switch
                 {
                     "INVALID_CREDENTIALS" => "Geen toegang. Ongeldige e-mail of wachtwoord.",
                     "NOT_APPROVED" => "Geen toegang. Je bent nog niet goedgekeurd",
@@ -113,8 +99,10 @@
                     "USER_DELETED" => "Geen toegang. Je account werd verwijderd",
                     "UNAUTHORIZED_ACCESS_MAINTENANCE" => "Als een operator heb je geen toegang tot dit platform",
                     "UNAUTHORIZED_ACCESS_USER" => "Enkel operators hebben toegang tot dit platform",
-                    _ => errorMessage
+                    _ => ""
                 };
+
+                if (!string.IsNullOrEmpty(errorMessage)) this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
 
                 return;
             }
@@ -122,13 +110,19 @@
             LoginResponseDTO? token = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
 
             string tempKey = Guid.NewGuid().ToString();
+        try
+        {
             Cache.Set(tempKey, token, TimeSpan.FromMinutes(5));
 
             Navigation.NavigateTo($"/auth/login-callback?key={tempKey}", forceLoad: true);
         }
-        catch (Exception e)
+        catch (OverflowException e)
         {
-            this.errorMessage = e.Message;
+            this.EnqueueToast(message: $"Er ging iets mis bij het omzetten van de tijd: {e}", type: ToastType.Warning);
+        }
+        catch (ArgumentException e)
+        {
+            this.EnqueueToast(message: $"Er ging iets mis bij het omzetten van de tijd: {e}", type: ToastType.Warning);
         }
     }
 
@@ -138,5 +132,20 @@
     private void Cancel()
     {
         Navigation.NavigateTo("/welcome");
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }
