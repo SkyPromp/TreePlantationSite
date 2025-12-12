@@ -80,10 +80,7 @@
     </div>
 </div>
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 @code {
     /// <summary>
@@ -100,14 +97,14 @@
     };
 
     /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
     private HttpClient client = default!;
-
-    /// <summary>
-    /// Stores any error messages encountered during operations.
-    /// </summary>
-    string errorMessage = "";
 
     /// <summary>
     /// Indicates whether the password meets minimum length requirements.
@@ -148,22 +145,10 @@
     /// </summary>
     private async Task HandleValidSubmit()
     {
-        try
-        {
-            var response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
+        var response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
 
-            if (response.IsSuccessStatusCode)
-            {
-                this.errorMessage = "";
-                Navigation.NavigateTo("/login");
-            }
-            else
-                this.errorMessage = await response.Content.ReadAsStringAsync();
-        }
-        catch (Exception e)
-        {
-            this.errorMessage = e.Message;
-        }
+        if (response.IsSuccessStatusCode) Navigation.NavigateTo("/login");
+        else this.EnqueueToast(message: $"Er ging iets mis bij het registreren: {await response.Content.ReadAsStringAsync()}", type: ToastType.Warning);
     }
 
     /// <summary>
@@ -178,5 +163,20 @@
     /// Helper method that determines which CSS class to apply to password rule indicators.
     /// </summary>
     /// <param name="condition">Whether the rule is met.</param>
-    private static string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+    private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+    
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
 }
