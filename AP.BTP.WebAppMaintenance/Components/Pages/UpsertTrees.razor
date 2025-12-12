@@ -283,12 +283,6 @@
     [Parameter] public int? Id { get; set; }
 
     /// <summary>
-    /// Stores any error messages encountered during operations.
-    /// Used to display feedback to the user.
-    /// </summary>
-    string errorMessage = "";
-
-    /// <summary>
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
     HttpClient? client;
@@ -455,13 +449,6 @@
     /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Geen httpclient gevonden.";
-
-            return;
-        }
-
         TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
 
         if (response != null) this.Tree = response;
@@ -575,7 +562,6 @@
 
         if (savedTree == null || savedTree.Id == 0)
         {
-            this.errorMessage = "";
             EnqueueToast(message: "Kan de opgeslagen boom-id niet ophalen.", ToastType.Warning);
 
             return;
