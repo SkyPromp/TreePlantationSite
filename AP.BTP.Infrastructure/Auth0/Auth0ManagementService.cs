@@ -127,7 +127,6 @@ namespace AP.BTP.Infrastructure.Auth0
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine($"Failed to get roles: {response.StatusCode} - {response.Content}");
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
