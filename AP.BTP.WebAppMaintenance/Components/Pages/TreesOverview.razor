@@ -54,17 +54,13 @@
                                         {
                                         <hr class="mb-1"/>
                                         <div class="d-flex justify-content-end">
-                                            <a href="/admin/tree/edit/@item.Id"><Button Class="py-0 green-icon"><Icon Name="IconName.Pencil"></Icon></Button></a>
+                                            <a href="/admin/tree/edit/@item.Id"><Button Class="py-0 blue-icon"><Icon Name="IconName.Pencil"></Icon></Button></a>
                                             <Button Class="py-0 red-icon" @onclick="() => showDeleteConfirmation = true"><Icon Name="IconName.Trash"></Icon></Button>
                                         </div>
                                         }
                                         else if(user != null && user.IsInRole("Manager"))
                                         {
-                                            <a href="@($"/manager/tree/{item.Id}")" style="text-decoration:none;">
-                                                <Button Class="p-0" Style="box-shadow: none; border: none; width:100%; height: 5vh;" TooltipTitle="Details bekijken" TooltipColor="TooltipColor.Dark">
-                                                    <Icon Name="IconName.Eye" Color="IconColor.Dark" Style="font-size: 4vh;"></Icon>
-                                                </Button>
-                                            </a>
+                                            <Button Class="mt-2 green-btn container-fluid" @onclick="() => GoToDetailPage(item.Id)">Bekijken</Button>
                                         }
 
                                 </div>
@@ -251,6 +247,15 @@
     private void GoToUpdateForm(int id)
     {
         Navigation.NavigateTo($"/admin/tree/edit/{id}");
+    }
+
+    /// <summary>
+    /// Navigates to the tree detail page.
+    /// </summary>
+    /// <param name="id">The ID of the tree to edit.</param>
+    private void GoToDetailPage(int id)
+    {
+        Navigation.NavigateTo($"/manager/tree/{id}");
     }
 
     /// <summary>

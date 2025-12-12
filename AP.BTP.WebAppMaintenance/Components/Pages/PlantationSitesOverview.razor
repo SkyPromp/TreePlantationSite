@@ -37,7 +37,7 @@
                                 <CardText>@item.Country</CardText>
                                 <hr />
                                 <div class="d-flex justify-content-end">
-                                    <Button Class="py-0 green-icon"  @onclick="() => GoToUpdateForm(item.Id)"><Icon Name="IconName.Pencil"></Icon></Button>
+                                    <Button Class="py-0 blue-icon"  @onclick="() => GoToUpdateForm(item.Id)"><Icon Name="IconName.Pencil"></Icon></Button>
                                     <Button Class="py-0 red-icon" @onclick="() => { this.showDeleteConfirmation = true; selectedPlantationSite = item; }"><Icon Name="IconName.Trash"></Icon></Button>
                                 </div>
                             </CardBody>

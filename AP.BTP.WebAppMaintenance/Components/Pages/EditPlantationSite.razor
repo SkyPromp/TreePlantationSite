@@ -113,7 +113,7 @@
                                 <td>@zone.Size</td>
                                 <td>@(this.findTree(zone.TreeId)?.Species ?? "Er werd geen soortnaam gevonden.")</td>
                                 <td>
-                                    <Button Class="green-icon py-0 px-1" @onclick="() => OpenEditZone(zone)"><Icon Name="IconName.Pencil"></Icon></Button>
+                                    <Button Class="blue-icon py-0 px-1" @onclick="() => OpenEditZone(zone)"><Icon Name="IconName.Pencil"></Icon></Button>
                                     <Button Class="red-icon py-0 px-1" @onclick="() => ConfirmDeleteZone(zone.Id)"><Icon Name="IconName.Trash"></Icon></Button>
                                 </td>
                             </tr>

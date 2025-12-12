@@ -43,9 +43,18 @@ a.nav-link:hover {
 }
 
 
-.green-icon {
+.blue-icon {
     :hover {
         color: rgb(22, 121, 226); 
+    }
+    box-shadow: none !important;
+    text-decoration: none !important; 
+    border: none !important;
+}
+
+.green-icon {
+    :hover {
+        color: rgb(85, 193, 85); 
     }
     box-shadow: none !important;
     text-decoration: none !important; 
