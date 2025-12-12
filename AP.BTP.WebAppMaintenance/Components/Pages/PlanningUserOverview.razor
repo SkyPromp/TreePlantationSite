@@ -6,6 +6,8 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.DTOs
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
 <PageTitle>Planning gebruikersselectie</PageTitle>
 
 <h3 class="text-center">Gebruikerskeuze voor planningsbeheer</h3>
@@ -58,9 +60,7 @@
                                     <CardText class="m-0 col-4">n.v.t.</CardText>
                                 }
                                 <div class="col-1 d-flex justify-content-end">
-                                    <a href="/manager/planning/user/@item.Id">
-                                        <Button Class="green-btn" Size=ButtonSize.Small>Beheren</Button>
-                                    </a>
+                                    <Button Class="green-btn" Size=ButtonSize.Small @onclick="() => NavigateToUserPlanning(item.Id)">Beheren</Button>
                                 </div>
                             </CardBody>
 
@@ -247,5 +247,9 @@
     {
         if (sortBy != column) return IconName.None;
         return sortDirection == "asc" ? IconName.ArrowUp : IconName.ArrowDown;
+    }
+
+    private void NavigateToUserPlanning(int id){
+        Navigation.NavigateTo($"manager/planning/user/{id}");
     }
 }

@@ -54,7 +54,7 @@
                                         {
                                         <hr class="mb-1"/>
                                         <div class="d-flex justify-content-end">
-                                            <a href="/admin/tree/edit/@item.Id"><Button Class="py-0 blue-icon"><Icon Name="IconName.Pencil"></Icon></Button></a>
+                                            <Button Class="py-0 blue-icon" @onclick="() => GoToUpdateForm(item.Id)"><Icon Name="IconName.Pencil"></Icon></Button>
                                             <Button Class="py-0 red-icon" @onclick="() => showDeleteConfirmation = true"><Icon Name="IconName.Trash"></Icon></Button>
                                         </div>
                                         }

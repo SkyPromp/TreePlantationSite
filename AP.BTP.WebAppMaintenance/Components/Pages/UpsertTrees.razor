@@ -230,9 +230,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+                <div class="buttons d-flex justify-content-end mt-4 gap-3">
+                    <Button Color="ButtonColor.Secondary" Class="d-flex align-items-center justify-content-center" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</Button>
+                    <Button Class="d-flex align-items-center justify-content-center green-btn" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>

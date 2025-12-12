@@ -9,13 +9,11 @@
 @using QRCoder
 
 <div class="d-flex justify-content-between mb-3">
-    <a href="/manager/tree" style="text-decoration: none;">
-        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
-                Style=" box-shadow: none; border: none; text-decoration: none;">
-            <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
-            Terug naar overzicht
-        </Button>
-    </a>
+    <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" @onclick="() => NavigateBack()"
+            Style=" box-shadow: none; border: none; text-decoration: none;">
+        <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
+        Terug naar overzicht
+    </Button>
 </div>
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
@@ -529,5 +527,5 @@
     private void NavigateBack()
     {
         NavigationManager.NavigateTo("/manager/tree");
-    }    
+    }
 }
