@@ -297,7 +297,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<bool> IsEmailUnique(string email)
         {
             return !await this.dbSet.AnyAsync(u =>
-                u.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
+                EF.Functions.Like(u.Email, email));
         }
 
         /// <summary>
@@ -306,8 +306,8 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<bool> IsFullNameUnique(string firstName, string lastName)
         {
             return !await this.dbSet.AnyAsync(u =>
-                u.FirstName.Equals(firstName, StringComparison.CurrentCultureIgnoreCase) &&
-                u.LastName.Equals(lastName, StringComparison.CurrentCultureIgnoreCase));
+                EF.Functions.Like(u.FirstName, firstName) &&
+                EF.Functions.Like(u.LastName, lastName));
         }
     }
 }
