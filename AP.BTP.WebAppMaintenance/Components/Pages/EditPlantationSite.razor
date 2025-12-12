@@ -9,10 +9,10 @@
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
 
-<Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
+<Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Site details">
         <Content>
-            <EditForm Model="plantationSite" OnValidSubmit="() => this.showConfirmSaveForm = true">
+            <EditForm Model="plantationSite" OnValidSubmit="ShowSecondTabAsync">
                 <DataAnnotationsValidator />
                 <div class="form-content">
                     <div class="row">
@@ -83,9 +83,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Verlaten</Button>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Bewaren</Button>
+                <div class="buttons d-flex justify-content-end mt-4 gap-3">
+                    <Button Color="ButtonColor.Secondary" @onclick="() => showExitPopup = true">Verlaten</Button>
+                    <Button Class="green-btn" Type="ButtonType.Submit">Volgende</Button>
                 </div>
             </EditForm>
         </Content>
@@ -93,12 +93,8 @@
     <Tab Title="Zones">
         <Content>
             <div class="form-content">
-                <div class="container">
-                    <div class="row d-flex justify-content-end">
-                        <div class="col-auto">
-                            <Button Class="green-btn" @onclick="OpenZoneCreation"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-end">
+                    <Button Class="green-btn" @onclick="OpenZoneCreation"><Icon Name="IconName.Plus"></Icon> Toevoegen</Button>
                 </div>
                 <table class="table">
                     <thead class="thead-dark">
@@ -106,7 +102,7 @@
                             <th scope="col">Naam</th>
                             <th scope="col">Oppervlakte</th>
                             <th scope="col">Boomsoort</th>
-                            <th scope="col"></th>
+                            <th scope="col">Beheren</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,54 +121,72 @@
                     </tbody>
                 </table>
             </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="Cancel">Verlaten</Button>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+                <div class="buttons d-flex justify-content-end gap-3 mt-4">
+                    <Button Color="ButtonColor.Secondary" @onclick="() => showExitPopup = true">Verlaten</Button>
+                    <Button Class="green-btn" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
         </Content>
     </Tab>
 </Tabs>
 
 <ConfirmationPopup 
-    showConfirmationPopup="this.showConfirmSaveForm"
-    onConfirmation="this.HandleValidSubmit"
+    confirmationTitle="Kweeksite opslaan?"
+    confirmationDescription="Wenst u deze kweeksite op te slaan?"
+    showConfirmationPopup="showConfirmSaveForm"
+    onCancellation="CloseSave"
+    onConfirmation="HandleValidSubmit"
+/>
+
+<ConfirmationPopup
+    confirmationTitle="Deze zone verwijderen?"
+    confirmationDescription="Wenst u deze zone te verwijderen?"
+    showConfirmationPopup="showConfirmZoneDeletion && SelectedZoneId != 0"
+    onCancellation="CancelZoneDeletion"
+    onConfirmation="() => DeleteZone(SelectedZoneId)"
 />
 
 <ConfirmationPopup 
-    showConfirmationPopup="this.showConfirmZoneDeletion && this.SelectedZoneId != 0"
-    onCancellation="this.CancelZoneDeletion"
-    onConfirmation="() => this.DeleteZone(this.SelectedZoneId)"
+    confirmationTitle="Deze pagina verlaten?"
+    confirmationDescription="Niet opgeslagen wijzingen zullen verloren gaan"
+    showConfirmationPopup="showExitPopup"
+    onCancellation="CloseExit"
+    onConfirmation="Cancel"
 />
 
 @if (this.showZoneCreation && this.newZone != null)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center">
-        <Card Class="position-absolute align-self-center p-4">
-            <div class="mb-3"> 
-                <label class="label">Naam</label>
-                <TextInput @bind-Value="@newZone.Name"></TextInput>
-            </div>
+        <Card Class="position-absolute align-self-center p-4 border shadow">
+            <EditForm Model="newZone" OnValidSubmit="SaveZone">
+                <DataAnnotationsValidator />
+                <div class="mb-3"> 
+                    <label class="label">Naam</label>
+                    <TextInput @bind-Value="@newZone.Name"></TextInput>
+                    <ValidationMessage For="@(() => newZone.Name)" />
+                </div>
 
-            <div class="mb-3">
-                <label class="label">Oppervlakte</label>
-                <NumberInput @bind-Value="@newZone.Size" Min="0" Max="GetMaxSize()" Step="1"></NumberInput>
-            </div>
-            @* TODO add correct validation handling *@
+                <div class="mb-3">
+                    <label class="label">Oppervlakte</label>
+                    <NumberInput @bind-Value="@newZone.Size" Min="0" Max="GetMaxSize()" Step="1"></NumberInput>
+                    <ValidationMessage For="@(() => newZone.Size)" />
+                </div>
+                @* TODO add correct validation handling *@
 
-            <div class="mb-3">
-                <label class="label">Boomsoort</label>
-                <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
-                <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
-                    @foreach(TreeDTO tree in this.Trees ?? [])
-                    {
-                        <option value="@tree.Id">@tree.Species</option>
-                    }
-                </select>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <Button Color="ButtonColor.Secondary" @onclick="this.CancelZoneCreation">Verlaten</Button>
-                <Button Class="green-btn" @onclick="this.CreateZone">Bewaren</Button>
-            </div>
+                <div class="mb-3">
+                    <label class="label">Boomsoort</label>
+                    <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh"/>
+                    <select @bind="this.newZone.TreeId" size ="3" class="form-select mb-3">
+                        @foreach(TreeDTO tree in this.Trees ?? [])
+                        {
+                            <option value="@tree.Id">@tree.Species</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <Button Color="ButtonColor.Secondary" @onclick="this.CancelZoneCreation">Verlaten</Button>
+                    <Button Class="green-btn" Type="ButtonType.Submit">Bewaren</Button>
+                </div>
+            </EditForm>
         </Card>
     </div>
 }
@@ -187,6 +201,12 @@
     /// The ID of the plantation site to load. This is a component parameter.
     /// </summary>
     [Parameter] public int id { get; set; }
+
+    /// <summary>
+    /// Reference to the tab component for switching between tabs.
+    /// </summary>    
+    private Tabs tabs = default!;
+
 
     /// <summary>
     /// The ID of the plantation site to load. This is a component parameter.
@@ -299,6 +319,8 @@
     /// HttpClient instance for API calls.
     /// </summary>
     HttpClient? client;
+
+    private bool showExitPopup = false; 
 
     /// <summary>
     /// Initializes the component, loads plantation site data if editing, loads trees and zones.
@@ -453,11 +475,20 @@
     /// <summary>
     /// Cancels the editing/creation and navigates back to the plantation site list.
     /// </summary>
-    private void Cancel()
+    private async Task Cancel()
     {
         this.showConfirmSaveForm = false;
         Navigation.NavigateTo("/admin/plantation-site");
     }
+
+    private async Task CloseExit(){
+        showExitPopup = false;
+    }
+
+    private async Task CloseSave(){
+        showConfirmSaveForm = false;
+    }
+
 
     /// <summary>
     /// Uploads a ground plan file for the plantation site and generates a preview.
@@ -592,7 +623,7 @@
     /// Performs validation checks, handles edit vs. create logic,
     /// refreshes related data, and updates UI state.
     /// </summary>
-    private async Task CreateZone()
+    private async Task SaveZone()
     {
         if (this.newZone == null)
         {
@@ -766,5 +797,13 @@
         int rounded = (int)Math.Round(maxSize);
 
         return Math.Max(rounded, 0);
+    }
+
+    /// <summary>
+    /// Switches the UI to display the second tab.
+    /// </summary>
+    private async Task ShowSecondTabAsync()
+    {
+        await tabs.ShowTabByIndexAsync(1);
     }
 }

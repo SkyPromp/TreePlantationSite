@@ -1,4 +1,6 @@
-﻿namespace AP.BTP.Contracts.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AP.BTP.Contracts.DTOs
 {
     public record TreeDTO
     {
@@ -10,6 +12,7 @@
         /// <summary>
         /// The species of the tree.
         /// </summary>
+        [Required(ErrorMessage = "Naam is verplicht.")]
         public required string Species { get; set; }
 
         /// <summary>
