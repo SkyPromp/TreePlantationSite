@@ -13,20 +13,20 @@
 </div>
 
 <div class="text-center my-3">
-    <Button Class="green-btn" @onclick="ShowGroundPlan"> 
+    <Button Class="green-btn shadow" @onclick="ShowGroundPlan"> 
         <Icon Name="IconName.Map"></Icon> Zie plattegrond
     </Button>
 </div>
 
-<Card Class="border-0" Style="height: 60vh">
+<Card Class="border-0 shadow border" Style="height: 60vh">
     @if(todayTasks != null){
         <CardBody Class="p-3 d-flex flex-column gap-3 h-100">
             @foreach (TaskItemDTO task in todayTasks.TaskItems ?? [])
             {
-                <Card Class="py-2 h-25">
+                <Card Class="py-2 h-25 shadow border">
                     <div class="container">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-7" @onclick="() => {showTaskDetails = true; selectedTask = task;}">
                                 <p class="text-truncate-multiline-2 fw-bold mb-1" title="@task.Title">@task.Title</p>
                             @* TODO: new card for details  *@
                             </div>
@@ -83,7 +83,7 @@
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
          style="background: rgba(0,0,0,0.5); z-index: 10">
 
-        <Card Class="shadow-lg p-4">
+        <Card Class="shadow-lg p-4" Style="width:90%">
             @if (currentSite != null)
             {
                 <CardTitle Class="text-center fw-bold mb-4">@currentSite.Name</CardTitle>
@@ -118,10 +118,29 @@
             </div>
 
             <div class="text-center mt-2">
-                <Button Color="ButtonColor.Danger" Class="px-4" @onclick="() => showGroundPlan = false">Sluiten</Button>
+                <Button Class="px-4 red-btn" @onclick="() => showGroundPlan = false">Sluiten</Button>
             </div>
         </Card>
     </div>
+}
+
+@if(showTaskDetails){
+        <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background: rgba(0,0,0,0.5); z-index: 10"> 
+            <Card Class="shadow-lg p-4" Style="width:90%">
+                @if(selectedTask != null) {
+                    <CardTitle Class="text-center fw-bold mb-4">@selectedTask.Title</CardTitle>
+
+                    <CardBody Class="mb-4 p-3 border rounded bg-light">
+                        @selectedTask.Description
+                    </CardBody>
+                } else {
+                    <p>Geen informatie gevonden over deze taak.</p>
+                }
+                <div class="text-center mt-2">
+                    <Button Class="px-4 red-btn" @onclick="() => {showTaskDetails = false; selectedTask = null; }">Sluiten</Button>
+                </div>
+            </Card>
+        </div>
 }
 
 @code {
@@ -147,6 +166,8 @@
     private TaskItemDTO? selectedTask;
 
     private bool showGroundPlan = false;
+
+    private bool showTaskDetails = false;
 
     private string groundPlanPreview = string.Empty;
 
