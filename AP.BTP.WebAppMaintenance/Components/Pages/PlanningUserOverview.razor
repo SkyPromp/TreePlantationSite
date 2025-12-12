@@ -11,22 +11,22 @@
 <h3 class="text-center">Gebruikerskeuze voor planningsbeheer</h3>
 
 <div class="row d-flex justify-content-end mb-3">
-    <TextInput @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
+    <TextInput Class="border shadow" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
 </div>
-<div class="p-3 row" style="background-color: #D9D9D9; border-radius: 15px;">
+<div class="p-3 mb-3 row border shadow" style="background-color: white; border-radius: 15px;">
     <div class="col-2">
         <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
-            Naam @SortIndicator("FirstName")
+            Naam <Icon Name="@SortIndicator("FirstName")"></Icon>
         </Button>
     </div>
     <div class="col-3">
         <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
-            E-mail @SortIndicator("Email")
+            E-mail <Icon Name="@SortIndicator("Email")"></Icon>
         </Button>
     </div>
     <div class="col-2">
         <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("PhoneNumber")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
-            Gsm-number @SortIndicator("PhoneNumber")
+            Gsm-number <Icon Name="@SortIndicator("PhoneNumber")"></Icon>
         </Button>
     </div>
     <div class="col-4 fw-bold" style="padding: 0.375rem">
@@ -40,7 +40,7 @@
                 @foreach (UserDTO item in row)
                 {
                     <div class="p-2">
-                        <Card Class="py-2 px-3" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
+                        <Card Class="py-2 px-3 border shadow">
                             <CardBody Class="p-0 row align-items-center">
                                 <CardText Class="m-0 col-2">@item.FirstName  @item.LastName</CardText>
                                 <CardText Class="m-0 col-3">
@@ -59,7 +59,7 @@
                                 }
                                 <div class="col-1 d-flex justify-content-end">
                                     <a href="/manager/planning/user/@item.Id">
-                                        <Button Color="ButtonColor.Dark" Size=ButtonSize.Small>Beheren</Button>
+                                        <Button Class="green-btn" Size=ButtonSize.Small>Beheren</Button>
                                     </a>
                                 </div>
                             </CardBody>
@@ -243,9 +243,9 @@
     /// Handles the icon to display for the sorting direction.
     /// </summary>
     /// <param name="column">The column that needs to be sorted.</param>
-    private string SortIndicator(string column)
+    private IconName SortIndicator(string column)
     {
-        if (sortBy != column) return "";
-        return sortDirection == "asc" ? "↑" : "↓";
+        if (sortBy != column) return IconName.None;
+        return sortDirection == "asc" ? IconName.ArrowUp : IconName.ArrowDown;
     }
 }

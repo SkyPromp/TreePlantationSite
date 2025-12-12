@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<div class="p-3 mb-3 row shadow border" style="background-color: white; border-radius: 15px;">
+<div class="p-3 mb-3 row shadow border" style="background-color: white; border-radius: 15px">
     <div class="col-3">
         <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
             Naam @SortIndicator("FirstName")
@@ -54,7 +54,7 @@
                     @foreach (UserDTO item in row)
                     {
                         <div class="p-2">
-                            <Card Class="py-2 px-3 mb-0 border shadow" Style="border-radius: 10px;">
+                            <Card Class="py-2 px-3 mb-0 border shadow">
                                 <CardBody Class="p-0 row align-items-center">
                                     <CardText class="m-0 col-3">@item.FirstName @item.LastName</CardText>
                                     <CardText class="m-0 col-4">

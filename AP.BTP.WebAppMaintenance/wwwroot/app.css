@@ -61,6 +61,18 @@ a.nav-link:hover {
     border: none !important;
 }
 
+.green-text {
+    color: rgb(85, 193, 85);
+}
+
+.red-text {
+    color: rgb(238, 73, 73);
+}
+
+.warning-text {
+    color: rgb(206, 151, 42);
+}
+
 .green-btn {
     background-color: rgb(85, 193, 85) !important; 
     color: white !important;
@@ -168,7 +180,7 @@ div.nav.nav-tabs {
         content: "";
         position: absolute;
         inset: 0;
-        background-color: rgba(0, 255, 0, 0.5);
+        background-color: rgba(11, 209, 11, 0.5);
         border-radius: inherit;
         pointer-events: none;
     }

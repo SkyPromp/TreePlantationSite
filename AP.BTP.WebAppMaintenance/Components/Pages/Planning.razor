@@ -68,8 +68,8 @@ else
                 }
             </div>
             <div class="d-flex flex-column align-items-center gap-2">
-                    <Button Class="w-100" Color="ButtonColor.Danger" @onclick="() => { ShowDeleteConfirm = true; }"><small>Wijzigingen ongedaan maken</small></Button>
-                    <Button Class="w-100" Color="ButtonColor.Success" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
+                    <Button Class="w-100 red-btn" @onclick="() => { showCancelSubmit = true; }"><small>Wijzigingen ongedaan maken</small></Button>
+                    <Button Class="w-100 green-btn" @onclick="() => { ShowSubmitChanges = true; }"><small>Wijzigingen opslaan</small></Button>
             </div>
         </div>
 
@@ -121,7 +121,7 @@ else
                         @{
                             int totalMinutes = GetTotalDurationForDay(day);
                             int remainingMinutes = GetRemainingTimeForDay(day);
-                            string totalColor = totalMinutes > 480 ? "text-danger" : totalMinutes > 400 ? "text-warning" : "text-success";
+                            string totalColor = totalMinutes > 480 ? "red-text" : totalMinutes > 400 ? "warning-text" : "green-text";
                         }
                         <div class="@totalColor" style="font-size: 0.75rem; font-weight: normal;">
                             @FormatDuration(totalMinutes) / 8u
@@ -190,19 +190,19 @@ else
                                     cssClass = "updated-card";
                                 }
 
-                                <div class="p-1 m-2 border border-dark rounded @cssClass"
+                                <div class="p-1 m-2 border border rounded @cssClass"
                                      style="background-color: #D9D9D9; height: 130px; display: flex; flex-direction: column; overflow: hidden;">
 
-                                    <div class="d-flex justify-content-between align-items-start">
+                                    <div class="d-flex justify-content-between align-items-center">
                                         <span class="badge bg-secondary" style="font-size: 0.7rem;">
                                             @FormatDuration(taskItem.DurationInMinutes)
                                         </span>
                                         <div>
-                                            <Button @onclick="() => EditTaskItem(taskItem)" class="p-0 me-1">
-                                                <i class="bi bi-pencil-square"></i>
+                                            <Button Class="green-icon p-0 me-1" @onclick="() => EditTaskItem(taskItem)">
+                                                <Icon Name="IconName.Pencil"></Icon>
                                             </Button>
-                                            <Button @onclick="() => ConfirmDeletion(taskItem)" class="p-0">
-                                                <i class="bi bi-trash"></i>
+                                            <Button Class="p-0 red-icon" @onclick="() => ConfirmDeletion(taskItem)">
+                                                <Icon Name="IconName.Trash"></Icon>
                                             </Button>
                                         </div>
                                     </div>
@@ -215,9 +215,9 @@ else
                         @if(taskList != null && taskList.Date >= DateTime.Today){
                             <Button class="p-0 m-2" @onclick="() => AddTaskItemConfirm(day)" disabled="@(!selectedPlantationSiteId.HasValue)">
                                 <div class="p-1 m-0 rounded-3 d-flex flex-column justify-content-center align-items-center"
-                                    style="background-color: transparent; height: 130px; border: 2px dashed #5FC66D">
-                                    <i class="bi bi-plus-lg" style="color: #5FC66D"></i>
-                                    <div class="fw-normal" style="color: #5FC66D">Taak toevoegen</div>
+                                    style="background-color: transparent; height: 130px; border: 2px dashed rgb(85, 193, 85)">
+                                    <i class="bi bi-plus-lg" style="color: rgb(85, 193, 85)"></i>
+                                    <div class="fw-normal" style="color: rgb(85, 193, 85)">Taak toevoegen</div>
                                 </div>
                             </Button>
                         }
@@ -291,19 +291,25 @@ else
             }
 
             <div class="d-flex gap-2">
-                <button @onclick="CancelAddTask" class="btn btn-dark flex-fill">Verlaten</button>
-                <button @onclick="() => AddTaskItem(selectedTaskItem)" class="btn btn-success flex-fill">Bewaren</button>
+                <Button Class="container-fluid" Color="ButtonColor.Secondary" @onclick="CancelAddTask">Verlaten</Button>
+                <Button Class="green-btn container-fluid" @onclick="() => AddTaskItem(selectedTaskItem)">Bewaren</Button>
             </div>
         </div>
     </div>
 }
 
-<ConfirmationPopup showConfirmationPopup="this.ShowDeleteConfirm"
+<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirm"
                    onCancellation="this.CancelRemoveTask"
+                   onConfirmation="() => this.DeleteTaskItem(selectedTaskItem?.Id)"
+                   confirmationTitle="Taak verwijderen?"
+                   confirmationDescription="Bent u zeker dat u deze taak wilt verwijderen?"
+                    />
+
+<ConfirmationPopup showConfirmationPopup="showCancelSubmit"
+                   onCancellation="this.CancelSubmitChangesCancel"
                    onConfirmation="this.LoadTaskListsForWeek"
                    confirmationTitle="Wijzigingen ongedaan maken"
-                   confirmationDescription="Bent u zeker dat u de aangebrachte aanpassingen ongedaan wil maken?"
-                    />
+                   confirmationDescription="Bent u zeker dat u de aangebrachte aanpassingen ongedaan wil maken?" />
 
 <ConfirmationPopup showConfirmationPopup="this.ShowSubmitChanges"
                    onCancellation="this.CancelSubmitChanges"
@@ -387,7 +393,12 @@ else
     /// <summary>
     /// Indicates whether the confirmation modal for deleting a task item is shown.
     /// </summary>
-    private bool ShowDeleteConfirm;
+    private bool showDeleteConfirm;
+
+    /// <summary>
+    /// Indicates whether the confirmation modal for deleting a task item is shown.
+    /// </summary>
+    private bool showCancelSubmit;    
 
     /// <summary>
     /// Stores the ID of the currently selected task item for deletion.
@@ -532,11 +543,13 @@ else
                 selectedPlantationSiteId = null;
             }
 
+            showCancelSubmit = false;
             StateHasChanged();
         }
         catch (Exception ex)
         {
             errorMessage = $"Fout bij ophalen van taken: {ex.Message}";
+            showCancelSubmit = false;
         }
     }
 
@@ -608,7 +621,7 @@ else
             selectedTaskItem.IsDeleted = true;
         }
 
-        this.ShowDeleteConfirm = false;
+        this.showDeleteConfirm = false;
         StateHasChanged();
     }
 
@@ -624,7 +637,7 @@ else
     private void ConfirmDeletion(TaskItemDTO task)
     {
         selectedTaskItem = task;
-        this.ShowDeleteConfirm = true;
+        this.showDeleteConfirm = true;
         this.selectedTaskItemId = task.Id;
     }
 
@@ -814,9 +827,11 @@ else
 
             errorMessage = errorResponseInfo?.Message
                 ?? "Er is een fout opgetreden tijdens het opslagen van de weekplanning.";
+            ShowSubmitChanges = false;
             return;
         }
 
+        ShowSubmitChanges = false;
         await LoadTaskListsForWeek();
     }
 
@@ -884,7 +899,7 @@ else
     /// </summary>
     private Task CancelRemoveTask()
     {
-        this.ShowDeleteConfirm = false;
+        this.showDeleteConfirm = false;
         this.selectedTaskItemId = null;
 
         return Task.CompletedTask;
@@ -896,6 +911,14 @@ else
     private async Task CancelSubmitChanges()
     {
         this.ShowSubmitChanges = false;
+    }
+
+    /// <summary>
+    /// Cancels the submit changes cancelling operation and hides the confirmation dialog.
+    /// </summary>
+    private async Task CancelSubmitChangesCancel()
+    {
+        this.showCancelSubmit = false;
     }
 
     /// <summary>
