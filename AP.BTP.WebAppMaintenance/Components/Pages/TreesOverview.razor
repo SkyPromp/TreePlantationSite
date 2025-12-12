@@ -106,9 +106,9 @@
 />
 
 @code {
-        /// <summary>
-        /// Indicates whether an API call or operation is in progress.
-        /// </summary>
+    /// <summary>
+    /// Indicates whether an API call or operation is in progress.
+    /// </summary>
     private bool isLoading = false;
 
     /// <summary>
@@ -215,7 +215,11 @@
         response = await client.GetFromJsonAsync<PagedResponseDTO<TreeDTO>>(url);
 
         if(response == null)
+        {
+            EnqueueToast(message: "De bomen konnen niet worden ingeladen.", ToastType.Success);
+
             return;
+        }
 
         foreach (TreeDTO tree in response.Items){
             await GetFavouriteTreePicture(tree.Id);
@@ -285,7 +289,7 @@
         isLoading = true;
         if (selectedTree == null) return;
 
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         try
         {
             HttpResponseMessage response = await client.DeleteAsync($"Tree/{selectedTree.Id}");

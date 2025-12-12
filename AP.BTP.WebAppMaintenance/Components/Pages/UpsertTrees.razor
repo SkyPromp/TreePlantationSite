@@ -878,10 +878,7 @@
     /// <returns><c>true</c> if the picture is favourite; otherwise <c>false</c>.</returns>
     private bool IsPictureFavourite(string key)
     {
-        if (int.TryParse(key, out int id))
-            return favourites.ContainsKey(id) && favourites[id];
-
-        return false;
+        return int.TryParse(key, out int id) && favourites.ContainsKey(id) && favourites[id];
     }
 
     /// <summary>
@@ -892,7 +889,11 @@
     private async Task ToggleFavourite(string key)
     {
         if (!int.TryParse(key, out int picId))
+        {
+            this.EnqueueToast("De foto kon niet geselecteerd worden.", ToastType.Warning);
+
             return;
+        }
 
         bool newValue = !IsPictureFavourite(key);
 
@@ -906,8 +907,9 @@
 
                     if (!responseMessage.IsSuccessStatusCode)
                     {
-                        errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                        this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await responseMessage.Content.ReadAsStringAsync()}", ToastType.Warning);
                         StateHasChanged();
+
                         return;
                     }
                 }
@@ -918,13 +920,14 @@
 
         if (!response.IsSuccessStatusCode)
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await response.Content.ReadAsStringAsync()}", ToastType.Warning);
             StateHasChanged();
+
             return;
         }
 
         favourites[picId] = newValue;
-
+        this.EnqueueToast("Deze foto is als favoriet toegevoegd geweest.", ToastType.Success);
         StateHasChanged();
     }
 
