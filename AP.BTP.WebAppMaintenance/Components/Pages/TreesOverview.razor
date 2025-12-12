@@ -107,11 +107,6 @@
 
 @code {
     /// <summary>
-    /// Indicates whether an API call or operation is in progress.
-    /// </summary>
-    private bool isLoading = false;
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
@@ -281,7 +276,6 @@
     /// </summary>
     private async Task DeleteTree()
     {
-        isLoading = true;
         if (selectedTree == null) return;
 
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
@@ -309,7 +303,6 @@
             EnqueueToast(message: $"Fout bij het verwijderen van gebruiker, de taak is geannuleerd: {ex.Message}", ToastType.Success);
         }
         await CancelDeleteTree();
-        isLoading = false;
     }
 
     /// <summary>

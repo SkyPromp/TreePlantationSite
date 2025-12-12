@@ -72,11 +72,6 @@
 
 @code {
     /// <summary>
-    /// Indicates whether an API call or operation is in progress.
-    /// </summary>
-    private bool isLoading = false;
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
@@ -256,7 +251,6 @@
 
 
         await CancelDeletePlantationSite();
-        isLoading = false;
     }
 
     /// <summary>
