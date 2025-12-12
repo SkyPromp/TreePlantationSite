@@ -33,13 +33,11 @@
                             @if (task.StartTime == null)
                             {
                                 <button @onclick="() => ConfirmStartTask(task)" class="btn btn-success">Start</button>
-                            }
-                            else if (task.EndTime == null)
+                            } else if (task.EndTime == null)
                             {
                                 <button @onclick="() => ConfirmEndTask(task)" class="btn btn-danger">Stop</button>
                                 <small>@($"Startuur: {task.StartTime:HH:mm:ss}")</small>
-                            }
-                            else
+                            } else
                             {
                                 <button class="btn btn-secondary" disabled>Beëindigd</button>
                                 <small>@($"Totaalduur: {(task.EndTime - task.StartTime):hh\\:mm\\:ss}")</small>
@@ -52,19 +50,17 @@
     </div>
 </div>
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showStartConfirmation"
-    onCancellation="this.CancelStartTask"
-    onConfirmation="this.StartTask"
-    confirmationDescription="Bent u zeker dat u deze taak wilt starten?"
-/>
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showEndConfirmation"
-    onCancellation="this.CancelEndTask"
-    onConfirmation="this.EndTask"
-    confirmationDescription="Bent u zeker dat u deze taak wilt stoppen?"
-/>
+<ConfirmationPopup showConfirmationPopup="this.showStartConfirmation"
+                   onCancellation="this.CancelStartTask"
+                   onConfirmation="this.StartTask"
+                   confirmationDescription="Bent u zeker dat u deze taak wilt starten?" />
+
+<ConfirmationPopup showConfirmationPopup="this.showEndConfirmation"
+                   onCancellation="this.CancelEndTask"
+                   onConfirmation="this.EndTask"
+                   confirmationDescription="Bent u zeker dat u deze taak wilt stoppen?" />
 
 @if (this.showGroundPlan)
 {
@@ -99,8 +95,7 @@
                     <img src="@groundPlanPreview"
                          class="img-fluid rounded shadow-sm"
                          style="max-height: 60vh; object-fit: contain;" />
-                }
-                else
+                } else
                 {
                     <p>Geen plattegrond gevonden.</p>
                 }
@@ -114,18 +109,11 @@
     </div>
 }
 
-
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
-
 @code {
     /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.
-    /// This is passed as a parameter to the component.
+    /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private string errorMessage = "";
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// HttpClient used to call the backend API.
@@ -157,7 +145,8 @@
     /// <param name="firstRender">True if this is the first render of the component.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender) return;
+        if (!firstRender)
+            return;
 
         this.client = HttpClientFactory.CreateClient("BTPApi");
         this.selectedDate = DateTime.Now.Date;
@@ -170,29 +159,12 @@
     /// </summary>
     private async Task LoadUser()
     {
-        try
-        {
-            TaskListDto? response = await this.client.GetFromJsonAsync<TaskListDto>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
-            this.todayTasks = response;
+        TaskListDto? response = await this.client.GetFromJsonAsync<TaskListDto>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
+        this.todayTasks = response;
 
-            if (response == null)
-            {
-                this.errorMessage = "Er is iets misgegaan tijdens het ophalen van de takenlijst.";
-            }
-            else
-            {
-                this.errorMessage = "";
-            }
-        }
-        catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.NotFound)
+        if (response == null)
         {
-            this.errorMessage = "Geen taken gevonden voor deze dag";
-            this.todayTasks = null;
-        }
-        catch (Exception e)
-        {
-            this.errorMessage = e.Message;
-            this.todayTasks = null;
+            this.EnqueueToast(message: "Er is iets misgegaan tijdens het ophalen van de takenlijst.", type: ToastType.Warning);
         }
 
         StateHasChanged();
@@ -226,9 +198,10 @@
     {
         if (this.selectedTask == null)
         {
-            this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
+            this.EnqueueToast(message: "De geselecteerde taak kon niet gevonden worden!", type: ToastType.Warning);
             this.showStartConfirmation = false;
             StateHasChanged();
+
             return;
         }
 
@@ -239,10 +212,9 @@
             {
                 ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
-                if (errorResponseInfo == null)
-                    return;
+                if (errorResponseInfo == null) return;
 
-                this.errorMessage = errorResponseInfo.ErrorCode switch
+                string errorMessage = errorResponseInfo.ErrorCode switch
                 {
                     "TASK_ALREADY_STARTED" => "Deze taak is al gestart.",
                     "TASK_MULTIPLE_ACTIVE_NOT_ALLOWED" => "Er kan niet meer dan één taak tegelijk gestart zijn in deze takenlijst.",
@@ -250,16 +222,18 @@
                     "TASK_INVALID_STATE" => "De taak bevindt zich in een ongeldige toestand.",
                     _ => errorResponseInfo.Message ?? "Er is een onverwachte fout opgetreden."
                 };
+
+                this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
                 this.showStartConfirmation = false;
+
                 return;
             }
 
-            this.errorMessage = "";
+            this.EnqueueToast(message: "De taak is succesvol gestart geweest.", type: ToastType.Success);
             this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.StartTime;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
-            this.errorMessage = $"Er is een fout opgetreden: {e.Message}";
+            this.EnqueueToast(message: $"Er is een fout opgetreden: {e.Message}", type: ToastType.Warning);
             this.showStartConfirmation = false;
         }
 
@@ -286,9 +260,10 @@
     {
         if (this.selectedTask == null)
         {
-            this.errorMessage = "De geselecteerde taak kon niet gevonden worden!";
+            this.EnqueueToast(message: "De geselecteerde taak kon niet gevonden worden!", type: ToastType.Warning);
             this.showEndConfirmation = false;
             StateHasChanged();
+
             return;
         }
 
@@ -302,7 +277,7 @@
 
                 if (errorResponseInfo != null)
                 {
-                    this.errorMessage = errorResponseInfo.ErrorCode switch
+                    string errorMessage = errorResponseInfo.ErrorCode switch
                     {
                         "TASK_NOT_STARTED" => "Deze taak is nog niet gestart.",
                         "TASK_ALREADY_ENDED" => "Deze taak is al beëindigd.",
@@ -310,22 +285,23 @@
                         "TASK_END_INVALID_DATE" => "Taken kunnen alleen gestopt worden op de huidige datum.",
                         _ => errorResponseInfo.Message ?? "Er is een onverwachte fout opgetreden."
                     };
-                }
-                else
+
+                    this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
+                } else
                 {
-                    this.errorMessage = "Er is een onverwachte fout opgetreden.";
+                    this.EnqueueToast(message: "Er is een onverwachte fout opgetreden.", type: ToastType.Warning);
                 }
 
                 this.showEndConfirmation = false;
+
                 return;
             }
 
-            this.errorMessage = "";
+            this.EnqueueToast(message: "De taak is succesvol beëindigd.", type: ToastType.Success);
             this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.EndTime;
-        }
-        catch (Exception e)
+        } catch (ArgumentNullException e)
         {
-            this.errorMessage = $"Er is een fout opgetreden: {e.Message}";
+            this.EnqueueToast(message: $"Er is een fout opgetreden bij het beëindigen van de taak: {e.Message}", type: ToastType.Warning);
         }
 
         this.selectedTask = null;
@@ -337,44 +313,42 @@
     {
         if (todayTasks == null)
         {
-            errorMessage = "Geen locatie beschikbaar op deze datum";
+            this.EnqueueToast(message: "Geen locatie beschikbaar op deze datum", type: ToastType.Warning);
+
             return;
         }
 
-        try
+        currentSite = await client.GetFromJsonAsync<PlantationSiteDto>($"PlantationSite/{todayTasks.PlantationSiteId}");
+
+        if (currentSite == null)
         {
-            currentSite =
-                await client.GetFromJsonAsync<PlantationSiteDto>($"PlantationSite/{todayTasks.PlantationSiteId}");
+            this.EnqueueToast(message: "Kweeksite niet gevonden", type: ToastType.Warning);
 
-            if (currentSite == null)
-            {
-                errorMessage = "Site niet gevonden.";
-                return;
-            }
-
-            if (todayTasks.ZoneId.HasValue && currentSite.Zones != null)
-            {
-                currentZone = currentSite.Zones
-                    .FirstOrDefault(z => z.Id == todayTasks.ZoneId.Value);
-            }
-            else
-            {
-                currentZone = null;
-            }
-
-            if (string.IsNullOrWhiteSpace(currentSite.GroundPlan))
-            {
-                errorMessage = "Geen plategrond beschikbaar.";
-                groundPlanPreview = "";
-            }
-            else
-            {
-                await LoadImagePreview(client, currentSite.GroundPlan);
-            }
+            return;
         }
-        catch (Exception ex)
+
+        if (todayTasks.ZoneId.HasValue && currentSite.Zones != null)
         {
-            errorMessage = ex.Message;
+            try
+            {
+                currentZone = currentSite.Zones.FirstOrDefault(z => z.Id == todayTasks.ZoneId.Value);
+            } catch (ArgumentNullException e)
+            {
+                this.EnqueueToast(message: $"Kon de huidige zone niet ophalen om in de plattegrond te tonen: {e}", type: ToastType.Warning);
+                this.currentZone = null;
+            }
+        } else
+        {
+            currentZone = null;
+        }
+
+        if (string.IsNullOrWhiteSpace(currentSite.GroundPlan))
+        {
+            this.EnqueueToast(message: "Geen plategrond beschikbaar.", type: ToastType.Warning);
+            groundPlanPreview = "";
+        } else
+        {
+            await LoadImagePreview(client, currentSite.GroundPlan);
         }
 
         showGroundPlan = true;
@@ -386,17 +360,46 @@
     {
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = (await client.GetAsync($"File/{fileName}")).EnsureSuccessStatusCode();
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-
             string contentType = response.Content.Headers.ContentType?.MediaType ?? "image/jpeg";
             groundPlanPreview = $"data:{contentType};base64,{Convert.ToBase64String(imageBytes)}";
-        }
-        catch
+        } catch (InvalidOperationException e)
         {
+            this.EnqueueToast(message: $"Er is iets misgegaan bij het inladen van de kweeksites: {e}", type: ToastType.Warning);
+            groundPlanPreview = string.Empty;
+        } catch (HttpRequestException e)
+        {
+            this.EnqueueToast(message: $"Er is iets misgegaan bij het inladen van de kweeksites: {e}", type: ToastType.Warning);
+            groundPlanPreview = string.Empty;
+        } catch (TaskCanceledException e)
+        {
+            this.EnqueueToast(message: $"Er is iets misgegaan bij het inladen van de kweeksites: {e}", type: ToastType.Warning);
+            groundPlanPreview = string.Empty;
+        } catch (UriFormatException e)
+        {
+            this.EnqueueToast(message: $"Er is iets misgegaan bij het inladen van de kweeksites: {e}", type: ToastType.Warning);
+            groundPlanPreview = string.Empty;
+        } catch (ArgumentNullException e)
+        {
+            this.EnqueueToast(message: $"Er is iets misgegaan bij het inladen van de kweeksites: {e}", type: ToastType.Warning);
             groundPlanPreview = string.Empty;
         }
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }
 

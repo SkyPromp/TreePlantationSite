@@ -97,7 +97,7 @@
     }
 </div>
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
 <Pagination Class="justify-content-center"
             Style="margin-top: 10px"
@@ -173,12 +173,7 @@
     /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private List<ToastMessage> toastMessages = new List<ToastMessage>();
-
-    /// <summary>
-    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
-    /// </summary>
-    private Toasts? toastContainer;
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// The paginated response containing the list of users.
@@ -249,11 +244,6 @@
     /// The currently selected user being edited.
     /// </summary>
     private UserDto? selectedUser;
-
-    /// <summary>
-    /// The opacity of the success toast message for fade animation.
-    /// </summary>
-    private double toastOpacity = 1.0;
 
     /// <summary>
     /// Indicates whether an API call or operation is in progress.

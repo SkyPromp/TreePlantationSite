@@ -241,7 +241,7 @@
     </Tab>
 </Tabs>
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
 <ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
                    onCancellation="this.CancelDeletePicture"
@@ -265,11 +265,6 @@
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
-
-    /// <summary>
-    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
-    /// </summary>
-    private Toasts? toastContainer;
 
     /// <summary>
     /// Reference to the tab component for switching between tabs.
@@ -336,12 +331,6 @@
     /// Key is a temporary GUID, value is a tuple containing the file and its byte content.
     /// </summary>
     private readonly Dictionary<string, (IBrowserFile file, byte[] data)> newMaintenanceFiles = new();
-
-    /// <summary>
-    /// Existing maintenance files associated with the tree.
-    /// Key is the file ID, value is the filename/path.
-    /// </summary>
-    private Dictionary<int, string> existingMaintenanceFiles = new();
 
     /// <summary>
     /// Previews for maintenance files.
@@ -844,8 +833,7 @@
 
     private async Task DeleteAllQueuedPictures()
     {
-        if (this.deletedTreePics.Count() == 0)
-            return;
+        if (!this.deletedTreePics.Any()) return;
 
         if (this.client == null)
         {
