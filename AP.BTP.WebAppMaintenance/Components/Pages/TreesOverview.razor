@@ -96,6 +96,8 @@
     </Pagination>
 </div>
 
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 <ConfirmationPopup 
     showConfirmationPopup="@(this.showDeleteConfirmation && user != null && user.IsInRole("Admin"))"
     onCancellation="this.CancelDeleteTree"
@@ -104,6 +106,21 @@
 />
 
 @code {
+    /// <summary>
+    /// Indicates whether an API call or operation is in progress.
+    /// </summary>
+    private bool isLoading = false;
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
+    private Toasts? toastContainer;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
     /// <summary>
     /// Indicates whether a delete confirmation modal should be displayed.
     /// </summary>
@@ -127,7 +144,7 @@
     /// <summary>
     /// Holds the paged response of trees from the API.
     /// </summary>
-    PagedResponseDto<TreeDto>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
+    PagedResponseDto<TreeDto>? response;  // TODO should not be stored? just store an IEnumerable<...Dto>????
 
     /// <summary>
     /// The current page number being displayed.
@@ -198,7 +215,11 @@
         response = await client.GetFromJsonAsync<PagedResponseDto<TreeDto>>(url);
         
         if(response == null)
+        {
+            EnqueueToast(message: "De bomen konnen niet worden ingeladen.", ToastType.Success);
+
             return;
+        }
 
         foreach (TreeDto tree in response.Items){
             await GetFavouriteTreePicture(tree.Id);
@@ -265,25 +286,35 @@
     /// </summary>
     private async Task DeleteTree()
     {
-        if (selectedTree == null)
-            return;
+        isLoading = true;
+        if (selectedTree == null) return;
 
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         try
-        {   
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        {
             HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"Tree/{selectedTree.Id}");
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
                 StateHasChanged();
+                EnqueueToast(message: "De boom is correct verwijdert geweest.", ToastType.Success);
             }
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
-            Console.WriteLine($"Fout bij het verwijderen van gebruiker: {ex.Message}");
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {ex.Message}", ToastType.Success);
+        }
+        catch (HttpRequestException ex)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker: {ex.Message}", ToastType.Success);
+        }
+        catch (TaskCanceledException ex)
+        {
+            EnqueueToast(message: $"Fout bij het verwijderen van gebruiker, de taak is geannuleerd: {ex.Message}", ToastType.Success);
         }
         await CancelDeleteTree();
+        isLoading = false;
     }
 
     /// <summary>
@@ -322,7 +353,7 @@
         
         List<TreePictureDto>? pictures = await client.GetFromJsonAsync<List<TreePictureDto>>($"TreePicture/{id}");
 
-        if(pictures == null || pictures.Count <= 0)
+        if (pictures == null || pictures.Count <= 0)
             return;
 
         if(pictures.Any(p => p.IsFavourite)){
@@ -341,25 +372,58 @@
     /// <param name="path">The file path of the image to load from the API.</param>
     private async Task GenerateImage(int key, string path){
 
-        if (string.IsNullOrWhiteSpace(path)) return;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            EnqueueToast(message: "Een afbeelding kon niet worden gegenereerd. Het pad is leeg.", ToastType.Warning);
 
-        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+            return;
+        }
+
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");  // TODO eenmalig definieren, niet bij iedere http call (in verschillende .razer bestanden)
 
         try
         {
             HttpResponseMessage httpResponseMessage = await client.GetAsync($"File/{path}");
             httpResponseMessage.EnsureSuccessStatusCode();
-
             byte[] imageBytes = await httpResponseMessage.Content.ReadAsByteArrayAsync();
-
             string contentType = httpResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-
             string base64Image = Convert.ToBase64String(imageBytes);
             images[key.ToString()] = $"data:{contentType};base64,{base64Image}";
-        }
-        catch
+        } catch (InvalidOperationException e)
         {
             images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (UriFormatException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
+        } catch (ArgumentNullException e)
+        {
+            images[key.ToString()] = string.Empty;
+            EnqueueToast(message: $"Een afbeelding kon niet worden gegenereerd. {e}", ToastType.Warning);
         }
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = ToastType.Warning.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }

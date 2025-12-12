@@ -61,6 +61,8 @@
     </Pagination>
 </div>
 
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmation"
     onCancellation="this.CancelDeletePlantationSite"
@@ -69,6 +71,21 @@
 />
 
 @code {
+    /// <summary>
+    /// Indicates whether an API call or operation is in progress.
+    /// </summary>
+    private bool isLoading = false;
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
+    private Toasts? toastContainer;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
     /// <summary>
     /// Indicates whether a delete confirmation modal should be displayed.
     /// </summary>
@@ -87,12 +104,12 @@
     /// <summary>
     /// Whether the tree list should be sorted ascending (A-Z). Defaults to true.
     /// </summary>
-    private bool sortAscending = true;    
+    private bool sortAscending = true;
 
     /// <summary>
     /// Holds the paged response of plantation sites from the API.
     /// </summary>
-    PagedResponseDto<PlantationSiteDto>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
+    PagedResponseDto<PlantationSiteDto>? response;  // TODO should not be stored? just store an IEnumerable<...Dto>????
 
     /// <summary>
     /// The current page number being displayed.
@@ -211,24 +228,40 @@
     private async Task DeletePlantationSite()
     {
         if (selectedPlantationSite == null)
+        {
+            EnqueueToast(message: "De geselecteerde plantatiesite is niet succesvol geïnstantieerd!", ToastType.Warning);
+
             return;
+        }
+
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
 
         try
-        {   
-            HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        {
             HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"PlantationSite/{selectedPlantationSite.Id}");
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
+
+                EnqueueToast(message: "De kweeksite is succesvol verwijdert.", ToastType.Success);
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch(InvalidOperationException e)
         {
-            Console.WriteLine($"Fout bij het verwijderen van gebruiker: {ex.Message}");
+            EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"De geselecteerde zones konden niet verwijderd worden: {e}", ToastType.Warning);
         }
+
+
         await CancelDeletePlantationSite();
+        isLoading = false;
     }
 
     /// <summary>
@@ -240,7 +273,7 @@
         this.selectedPlantationSite = null;
 
         return Task.CompletedTask;
-    }   
+    }
 
     /// <summary>
     /// Handles changes to the sort order dropdown.  
@@ -254,5 +287,20 @@
             sortAscending = value;
             await LoadPage(1);
         }
-    }         
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = ToastType.Warning.ToString(),
+            Message = message,
+            AutoHide = true
+        });
+    }
 }

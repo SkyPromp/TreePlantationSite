@@ -10,7 +10,6 @@
 @using System.Net.Http.Headers
 @using QRCoder
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh" @ref="tabs">
     <Tab Title="Algemene informatie">
@@ -234,6 +233,8 @@
         </Content>
     </Tab>
 </Tabs>
+
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmation"
@@ -915,10 +916,7 @@
     /// <returns><c>true</c> if the picture is favourite; otherwise <c>false</c>.</returns>
     private bool IsPictureFavourite(string key)
     {
-        if (int.TryParse(key, out int id))
-            return favourites.ContainsKey(id) && favourites[id];
-
-        return false;
+        return int.TryParse(key, out int id) && favourites.ContainsKey(id) && favourites[id];
     }
 
     /// <summary>
@@ -929,7 +927,11 @@
     private async Task ToggleFavourite(string key)
     {
         if (!int.TryParse(key, out int picId))
+        {
+            this.EnqueueToast("De foto kon niet geselecteerd worden.", ToastType.Warning);
+
             return;
+        }
 
         bool newValue = !IsPictureFavourite(key);
 
@@ -943,8 +945,9 @@
 
                     if (!responseMessage.IsSuccessStatusCode)
                     {
-                        errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                        this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await responseMessage.Content.ReadAsStringAsync()}", ToastType.Warning);
                         StateHasChanged();
+
                         return;
                     }
                 }
@@ -955,13 +958,14 @@
 
         if (!response.IsSuccessStatusCode)
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            this.EnqueueToast($"Deze foto kon niet als favoriet toegevoegd worden: {await response.Content.ReadAsStringAsync()}", ToastType.Warning);
             StateHasChanged();
+
             return;
         }
 
         favourites[picId] = newValue;
-
+        this.EnqueueToast("Deze foto is als favoriet toegevoegd geweest.", ToastType.Success);
         StateHasChanged();
     }
 
@@ -983,23 +987,24 @@
     {
         if (IsTemporary(key))
         {
-            ShowWarning("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.");
+            this.EnqueueToast("U moet de afbeeldingen opslaan voordat u een favoriet selecteert.", ToastType.Warning);
+
             return;
         }
 
         await ToggleFavourite(key);
     }
 
-    /// <summary>
-    /// Adds a warning toast message to the toast container.
+    /// Adds a toast message to the toast container.
     /// </summary>
     /// <param name="message">The message to display.</param>
-    private void ShowWarning(string message)
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
     {
-        toastMessages.Add(new ToastMessage
+        this.toastMessages.Add(new ToastMessage
         {
-            Type = ToastType.Warning,
-            Title = "Waarschuwing",
+            Type = type,
+            Title = ToastType.Warning.ToString(),
             Message = message,
             AutoHide = true
         });
