@@ -9,75 +9,66 @@
 <PageTitle>Registreer</PageTitle>
 
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4 ">
-            <div class="card shadow-lg p-4">
-                <h2 class="text-center mb-3">Account aanmaken</h2>
-                <p class="text-muted text-center mb-4">Vul je gegevens in om een account aan te maken.</p>
+<div class="container d-flex justify-content-center align-items-center h-100" style="max-width: 600px">
+    <Card Class="shadow-lg p-4 h-100 overflow-scroll">
+        <CardTitle Class="text-center fw-bold fs-2">Account aanmaken</CardTitle>
+        <CardBody>
+            <p class="text-muted text-center mb-4">Vul je gegevens in om een account aan te maken.</p>
 
-                <EditForm Model="newUser" OnValidSubmit="HandleValidSubmit">
-                    <DataAnnotationsValidator />
+            <EditForm Model="newUser" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
 
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="firstName">Voornaam</label>
-                        <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" />
-                        <ValidationMessage For="@(() => newUser.FirstName)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="firstName">Voornaam</label>
+                    <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" />
+                    <ValidationMessage For="@(() => newUser.FirstName)" class="text-danger" />
+                </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="lastName">Achternaam</label>
-                        <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" />
-                        <ValidationMessage For="@(() => newUser.LastName)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="lastName">Achternaam</label>
+                    <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" />
+                    <ValidationMessage For="@(() => newUser.LastName)" class="text-danger" />
+                </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="phoneNumber">Telefoonnummer</label>
-                        <InputText id="phoneNumber" type="tel" class="form-control"
-                                   @bind-Value="newUser.PhoneNumber" />
-                        <ValidationMessage For="@(() => newUser.PhoneNumber)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="phoneNumber">Telefoonnummer</label>
+                    <InputText id="phoneNumber" type="tel" class="form-control"
+                                @bind-Value="newUser.PhoneNumber" />
+                    <ValidationMessage For="@(() => newUser.PhoneNumber)" class="text-danger" />
+                </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="email">E-mail</label>
-                        <InputText id="email" type="email" class="form-control" @bind-Value="newUser.Email" />
-                        <ValidationMessage For="@(() => newUser.Email)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="email">E-mail</label>
+                    <InputText id="email" class="form-control" @bind-Value="newUser.Email" />
+                    <ValidationMessage For="@(() => newUser.Email)" class="text-danger" />
+                </div>
 
-                    <div class="form-group mb-4">
-                        <label class="form-label" for="password">Wachtwoord</label>
-                        <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" />
-                        <div class="mt-2">
-                            <small class="form-text">
-                                <span class="@GetClass(HasMinLength)">• Minimaal 8 tekens</span><br />
-                                <span class="@GetClass(HasUpperCase)">• Minimaal 1 hoofdletter</span><br />
-                                <span class="@GetClass(HasLowerCase)">• Minimaal 1 kleine letter</span><br />
-                                <span class="@GetClass(HasNumber)">• Minimaal 1 nummer</span><br />
-                                <span class="@GetClass(HasSpecialChar)">• Minimaal 1 speciaal teken</span>
-                            </small>
-                        </div>
-                        <ValidationMessage For="@(() => newUser.Password)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-4">
+                    <label class="form-label" for="password">Wachtwoord</label>
+                    <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" />
+                    <ValidationMessage For="@(() => newUser.Password)" class="text-danger" />
+                    <small class="form-text">
+                        <span class="@GetClass(HasMinLength)">• Minimaal 8 tekens</span><br />
+                        <span class="@GetClass(HasUpperCase)">• Minimaal 1 hoofdletter</span><br />
+                        <span class="@GetClass(HasLowerCase)">• Minimaal 1 kleine letter</span><br />
+                        <span class="@GetClass(HasNumber)">• Minimaal 1 nummer</span><br />
+                        <span class="@GetClass(HasSpecialChar)">• Minimaal 1 speciaal teken</span>
+                    </small>
+                </div>
 
-                    <div class="form-group mb-4">
-                        <label class="form-label" for="confirmPassword">Bevestig wachtwoord</label>
-                        <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" />
-                        <ValidationMessage For="@(() => newUser.ConfirmPassword)" class="text-danger" />
-                    </div>
+                <div class="form-group mb-4">
+                    <label class="form-label" for="confirmPassword">Bevestig wachtwoord</label>
+                    <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" />
+                    <ValidationMessage For="@(() => newUser.ConfirmPassword)" class="text-danger" />
+                </div>
 
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" @onclick="Cancel">
-                            Ga terug
-                        </button>
-
-                        <button type="submit" class="btn btn-success">
-                            Registreer
-                        </button>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
-    </div>
+                <div class="d-flex justify-content-between">
+                    <Button Color="ButtonColor.Secondary" @onclick="Cancel">Ga terug</Button>
+                    <Button Class="green-btn" Type="ButtonType.Submit">Registreren</Button>
+                </div>
+            </EditForm>
+        </CardBody>
+    </Card>
 </div>
 
 @if (!string.IsNullOrEmpty(this.errorMessage))
@@ -148,7 +139,7 @@
                 return;
             }
 
-            var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
+            HttpResponseMessage response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
 
             if (response.IsSuccessStatusCode)
             {

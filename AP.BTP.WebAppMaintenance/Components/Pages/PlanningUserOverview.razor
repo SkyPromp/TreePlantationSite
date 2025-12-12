@@ -6,87 +6,79 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.DTOs
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
 <PageTitle>Planning gebruikersselectie</PageTitle>
 
-<h3 class="text-center">Planning gebruikersselectie</h3>
+<h3 class="text-center">Gebruikerskeuze voor planningsbeheer</h3>
 
-<div class="d-flex justify-content-end px-3">
-    <div class="d-flex flex-column align-items-end">
-        <TextInput @bind-Value="@searchText"
-                   @oninput="OnSearchChanged"
-                   TextAlignment="Alignment.Start"
-                   Placeholder="Zoek gebruikers"
-                   class="mb-3"
-                   style="width: 15vw; border-width: 2px;" />
-    </div>
+<div class="row d-flex justify-content-end mb-3">
+    <TextInput Class="border shadow" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
 </div>
-<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
-    @if (response?.Items != null)
+<div class="p-3 mb-3 row border shadow" style="background-color: white; border-radius: 15px;">
+    <div class="col-2">
+        <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
+            Naam <Icon Name="@SortIndicator("FirstName")"></Icon>
+        </Button>
+    </div>
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
+            E-mail <Icon Name="@SortIndicator("Email")"></Icon>
+        </Button>
+    </div>
+    <div class="col-2">
+        <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("PhoneNumber")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
+            Gsm-number <Icon Name="@SortIndicator("PhoneNumber")"></Icon>
+        </Button>
+    </div>
+    <div class="col-4 fw-bold" style="padding: 0.375rem">
+        Plantagelocaties
+    </div>
+    @if (response?.Items != null && response?.Items.Count() > 0)
     {
-        <div class="d-grid p-1 fw-bold"
-             style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div @onclick='() => OnSortChanged("FirstName")' style="cursor:pointer;">
-                Naam @SortIndicator("FirstName")
-            </div>
-            <div @onclick='() => OnSortChanged("Email")' style="cursor:pointer;">
-                E-mail @SortIndicator("Email")
-            </div>
-            <div @onclick='() => OnSortChanged("PhoneNumber")' style="cursor:pointer;">
-                Gsm-number @SortIndicator("PhoneNumber")
-            </div>
-            <div>Plantagelocaties</div>
-            <div class="text-center">Beheren</div>
-        </div>
-        <div style="overflow-x:hidden; max-height: 55vh;">
+        <div class="p-0" style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDTO> row in Rows)
             {
-                <div class="row">
-                    @foreach (UserDTO item in row)
-                    {
-                        <div class="p-2">
-                            <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
-                                <CardBody Class="p-0 d-grid align-items-center"
-                                          Style="grid-template-columns: 1fr 2fr 2fr 2fr auto; column-gap: 1rem;">
-                                    <CardText class="m-0">@item.FirstName  @item.LastName</CardText>
-                                    <CardText class="m-0">
-                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
-                                            @item.Email
-                                        </a>
-                                    </CardText>
-                                    <CardText class="m-0">123456456789</CardText>
-                                    @if (item.PlantationSites != null)
-                                    {
-                                        <CardText class="m-0">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
-                                    }
-                                    else
-                                    {
-                                        <CardText class="m-0">n.v.t.</CardText>
-                                    }
-                                    <div class="p-1">
-                                        <a href="/manager/planning/user/@item.Id">
-                                            <Button title="Selecteer gebruiker"
-                                                    Class="btn btn-dark btn-sm px-3">
-                                                Selecteren
-                                            </Button>
-                                        </a>
-                                    </div>
-                                </CardBody>
+                @foreach (UserDTO item in row)
+                {
+                    <div class="p-2">
+                        <Card Class="py-2 px-3 border shadow">
+                            <CardBody Class="p-0 row align-items-center">
+                                <CardText Class="m-0 col-2">@item.FirstName  @item.LastName</CardText>
+                                <CardText Class="m-0 col-3">
+                                    <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                                        @item.Email
+                                    </a>
+                                </CardText>
+                                <CardText Class="m-0 col-2">@item.PhoneNumber</CardText>
+                                @if (item.PlantationSites != null)
+                                {
+                                    <CardText class="m-0 col-4">@string.Join(", ", item.PlantationSites.Select(s => s.Name))</CardText>
+                                }
+                                else
+                                {
+                                    <CardText class="m-0 col-4">n.v.t.</CardText>
+                                }
+                                <div class="col-1 d-flex justify-content-end">
+                                    <Button Class="green-btn" Size=ButtonSize.Small @onclick="() => NavigateToUserPlanning(item.Id)">Beheren</Button>
+                                </div>
+                            </CardBody>
 
-                            </Card>
-                        </div>
-                    }
-                </div>
+                        </Card>
+                    </div>
+                }
             }
         </div>
     }
     else
     {
-        <p class="text-center mt-4">Geen resultaten gevonden.</p>
+        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 60vh;">
+            Geen medewerkers gevonden
+        </div>
     }
 </div>
 
-<Pagination Class="justify-content-center"
-            Style="margin-top: 10px"
+<Pagination Class="justify-content-center mt-4"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"
@@ -125,7 +117,7 @@
     /// <summary>
     /// Maximum number of rows to display per page.
     /// </summary>
-    private int maxRows = 7;
+    private int maxRows = 6;
 
     /// <summary>
     /// Number of users to display per page (calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>).
@@ -251,9 +243,13 @@
     /// Handles the icon to display for the sorting direction.
     /// </summary>
     /// <param name="column">The column that needs to be sorted.</param>
-    private string SortIndicator(string column)
+    private IconName SortIndicator(string column)
     {
-        if (sortBy != column) return "";
-        return sortDirection == "asc" ? "↑" : "↓";
+        if (sortBy != column) return IconName.None;
+        return sortDirection == "asc" ? IconName.ArrowUp : IconName.ArrowDown;
+    }
+
+    private void NavigateToUserPlanning(int id){
+        Navigation.NavigateTo($"manager/planning/user/{id}");
     }
 }

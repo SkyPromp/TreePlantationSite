@@ -8,6 +8,14 @@
 @using Microsoft.AspNetCore.Authorization
 @using QRCoder
 
+<div class="d-flex justify-content-between mb-3">
+    <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" @onclick="() => NavigateBack()"
+            Style=" box-shadow: none; border: none; text-decoration: none;">
+        <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
+        Terug naar overzicht
+    </Button>
+</div>
+
 <Tabs EnableFadeEffect="true" Style="margin-top: 3vh">
     <Tab Title="Overzicht">
         <Content>
@@ -27,17 +35,17 @@
                         @if (images.Count > 0)
                         {
                             <div class="d-flex align-items-center justify-content-center w-100 gap-3">
-                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled="@(images.Count <= 1)">
+                                <Button Class="green-btn d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;"@onclick="PreviousImage" Disabled="@(images.Count <= 1)">
                                     <Icon Name="IconName.ArrowLeft"></Icon>                                    
                                 </Button>
                                 <div class="position-relative d-flex justify-content-center align-items-center bg-light rounded border" 
                                      style="flex: 1; max-width: 600px; min-height: 300px; max-height: 400px;">
                                     <img src="@GetCurrentImage()" alt="Boom afbeelding" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;" />
-                                    <span class="position-absolute bottom-0 end-0 badge bg-dark m-3 fs-6">
+                                    <span class="position-absolute bottom-0 end-0 badge m-3 fs-6" style="background-color: rgb(85, 193, 85);">
                                         @(currentImageIndex + 1) / @images.Count
                                     </span>
                                 </div>
-                                <Button Color="ButtonColor.Dark" Class="d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled="@(images.Count <= 1)">
+                                <Button Class="green-btn d-flex justify-content-center align-items-center rounded-circle p-0" Style="width: 3.5vw; height: 3.5vw;" @onclick="NextImage" Disabled="@(images.Count <= 1)">
                                     <Icon Name="IconName.ArrowRight"></Icon>
                                 </Button>
                             </div>
@@ -70,7 +78,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -80,7 +88,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }
                             } else {
@@ -102,7 +110,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -112,7 +120,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }
                             } else {
@@ -134,7 +142,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -144,7 +152,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }                                    
                             } else {
@@ -166,7 +174,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -176,7 +184,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }                                    
                             } else {
@@ -189,9 +197,6 @@
         </Content>
     </Tab>
 </Tabs>
-<div class="buttons d-flex justify-content-end mt-4">
-    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => NavigateBack()">Verlaten</Button> 
-</div>
 
 @code {
     /// <summary>
@@ -522,5 +527,5 @@
     private void NavigateBack()
     {
         NavigationManager.NavigateTo("/manager/tree");
-    }    
+    }
 }
