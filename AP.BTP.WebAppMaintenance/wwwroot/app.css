@@ -28,15 +28,6 @@ a.nav-link:hover {
     color: white !important;
 }
 
-.profile-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 15vw;
-    padding: 1rem;
-    z-index: 1000;
-}
-
 .brand-logo {
     height: 40px;
     width: auto;

@@ -31,15 +31,30 @@ html, body {
     line-height: 1.2
 }
 
-.navbar {
-    background-color: #4EB862;
-    height: 9vh;
-}
-
 .navbar-brand {
     display: flex;
     align-items: center;
     height: 100%;
+}
+
+.navbar {
+    height: 9vh;
+    background-color: rgb(85, 193, 85);
+}
+
+.nav-item {
+    margin: 0 0.5vw;
+}
+
+a.nav-link {
+    color: white !important;
+    transition: font-weight 0.3s ease;
+    font-size: 1rem;
+}
+
+a.nav-link:hover {
+    font-weight: 600;
+    color: white !important;
 }
 
 .brand-logo {
@@ -49,17 +64,20 @@ html, body {
     object-fit: contain;
 }
 
-.nav-item {
-    margin: 0 1.25vw;
+.green-btn {
+    background-color: rgb(85, 193, 85) !important; 
+    color: white !important;
+    box-shadow: none !important;
+    text-decoration: none !important; 
+    border: none !important;
 }
 
-.profile-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 15vw;
-    padding: 1rem;
-    z-index: 1000;
+.red-btn {
+    background-color: rgb(238, 73, 73) !important; 
+    color: white !important;
+    box-shadow: none !important;
+    text-decoration: none !important; 
+    border: none !important;
 }
 
 @media (max-width: 576px) {

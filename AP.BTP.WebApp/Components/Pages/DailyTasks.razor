@@ -13,7 +13,7 @@
 </div>
 
 <div class="text-center my-3">
-    <Button Class="shadow-none" Color="ButtonColor.Dark" @onclick="ShowGroundPlan"> 
+    <Button Class="green-btn" @onclick="ShowGroundPlan"> 
         <Icon Name="IconName.Map"></Icon> Zie plattegrond
     </Button>
 </div>
@@ -36,11 +36,11 @@
                                 }
                                 else if (task.StartTime == null)
                                 {
-                                    <Button Color="ButtonColor.Success" @onclick="() => ConfirmStartTask(task)">Start</Button>
+                                    <Button Class="green-btn" @onclick="() => ConfirmStartTask(task)">Start</Button>
                                 }
                                 else if (task.EndTime == null)
                                 {
-                                    <Button Color="ButtonColor.Danger" @onclick="() => ConfirmEndTask(task)">Stop</Button>
+                                    <Button Class="red-btn" @onclick="() => ConfirmEndTask(task)">Stop</Button>
                                     <small>@($"Start: {task.StartTime:HH:mm}")</small>
                                 }
                                 else
