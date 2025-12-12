@@ -834,7 +834,7 @@
 
     private async Task DeleteAllQueuedPictures()
     {
-        if (this.deletedTreePics.Count() == 0)
+        if (!this.deletedTreePics.Any())
             return;
 
         if (this.client == null)
