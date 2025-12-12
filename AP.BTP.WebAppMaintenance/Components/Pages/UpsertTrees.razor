@@ -797,7 +797,7 @@
 
         if(this.client == null)
         {
-            this.errorMessage = "The client has not been initialized yet.";
+            EnqueueToast(message: "The client has not been initialized yet.", ToastType.Warning);
 
             return;
         }
@@ -809,7 +809,7 @@
 
             if (!res.IsSuccessStatusCode)
             {
-                this.errorMessage = await res.Content.ReadAsStringAsync();
+                EnqueueToast(message: $"Kon één foto niet verwijderen: {await res.Content.ReadAsStringAsync()}", ToastType.Warning);
                 StateHasChanged();
             }
         }
@@ -821,19 +821,21 @@
     /// Deletes the currently selected picture.
     /// Removes it from <see cref="existingPictures"/> or <see cref="newPictures"/> and updates <see cref="previews"/>.
     /// </summary>
-    private async Task DeletePicture()
+    private Task DeletePicture()
     {
         if (selectedImage == null)
         {
             showDeleteConfirmation = false;
-            return;
+            EnqueueToast(message: "Er was geen afbeelding geselecteerd.", ToastType.Warning);
+
+            return Task.CompletedTask;
         }
 
         if(this.client == null)
         {
-            this.errorMessage = "The client has not been initialized yet.";
+            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
 
-            return;
+            return Task.CompletedTask;
         }
 
         if (int.TryParse(selectedImage, out int picId))
@@ -850,7 +852,10 @@
 
         selectedImage = null;
         showDeleteConfirmation = false;
+        this.EnqueueToast("Het verwijderen van de foto wordt succesvol afgehandelt.", ToastType.Success);
         StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -966,7 +971,7 @@
         this.toastMessages.Add(new ToastMessage
         {
             Type = type,
-            Title = ToastType.Warning.ToString(),
+            Title = type.ToString(),
             Message = message,
             AutoHide = true
         });
