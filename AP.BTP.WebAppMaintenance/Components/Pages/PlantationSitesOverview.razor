@@ -61,7 +61,7 @@
     </Pagination>
 </div>
 
-<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showDeleteConfirmation"
@@ -77,14 +77,9 @@
     private bool isLoading = false;
 
     /// <summary>
-    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
-    /// </summary>
-    private Toasts? toastContainer;
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Indicates whether a delete confirmation modal should be displayed.

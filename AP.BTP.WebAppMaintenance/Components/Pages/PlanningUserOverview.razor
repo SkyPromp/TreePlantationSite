@@ -6,6 +6,8 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.DTOs
 @inject IHttpClientFactory HttpClientFactory
+
+
 <PageTitle>Planning gebruikersselectie</PageTitle>
 
 <h3 class="text-center">Planning gebruikersselectie</h3>
@@ -96,11 +98,6 @@
             LastLinkIcon="IconName.ChevronDoubleRight">
 </Pagination>
 
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
-
 @code {
     /// <summary>
     /// The current search text entered by the user. Used for filtering operators.
@@ -147,11 +144,6 @@
     /// HttpClient used to call the backend API.
     /// </summary>
     private HttpClient client;  // TODO should be nullable and checks to see if it's null
-
-    /// <summary>
-    /// Stores any error messages encountered during API calls.
-    /// </summary>
-    private string errorMessage = "";
 
     /// <summary>
     /// Indicates the sorting direction
