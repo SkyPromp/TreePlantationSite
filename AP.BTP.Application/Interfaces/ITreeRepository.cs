@@ -1,5 +1,4 @@
-﻿using AP.BTP.Contracts.DTOs;
-using AP.BTP.Domain;
+﻿using AP.BTP.Domain;
 
 namespace AP.BTP.Application.Interfaces
 {

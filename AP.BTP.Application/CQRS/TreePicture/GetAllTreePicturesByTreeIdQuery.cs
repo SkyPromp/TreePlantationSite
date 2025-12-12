@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Represents a query to retrieve all tree pictures associated with a specific tree.
     /// </summary>
-    public class GetAllTreePicturesByTreeIdQuery : IRequest<List<TreePictureDTO>>
+    public class GetAllTreePicturesByTreeIdQuery : IRequest<List<TreePictureDto>>
     {
         /// <summary>
         /// The ID of the tree for which to retrieve pictures.
@@ -36,7 +36,7 @@ namespace AP.BTP.Application.CQRS.TreePicture
     /// <summary>
     /// Handles the <see cref="GetAllTreePicturesByTreeIdQuery"/> by retrieving all tree pictures from the repository.
     /// </summary>
-    public class GetAllTreePicturesByTreeIdQueryHandler : IRequestHandler<GetAllTreePicturesByTreeIdQuery, List<TreePictureDTO>>
+    public class GetAllTreePicturesByTreeIdQueryHandler : IRequestHandler<GetAllTreePicturesByTreeIdQuery, List<TreePictureDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -57,12 +57,12 @@ namespace AP.BTP.Application.CQRS.TreePicture
         /// </summary>
         /// <param name="request">The query containing the tree ID.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A list of <see cref="TreePictureDTO"/> representing the tree's pictures.</returns>
-        public async Task<List<TreePictureDTO>> Handle(GetAllTreePicturesByTreeIdQuery request, CancellationToken cancellationToken)
+        /// <returns>A list of <see cref="TreePictureDto"/> representing the tree's pictures.</returns>
+        public async Task<List<TreePictureDto>> Handle(GetAllTreePicturesByTreeIdQuery request, CancellationToken cancellationToken)
         {
             ICollection<Domain.TreePicture> treePictures = await uow.TreePictureRepository.GetAllByTreeId(request.TreeId);
 
-            return mapper.Map<List<TreePictureDTO>>(treePictures);
+            return mapper.Map<List<TreePictureDto>>(treePictures);
         }
     }
 }

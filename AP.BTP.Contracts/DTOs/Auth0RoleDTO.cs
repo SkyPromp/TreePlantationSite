@@ -6,7 +6,7 @@
     /// <param name="Id">The unique identifier of the role.</param>
     /// <param name="Name">The name of the role.</param>
     /// <param name="Description">A brief description of the role's purpose or permissions.</param>
-    public record Auth0RoleDTO
+    public record Auth0RoleDto
     (
         string Id,
         string Name,

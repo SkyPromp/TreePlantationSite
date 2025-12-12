@@ -16,8 +16,8 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <summary>
         /// Initializes a new instance of the <see cref="ZoneRepository"/> class.
         /// </summary>
-        /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
-        public ZoneRepository(BTPContext context)
+        /// <param name="context">The <see cref="BtpContext"/> used to access the database.</param>
+        public ZoneRepository(BtpContext context)
         {
             this.dbSet = context.Set<Zone>();
         }
@@ -80,7 +80,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>A collection of <see cref="Zone"/> entities associated with the plantation site.</returns>
         public async Task<ICollection<Zone>> GetAllByPlantationSiteId(int plantationSiteId)
         {
-            return await this.dbSet.Where(zone => !zone.IsDeleted && zone.PlantationSite.Id == plantationSiteId).ToListAsync();
+            return await this.dbSet.Where(zone => !zone.IsDeleted && zone.PlantationSite != null && zone.PlantationSite.Id == plantationSiteId).ToListAsync();
         }
 
         /// <summary>

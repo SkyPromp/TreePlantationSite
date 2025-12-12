@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a query to retrieve a paged list of trees with optional search functionality.
     /// </summary>
-    public class GetAllTreesPagedQuery: IRequest<PagedResponseDTO<TreeDTO>>
+    public class GetAllTreesPagedQuery: IRequest<PagedResponseDto<TreeDto>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -48,9 +48,9 @@ namespace AP.BTP.Application.CQRS.Tree
     }
 
     /// <summary>
-    /// Handles the <see cref="GetAllTreesPagedQuery"/> by retrieving a paged list of trees from the repository, optionally filtered by a search string, and mapping them to <see cref="TreeDTO"/> objects.
+    /// Handles the <see cref="GetAllTreesPagedQuery"/> by retrieving a paged list of trees from the repository, optionally filtered by a search string, and mapping them to <see cref="TreeDto"/> objects.
     /// </summary>
-    public class GetAllTreesPagedQueryHandler: IRequestHandler<GetAllTreesPagedQuery, PagedResponseDTO<TreeDTO>>
+    public class GetAllTreesPagedQueryHandler: IRequestHandler<GetAllTreesPagedQuery, PagedResponseDto<TreeDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -67,18 +67,18 @@ namespace AP.BTP.Application.CQRS.Tree
         }
 
         /// <summary>
-        /// Handles the <see cref="GetAllTreesPagedQuery"/> by fetching the requested page of trees, mapping them to <see cref="TreeDTO"/>, and returning a <see cref="Paged{TreeDTO}"/> result.
+        /// Handles the <see cref="GetAllTreesPagedQuery"/> by fetching the requested page of trees, mapping them to <see cref="TreeDto"/>, and returning a <see cref="Paged{TreeDTO}"/> result.
         /// </summary>
         /// <param name="request">The query containing the page number, page size, and optional search string.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="PagedResponseDTO{TreeDTO}"/> object containing the requested page of trees.</returns>
-        public async Task<PagedResponseDTO<TreeDTO>> Handle(GetAllTreesPagedQuery request, CancellationToken cancellationToken)
+        /// <returns>A <see cref="PagedResponseDto{TreeDTO}"/> object containing the requested page of trees.</returns>
+        public async Task<PagedResponseDto<TreeDto>> Handle(GetAllTreesPagedQuery request, CancellationToken cancellationToken)
         {
             (IEnumerable<Domain.Tree> items, int totalCount) = await uow.TreeRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search, request.SortAscending);
 
-            return new PagedResponseDTO<TreeDTO>
+            return new PagedResponseDto<TreeDto>
             {
-                Items = mapper.Map<IEnumerable<TreeDTO>>(items),
+                Items = mapper.Map<IEnumerable<TreeDto>>(items),
                 PageNumber = request.PageNr,
                 PageSize = request.PageSize,
                 TotalItems = totalCount

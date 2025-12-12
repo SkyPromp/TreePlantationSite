@@ -9,7 +9,7 @@ namespace AP.BTP.Infrastructure.UOW
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly BTPContext ctxt;
+        private readonly BtpContext ctxt;
         private readonly ITreeRepository treeRepo;
         private readonly IPlantationSiteRepository plantationSiteRepo;
         private readonly IZoneRepository zoneRepo;
@@ -28,8 +28,9 @@ namespace AP.BTP.Infrastructure.UOW
         /// <param name="userRepo">Repository for user entities.</param>
         /// <param name="taskListRepo">Repository for task list entities.</param>
         /// <param name="taskItemRepo">Repository for task item entities.</param>
+        /// <param name="treePictureRepo">Repository for task item entities.</param>
         public UnitOfWork(
-            BTPContext ctxt,
+            BtpContext ctxt,
             ITreeRepository treeRepo,
             IPlantationSiteRepository plantationSiteRepo,
             IZoneRepository zoneRepo,

@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a command to link a user to one or more plantation sites.
     /// </summary>
-    public class LinkUserToPlantationSitesCommand: IRequest<UserDTO>
+    public class LinkUserToPlantationSitesCommand: IRequest<UserDto>
     {
         /// <summary>
         /// The unique identifier of the user to link to plantation sites.
@@ -62,9 +62,9 @@ namespace AP.BTP.Application.CQRS.User
     }
 
     /// <summary>
-    /// Handles the <see cref="LinkUserToPlantationSitesCommand"/> by linking the specified user to the given plantation sites and returning the updated user as a <see cref="UserDTO"/>.
+    /// Handles the <see cref="LinkUserToPlantationSitesCommand"/> by linking the specified user to the given plantation sites and returning the updated user as a <see cref="UserDto"/>.
     /// </summary>
-    public class LinkUserToPlantationSitesCommandHandler : IRequestHandler<LinkUserToPlantationSitesCommand, UserDTO>
+    public class LinkUserToPlantationSitesCommandHandler : IRequestHandler<LinkUserToPlantationSitesCommand, UserDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -85,10 +85,13 @@ namespace AP.BTP.Application.CQRS.User
         /// </summary>
         /// <param name="request">The command containing the user ID and the list of plantation site IDs.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="UserDTO"/> with linked plantation sites.</returns>
-        public async Task<UserDTO> Handle(LinkUserToPlantationSitesCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="UserDto"/> with linked plantation sites.</returns>
+        public async Task<UserDto> Handle(LinkUserToPlantationSitesCommand request, CancellationToken cancellationToken)
         {
             Domain.User? user = await uow.UserRepository.GetById(request.UserId);
+
+            if (user == null)
+                throw new KeyNotFoundException($"User with id {request.UserId} was not found.");
 
             user.PlantationSites.Clear();
 
@@ -101,7 +104,7 @@ namespace AP.BTP.Application.CQRS.User
                 }
             }
             await uow.Commit();
-            return mapper.Map<UserDTO>(user);
+            return mapper.Map<UserDto>(user);
         }
     }
 }

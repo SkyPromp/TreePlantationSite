@@ -8,6 +8,8 @@ namespace AP.BTP.Infrastructure.Seeding
     /// </summary>
     public static class PlantationSiteSeeding
     {
+        private const string Country = "Belgium";
+
         /// <summary>
         /// Seeds the <see cref="PlantationSite"/> entity with 10 sample records.
         /// </summary>
@@ -18,7 +20,7 @@ namespace AP.BTP.Infrastructure.Seeding
         /// <item><description>An <see cref="PlantationSite.Id"/> from 1 to 100</description></item>
         /// <item><description>Unique <see cref="PlantationSite.Name"/>, <see cref="PlantationSite.Street"/>, <see cref="PlantationSite.HouseNumber"/>, and <see cref="PlantationSite.City"/></description></item>
         /// <item><description>Postal codes incrementing from 1000 to 9999</description></item>
-        /// <item><description>Country set to "Belgium"</description></item>
+        /// <item><description>Country set to Country</description></item>
         /// <item><description>Size is in square meters</description></item>
         /// <item><description>GroundPlan set to a unique string per site</description></item>
         /// <item><description>IsDeleted set to <c>false</c></description></item>
@@ -37,7 +39,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "12",
                 City = "Leuven",
                 PostalCode = 3000,
-                Country = "Belgium",
+                Country = Country,
                 Size = 5300.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -51,7 +53,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "5B",
                 City = "Antwerpen",
                 PostalCode = 2000,
-                Country = "Belgium",
+                Country = Country,
                 Size = 7600.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -65,7 +67,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "44",
                 City = "Mechelen",
                 PostalCode = 2800,
-                Country = "Belgium",
+                Country = Country,
                 Size = 6900.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -79,7 +81,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "7A",
                 City = "Kortrijk",
                 PostalCode = 8500,
-                Country = "Belgium",
+                Country = Country,
                 Size = 5100.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -93,7 +95,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "91",
                 City = "Marche-en-Famenne",
                 PostalCode = 6900,
-                Country = "Belgium",
+                Country = Country,
                 Size = 14000.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -107,7 +109,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "3C",
                 City = "Gent",
                 PostalCode = 9000,
-                Country = "Belgium",
+                Country = Country,
                 Size = 8700.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -121,7 +123,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "28",
                 City = "Hasselt",
                 PostalCode = 3500,
-                Country = "Belgium",
+                Country = Country,
                 Size = 6700.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -135,7 +137,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "16",
                 City = "Brugge",
                 PostalCode = 8000,
-                Country = "Belgium",
+                Country = Country,
                 Size = 8400.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -149,7 +151,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "77",
                 City = "Sint-Truiden",
                 PostalCode = 3800,
-                Country = "Belgium",
+                Country = Country,
                 Size = 9200.0,
                 GroundPlan = "",
                 IsDeleted = false,
@@ -163,7 +165,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 HouseNumber = "10D",
                 City = "Turnhout",
                 PostalCode = 2300,
-                Country = "Belgium",
+                Country = Country,
                 Size = 12500.0,
                 GroundPlan = "",
                 IsDeleted = false,

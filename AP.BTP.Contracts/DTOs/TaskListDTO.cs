@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a data transfer object (DTO) for a task list, including its identifier, date, and associated task items.
     /// </summary>
-    public record TaskListDTO
+    public record TaskListDto
     {
         /// <summary>
         /// The unique identifier of the task list.
@@ -24,7 +24,7 @@
         /// The collection of task items associated with this task list.
         /// May be <c>null</c> if there are no tasks.
         /// </summary>
-        public ICollection<TaskItemDTO>? TaskItems { get; set; }
+        public ICollection<TaskItemDto>? TaskItems { get; set; }
 
         /// <summary>
         /// The ID of the user associated with this task list.

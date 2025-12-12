@@ -16,8 +16,8 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskItemRepository"/> class.
         /// </summary>
-        /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
-        public TaskItemRepository(BTPContext context)
+        /// <param name="context">The <see cref="BtpContext"/> used to access the database.</param>
+        public TaskItemRepository(BtpContext context)
         {
             dbSet = context.Set<TaskItem>();
         }

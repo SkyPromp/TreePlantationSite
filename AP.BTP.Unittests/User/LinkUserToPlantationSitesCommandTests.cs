@@ -1,6 +1,5 @@
 ﻿using AP.BTP.Application.CQRS.User;
 using AP.BTP.Application.Interfaces;
-using AP.BTP.Contracts.DTOs;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -9,10 +8,10 @@ namespace AP.BTP.Unittests.User
     [TestClass]
     public class LinkUserToPlantationSitesCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<IUserRepository> userRepoMock;
-        private Mock<IPlantationSiteRepository> plantationSiteRepoMock;
-        private LinkUserToPlantationSitesCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<IUserRepository> userRepoMock = null!;
+        private Mock<IPlantationSiteRepository> plantationSiteRepoMock = null!;
+        private LinkUserToPlantationSitesCommandValidator validator = null!;
         private Domain.PlantationSite? plantationSite;
 
         [TestInitialize]

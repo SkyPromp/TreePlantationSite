@@ -10,12 +10,12 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a command to add a new tree to the system.
     /// </summary>
-    public class AddTreeCommand: IRequest<TreeDTO>
+    public class AddTreeCommand: IRequest<TreeDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the tree details to be added.
         /// </summary>
-        public required TreeDTO Tree { get; set; }
+        public required TreeDto Tree { get; set; }
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace AP.BTP.Application.CQRS.Tree
 
                     if (trees == null) return true;
 
-                    return trees.Count(t => t.Species == tree.Species) == 0;
+                    return !trees.Any(t => t.Species == tree.Species);
                 })
                 .WithMessage("The tree species must be unique.");
 
@@ -85,7 +85,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Handles the <see cref="AddTreeCommand"/> by adding a new tree to the database and returning the resulting DTO.
     /// </summary>
-    public class AddTreeCommandHandler: IRequestHandler<AddTreeCommand, TreeDTO>
+    public class AddTreeCommandHandler: IRequestHandler<AddTreeCommand, TreeDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -106,15 +106,15 @@ namespace AP.BTP.Application.CQRS.Tree
         /// </summary>
         /// <param name="request">The command containing the tree details to add.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The <see cref="TreeDTO"/> representing the newly added tree.</returns>
-        public async Task<TreeDTO> Handle(AddTreeCommand request, CancellationToken cancellationToken)
+        /// <returns>The <see cref="TreeDto"/> representing the newly added tree.</returns>
+        public async Task<TreeDto> Handle(AddTreeCommand request, CancellationToken cancellationToken)
         {
             Domain.Tree tree = mapper.Map<Domain.Tree>(request.Tree);
 
             await uow.TreeRepository.Create(tree);
             await uow.Commit();
 
-            return mapper.Map<TreeDTO>(tree);
+            return mapper.Map<TreeDto>(tree);
         }
     }
 }

@@ -84,5 +84,26 @@ namespace AP.BTP.Application.Interfaces
         /// <param name="id">The unique identifier of the user to delete.</param>
         /// <returns>A task representing the asynchronous delete operation.</returns>
         Task Delete(int id);
+
+        /// <summary>
+        /// Determines whether the specified email address is unique among all users.
+        /// </summary>
+        /// <param name="email">The email address to check.</param>
+        /// <returns>
+        /// A task that returns <c>true</c> if the email is not used by any existing user;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        Task<bool> IsEmailUnique(string email);
+
+        /// <summary>
+        /// Determines whether the combination of first name and last name is unique among all users.
+        /// </summary>
+        /// <param name="firstName">The first name of the user.</param>
+        /// <param name="lastName">The last name of the user.</param>
+        /// <returns>
+        /// A task that returns <c>true</c> if no existing user has the same full name;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        Task<bool> IsFullNameUnique(string firstName, string lastName);
     }
 }

@@ -23,10 +23,10 @@
 <div class="container-fluid m-0">
     @if (response?.Items != null)
     {
-        @foreach (List<PlantationSiteDTO> row in Rows)
+        @foreach (List<PlantationSiteDto> row in Rows)
         {
             <div class="row">
-                @foreach (PlantationSiteDTO item in row)
+                @foreach (PlantationSiteDto item in row)
                 {
                     <div class="col-md-4" style="padding: 2vh">
                         <Card Class="shadow border" Style="border-radius: 24px; padding: 4vh">
@@ -75,11 +75,6 @@
 
 @code {
     /// <summary>
-    /// Indicates whether an API call or operation is in progress.
-    /// </summary>
-    private bool isLoading = false;
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
@@ -92,7 +87,7 @@
     /// <summary>
     /// The currently selected plantation site being deleted.
     /// </summary>
-    private PlantationSiteDTO? selectedPlantationSite;
+    private PlantationSiteDto? selectedPlantationSite;
 
     /// <summary>
     /// Current search text entered by the user for filtering plantation sites.
@@ -107,7 +102,7 @@
     /// <summary>
     /// Holds the paged response of plantation sites from the API.
     /// </summary>
-    PagedResponseDTO<PlantationSiteDTO>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
+    PagedResponseDto<PlantationSiteDto>? response;  // TODO should not be stored? just store an IEnumerable<...Dto>????
 
     /// <summary>
     /// The current page number being displayed.
@@ -117,12 +112,12 @@
     /// <summary>
     /// Number of cards to display per row in the UI.
     /// </summary>
-    private int cardsPerRow = 3;
+    private readonly int cardsPerRow = 3;
 
     /// <summary>
     /// Maximum number of rows per page.
     /// </summary>
-    private int maxRows = 2;
+    private readonly int maxRows = 2;
 
     /// <summary>
     /// Number of items displayed per page, calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>.
@@ -163,7 +158,7 @@
 
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<PlantationSiteDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDto<PlantationSiteDto>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
@@ -212,10 +207,10 @@
 
     /// <summary>
     /// Groups the plantation sites into rows for display based on <see cref="cardsPerRow"/>.
-    /// Each row is represented as a list of <see cref="PlantationSiteDTO"/>.
+    /// Each row is represented as a list of <see cref="PlantationSiteDto"/>.
     /// </summary>
-    private IEnumerable<List<PlantationSiteDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<PlantationSiteDTO>())
+    private IEnumerable<List<PlantationSiteDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<PlantationSiteDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
@@ -225,10 +220,9 @@
     /// </summary>
     private async Task DeletePlantationSite()
     {
-        isLoading = true;
         if (selectedPlantationSite == null)
         {
-            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+            EnqueueToast(message: "De geselecteerde plantatiesite is niet succesvol geïnstantieerd!", ToastType.Warning);
 
             return;
         }
@@ -237,9 +231,9 @@
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"PlantationSite/{selectedPlantationSite.Id}");
+            HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"PlantationSite/{selectedPlantationSite.Id}");
 
-            if (response.IsSuccessStatusCode)
+            if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
 
@@ -260,7 +254,6 @@
 
 
         await CancelDeletePlantationSite();
-        isLoading = false;
     }
 
     /// <summary>

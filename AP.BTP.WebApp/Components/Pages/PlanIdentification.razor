@@ -48,7 +48,7 @@
                     else if (plantResults != null && plantResults.Any())
                     {
                         <h5 class="mb-3">Resultaten:</h5>
-                        @foreach (PlantResultDTO result in plantResults.Take(5))
+                        @foreach (PlantResultDto result in plantResults.Take(5))
                         {
                             <Card Class="mb-2 shadow-sm">
                                 <CardBody>
@@ -110,7 +110,7 @@
     /// <summary>
     /// List of plant identification results returned from the Pl@ntNet API.
     /// </summary>    
-    private List<PlantResultDTO>? plantResults;
+    private List<PlantResultDto>? plantResults;
 
     /// <summary>
     /// Byte array containing the uploaded image data, used for both preview and API calls.
@@ -121,15 +121,15 @@
     /// API key for authenticating with the Pl@ntNet API.
     /// Loaded from the PLANT_API configuration setting.
     /// </summary>    
-    public required string plantApiKey;
+    private string plantApiKey = "";
 
     /// <summary>
     /// Initializes the component and loads the Pl@ntNet API key from configuration.
     /// Throws an exception if the API key is not configured.
     /// </summary>
     protected override void OnInitialized(){
-        plantApiKey = Configuration["PLANT_API"]
-                ?? throw new Exception("PLANT_API is missing");
+        plantApiKey = Configuration["PLANT_API"] 
+                ?? throw new InvalidOperationException("Configuration key 'PLANT_API' is missing.");
     }
 
     /// <summary>
@@ -220,14 +220,14 @@
             if (response.IsSuccessStatusCode)
             {
                 string jsonResponse = await response.Content.ReadAsStringAsync();
-                PlantNetResponseDTO? apiResult = JsonSerializer.Deserialize<PlantNetResponseDTO>(jsonResponse, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
+                PlantNetResponseDto? apiResult = JsonSerializer.Deserialize<PlantNetResponseDto>(jsonResponse, new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
                 });
 
                 if (apiResult?.Results != null && apiResult.Results.Any())
                 {
-                    plantResults = apiResult.Results.Select(r => new PlantResultDTO() {
+                    plantResults = apiResult.Results.Select(r => new PlantResultDto() {
                         ScientificName = r.Species?.ScientificNameWithoutAuthor ?? "Unknown",
                         CommonNames = r.Species?.CommonNames ?? new List<string>(),
                         Family = r.Species?.Family?.ScientificNameWithoutAuthor ?? "Unknown",
@@ -236,7 +236,7 @@
                 }
                 else
                 {
-                    plantResults = new List<PlantResultDTO>();
+                    plantResults = new List<PlantResultDto>();
                 }
             }
             else

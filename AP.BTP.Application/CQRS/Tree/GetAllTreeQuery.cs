@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a query to retrieve all trees in the system.
     /// </summary>
-    public class GetAllTreeQuery: IRequest<IEnumerable<TreeDTO>>  // TODO this should probably be merged in with GetTreeQuery
+    public class GetAllTreeQuery: IRequest<IEnumerable<TreeDto>>
     {
         /// <summary>
         /// An optional search string to filter trees by relevant fields (e.g., species name).
@@ -35,7 +35,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Handles the <see cref="GetAllTreeQuery"/> by retrieving all trees from the repository and mapping them to DTOs.
     /// </summary>
-    public class GetAllTreeQueryHandler: IRequestHandler<GetAllTreeQuery, IEnumerable<TreeDTO>>
+    public class GetAllTreeQueryHandler: IRequestHandler<GetAllTreeQuery, IEnumerable<TreeDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -52,15 +52,15 @@ namespace AP.BTP.Application.CQRS.Tree
         }
 
         /// <summary>
-        /// Handles the <see cref="GetAllTreeQuery"/> by fetching all trees from the repository and mapping them to <see cref="TreeDTO"/>.
+        /// Handles the <see cref="GetAllTreeQuery"/> by fetching all trees from the repository and mapping them to <see cref="TreeDto"/>.
         /// </summary>
         /// <param name="request">The query request (no parameters required).</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A collection of <see cref="TreeDTO"/> objects representing all trees in the system.</returns>
-        public async Task<IEnumerable<TreeDTO>> Handle(GetAllTreeQuery request, CancellationToken cancellationToken)
+        /// <returns>A collection of <see cref="TreeDto"/> objects representing all trees in the system.</returns>
+        public async Task<IEnumerable<TreeDto>> Handle(GetAllTreeQuery request, CancellationToken cancellationToken)
         {
             IEnumerable<Domain.Tree> trees = await uow.TreeRepository.GetAll(request.Search);
-            IEnumerable<TreeDTO> treeDTOs = mapper.Map<IEnumerable<TreeDTO>>(trees);
+            IEnumerable<TreeDto> treeDTOs = mapper.Map<IEnumerable<TreeDto>>(trees);
 
             return treeDTOs;
         }

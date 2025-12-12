@@ -21,7 +21,7 @@
 <Card Class="border-0 shadow border" Style="height: 60vh">
     @if(todayTasks != null){
         <CardBody Class="p-3 d-flex flex-column gap-3 h-100">
-            @foreach (TaskItemDTO task in todayTasks.TaskItems ?? [])
+            @foreach (TaskItemDto task in todayTasks.TaskItems ?? [])
             {
                 <Card Class="py-2 h-25 shadow border">
                     <div class="container">
@@ -151,17 +151,17 @@
     /// <summary>
     /// HttpClient used to call the backend API.
     /// </summary>
-    private HttpClient? client;
+    private HttpClient client = default!;
 
     private DateTime selectedDate; // TODO fix initialisation issues
 
-    private TaskListDTO? todayTasks;
+    private TaskListDto? todayTasks;
 
     private bool showStartConfirmation;
 
     private bool showEndConfirmation;
 
-    private TaskItemDTO? selectedTask;
+    private TaskItemDto? selectedTask;
 
     private bool showGroundPlan = false;
 
@@ -169,7 +169,7 @@
 
     private string groundPlanPreview = string.Empty;
 
-    private PlantationSiteDTO? currentSite;
+    private PlantationSiteDto? currentSite;
 
     /// <summary>
     /// Lifecycle method called after the component has rendered. Initializes the HttpClient, loads the user,
@@ -192,7 +192,7 @@
     /// </summary>
     private async Task LoadUser()
     {
-        TaskListDTO? response = await this.client.GetFromJsonAsync<TaskListDTO>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
+        TaskListDto? response = await this.client.GetFromJsonAsync<TaskListDto>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
         this.todayTasks = response;
 
         if (response == null)
@@ -213,7 +213,7 @@
         StateHasChanged();
     }
 
-    private void ConfirmStartTask(TaskItemDTO task)
+    private void ConfirmStartTask(TaskItemDto task)
     {
         this.selectedTask = task;
         this.showStartConfirmation = true;
@@ -240,10 +240,10 @@
 
         try
         {
-            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/started", this.selectedTask);
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDto>("TaskItem/started", this.selectedTask);
             if (!response.IsSuccessStatusCode)
             {
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo == null) return;
 
@@ -263,7 +263,7 @@
             }
 
             this.EnqueueToast(message: "De taak is succesvol gestart geweest.", type: ToastType.Success);
-            this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.StartTime;
+            this.selectedTask.StartTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.StartTime;
         } catch (Exception e)
         {
             this.EnqueueToast(message: $"Er is een fout opgetreden: {e.Message}", type: ToastType.Warning);
@@ -275,7 +275,7 @@
         StateHasChanged();
     }
 
-    private void ConfirmEndTask(TaskItemDTO task)
+    private void ConfirmEndTask(TaskItemDto task)
     {
         this.selectedTask = task;
         this.showEndConfirmation = true;
@@ -302,11 +302,11 @@
 
         try
         {
-            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDTO>("TaskItem/ended", this.selectedTask);
+            HttpResponseMessage response = await client.PatchAsJsonAsync<TaskItemDto>("TaskItem/ended", this.selectedTask);
 
             if (!response.IsSuccessStatusCode)
             {
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo != null)
                 {
@@ -331,7 +331,7 @@
             }
 
             this.EnqueueToast(message: "De taak is succesvol beëindigd.", type: ToastType.Success);
-            this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
+            this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDto>())?.EndTime;
         } catch (ArgumentNullException e)
         {
             this.EnqueueToast(message: $"Er is een fout opgetreden bij het beëindigen van de taak: {e.Message}", type: ToastType.Warning);
@@ -351,7 +351,7 @@
             return;
         }
 
-        currentSite = await client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{todayTasks.PlantationSiteId}");
+        currentSite = await client.GetFromJsonAsync<PlantationSiteDto>($"PlantationSite/{todayTasks.PlantationSiteId}");
 
         if (currentSite == null)
         {

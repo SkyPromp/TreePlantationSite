@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 
 # Ignore media
 AP.BTP.WebAPI/media/**
+
+# Ignore sonarqube files
+.sonarqube/

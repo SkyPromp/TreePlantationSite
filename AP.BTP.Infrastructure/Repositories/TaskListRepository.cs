@@ -17,8 +17,8 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskListRepository"/> class.
         /// </summary>
-        /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
-        public TaskListRepository(BTPContext context)
+        /// <param name="context">The <see cref="BtpContext"/> used to access the database.</param>
+        public TaskListRepository(BtpContext context)
         {
             dbSet = context.Set<TaskList>();
         }
@@ -110,7 +110,7 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             TaskList? site = await dbSet
                 .Include(tl => tl.TaskItems.Where(item => !item.IsDeleted))
-                .AsNoTracking()  // Don't track it with EntityFramework
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
             if (site == null) throw new KeyNotFoundException($"TaskList with ID {id} not found.");

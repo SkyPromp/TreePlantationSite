@@ -22,7 +22,7 @@ namespace AP.BTP.Web.Shared.Authentication
             app.MapGet("/auth/login-callback", async (HttpContext context, [FromServices] IMemoryCache cache) =>
             {
                 string key = context.Request.Query["key"].ToString();
-                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<LoginResponseDTO>(key, out LoginResponseDTO? LoginResponse))
+                if (string.IsNullOrEmpty(key) || !cache.TryGetValue<LoginResponseDto>(key, out LoginResponseDto? LoginResponse))
                 {
                     return Results.BadRequest("Invalid or expired key.");
                 }
@@ -58,7 +58,7 @@ namespace AP.BTP.Web.Shared.Authentication
 
                 try
                 {
-                    ClaimsPrincipal principal = handler.ValidateToken(LoginResponse.id_token, validationParameters, out SecurityToken? validatedToken);
+                    ClaimsPrincipal principal = handler.ValidateToken(LoginResponse.id_token, validationParameters, out _);
 
                     List<Claim> claims = principal.Claims.Select(c =>
                     {

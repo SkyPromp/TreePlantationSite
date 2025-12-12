@@ -1,4 +1,5 @@
-﻿using AP.BTP.Application.Interfaces;
+﻿using AP.BTP.Application.Exceptions;
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Contracts.DTOs;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
@@ -18,17 +19,23 @@ namespace AP.BTP.Infrastructure.Auth0
         private readonly string _audience;
         private string? _cachedToken;
         private DateTime _tokenExpiry;
+        private const string HeaderContentType = "content-type";
+        private const string JsonContentType = "application/json";
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Auth0ManagementService"/> class with configuration values.
         /// </summary>
         /// <param name="config">The configuration containing Auth0 credentials.</param>
-        /// <exception cref="ArgumentNullException">Thrown if any required Auth0 configuration is missing.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if any required Auth0 configuration is missing.</exception>
         public Auth0ManagementService(IConfiguration config)
         {
-            _domain = config["AUTH0:DOMAIN"] ?? throw new ArgumentNullException("AUTH0:DOMAIN");
-            _clientId = config["AUTH0:MANAGEMENT_CLIENT_ID"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_ID");
-            _clientSecret = config["AUTH0:MANAGEMENT_CLIENT_SECRET"] ?? throw new ArgumentNullException("AUTH0:MANAGEMENT_CLIENT_SECRET");
+            _domain = config["AUTH0:DOMAIN"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:DOMAIN' is missing.");
+            _clientId = config["AUTH0:MANAGEMENT_CLIENT_ID"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:MANAGEMENT_CLIENT_ID' is missing.");
+            _clientSecret = config["AUTH0:MANAGEMENT_CLIENT_SECRET"] ?? throw new InvalidOperationException("Configuration key 'AUTH0:MANAGEMENT_CLIENT_SECRET' is missing.");
             _audience = $"https://{_domain}/api/v2/";
         }
 
@@ -43,7 +50,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestClient client = new RestClient($"https://{_domain}/oauth/token");
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
 
             request.AddJsonBody(new
             {
@@ -80,7 +87,7 @@ namespace AP.BTP.Infrastructure.Auth0
         {
             string token = await GetManagementTokenAsync();
 
-            IEnumerable<Auth0RoleDTO> roles = await GetRoles();
+            IEnumerable<Auth0RoleDto> roles = await GetRoles();
 
             string? roleId = roles.FirstOrDefault(r => r.Name.Equals(role, StringComparison.OrdinalIgnoreCase))?.Id;
 
@@ -93,7 +100,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
             request.AddJsonBody(new { roles = new[] { roleId } });
             RestResponse response = await client.ExecuteAsync(request);
 
@@ -108,25 +115,22 @@ namespace AP.BTP.Infrastructure.Auth0
         /// </summary>
         /// <returns>A <see cref="Task{IEnumerable{Auth0Role}}"/> containing the list of roles.</returns>
         /// <exception cref="InvalidOperationException">Thrown if retrieving roles fails.</exception>
-        private async Task<IEnumerable<Auth0RoleDTO>> GetRoles()
+        private async Task<IEnumerable<Auth0RoleDto>> GetRoles()
         {
             string token = await GetManagementTokenAsync();
             RestClient client = new RestClient($"https://{_domain}/api/v2/roles");
             RestRequest request = new RestRequest();
             request.Method = Method.Get;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
             RestResponse response = await client.ExecuteAsync(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine($"Failed to get roles: {response.StatusCode} - {response.Content}");
                 throw new InvalidOperationException($"Failed to get roles: {response.StatusCode} - {response.Content}");
             }
 
-            List<Auth0RoleDTO>? roles = JsonSerializer.Deserialize<List<Auth0RoleDTO>>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
-
-            return roles ?? new List<Auth0RoleDTO>();
+            return JsonSerializer.Deserialize<List<Auth0RoleDto>>(response.Content!, _jsonOptions) ?? new List<Auth0RoleDto>();
         }
 
         /// <summary>
@@ -137,7 +141,7 @@ namespace AP.BTP.Infrastructure.Auth0
         /// <param name="password">The user's password.</param>
         /// <returns>A <see cref="Task{Auth0UserDTO}"/> containing the created user.</returns>
         /// <exception cref="InvalidOperationException">Thrown if user creation fails.</exception>
-        public async Task<Auth0UserDTO?> CreateUserAsync(
+        public async Task<Auth0UserDto> CreateUserAsync(
             string username,
             string email,
             string password)
@@ -148,7 +152,7 @@ namespace AP.BTP.Infrastructure.Auth0
             RestRequest request = new RestRequest();
             request.Method = Method.Post;
             request.AddHeader("Authorization", $"Bearer {token}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader(HeaderContentType, JsonContentType);
 
 
             request.AddJsonBody(new
@@ -161,13 +165,16 @@ namespace AP.BTP.Infrastructure.Auth0
 
             RestResponse response = await client.ExecuteAsync(request);
 
-            if (response.StatusCode != HttpStatusCode.Created)
+            if (response.StatusCode == HttpStatusCode.Conflict)
+                throw new Auth0UserCreationException("Auth0 could not create the user because it already exists", "USER_ALREADY_EXISTS");
+            if (response.StatusCode == HttpStatusCode.Created)
             {
-                throw new InvalidOperationException(
-                    $"Failed to create user: {response.StatusCode} - {response.Content}");
-            }
+                Auth0UserDto? auth0UserDto = JsonSerializer.Deserialize<Auth0UserDto>(response.Content!, _jsonOptions);
 
-            return JsonSerializer.Deserialize<Auth0UserDTO>(response.Content!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return auth0UserDto ?? throw new Auth0UserCreationException("Auth0 returned an empty response when creating user.", "AUTH0_EMPTY_RESPONSE");
+            }
+            else
+                throw new Auth0UserCreationException($"Auth0 user creation failed: {response.StatusCode} - {response.Content}", "AUTH0_USER_CREATION_FAILED");
         }
     }
 }

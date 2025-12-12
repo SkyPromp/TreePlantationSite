@@ -8,7 +8,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Represents a query to retrieve a paged list of unapproved users, optionally filtered by a search term.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDTO<UserDTO>>
+    public class GetAllUnapprovedUsersPagedQuery() : IRequest<PagedResponseDto<UserDto>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -39,7 +39,7 @@ namespace AP.BTP.Application.CQRS.User
     /// <summary>
     /// Handles the <see cref="GetAllUnapprovedUsersPagedQuery"/> by retrieving a paged collection of unapproved users.
     /// </summary>
-    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponseDTO<UserDTO>>
+    public class GetAllUnapprovedUsersPagedQueryHandler : IRequestHandler<GetAllUnapprovedUsersPagedQuery, PagedResponseDto<UserDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -63,14 +63,14 @@ namespace AP.BTP.Application.CQRS.User
         /// <returns>
         /// A <see cref="PagedResponse{T}"/> containing the unapproved users for the requested page and the total user count.
         /// </returns>
-        public async Task<PagedResponseDTO<UserDTO>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDto<UserDto>> Handle(GetAllUnapprovedUsersPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             (IEnumerable<Domain.User> items, int totalCount) = await uow.UserRepository.GetAllUnapprovedUsersPaged(request.PageNr, request.PageSize, request.Search, request.SortBy, request.SortDirection);
 
-            IEnumerable<UserDTO> users = mapper.Map<IEnumerable<UserDTO>>(items);
-            return new PagedResponseDTO<UserDTO>
+            IEnumerable<UserDto> users = mapper.Map<IEnumerable<UserDto>>(items);
+            return new PagedResponseDto<UserDto>
             {
                 Items = users,
                 PageNumber = request.PageNr,

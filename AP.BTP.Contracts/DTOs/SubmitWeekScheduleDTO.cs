@@ -3,11 +3,11 @@
     /// <summary>
     /// Represents a data transfer object (DTO) week schedule.
     /// </summary>
-    public class SubmitWeekScheduleDTO
+    public class SubmitWeekScheduleDto
     {
         /// <summary>
         /// the task lists of the week, each one representing one day in the week.
         /// </summary>
-        public List<TaskListDTO> TaskLists { get; set; } = new();
+        public List<TaskListDto> TaskLists { get; set; } = new();
     }
 }

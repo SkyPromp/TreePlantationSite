@@ -4,7 +4,7 @@ namespace AP.BTP.Contracts.DTOs
     /// Represents a flattened and simplified plant identification result,
     /// typically used for client-facing responses.
     /// </summary>    
-    public record PlantResultDTO
+    public record PlantResultDto
     {
         /// <summary>
         /// Gets or sets the full scientific name of the plant species.

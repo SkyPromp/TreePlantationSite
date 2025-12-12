@@ -50,12 +50,12 @@
     /// <summary>
     /// Holds the data entered by the user for login.
     /// </summary>
-    private LoginUserDTO loginDetails;
+    private readonly LoginUserDto loginDetails = new LoginUserDto();
 
     /// <summary>
     /// The HTTP client used to communicate with the auth.
     /// </summary>
-    private HttpClient? client;
+    private HttpClient client = default!;
 
     /// <summary>
     /// Holds the list of toast messages to display in the UI.
@@ -67,7 +67,6 @@
     /// </summary>
     protected override void OnInitialized()
     {
-        loginDetails = new LoginUserDTO();
         client = HttpClientFactory.CreateClient("BTPApi");
 
         string? appType = AppInfoOptions.Value.AppType;
@@ -87,7 +86,7 @@
             {
                 this.EnqueueToast(message: "Er is een fout opgetreden tijdens het inloggen.", type: ToastType.Warning);
 
-                ErrorResponseInfoDTO? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDTO>();
+                ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
 
                 if (errorResponseInfo == null) return;
 
@@ -107,7 +106,7 @@
                 return;
             }
 
-            LoginResponseDTO? token = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
+            LoginResponseDto? token = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
 
             string tempKey = Guid.NewGuid().ToString();
         try

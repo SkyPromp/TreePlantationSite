@@ -28,7 +28,6 @@ namespace AP.BTP.WebAPI.Middleware
             if (context.Request.Headers.TryGetValue("Referer", out StringValues referer) &&
                 referer.ToString().Contains("/swagger", StringComparison.OrdinalIgnoreCase))
             {
-                // Create a dummy authenticated user
                 context.User = new ClaimsPrincipal(new ClaimsIdentity(
                     [new Claim(ClaimTypes.Role, "Admin")], "SwaggerBypass"
                 ));

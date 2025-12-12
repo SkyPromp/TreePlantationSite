@@ -8,9 +8,9 @@ namespace AP.BTP.Unittests.TreePicture
     [TestClass]
     public class DeleteTreePictureCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreePictureRepository> treePictureRepoMock;
-        private DeleteTreePictureCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITreePictureRepository> treePictureRepoMock = null!;
+        private DeleteTreePictureCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()

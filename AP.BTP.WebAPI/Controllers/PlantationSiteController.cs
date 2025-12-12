@@ -61,7 +61,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// Retrieves a specific plantation site by its ID.
         /// </summary>
         /// <param name="id">The ID of the plantation site.</param>
-        /// <returns>The requested <see cref="PlantationSiteDTO"/> if found.</returns>
+        /// <returns>The requested <see cref="PlantationSiteDto"/> if found.</returns>
         [Authorize(Roles = "Admin, Operator")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPlantationSiteById(int id)
@@ -73,22 +73,19 @@ namespace AP.BTP.WebAPI.Controllers
         /// Creates a new plantation site along with its zones.
         /// </summary>
         /// <param name="plantationSiteDTO">The plantation site data transfer object.</param>
-        /// <returns>The created <see cref="PlantationSiteDTO"/> along with its zones.</returns>
+        /// <returns>The created <see cref="PlantationSiteDto"/> along with its zones.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDTO plantationSiteDTO)
+        public async Task<IActionResult> CreatePlantationSite([FromBody] PlantationSiteDto plantationSiteDTO)
         {
-            ICollection<ZoneDTO>? zones = plantationSiteDTO.Zones;
-            plantationSiteDTO.Zones = null; // avoid duplicated instances in database
+            ICollection<ZoneDto>? zones = plantationSiteDTO.Zones;
+            plantationSiteDTO.Zones = null;
 
-            PlantationSiteDTO newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
-
-            Console.WriteLine($"- zones amount: {zones?.Count() ?? -1}");
-            Console.WriteLine($"- newPlantationSiteId: {newPlantationSite.Id}");
+            PlantationSiteDto newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
 
             if (zones != null)
             {
-                foreach (ZoneDTO zone in zones) zone.PlantationSiteId = newPlantationSite.Id;
+                foreach (ZoneDto zone in zones) zone.PlantationSiteId = newPlantationSite.Id;
 
                 await mediator.Send(new AddZonesManyCommand() { Zones = zones });
             }
@@ -103,19 +100,19 @@ namespace AP.BTP.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The ID of the plantation site to update.</param>
         /// <param name="plantationSiteDTO">The updated plantation site data transfer object.</param>
-        /// <returns>The updated <see cref="PlantationSiteDTO"/>.</returns>
+        /// <returns>The updated <see cref="PlantationSiteDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePlantationSite(int id, [FromBody] PlantationSiteDTO plantationSiteDTO)
+        public async Task<IActionResult> UpdatePlantationSite(int id, [FromBody] PlantationSiteDto plantationSiteDTO)
         {
             if (plantationSiteDTO == null) return BadRequest("Missing parameter: plantationSite");
             if (id != plantationSiteDTO.Id) return BadRequest("Mismatched ID.");
 
-            List<ZoneDTO> zones = plantationSiteDTO.Zones?.ToList() ?? new List<ZoneDTO>();
+            List<ZoneDto> zones = plantationSiteDTO.Zones?.ToList() ?? new List<ZoneDto>();
 
-            PlantationSiteDTO newPlantationSite = await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO });
+            PlantationSiteDto newPlantationSite = await mediator.Send(new UpdatePlantationSiteCommand() { UpdatedSite = plantationSiteDTO });
 
-            foreach (ZoneDTO zone in zones ?? [])
+            foreach (ZoneDto zone in zones ?? [])
             {
                 if (zone.Id == 0) await mediator.Send(new AddZoneCommand() { Zone = zone });
                 else await mediator.Send(new UpdateZoneCommand() { Zone = zone });

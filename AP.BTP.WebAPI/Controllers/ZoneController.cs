@@ -34,19 +34,19 @@ namespace AP.BTP.WebAPI.Controllers
         /// Retrieves a zone by its ID.
         /// </summary>
         /// <param name="id">The ID of the zone to retrieve.</param>
-        /// <returns>The <see cref="ZoneDTO"/> corresponding to the specified ID.</returns>
+        /// <returns>The <see cref="ZoneDto"/> corresponding to the specified ID.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetZoneById(int id)
         {
             return Ok(await mediator.Send(new GetZoneByIdQuery() { Id = id }));
         }
 
-        // <summary>
+        /// <summary>
         /// Retrieves all zones for a given plantation site.
         /// </summary>
         /// <param name="plantationSiteId">The ID of the plantation site to filter zones by.</param>
         /// <returns>
-        /// A list of <see cref="ZoneDTO"/> for the specified plantation site, 
+        /// A list of <see cref="ZoneDto"/> for the specified plantation site, 
         /// or a <see cref="BadRequestResult"/> if the plantationSiteId is not provided.
         /// </returns>
         [HttpGet]
@@ -61,25 +61,25 @@ namespace AP.BTP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Adds a new zone either from a provided <see cref="ZoneDTO"/> or by specifying a tree and plantation site ID.
+        /// Adds a new zone either from a provided <see cref="ZoneDto"/> or by specifying a tree and plantation site ID.
         /// </summary>
         /// <param name="zone">Optional zone object to create.</param>
         /// <param name="treeId">Optional tree ID to associate with the new zone.</param>
         /// <param name="plantationSiteId">Optional plantation site ID to associate with the new zone.</param>
-        /// <returns>The newly created <see cref="ZoneDTO"/> or a <see cref="BadRequestResult"/> if parameters are invalid.</returns>
+        /// <returns>The newly created <see cref="ZoneDto"/> or a <see cref="BadRequestResult"/> if parameters are invalid.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddZoneByParams([FromBody] ZoneDTO? zone, [FromQuery] int? treeId, int? plantationSiteId)
+        public async Task<IActionResult> AddZoneByParams([FromBody] ZoneDto? zone, [FromQuery] int? treeId, int? plantationSiteId)
         {
             if(zone != null)
             {
                 return Created("", await mediator.Send(new AddZoneCommand() { Zone = zone }));
             } else if(treeId != null && plantationSiteId != null)
             {
-                TreeDTO? tree = await mediator.Send(new GetTreeByIdQuery() { Id=treeId.Value });
-                PlantationSiteDTO? plantationSite = await mediator.Send(new GetPlantationSiteByIdQuery() { Id=plantationSiteId.Value });
+                TreeDto? tree = await mediator.Send(new GetTreeByIdQuery() { Id=treeId.Value });
+                PlantationSiteDto? plantationSite = await mediator.Send(new GetPlantationSiteByIdQuery() { Id=plantationSiteId.Value });
 
-                return Created("", await mediator.Send(new AddZoneCommand() { Zone = new ZoneDTO() { PlantationSiteId = plantationSite.Id, TreeId = tree.Id } }));
+                return Created("", await mediator.Send(new AddZoneCommand() { Zone = new ZoneDto() { PlantationSiteId = plantationSite.Id, TreeId = tree.Id } }));
             }
 
             return BadRequest("Incorrect parameters given");

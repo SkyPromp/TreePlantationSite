@@ -1,3 +1,4 @@
+using AP.BTP.Application.Interfaces;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// Initializes a new instance of the <see cref="TreePictureRepository"/> class.
         /// </summary>
         /// <param name="context">The database context used for accessing <see cref="TreePicture"/> entities.</param>
-        public TreePictureRepository(BTPContext context)
+        public TreePictureRepository(BtpContext context)
         {
             dbSet = context.Set<TreePicture>();
         }
@@ -72,7 +73,7 @@ namespace AP.BTP.Infrastructure.Repositories
         public async Task<ICollection<TreePicture>> GetAllByTreeId(int treeId)
         {
             return await dbSet
-                .Where(tp => tp.TreeId == treeId && tp.IsDeleted != true)
+                .Where(tp => tp.TreeId == treeId && !tp.IsDeleted)
                 .ToListAsync();        
         }
 

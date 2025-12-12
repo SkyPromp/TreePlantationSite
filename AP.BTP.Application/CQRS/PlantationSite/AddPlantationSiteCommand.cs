@@ -9,12 +9,12 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a command to create a new plantation site in the system.
     /// </summary>
-    public class AddPlantationSiteCommand : IRequest<PlantationSiteDTO>
+    public class AddPlantationSiteCommand : IRequest<PlantationSiteDto>
     {
         /// <summary>
         /// The data transfer object (DTO) containing the details of the plantation site to be created.
         /// </summary>
-        public required PlantationSiteDTO PlantationSite { get; set; }
+        public required PlantationSiteDto PlantationSite { get; set; }
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="AddPlantationSiteCommand"/> by creating a new plantation site and returning its corresponding DTO.
     /// </summary>
-    public class AddPlantationSiteCOmmandHandler: IRequestHandler<AddPlantationSiteCommand, PlantationSiteDTO>
+    public class AddPlantationSiteCOmmandHandler: IRequestHandler<AddPlantationSiteCommand, PlantationSiteDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -97,15 +97,15 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// </summary>
         /// <param name="request">The command containing the plantation site details to be created.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="PlantationSiteDTO"/> representing the newly created plantation site.</returns>
-        public async Task<PlantationSiteDTO> Handle(AddPlantationSiteCommand request, CancellationToken cancellationToken)
+        /// <returns>A <see cref="PlantationSiteDto"/> representing the newly created plantation site.</returns>
+        public async Task<PlantationSiteDto> Handle(AddPlantationSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite plantationSite = mapper.Map<Domain.PlantationSite>(request.PlantationSite);
 
             await uow.PlantationSiteRepository.Create(plantationSite);
             await uow.Commit();
 
-            return mapper.Map<PlantationSiteDTO>(plantationSite);
+            return mapper.Map<PlantationSiteDto>(plantationSite);
         }
     }
 }

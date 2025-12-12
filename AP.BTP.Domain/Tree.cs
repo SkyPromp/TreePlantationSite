@@ -59,6 +59,6 @@ namespace AP.BTP.Domain
         /// Gets or sets the collection of tree pictures for the tree.
         /// This property is ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore] public ICollection<TreePicture> TreePictures = new List<TreePicture>();
+        [JsonIgnore] public ICollection<TreePicture> TreePictures { get; set; } = new List<TreePicture>();
     }
 }

@@ -31,14 +31,14 @@ namespace AP.BTP.Infrastructure.Extentions
         }
 
         /// <summary>
-        /// Registers the application's <see cref="BTPContext"/> with SQL Server using connection string and retry policy configuration.
+        /// Registers the application's <see cref="BtpContext"/> with SQL Server using connection string and retry policy configuration.
         /// </summary>
         /// <param name="services">The service collection to register services into.</param>
         /// <param name="configuration">The application configuration used to retrieve the connection string named "Default".</param>
         /// <returns>The updated <see cref="IServiceCollection"/> instance.</returns>
         public static IServiceCollection RegisterDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<BTPContext>(options =>
+            services.AddDbContext<BtpContext>(options =>
                         options.UseSqlServer(configuration.GetConnectionString("Default"),
                         sqlOptions => sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null))
             );

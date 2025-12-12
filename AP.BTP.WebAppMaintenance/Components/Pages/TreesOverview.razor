@@ -26,10 +26,10 @@
 <div class="container-fluid">
     @if (response?.Items != null)
     {
-        @foreach (List<TreeDTO> row in Rows)
+        @foreach (List<TreeDto> row in Rows)
         {
-            <div class="row mb-2">
-                @foreach (TreeDTO item in row)
+            <div class="row">
+                @foreach (TreeDto item in row)
                 {
                     <div class="col-md-4 gap-2 my-1">
                         <Card Class="shadow border" Style="border-radius: 24px; padding: 2vh 4vh">
@@ -101,11 +101,6 @@
 
 @code {
     /// <summary>
-    /// Indicates whether an API call or operation is in progress.
-    /// </summary>
-    private bool isLoading = false;
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
@@ -118,7 +113,7 @@
     /// <summary>
     /// The currently selected tree being deleted.
     /// </summary>
-    private TreeDTO? selectedTree;
+    private TreeDto? selectedTree;
 
     /// <summary>
     /// Current search text entered by the user for filtering trees.
@@ -133,7 +128,7 @@
     /// <summary>
     /// Holds the paged response of trees from the API.
     /// </summary>
-    PagedResponseDTO<TreeDTO>? response;  // TODO should not be stored? just store an IEnumerable<...DTO>????
+    PagedResponseDto<TreeDto>? response;  // TODO should not be stored? just store an IEnumerable<...Dto>????
 
     /// <summary>
     /// The current page number being displayed.
@@ -143,12 +138,12 @@
     /// <summary>
     /// Number of cards to display per row in the UI.
     /// </summary>
-    private int cardsPerRow = 3;
+    private readonly int cardsPerRow = 3;
 
     /// <summary>
     /// Maximum number of rows per page.
     /// </summary>
-    private int maxRows = 2;
+    private readonly int maxRows = 2;
 
     /// <summary>
     /// Number of items displayed per page, calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>.
@@ -169,7 +164,7 @@
     /// <summary>
     /// Stores the base64-encoded image data for trees, keyed by tree ID as a string.
     /// </summary>
-    private Dictionary<string, string> images = new();
+    private readonly Dictionary<string, string> images = new();
 
     /// <summary>
     /// Represents the current authenticated user.
@@ -201,8 +196,8 @@
 
         if (!string.IsNullOrWhiteSpace(searchText)) url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<TreeDTO>>(url);
-
+        response = await client.GetFromJsonAsync<PagedResponseDto<TreeDto>>(url);
+        
         if(response == null)
         {
             EnqueueToast(message: "De bomen konnen niet worden ingeladen.", ToastType.Success);
@@ -210,7 +205,7 @@
             return;
         }
 
-        foreach (TreeDTO tree in response.Items){
+        foreach (TreeDto tree in response.Items){
             await GetFavouriteTreePicture(tree.Id);
         }
 
@@ -271,10 +266,10 @@
 
     /// <summary>
     /// Groups the trees into rows for display based on <see cref="cardsPerRow"/>.
-    /// Each row is represented as a list of <see cref="TreeDTO"/>.
+    /// Each row is represented as a list of <see cref="TreeDto"/>.
     /// </summary>
-    private IEnumerable<List<TreeDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<TreeDTO>())
+    private IEnumerable<List<TreeDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<TreeDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
@@ -284,15 +279,14 @@
     /// </summary>
     private async Task DeleteTree()
     {
-        isLoading = true;
         if (selectedTree == null) return;
 
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"Tree/{selectedTree.Id}");
+            HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"Tree/{selectedTree.Id}");
 
-            if (response.IsSuccessStatusCode)
+            if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
                 StateHasChanged();
@@ -312,7 +306,6 @@
             EnqueueToast(message: $"Fout bij het verwijderen van gebruiker, de taak is geannuleerd: {ex.Message}", ToastType.Success);
         }
         await CancelDeleteTree();
-        isLoading = false;
     }
 
     /// <summary>
@@ -348,21 +341,17 @@
     /// <param name="id">The ID of the tree to fetch pictures for.</param>
     private async Task GetFavouriteTreePicture(int id){
         HttpClient client = HttpClientFactory.CreateClient("BTPApi");
-
-        List<TreePictureDTO>? pictures = await client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{id}");
+        
+        List<TreePictureDto>? pictures = await client.GetFromJsonAsync<List<TreePictureDto>>($"TreePicture/{id}");
 
         if (pictures == null || pictures.Count <= 0)
-        {
-            EnqueueToast(message: "Geen foto kon worden gevonden.", ToastType.Warning);
-
             return;
-        }
 
-        if(pictures.Any(p => p.IsFavourite == true)){
-            TreePictureDTO? picture = pictures.Find(p => p.IsFavourite == true)!;
+        if(pictures.Any(p => p.IsFavourite)){
+            TreePictureDto? picture = pictures.Find(p => p.IsFavourite)!;
             await GenerateImage(id, picture.Path);
         } else {
-            TreePictureDTO? picture = pictures.OrderBy(p => p.Id).FirstOrDefault()!;
+            TreePictureDto? picture = pictures.OrderBy(p => p.Id).FirstOrDefault()!;
             await GenerateImage(id, picture.Path);
         }
     }
@@ -381,14 +370,14 @@
             return;
         }
 
-        HttpClient client = HttpClientFactory.CreateClient("BTPApi");
+        HttpClient client = HttpClientFactory.CreateClient("BTPApi");  // TODO eenmalig definieren, niet bij iedere http call (in verschillende .razer bestanden)
 
         try
         {
-            HttpResponseMessage response = await client.GetAsync($"File/{path}");
-            response.EnsureSuccessStatusCode();
-            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-            string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+            HttpResponseMessage httpResponseMessage = await client.GetAsync($"File/{path}");
+            httpResponseMessage.EnsureSuccessStatusCode();
+            byte[] imageBytes = await httpResponseMessage.Content.ReadAsByteArrayAsync();
+            string contentType = httpResponseMessage.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
             string base64Image = Convert.ToBase64String(imageBytes);
             images[key.ToString()] = $"data:{contentType};base64,{base64Image}";
         } catch (InvalidOperationException e)

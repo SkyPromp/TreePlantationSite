@@ -3,7 +3,7 @@ namespace AP.BTP.Contracts.DTOs.PlantNet
     /// <summary>
     /// Represents a single identification result returned by the PlantNet service.
     /// </summary>    
-    public record PlantNetResultDTO
+    public record PlantNetResultDto
     {
         /// <summary>
         /// Gets or sets the confidence score of the identification.
@@ -14,6 +14,6 @@ namespace AP.BTP.Contracts.DTOs.PlantNet
         /// Gets or sets the species information associated with this result.
         /// May be null if the service could not determine a species.
         /// </summary>        
-        public PlantNetSpeciesDTO? Species { get; set; }
+        public PlantNetSpeciesDto? Species { get; set; }
     }
 }

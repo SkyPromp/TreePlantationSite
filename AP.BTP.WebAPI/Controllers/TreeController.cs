@@ -32,7 +32,7 @@ namespace AP.BTP.WebAPI.Controllers
         /// Retrieves a tree by its unique ID.
         /// </summary>
         /// <param name="id">The ID of the tree to retrieve.</param>
-        /// <returns>The <see cref="TreeDTO"/> matching the given ID, or 404 if not found.</returns>
+        /// <returns>The <see cref="TreeDto"/> matching the given ID, or 404 if not found.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTreeById(int id)
         {
@@ -70,11 +70,11 @@ namespace AP.BTP.WebAPI.Controllers
         /// <summary>
         /// Adds a new tree to the system.
         /// </summary>
-        /// <param name="tree">The <see cref="TreeDTO"/> representing the tree to add.</param>
-        /// <returns>The newly created <see cref="TreeDTO"/>.</returns>
+        /// <param name="tree">The <see cref="TreeDto"/> representing the tree to add.</param>
+        /// <returns>The newly created <see cref="TreeDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddTree([FromBody] TreeDTO tree)
+        public async Task<IActionResult> AddTree([FromBody] TreeDto tree)
         {
             return Created("", await mediator.Send(new AddTreeCommand() { Tree = tree }));
         }
@@ -82,11 +82,11 @@ namespace AP.BTP.WebAPI.Controllers
         /// <summary>
         /// Updates an existing tree.
         /// </summary>
-        /// <param name="tree">The <see cref="TreeDTO"/> containing updated tree data.</param>
-        /// <returns>The updated <see cref="TreeDTO"/>.</returns>
+        /// <param name="tree">The <see cref="TreeDto"/> containing updated tree data.</param>
+        /// <returns>The updated <see cref="TreeDto"/>.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<IActionResult> EditTree([FromBody] TreeDTO tree)
+        public async Task<IActionResult> EditTree([FromBody] TreeDto tree)
         {
             return Ok(await mediator.Send(new EditTreeCommand() { Tree = tree }));
         }
@@ -100,8 +100,6 @@ namespace AP.BTP.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTree(int id)
         {
-            Console.WriteLine($"Delete tree controller, delete: {id}");
-
             await mediator.Send(new DeleteTreeCommand() { Id = id });
 
             return NoContent();

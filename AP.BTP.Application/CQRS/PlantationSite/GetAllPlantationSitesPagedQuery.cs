@@ -8,7 +8,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a query to retrieve a paginated list of plantation sites, optionally filtered by a search term.
     /// </summary>
-    public class GetAllPlantationSitesPagedQuery: IRequest<PagedResponseDTO<PlantationSiteDTO>>
+    public class GetAllPlantationSitesPagedQuery: IRequest<PagedResponseDto<PlantationSiteDto>>
     {
         /// <summary>
         /// The page number to retrieve.
@@ -31,7 +31,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="GetAllPlantationSitesPagedQuery"/> by retrieving a paginated list of plantation sites from the database.
     /// </summary>
-    public class GetAllPlantationSitesPagedQueryHandler: IRequestHandler<GetAllPlantationSitesPagedQuery, PagedResponseDTO<PlantationSiteDTO>>
+    public class GetAllPlantationSitesPagedQueryHandler: IRequestHandler<GetAllPlantationSitesPagedQuery, PagedResponseDto<PlantationSiteDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -55,15 +55,15 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// <returns>
         /// A <see cref="PagedResponse{T}"/> containing the paginated plantation sites and related pagination metadata.
         /// </returns>
-        public async Task<PagedResponseDTO<PlantationSiteDTO>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResponseDto<PlantationSiteDto>> Handle(GetAllPlantationSitesPagedQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             (IEnumerable<Domain.PlantationSite> items, int totalCount) = await uow.PlantationSiteRepository.GetAllPaged(request.PageNr, request.PageSize, request.Search, request.SortAscending);
 
-            return new PagedResponseDTO<PlantationSiteDTO>
+            return new PagedResponseDto<PlantationSiteDto>
             {
-                Items = mapper.Map<IEnumerable<PlantationSiteDTO>>(items),
+                Items = mapper.Map<IEnumerable<PlantationSiteDto>>(items),
                 PageNumber = request.PageNr,
                 PageSize = request.PageSize,
                 TotalItems = totalCount

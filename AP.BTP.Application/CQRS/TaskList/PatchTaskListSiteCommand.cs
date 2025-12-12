@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.TaskList
     /// <summary>
     /// Represents a command to partially update a task list (e.g., updating only the PlantationSiteId).
     /// </summary>
-    public class PatchTaskListSiteCommand : IRequest<TaskListDTO>
+    public class PatchTaskListSiteCommand : IRequest<TaskListDto>
     {
         /// <summary>
         /// The ID of the task list to update.
@@ -43,25 +43,24 @@ namespace AP.BTP.Application.CQRS.TaskList
                 })
                 .WithMessage("Task list does not exist or has been deleted");
 
-            When(x => x.PlantationSiteId.HasValue, () =>
-            {
-                RuleFor(x => x.PlantationSiteId.Value)
-                    .GreaterThan(0)
-                    .WithMessage("Plantation site ID must be greater than 0 when specified")
-                    .MustAsync(async (siteId, cancellation) => 
-                    {
-                        Domain.PlantationSite? site = await uow.PlantationSiteRepository.GetById(siteId);
-                        return site != null && !site.IsDeleted;
-                    })
-                    .WithMessage("Plantation site does not exist or has been deleted");
-            });
+            RuleFor(x => x.PlantationSiteId)
+                .GreaterThan(0)
+                .When(x => x.PlantationSiteId.HasValue)
+                .WithMessage("Plantation site ID must be greater than 0 when specified")
+                .MustAsync(async (siteId, cancellation) =>
+                {
+                    if (!siteId.HasValue) return true;
+                    Domain.PlantationSite? site = await uow.PlantationSiteRepository.GetById(siteId.Value);
+                    return site != null && !site.IsDeleted;
+                })
+                .WithMessage("Plantation site does not exist or has been deleted");
         }
     }
 
     /// <summary>
     /// Handles the <see cref="PatchTaskListSiteCommand"/> by partially updating the task list in the database.
     /// </summary>
-    public class PatchTaskListSiteCommandHandler : IRequestHandler<PatchTaskListSiteCommand, TaskListDTO>
+    public class PatchTaskListSiteCommandHandler : IRequestHandler<PatchTaskListSiteCommand, TaskListDto>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -82,8 +81,8 @@ namespace AP.BTP.Application.CQRS.TaskList
         /// </summary>
         /// <param name="request">The command containing the task list ID and fields to update.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The updated <see cref="TaskListDTO"/>.</returns>
-        public async Task<TaskListDTO> Handle(PatchTaskListSiteCommand request, CancellationToken cancellationToken)
+        /// <returns>The updated <see cref="TaskListDto"/>.</returns>
+        public async Task<TaskListDto> Handle(PatchTaskListSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.TaskList? taskList = await uow.TaskListRepository.GetById(request.TaskListId);
             
@@ -97,7 +96,7 @@ namespace AP.BTP.Application.CQRS.TaskList
             uow.TaskListRepository.Update(taskList);
             await uow.Commit();
 
-            return mapper.Map<TaskListDTO>(taskList);
+            return mapper.Map<TaskListDto>(taskList);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <param name="username">The user's username, if available.</param>
     /// <param name="created_at">The date and time the user account was created.</param>
     /// <param name="app_metadata">Additional metadata associated with the user, stored as a JSON element.</param>
-    public record Auth0UserDTO
+    public record Auth0UserDto
     (
         string user_id,
         string email,

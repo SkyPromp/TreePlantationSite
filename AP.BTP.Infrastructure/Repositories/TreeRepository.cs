@@ -1,6 +1,4 @@
-﻿using AP.BTP.Application.CQRS;
-using AP.BTP.Application.Interfaces;
-using AP.BTP.Contracts.DTOs;
+﻿using AP.BTP.Application.Interfaces;
 using AP.BTP.Domain;
 using AP.BTP.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +9,15 @@ namespace AP.BTP.Infrastructure.Repositories
     /// Repository for managing <see cref="Tree"/> entities in the database.
     /// Implements <see cref="ITreeRepository"/>.
     /// </summary>
-    public class TreeRepository: ITreeRepository
+    public class TreeRepository : ITreeRepository
     {
         private readonly DbSet<Tree> dbSet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeRepository"/> class.
         /// </summary>
-        /// <param name="context">The <see cref="BTPContext"/> used to access the database.</param>
-        public TreeRepository(BTPContext context)
+        /// <param name="context">The <see cref="BtpContext"/> used to access the database.</param>
+        public TreeRepository(BtpContext context)
         {
             this.dbSet = context.Set<Tree>();
         }
@@ -85,7 +83,7 @@ namespace AP.BTP.Infrastructure.Repositories
                 .Where(tree => !tree.IsDeleted)
                 .OrderBy(tree => tree.Species).ToListAsync();
         }
-        
+
         /// <summary>
         /// Retrieves all <see cref="Tree"/> entities that are not soft-deleted.
         /// <param name="search">Optional search string to filter by species name.</param>
@@ -94,7 +92,7 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             return await this.dbSet
                 .Where(tree => !tree.IsDeleted)
-                .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true)
+                .Where(tree => string.IsNullOrWhiteSpace(search) || EF.Functions.Like(tree.Species, $"%{search}%"))
                 .OrderBy(tree => tree.Species).ToListAsync();
         }
 
@@ -110,10 +108,10 @@ namespace AP.BTP.Infrastructure.Repositories
         {
             IQueryable<Tree> query = dbSet
                 .Where(tree => !tree.IsDeleted)
-                .Where(tree => ((search ?? "") != "") ? tree.Species.ToLower().Contains(search!.ToLower()) : true);  // This is delegated, 1 Where() is less readable than 2
+                .Where(tree => string.IsNullOrEmpty(search) || EF.Functions.Like(tree.Species, $"%{search}%"));
 
-            query = sortAscending 
-                ? query.OrderBy(tree => tree.Species) 
+            query = sortAscending
+                ? query.OrderBy(tree => tree.Species)
                 : query.OrderByDescending(tree => tree.Species);
 
             int totalCount = await query.CountAsync();
@@ -122,7 +120,7 @@ namespace AP.BTP.Infrastructure.Repositories
                                 .Skip((pageNr - 1) * pageSize)
                                 .Take(pageSize)
                                 .ToListAsync();
-                                
+
             return (items, totalCount);
         }
 

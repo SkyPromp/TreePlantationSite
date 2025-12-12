@@ -105,7 +105,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (ZoneDTO zone in plantationSite?.Zones ?? [])
+                        @foreach (ZoneDto zone in plantationSite?.Zones ?? [])
                         {
                             <tr>
                                 <td>@zone.Name?.Trim()</td>
@@ -171,7 +171,7 @@
                     <label class="label">Boomsoort</label>
                     <TextInput @bind-Value="@searchTreeText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 25vw; height: 5vh" />
                     <select @bind="this.newZone.TreeId" size="3" class="form-select mb-3">
-                        @foreach (TreeDTO tree in this.Trees ?? [])
+                        @foreach (TreeDto tree in this.Trees ?? [])
                         {
                             <option value="@tree.Id">@tree.Species</option>
                         }
@@ -211,7 +211,7 @@
     /// <summary>
     /// The ID of the plantation site to load. This is a component parameter.
     /// </summary>
-    PlantationSiteDTO? plantationSite = new PlantationSiteDTO()
+    PlantationSiteDto? plantationSite = new PlantationSiteDto()
     {
         Id = 0,
         Name = "",
@@ -222,7 +222,7 @@
         PostalCode = 0,
         Size = 0.0,
         GroundPlan = "",
-        Zones = new List<ZoneDTO>()
+        Zones = new List<ZoneDto>()
     };
 
     /// <summary>
@@ -258,11 +258,11 @@
     /// <summary>
     /// Returns a new, empty zone DTO associated with the current plantation site.
     /// </summary>
-    private ZoneDTO EmptyZone
+    private ZoneDto EmptyZone
     {
         get
         {
-            return new ZoneDTO()
+            return new ZoneDto()
             {
                 Id = 0,
                 PlantationSiteId = this.plantationSite?.Id ?? 0,
@@ -299,17 +299,17 @@
     /// <summary>
     /// Holds the new zone that is being added.
     /// </summary>
-    private ZoneDTO? newZone;
+    private ZoneDto? newZone;
 
     /// <summary>
     /// List of available trees for assignment to zones.
     /// </summary>
-    private IEnumerable<TreeDTO>? Trees;
+    private IEnumerable<TreeDto>? Trees;
 
     /// <summary>
     /// HttpClient instance for API calls.
     /// </summary>
-    HttpClient? client;
+    HttpClient client = default!;
 
     private bool showExitPopup = false;
 
@@ -323,11 +323,15 @@
 
         if (this.id != 0)
         {
-            this.plantationSite = await this.client.GetFromJsonAsync<PlantationSiteDTO>($"PlantationSite/{this.id}");
+            PlantationSiteDto? response = await this.client.GetFromJsonAsync<PlantationSiteDto>($"PlantationSite/{this.id}");
 
-            if (!string.IsNullOrEmpty(this.plantationSite?.GroundPlan))
+            if (response != null)
             {
-                await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
+                this.plantationSite = response;
+                if (!string.IsNullOrEmpty(this.plantationSite.GroundPlan))
+                {
+                    await this.LoadImagePreview(client, this.plantationSite.GroundPlan);
+                }
             }
         }
 
@@ -343,12 +347,9 @@
         if (this.plantationSite == null || this.plantationSite.Id == 0)
             return;  // No toast needed, because there are no zones when a new plantationsite is created.
 
-        if (this.client == null)
-            return;
+        ICollection<ZoneDto>? response;
 
-        ICollection<ZoneDTO>? response;
-
-        response = await this.client.GetFromJsonAsync<ICollection<ZoneDTO>>($"Zone?plantationSiteId={this.plantationSite.Id}");
+        response = await this.client.GetFromJsonAsync<ICollection<ZoneDto>>($"Zone?plantationSiteId={this.plantationSite.Id}");
 
         if (response != null)
         {
@@ -365,16 +366,9 @@
     /// </summary>
     private async Task LoadTrees()
     {
-        if (this.client == null)
-        {
-            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
+        IEnumerable<TreeDto>? response;
 
-            return;
-        }
-
-        IEnumerable<TreeDTO>? response;
-
-        response = await this.client.GetFromJsonAsync<IEnumerable<TreeDTO>>("Tree/all" + (this.searchTreeText != null ? $"?search={this.searchTreeText}" : ""));
+        response = await this.client.GetFromJsonAsync<IEnumerable<TreeDto>>("Tree/all" + (this.searchTreeText != null? $"?search={this.searchTreeText}": ""));
 
         if (response != null)
         {
@@ -414,18 +408,17 @@
     /// <summary>
     /// Handles form submission for creating or updating a plantation site and its zones.
     /// </summary>
-    private async Task HandleValidSubmit()
-    {
-        if (this.client == null || this.plantationSite == null)
+    private async Task HandleValidSubmit(){
+        if (this.plantationSite == null)
         {
-            EnqueueToast(message: "De http-client of de kweeksite is niet succesvol geïnstantieerd!", ToastType.Warning);
+            EnqueueToast(message: "De kweeksite is niet succesvol geïnstantieerd!", ToastType.Warning);
 
             return;
         }
 
         HttpResponseMessage response;
 
-        foreach (ZoneDTO zone in this.plantationSite.Zones ?? [])
+        foreach (ZoneDto zone in this.plantationSite.Zones ?? [])
         {
             if (zone.Id < 0)
                 zone.Id = 0;
@@ -499,13 +492,6 @@
     {
         IBrowserFile file = e.File;
 
-        if (this.client == null)
-        {
-            EnqueueToast(message: "De http-client is niet succesvol geïnstantieerd!", ToastType.Warning);
-
-            return;
-        }
-
         if (!this.allowedGroundplanFileTypes.Contains(file.ContentType))
         {
             EnqueueToast(message: $"Het bestandstype {file.ContentType} is niet toegestaan.", ToastType.Warning);
@@ -547,9 +533,9 @@
     /// </summary>
     /// <param name="id">Tree ID.</param>
     /// <returns>The tree DTO or null if not found.</returns>
-    private TreeDTO? findTree(int? id)
+    private TreeDto? findTree(int? id)
     {
-        return id == null ? null : this.Trees?.Where(tree => tree.Id == id).FirstOrDefault() ?? null;
+        return id == null ? null : this.Trees?.FirstOrDefault(tree => tree.Id == id);
     }
 
     /// <summary>
@@ -586,13 +572,9 @@
             return;
         }
 
-        if (this.client != null)
+        if (this.DeleteZonesAction == null) this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
+        else this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
         {
-            if (this.DeleteZonesAction == null)
-                this.DeleteZonesAction = () => this.client.DeleteAsync($"Zone?id={id}");
-            else
-                this.DeleteZonesAction += () => this.client.DeleteAsync($"Zone?id={id}");
-
             this.plantationSite.Zones = this.plantationSite.Zones.Where(zone => zone.Id != id).ToList();
             EnqueueToast(message: "Het verwijderen van de zone wordt correct afgehandelt. Druk op \"Bewaar\" om finaal te verwijderen.", ToastType.Success);
         }
@@ -717,7 +699,7 @@
                 return;
             }
 
-            List<ZoneDTO> zones = this.plantationSite.Zones.ToList();
+            List<ZoneDto> zones = this.plantationSite.Zones.ToList();
             int index = zones.FindIndex(zone => zone.Id == newZone.Id);
 
             if (index == -1)
@@ -730,10 +712,11 @@
 
             zones[index] = newZone;
             this.plantationSite.Zones = zones;
-        } else
+        }
+        else
         {
             if (this.plantationSite.Zones == null)
-                this.plantationSite.Zones = new List<ZoneDTO>();
+                this.plantationSite.Zones = new List<ZoneDto>();
 
             this.plantationSite.Zones.Add(newZone);
         }
@@ -775,11 +758,11 @@
     /// Creates a temporary editable copy of the selected zone.
     /// </summary>
     /// <param name="zone">The zone to edit.</param>
-    private void OpenEditZone(ZoneDTO zone)
+    private void OpenEditZone(ZoneDto zone)
     {
         this.showZoneCreation = true;
 
-        this.newZone = new ZoneDTO()
+        this.newZone = new ZoneDto()
         {
             Id = zone.Id,
             PlantationSiteId = zone.PlantationSiteId,
@@ -804,7 +787,7 @@
 
         if (this.newZone == null)
         {
-            this.newZone = new ZoneDTO()
+            this.newZone = new ZoneDto()
             {
                 Id = this.tempAddedZoneIndex--,
                 PlantationSiteId = this.plantationSite?.Id ?? 0,

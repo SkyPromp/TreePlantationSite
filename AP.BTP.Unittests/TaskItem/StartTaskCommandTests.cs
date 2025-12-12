@@ -26,8 +26,8 @@ namespace AP.BTP.Unittests.TaskItem
 
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Domain.TaskList, TaskListDTO>().ReverseMap();
-                cfg.CreateMap<Domain.TaskItem, TaskItemDTO>().ReverseMap();
+                cfg.CreateMap<Domain.TaskList, TaskListDto>().ReverseMap();
+                cfg.CreateMap<Domain.TaskItem, TaskItemDto>().ReverseMap();
             });
 
             this.mapper = config.CreateMapper();
@@ -36,7 +36,7 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task Should_Have_Error_When_Already_Started()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now };
+            TaskItemDto taskItem = new TaskItemDto() { Id = 1, Title = "", Description = "", TaskListId = 1, StartTime = DateTime.Now };
             StartTaskCommand command = new StartTaskCommand() { TaskItem=taskItem };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
@@ -50,7 +50,7 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task Should_Have_Error_When_EndTime_Is_Not_Null()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1, EndTime = DateTime.Now };
+            TaskItemDto taskItem = new TaskItemDto() { Id = 1, Title = "", Description = "", TaskListId = 1, EndTime = DateTime.Now };
             StartTaskCommand command = new StartTaskCommand() { TaskItem=taskItem };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
@@ -64,10 +64,10 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task Should_Have_Error_When_TaskList_Is_Null()
         {
-            TaskItemDTO taskItem = new TaskItemDTO() { Id = 1, Title = "", Description = "", TaskListId = 1 };
+            TaskItemDto taskItem = new TaskItemDto() { Id = 1, Title = "", Description = "", TaskListId = 1 };
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskItem.TaskListId)).ReturnsAsync((Domain.TaskList?)null);
 
-            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
+            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDto() { Id=1, Title="", Description="", TaskListId=1 } };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
             NotFoundException ex = await Assert.ThrowsExceptionAsync<NotFoundException>(
@@ -92,7 +92,7 @@ namespace AP.BTP.Unittests.TaskItem
 
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
 
-            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
+            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDto() { Id=1, Title="", Description="", TaskListId=1 } };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
             StartStopTaskFailedException ex = await Assert.ThrowsExceptionAsync<StartStopTaskFailedException>(
@@ -115,7 +115,7 @@ namespace AP.BTP.Unittests.TaskItem
             };
             taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
 
-            TaskItemDTO taskItem = new TaskItemDTO { Id = 1, Title = "", Description = "", TaskListId = 1 };
+            TaskItemDto taskItem = new TaskItemDto { Id = 1, Title = "", Description = "", TaskListId = 1 };
             StartTaskCommand command = new StartTaskCommand { TaskItem = taskItem };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(uowMock.Object, mapper);
 
@@ -140,11 +140,15 @@ namespace AP.BTP.Unittests.TaskItem
             };
 
             this.taskListRepoMock.Setup(r => r.GetByIdUntracked(taskList.Id)).ReturnsAsync(taskList);
+            this.taskItemRepoMock.Setup(r => r.Update(It.IsAny<Domain.TaskItem>()));
 
-            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDTO() { Id=1, Title="", Description="", TaskListId=1 } };
+            StartTaskCommand command = new StartTaskCommand() { TaskItem=new TaskItemDto() { Id=1, Title="", Description="", TaskListId=1 } };
             StartTaskCommandHandler handler = new StartTaskCommandHandler(this.uowMock.Object, this.mapper);
 
-            await handler.Handle(command, CancellationToken.None);
+            TaskItemDto result = await handler.Handle(command, CancellationToken.None);
+
+            Assert.IsNotNull(result.StartTime, "The StartTime of the new task should be set.");
+            Assert.IsNull(result.EndTime, "The EndTime of the new task should be null while it is running.");
         }
     }
 }

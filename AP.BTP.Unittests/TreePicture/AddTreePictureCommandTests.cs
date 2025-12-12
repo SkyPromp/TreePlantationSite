@@ -9,9 +9,9 @@ namespace AP.BTP.Unittests.TreePicture
     [TestClass]
     public class AddTreePictureCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreeRepository> treeRepoMock;
-        private AddTreePictureCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITreeRepository> treeRepoMock = null!;
+        private AddTreePictureCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -29,7 +29,7 @@ namespace AP.BTP.Unittests.TreePicture
         {
             AddTreePictureCommand command = new AddTreePictureCommand
             {
-                TreePicture = new TreePictureDTO 
+                TreePicture = new TreePictureDto 
                 { 
                     Path = "", 
                     TreeId = 1,
@@ -48,7 +48,7 @@ namespace AP.BTP.Unittests.TreePicture
         {
             AddTreePictureCommand command = new AddTreePictureCommand
             {
-                TreePicture = new TreePictureDTO 
+                TreePicture = new TreePictureDto 
                 { 
                     Path = "test.jpg", 
                     TreeId = 0,
@@ -70,7 +70,7 @@ namespace AP.BTP.Unittests.TreePicture
 
             AddTreePictureCommand command = new AddTreePictureCommand
             {
-                TreePicture = new TreePictureDTO 
+                TreePicture = new TreePictureDto 
                 { 
                     Path = "photo.jpg", 
                     TreeId = 10,
@@ -92,7 +92,7 @@ namespace AP.BTP.Unittests.TreePicture
 
             AddTreePictureCommand command = new AddTreePictureCommand
             {
-                TreePicture = new TreePictureDTO 
+                TreePicture = new TreePictureDto 
                 { 
                     Path = "file.txt", 
                     TreeId = 1,
@@ -114,7 +114,7 @@ namespace AP.BTP.Unittests.TreePicture
 
             AddTreePictureCommand command = new AddTreePictureCommand
             {
-                TreePicture = new TreePictureDTO
+                TreePicture = new TreePictureDto
                 {
                     Path = "image.png",
                     TreeId = 3,

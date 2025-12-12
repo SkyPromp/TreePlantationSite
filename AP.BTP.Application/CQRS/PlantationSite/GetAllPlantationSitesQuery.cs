@@ -8,7 +8,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Represents a query to retrieve list of plantation sites, optionally filtered by a search term.
     /// </summary>
-    public class GetAllPlantationSitesQuery : IRequest<IEnumerable<PlantationSiteDTO>>
+    public class GetAllPlantationSitesQuery : IRequest<IEnumerable<PlantationSiteDto>>
     {
         /// <summary>
         /// The search term used to filter plantation sites by name or other criteria.
@@ -19,7 +19,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
     /// <summary>
     /// Handles the <see cref="GetAllPlantationSitesQuery"/> by retrieving list of plantation sites from the database.
     /// </summary>
-    public class GetAllPlantationSitesQueryHandler : IRequestHandler<GetAllPlantationSitesQuery, IEnumerable<PlantationSiteDTO>>
+    public class GetAllPlantationSitesQueryHandler : IRequestHandler<GetAllPlantationSitesQuery, IEnumerable<PlantationSiteDto>>
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -43,13 +43,13 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         /// <returns>
         /// A <see cref="List{T}"/> containing the plantation sites.
         /// </returns>
-        public async Task<IEnumerable<PlantationSiteDTO>> Handle(GetAllPlantationSitesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PlantationSiteDto>> Handle(GetAllPlantationSitesQuery request, CancellationToken cancellationToken)
         {
             if (request.Search == null) request.Search = "";
 
             IEnumerable<Domain.PlantationSite> items = await uow.PlantationSiteRepository.GetAllSearched(request.Search);
 
-            return mapper.Map<IEnumerable<PlantationSiteDTO>>(items);
+            return mapper.Map<IEnumerable<PlantationSiteDto>>(items);
         }
     }
 }

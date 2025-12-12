@@ -77,7 +77,15 @@
     /// <summary>
     /// Holds the data entered by the user for registration.
     /// </summary>
-    private RegisterUserDTO newUser = new RegisterUserDTO();
+    private readonly RegisterUserDto newUser = new RegisterUserDto
+    {
+        FirstName = string.Empty,
+        LastName = string.Empty,
+        PhoneNumber = string.Empty,
+        Email = string.Empty,
+        Password = string.Empty,
+        ConfirmPassword = string.Empty
+    };
 
     /// <summary>
     /// Holds the list of toast messages to display in the UI.
@@ -87,7 +95,7 @@
     /// <summary>
     /// The HTTP client used to communicate with the backend API.
     /// </summary>
-    private HttpClient? client;
+    private HttpClient client = default!;
 
     /// <summary>
     /// Indicates whether the password meets minimum length requirements.
@@ -128,10 +136,28 @@
     /// </summary>
     private async Task HandleValidSubmit()
     {
-        HttpResponseMessage response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
+        HttpResponseMessage response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
 
         if (response.IsSuccessStatusCode) Navigation.NavigateTo("/login");
-        else this.EnqueueToast(message: $"Er ging iets mis bij het registreren: {await response.Content.ReadAsStringAsync()}", type: ToastType.Warning);
+        else
+        {
+            this.EnqueueToast(message: "Er is een fout opgetreden tijdens het registreren.", type: ToastType.Warning);
+
+            ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
+
+            if (errorResponseInfo == null) return;
+
+            string errorMessage = errorResponseInfo.ErrorCode switch
+            {
+                "USER_ALREADY_EXISTS" => "Een gebruiker met deze naam bestaat al.",
+                "AUTH0_EMPTY_RESPONSE" => "De authenticatieprovider geeft een onverwacte fout.",
+                "AUTH0_USER_CREATION_FAILED" => "Een gebruiker met dit e-mail adres bestaat al.",
+                _ => ""
+            };
+
+            if (!string.IsNullOrEmpty(errorMessage)) this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
+
+        }
     }
 
     /// <summary>
@@ -146,7 +172,7 @@
     /// Helper method that determines which CSS class to apply to password rule indicators.
     /// </summary>
     /// <param name="condition">Whether the rule is met.</param>
-    private string GetClass(bool condition) => condition ? "text-success" : "text-muted";
+    private static string GetClass(bool condition) => condition ? "text-success" : "text-muted";
     
     /// Adds a toast message to the toast container.
     /// </summary>

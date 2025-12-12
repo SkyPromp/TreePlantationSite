@@ -8,13 +8,13 @@ namespace AP.BTP.Infrastructure.Context
     /// <summary>
     /// Represents the Entity Framework Core database context for the BTP application.
     /// </summary>
-    public class BTPContext : DbContext
+    public class BtpContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BTPContext"/> class using the specified options.
+        /// Initializes a new instance of the <see cref="BtpContext"/> class using the specified options.
         /// </summary>
         /// <param name="options">The options to configure the database context.</param>
-        public BTPContext(DbContextOptions<BTPContext> options) : base(options)
+        public BtpContext(DbContextOptions<BtpContext> options) : base(options)
         {
         }
 
@@ -67,7 +67,6 @@ namespace AP.BTP.Infrastructure.Context
             modelBuilder.Entity<TaskList>().Seed();
             modelBuilder.Entity<TaskItem>().Seed();
 
-            // TODO: Seed Zone with correct PlantationSite relation
             modelBuilder.Entity("PlantationSiteUser").HasData(
                 new { PlantationSitesId = 1, UsersId = 3 },
                 new { PlantationSitesId = 2, UsersId = 3 },

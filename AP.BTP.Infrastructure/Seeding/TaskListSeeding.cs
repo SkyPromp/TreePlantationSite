@@ -1,5 +1,6 @@
 ﻿using AP.BTP.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Globalization;
 
 namespace AP.BTP.Infrastructure.Seeding
 {
@@ -21,7 +22,11 @@ namespace AP.BTP.Infrastructure.Seeding
         public static void Seed(this EntityTypeBuilder<TaskList> modelBuilder)
         {
             Random random = new Random(1);
-            DateTime middleDate = DateTime.Parse("2026-01-16");
+            DateTime middleDate = DateTime.ParseExact(
+                "2026-01-16",
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            );
             int daysToSetDayToMonday = 4;
             List<TaskList> taskLists = new List<TaskList>();
 
@@ -35,7 +40,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 {
                     int weekday = i % 7;
 
-                    if ((weekday + dayoffset) % 7 == 5) dayoffset += 2;  // Only 5 days/week
+                    if ((weekday + dayoffset) % 7 == 5) dayoffset += 2;
 
                     int plantationSiteBaseId = ((i - daysToSetDayToMonday + dayoffset) / 7) % 2 + 1;
 

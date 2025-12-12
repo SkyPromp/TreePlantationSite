@@ -48,10 +48,10 @@
     @if (response?.Items != null && response?.Items.Count() > 0)
     {
         <div style="overflow-x:hidden; height: 52vh;">
-            @foreach (List<UserDTO> row in Rows)
+            @foreach (List<UserDto> row in Rows)
             {
                 <div class="row">
-                    @foreach (UserDTO item in row)
+                    @foreach (UserDto item in row)
                     {
                         <div class="p-2">
                             <Card Class="py-2 px-3 mb-0 border shadow">
@@ -116,23 +116,23 @@
                     <p>Kweeksite 1</p>
                     <select @bind="this.site1" class="form-select mb-3">
                         <option value=""></option>
-                        @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
+                        @foreach (PlantationSiteDto plantationSite in this.plantationSites)
                         {
                             <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
                         }
                     </select>
 
-                    <p>Kweeksite 2</p>
-                    <select @bind="this.site2" class="form-select mb-3">
-                        <option value=""></option>
-                        @foreach (PlantationSiteDTO plantationSite in this.plantationSites)
-                        {
-                            <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
-                        }
-                    </select>
-                }
-                @if (isLoading)
-                {
+                <p>Kweeksite 2</p>
+                <select @bind="this.site2" class="form-select mb-3">
+                    <option value=""></option>
+                    @foreach (PlantationSiteDto plantationSite in this.plantationSites)
+                    {
+                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site1)">@plantationSite.Name</option>
+                    }
+                </select>
+            }
+            @if (isLoading)
+            {
 
                     <div class="spinner-border align-self-center" role="status">
                         <span class="visually-hidden">Laden...</span>
@@ -177,7 +177,7 @@
     /// <summary>
     /// The paginated response containing pending users retrieved from the backend.
     /// </summary>
-    PagedResponseDTO<UserDTO>? response;  // TODO just use IEnumerable<...> not a respone
+    PagedResponseDto<UserDto>? response;  // TODO just use IEnumerable<...> not a respone
 
     /// <summary>
     /// The current page index of the user list being displayed.
@@ -187,12 +187,12 @@
     /// <summary>
     /// The number of cards (user entries) displayed per row.
     /// </summary>
-    private int cardsPerRow = 1;
+    private readonly int cardsPerRow = 1;
 
     /// <summary>
     /// The maximum number of rows of user cards displayed per page.
     /// </summary>
-    private int maxRows = 6;
+    private readonly int maxRows = 6;
 
     /// <summary>
     /// The calculated number of user cards displayed per page.
@@ -210,9 +210,9 @@
     private System.Timers.Timer? debounceTimer;
 
     /// <summary>
-    /// The HTTP client used for API communication. TODO: make optional and handle null cases.
+    /// The HTTP client used for API communication.
     /// </summary>
-    HttpClient client;  // TODO make optional and check if null
+    HttpClient client = default!;
 
     /// <summary>
     /// Flag indicating whether the edit user modal or section is visible.
@@ -223,7 +223,7 @@
     /// A collection of all plantation sites loaded from the API.
     /// Used to assign users to one or more sites.
     /// </summary>
-    private IEnumerable<PlantationSiteDTO> plantationSites = new List<PlantationSiteDTO>();
+    private IEnumerable<PlantationSiteDto> plantationSites = new List<PlantationSiteDto>();
 
     /// <summary>
     /// The first selected plantation site ID for the user being approved.
@@ -292,7 +292,7 @@
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDto<UserDto>>(url);
         StateHasChanged();
         await InvokeAsync(StateHasChanged);
     }
@@ -305,7 +305,7 @@
     {
         isLoading = true;
 
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDTO() { Role = selectedRole });
+        HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDto() { Role = selectedRole });
 
         if (!responseMessage.IsSuccessStatusCode)
         {
@@ -324,9 +324,9 @@
         if (site2.HasValue)
             selectedSites.Add(site2.Value);
 
-        UserDTO user = responseMessage.Content.ReadFromJsonAsync<UserDTO>().Result!;
+            UserDto user = responseMessage.Content.ReadFromJsonAsync<UserDto>().Result!;
 
-        await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
+        await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
         await CancelEditUser();
         this.EnqueueToast("Gebruiker is succesvol goedgekeurd!", ToastType.Success);
 
@@ -361,8 +361,8 @@
     /// <summary>
     /// Splits the list of users into rows for grid-based rendering in the UI.
     /// </summary>
-    private IEnumerable<List<UserDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<UserDTO>())
+    private IEnumerable<List<UserDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<UserDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());
@@ -372,16 +372,13 @@
     /// </summary>
     private async Task LoadPlantationSites()
     {
-        if (this.client == null)
-            return;
+        List<PlantationSiteDto>? plantationSiteDtoResponse;
 
-        List<PlantationSiteDTO>? response;
+        plantationSiteDtoResponse = await this.client.GetFromJsonAsync<List<PlantationSiteDto>>("PlantationSite/all");
 
-        response = await this.client.GetFromJsonAsync<List<PlantationSiteDTO>>("PlantationSite/all");
-
-        if (response != null)
+        if (plantationSiteDtoResponse != null)
         {
-            this.plantationSites = response;
+            this.plantationSites = plantationSiteDtoResponse;
             StateHasChanged();
         } else
         {
@@ -410,7 +407,7 @@
     /// <param name="id">The ID of the plantation site.</param>
     /// <param name="otherSite">The ID of the other selected site.</param>
     /// <returns>True if the site should be disabled; otherwise, false.</returns>
-    private bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
+    private static bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
     /// <summary>
     /// Rejects a pending user by sending a deletion request.
@@ -424,16 +421,16 @@
 
         try
         {
-            HttpResponseMessage response = await client.DeleteAsync($"user/{selectedUserId}");
+            HttpResponseMessage httpResponseMessage = await client.DeleteAsync($"user/{selectedUserId}");
 
-            if (response.IsSuccessStatusCode)
+            if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
                 EnqueueToast(message: "De gebruiker is correct afgewezen geweest.", ToastType.Success);
                 StateHasChanged();
             } else
             {
-                EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {response.StatusCode}", ToastType.Warning);
+                EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {httpResponseMessage.StatusCode}", ToastType.Warning);
             }
         } catch (InvalidOperationException e)
         {

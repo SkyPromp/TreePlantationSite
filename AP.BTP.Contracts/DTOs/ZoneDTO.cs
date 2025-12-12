@@ -5,7 +5,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Data Transfer Object (DTO) representing a zone within a plantation site.
     /// </summary>
-    public record ZoneDTO
+    public record ZoneDto
     {
         /// <summary>
         /// The unique identifier of the zone.

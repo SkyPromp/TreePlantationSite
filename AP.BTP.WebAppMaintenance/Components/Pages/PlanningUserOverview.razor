@@ -37,9 +37,9 @@
     @if (response?.Items != null && response?.Items.Count() > 0)
     {
         <div class="p-0" style="overflow-x:hidden; height: 52vh;">
-            @foreach (List<UserDTO> row in Rows)
+            @foreach (List<UserDto> row in Rows)
             {
-                @foreach (UserDTO item in row)
+                @foreach (UserDto item in row)
                 {
                     <div class="p-2">
                         <Card Class="py-2 px-3 border shadow">
@@ -97,7 +97,7 @@
     /// <summary>
     /// Holds the paged response containing operator users from the API.
     /// </summary>
-    PagedResponseDTO<UserDTO>? response;  // TODO why is this here? shouldn't be global or has a bad name
+    PagedResponseDto<UserDto>? response;  // TODO why is this here? shouldn't be global or has a bad name
 
     /// <summary>
     /// The current page number being displayed.
@@ -107,12 +107,12 @@
     /// <summary>
     /// Number of cards to display per row in the UI.
     /// </summary>
-    private int cardsPerRow = 1;
+    private readonly int cardsPerRow = 1;
 
     /// <summary>
     /// Maximum number of rows to display per page.
     /// </summary>
-    private int maxRows = 6;
+    private readonly int maxRows = 6;
 
     /// <summary>
     /// Number of users to display per page (calculated as <see cref="cardsPerRow"/> * <see cref="maxRows"/>).
@@ -133,7 +133,7 @@
     /// <summary>
     /// HttpClient used to call the backend API.
     /// </summary>
-    private HttpClient client;  // TODO should be nullable and checks to see if it's null
+    private HttpClient client = default!; 
 
     /// <summary>
     /// Indicates the sorting direction
@@ -172,7 +172,7 @@
         if (!string.IsNullOrWhiteSpace(searchText))
             url += $"&search={Uri.EscapeDataString(searchText)}";
 
-        response = await client.GetFromJsonAsync<PagedResponseDTO<UserDTO>>(url);
+        response = await client.GetFromJsonAsync<PagedResponseDto<UserDto>>(url);
         StateHasChanged();
     }
 
@@ -202,10 +202,10 @@
 
     /// <summary>
     /// Groups the operator users into rows for display based on <see cref="cardsPerRow"/>.
-    /// Each row is represented as a list of <see cref="UserDTO"/>.
+    /// Each row is represented as a list of <see cref="UserDto"/>.
     /// </summary>
-    private IEnumerable<List<UserDTO>> Rows =>
-    (response?.Items ?? Enumerable.Empty<UserDTO>())
+    private IEnumerable<List<UserDto>> Rows =>
+    (response?.Items ?? Enumerable.Empty<UserDto>())
         .Select((item, index) => new { item, index })
         .GroupBy(x => x.index / cardsPerRow)
         .Select(g => g.Select(x => x.item).ToList());

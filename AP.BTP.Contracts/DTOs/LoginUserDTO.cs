@@ -5,7 +5,7 @@ namespace AP.BTP.Contracts.DTOs
     /// <summary>
     /// Represents a data transfer object (DTO) for logging a user in.
     /// </summary>
-    public record LoginUserDTO
+    public record LoginUserDto
     {
         /// <summary>
         /// The email address of the user. Must be a valid email format.

@@ -27,7 +27,6 @@
 </div>
 
 @code {
-    private bool isAuthenticated;
     private ClaimsPrincipal? user;
 
     /// <summary>
@@ -86,7 +85,7 @@
     /// <summary>
     /// Represents a card displayed on the dashboard with a title, description, and navigation URL.
     /// </summary>
-    private class DashboardCard
+    private sealed class DashboardCard
     {
         /// <summary>
         /// Gets or sets the title of the dashboard card.

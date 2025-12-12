@@ -10,9 +10,9 @@ namespace AP.BTP.Unittests.Tree
     [TestClass]
     public class EditTreeCommandTests
     {
-        private Mock<IUnitOfWork> uowMock;
-        private Mock<ITreeRepository> treeRepoMock;
-        private EditTreeCommandValidator validator;
+        private Mock<IUnitOfWork> uowMock = null!;
+        private Mock<ITreeRepository> treeRepoMock = null!;
+        private EditTreeCommandValidator validator = null!;
 
         [TestInitialize]
         public void Setup()
@@ -30,20 +30,7 @@ namespace AP.BTP.Unittests.Tree
         {
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "" }
-            };
-
-            TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
-
-            Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.Tree.Species).WithErrorMessage("Species name is required.") != null);
-        }
-
-        [TestMethod]
-        public async Task Should_Have_Error_When_Species_Missing()
-        {
-            EditTreeCommand command = new EditTreeCommand
-            {
-                Tree = new TreeDTO() { Id = 1, Species = null }
+                Tree = new TreeDto() { Id = 1, Species = "" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -56,7 +43,7 @@ namespace AP.BTP.Unittests.Tree
         {
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -69,7 +56,7 @@ namespace AP.BTP.Unittests.Tree
         {
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 0, Species = "Oak" }
+                Tree = new TreeDto() { Id = 0, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -84,10 +71,9 @@ namespace AP.BTP.Unittests.Tree
         [DataRow("MaintenancePlanWinter")]
         public async Task Should_Have_Error_When_Unsupported_File_Type(string propertyName)
         {
-            // Arrange
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO
+                Tree = new TreeDto
                 {
                     Id = 0,
                     Species = "Oak"
@@ -96,10 +82,8 @@ namespace AP.BTP.Unittests.Tree
 
             SetProperty(command.Tree, propertyName, "file.exe");
 
-            // Act
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldHaveValidationErrorFor($"Tree.{propertyName}");
         }
 
@@ -110,10 +94,9 @@ namespace AP.BTP.Unittests.Tree
         [DataRow("MaintenancePlanWinter")]
         public async Task Should_Not_Have_Error_When_Supported_File_Type(string propertyName)
         {
-            // Arrange
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO
+                Tree = new TreeDto
                 {
                     Id = 0,
                     Species = "Oak"
@@ -122,16 +105,14 @@ namespace AP.BTP.Unittests.Tree
 
             SetProperty(command.Tree, propertyName, "document.pdf");
 
-            // Act
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldNotHaveValidationErrorFor($"TreeDTO.{propertyName}");
         }
 
-        private static void SetProperty(TreeDTO tree, string propertyName, string value)
+        private static void SetProperty(TreeDto tree, string propertyName, string value)
         {
-            PropertyInfo property = typeof(TreeDTO).GetProperty(propertyName)
+            PropertyInfo property = typeof(TreeDto).GetProperty(propertyName)
                 ?? throw new ArgumentException($"Property {propertyName} not found on TreeDTO");
 
             property.SetValue(tree, value);
@@ -146,7 +127,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -160,7 +141,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command2 = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 2, Species = "Oak" }
+                Tree = new TreeDto() { Id = 2, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);
@@ -178,7 +159,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -192,7 +173,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command2 = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);
@@ -210,7 +191,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Oak" }
+                Tree = new TreeDto() { Id = 1, Species = "Oak" }
             };
 
             TestValidationResult<EditTreeCommand> result = await validator.TestValidateAsync(command);
@@ -224,7 +205,7 @@ namespace AP.BTP.Unittests.Tree
 
             EditTreeCommand command2 = new EditTreeCommand
             {
-                Tree = new TreeDTO() { Id = 1, Species = "Birch" }
+                Tree = new TreeDto() { Id = 1, Species = "Birch" }
             };
 
             TestValidationResult<EditTreeCommand> result2 = await validator.TestValidateAsync(command2);

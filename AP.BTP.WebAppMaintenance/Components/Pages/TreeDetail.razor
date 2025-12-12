@@ -70,7 +70,8 @@
                             <label class="form-label">Lente</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring)) {
+                            @if (Tree != null && !string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring))
+                            {
                                 string fileKey = Tree.MaintenancePlanSpring;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -102,7 +103,7 @@
                             <label class="form-label">Zomer</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer)) {
                                 string fileKey = Tree.MaintenancePlanSummer;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -134,7 +135,7 @@
                             <label class="form-label">Herfst</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn)) {
                                 string fileKey = Tree.MaintenancePlanAutumn;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -166,7 +167,7 @@
                             <label class="form-label">Winter</label>
                         </div>
                         <div class="preview text-center w-100 h-100 d-flex align-items-center justify-content-around mt-2">
-                            @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
+                            @if (!string.IsNullOrWhiteSpace(Tree?.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter)) {
                                 string fileKey = Tree.MaintenancePlanWinter!;
                                 string? previewData = maintenancePreviews[fileKey];
                                 string filename = maintenanceFileNames[fileKey];
@@ -219,17 +220,17 @@
     /// <summary>
     /// Holds the details of the currently loaded tree.
     /// </summary>
-    private TreeDTO? Tree = new TreeDTO(){ Species = ""};
+    private TreeDto? Tree = new TreeDto(){ Species = ""};
 
     /// <summary>
     /// HTTP client used to call the backend API.
     /// </summary>
-    HttpClient? client;
+    HttpClient client = default!;
 
     /// <summary>
     /// Stores image identifiers mapped to their corresponding image paths or URLs.
     /// </summary>
-    private Dictionary<string, string> images = new();
+    private readonly Dictionary<string, string> images = new();
 
     /// <summary>
     /// Tracks the index of the currently displayed image within the collection.
@@ -240,19 +241,19 @@
     /// Previews for maintenance files.
     /// Key is the temporary GUID or filename, value is a base64 data URI.
     /// </summary>    
-    private Dictionary<string, string> maintenancePreviews = new();
+    private readonly Dictionary<string, string> maintenancePreviews = new();
 
     /// <summary>
     /// Stores the original filenames for uploaded maintenance files.
     /// Key is the temporary GUID or server filename, value is the original filename.
     /// </summary>    
-    private Dictionary<string, string> maintenanceFileNames = new();
+    private readonly Dictionary<string, string> maintenanceFileNames = new();
 
     /// <summary>
     /// Stores QR code images as base64 data URIs.
     /// Key is the file key (same as maintenance previews), value is the QR code image data URI.
     /// </summary>
-    private Dictionary<string, string> qrCodes = new();
+    private readonly Dictionary<string, string> qrCodes = new();
 
     /// <summary>
     /// Lifecycle method called when the component is initialized.
@@ -273,14 +274,7 @@
     /// <param name="id">The ID of the tree to load.</param>
     private async Task LoadTree(int id)
     {
-        if (this.client == null)
-        {
-            EnqueueToast(message: "Geen httpclient gevonden.", ToastType.Warning);
-
-            return;
-        }
-
-        TreeDTO? response = await this.client.GetFromJsonAsync<TreeDTO>($"Tree/{id}");
+        TreeDto? response = await this.client.GetFromJsonAsync<TreeDto>($"Tree/{id}");
 
         if (response != null)
         {
@@ -295,24 +289,17 @@
     /// Loads tree pictures from the API and stores them as base64 encoded images.
     /// </summary>
     private async Task GetTreePictures(){
-        if (this.client == null)
-        {
-            EnqueueToast(message: "Geen httpclient gevonden.", ToastType.Warning);
-
-            return;
-        }
-
         if(Tree == null){
             EnqueueToast(message: "Geen boom gevonden", ToastType.Warning);
 
             return;
         }
 
-        List<TreePictureDTO>? response = await this.client.GetFromJsonAsync<List<TreePictureDTO>>($"TreePicture/{Tree.Id}");
+        List<TreePictureDto>? response = await this.client.GetFromJsonAsync<List<TreePictureDto>>($"TreePicture/{Tree.Id}");
 
         if (response != null)
         {
-            foreach (TreePictureDTO pic in response){
+            foreach (TreePictureDto pic in response){
                 if(pic == null){
                     EnqueueToast(message: "Geen afbeelding gevonden", ToastType.Warning);
 
@@ -331,7 +318,7 @@
     /// <param name="filename">The filename of the picture to load.</param>
     private async Task LoadTreePicture(string filename)
     {
-        if (client == null || string.IsNullOrWhiteSpace(filename)) return;
+        if (string.IsNullOrWhiteSpace(filename)) return;
 
         try
         {
@@ -431,7 +418,7 @@
     {
         try
         {
-            HttpResponseMessage response = await client!.GetAsync($"File/{fileName}");
+            HttpResponseMessage response = await client.GetAsync($"File/{fileName}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -512,11 +499,14 @@
             byte[] qrCodeBytes = qrCode.GetGraphic(40);
             string base64QrCode = Convert.ToBase64String(qrCodeBytes);
 
-            // Todo use case/dictionary
-            string season = fileKey == Tree?.MaintenancePlanSpring ? "Lente" :
-                           fileKey == Tree?.MaintenancePlanSummer ? "Zomer" :
-                           fileKey == Tree?.MaintenancePlanAutumn ? "Herfst" :
-                           fileKey == Tree?.MaintenancePlanWinter ? "Winter" : "Onbekend";
+            string season = fileKey switch
+            {
+                var key when key == Tree?.MaintenancePlanSpring => "Lente",
+                var key when key == Tree?.MaintenancePlanSummer => "Zomer",
+                var key when key == Tree?.MaintenancePlanAutumn => "Herfst",
+                var key when key == Tree?.MaintenancePlanWinter => "Winter",
+                _ => "Onbekend"
+            };
 
             string pdfFileName = $"QR_{Tree?.Species?.Replace(" ", "_") ?? "Boom"}_{season}.pdf";
             string title = $"{Tree?.Species ?? "Boom"} - Onderhoudsplan {season}";
