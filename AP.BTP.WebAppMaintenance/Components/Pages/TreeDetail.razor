@@ -110,7 +110,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -120,7 +120,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }
                             } else {
@@ -142,7 +142,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -152,7 +152,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }                                    
                             } else {
@@ -174,7 +174,7 @@
                                 if (filename.Contains(".pdf"))
                                 {
                                     <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                        <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                     </div>
                                 } else
                                 {
@@ -184,7 +184,7 @@
                                 {
                                     <div class="d-flex flex-column align-items-center">
                                         <img src="@qrCodes[fileKey]" alt="QR Code" style="width: 100px; height: 100px;" />
-                                        <Button Color="ButtonColor.Dark" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
+                                        <Button Class="green-btn" @onclick="() => DownloadQRCodePdf(fileKey, filename)">Downloaden</Button>
                                     </div>
                                 }                                    
                             } else {

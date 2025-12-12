@@ -135,7 +135,7 @@
 
                 <div class="d-flex justify-content-between">
                     <Button Color="ButtonColor.Secondary" @onclick="CancelEditUser">Verlaten</Button>
-                    <Button Class="green-btn" @onclick="UpdateUserSites" Disabled="GetSiteIsEmpty()">Bevestigen</Button>
+                    <Button Class="green-btn" @onclick="async () => await UpdateUserSites()" Disabled="GetSiteIsEmpty()">Bevestigen</Button>
                 </div>
             </CardBody>
         </Card>
@@ -393,7 +393,7 @@
 
         await client.PutAsJsonAsync($"user/{selectedUser!.Id}/sites", new LinkUserToPlantationSitesDTO() { PlantationSiteIds = selectedSites });
 
-        CancelEditUser();
+        await CancelEditUser();
 
         await ShowSuccessToast();
         await LoadPage(currentPage);

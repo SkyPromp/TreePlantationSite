@@ -55,7 +55,7 @@
                                         <hr class="mb-1"/>
                                         <div class="d-flex justify-content-end">
                                             <Button Class="py-0 blue-icon" @onclick="() => GoToUpdateForm(item.Id)"><Icon Name="IconName.Pencil"></Icon></Button>
-                                            <Button Class="py-0 red-icon" @onclick="() => showDeleteConfirmation = true"><Icon Name="IconName.Trash"></Icon></Button>
+                                            <Button Class="py-0 red-icon" @onclick="() => {showDeleteConfirmation = true; selectedTree = item;} "><Icon Name="IconName.Trash"></Icon></Button>
                                         </div>
                                         }
                                         else if(user != null && user.IsInRole("Manager"))

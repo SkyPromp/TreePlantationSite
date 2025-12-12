@@ -27,12 +27,14 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-7" @onclick="() => {showTaskDetails = true; selectedTask = task;}">
-                                <p class="text-truncate-multiline-2 fw-bold mb-1 h-100" title="@task.Title">@task.Title</p>
+                                <p class="text-truncate-multiline-2 fw-bold mb-1" title="@task.Title">@task.Title</p>
                             @* TODO: new card for details  *@
                             </div>
                             <div class="d-flex flex-column align-items-center justify-content-center col-5">
                                 @if(todayTasks.Date.Date < DateTime.Today && task.EndTime - task.StartTime == null) {
                                     <Button Color="ButtonColor.Dark" Disabled="true">Vervallen</Button>
+                                } else if (todayTasks.Date.Date > DateTime.Today){
+                                    <Button Class="green-btn" Disabled>Start</Button>
                                 }
                                 else if (task.StartTime == null)
                                 {
@@ -41,7 +43,7 @@
                                 else if (task.EndTime == null)
                                 {
                                     <Button Class="red-btn" @onclick="() => ConfirmEndTask(task)">Stop</Button>
-                                    <small>@($"Start: {task.StartTime:HH:mm}")</small>
+                                    <p class="mt-2" style="font-size: 3vw">@($"Start: {task.StartTime:HH:mm}")</p>
                                 }
                                 else
                                 {
