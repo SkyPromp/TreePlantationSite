@@ -24,10 +24,17 @@
     </div>
 </div>
 
+<Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false"/>
+
 @code {
     [Parameter]
     [SupplyParameterFromQuery(Name = "description")]
     public string? Message { get; set; }
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private readonly List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     /// <summary>
     /// Initializes the component and ensures that the <see cref="Message"/> property has a default value.
@@ -39,7 +46,22 @@
     /// </remarks>
     protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(Message))
-            Message = "Je hebt geen toegang tot deze applicatie.";
+        if (string.IsNullOrWhiteSpace(Message)) Message = "Je hebt geen toegang tot deze applicatie.";
+        this.EnqueueToast(message: "Je hebt geen toegang tot deze applicatie.", type: ToastType.Warning);
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }
