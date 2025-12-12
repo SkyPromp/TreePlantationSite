@@ -145,10 +145,28 @@
     /// </summary>
     private async Task HandleValidSubmit()
     {
-        var response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
+        HttpResponseMessage? response = await this.client.PostAsJsonAsync<RegisterUserDto>("user/auth/register", this.newUser);
 
         if (response.IsSuccessStatusCode) Navigation.NavigateTo("/login");
-        else this.EnqueueToast(message: $"Er ging iets mis bij het registreren: {await response.Content.ReadAsStringAsync()}", type: ToastType.Warning);
+        else
+        {
+            this.EnqueueToast(message: "Er is een fout opgetreden tijdens het registreren.", type: ToastType.Warning);
+
+            ErrorResponseInfoDto? errorResponseInfo = await response.Content.ReadFromJsonAsync<ErrorResponseInfoDto>();
+
+            if (errorResponseInfo == null) return;
+
+            string errorMessage = errorResponseInfo.ErrorCode switch
+            {
+                "USER_ALREADY_EXISTS" => "Een gebruiker met deze naam bestaat al.",
+                "AUTH0_EMPTY_RESPONSE" => "De authenticatieprovider geeft een onverwacte fout.",
+                "AUTH0_USER_CREATION_FAILED" => "Een gebruiker met dit e-mail adres bestaat al.",
+                _ => ""
+            };
+
+            if (!string.IsNullOrEmpty(errorMessage)) this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
+
+        }
     }
 
     /// <summary>
