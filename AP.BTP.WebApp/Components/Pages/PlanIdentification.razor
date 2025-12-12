@@ -11,17 +11,17 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject IConfiguration Configuration
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <Card>
+@* TODO fix margin bottom with when overflowing *@
+<div class="row d-flex justify-content-center align-items-center h-100 overflow-scroll">
+        <Card Class="shadow-sm">
             <CardBody>
             @if (string.IsNullOrEmpty(previewImageUrl))
                 {
                     <div class="text-center p-5 border border-2 border-dashed rounded">
                         <Icon Name="IconName.CloudUpload" Class="fs-1 text-muted mb-3" />
-                        <p class="text-muted mb-3">Upload een foto van de plant</p>
+                        <p class="text-muted mb-3">Upload een foto van de boom</p>
                         <InputFile OnChange="HandlePictureUpload" accept="image/*" class="d-none" id="fileInput" />
-                        <label for="fileInput" class="btn btn-dark">
+                        <label for="fileInput" class="btn" style="background-color: rgb(85, 193, 85); color: white">
                             <Icon Name="IconName.Camera" Class="me-2" />
                             Selecteer
                         </label>
@@ -30,8 +30,8 @@
                 else
                 {
                     <div class="position-relative">
-                        <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3" style="max-height: 50vh; width: 100%; object-fit: cover;" />
-                        <Button Class="position-absolute end-0 m-2" Color="ButtonColor.Danger" @onclick="ClearImage">
+                        <img src="@previewImageUrl" alt="Preview" class="img-fluid rounded mb-3 shadow-sm" style="max-height: 40vh; width: 100%; object-fit: cover;" />
+                        <Button Class="position-absolute end-0 m-2 red-btn shadow" @onclick="ClearImage">
                             <Icon Name="IconName.X" />
                         </Button>
                     </div>
@@ -39,7 +39,7 @@
                     @if (isLoading)
                     {
                         <div class="text-center py-3">
-                            <div class="spinner-border text-success" role="status">
+                            <div class="spinner-border" role="status" style="color: rgb(85, 193, 85)">
                                 <span class="visually-hidden"></span>
                             </div>
                             <p class="mt-2 text-muted">Plant aan het identificeren...</p>
@@ -50,7 +50,7 @@
                         <h5 class="mb-3">Resultaten:</h5>
                         @foreach (PlantResultDto result in plantResults.Take(5))
                         {
-                            <Card class="mb-2">
+                            <Card Class="mb-2 shadow-sm">
                                 <CardBody>
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
@@ -62,7 +62,7 @@
                                             <p class="mb-0 small">Familie: @result.Family</p>
                                         </div>
                                         <div class="text-end">
-                                            <span class="badge bg-success">@result.Score.ToString("P1")</span>
+                                            <span class="badge" style="background-color: rgb(85, 193, 85)">@result.Score.ToString("P1")</span>
                                         </div>
                                     </div>
                                 </CardBody>
@@ -73,7 +73,7 @@
                     @if (!isLoading)
                     {
                         <div class="d-flex mt-3">
-                            <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled=@( selectedFile == null )>
+                            <Button Class="flex-fill green-btn" @onclick="IdentifyPlant" disabled="@(selectedFile == null)">
                                 <Icon Name="IconName.Search" Class="me-2" />
                                 Identificeer Plant
                             </Button>
@@ -82,7 +82,6 @@
                 }
             </CardBody>
         </Card>
-    </div>
 </div>
 
 <Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />

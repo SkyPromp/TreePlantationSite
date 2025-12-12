@@ -18,42 +18,47 @@
                 <DataAnnotationsValidator />
                 <div class="form-content overflow-hidden">
                     <div class="row">
-                        <div class="col-4 pe-3">
-                            <div>
-                                <label class="form-label">Boomsoorten</label>
+                        <div class="col-4">
+                            <div class="mb-4">
+                                <label class="form-label">Boomsoort</label>
                                 <TextInput @bind-Value="@Tree.Species"></TextInput>
                                 <ValidationMessage For="@(() => Tree.Species)" />
                             </div>
-                            <div>
+                            <div class="mb-4">
+                                <label class="form-label">Beschrijving</label>
+                                <TextAreaInput Rows="4" @bind-Value="@Tree.Description"></TextAreaInput>
+                            </div>                              
+                            <div class="mb-4">
                                 <label class="form-label">Foto selectie</label>
-                                <InputFile OnChange="e => HandleFileUpload(e, FileType.Picture, null)" multiple class="form-control mb-2" />
-                            </div>
+                                <InputFile OnChange="e => HandleFileUpload(e, FileType.Picture, null)" multiple class="form-control mb-2"/>
+                            </div>                          
                         </div>
                         <div class="col-8">
                             <label class="form-label">Overzicht</label>
-                            <div class="border rounded p-2" style="height: 100%; overflow-y: auto;">
+                            <div class="border rounded p-2" style="height: 50vh; overflow-y: auto;">
                                 @if (previews.Count == 0)
                                 {
-                                    <p class="text-muted">Nog geen afbeeldingen geselecteerd.</p>
+                                    <div class="d-flex justify-content-center align-items-center h-100 text-muted">Nog geen afbeeldingen geselecteerd.</div>
                                 } else
                                 {
                                     <div class="d-flex flex-wrap">
                                         @foreach (KeyValuePair<string, string> kvp in previews)
                                         {
                                             <div class="position-relative p-1" style="flex: 0 0 50%; height: 200px;">
-                                                <Button Class="position-absolute" Style="box-shadow: none; top: 5px; left: 5px; background: none; border: none; z-index: 10;" @onclick="() => OnStarClicked(kvp.Key)">
+                                                <Button Class="position-absolute" Style="box-shadow: none; border: none; top: 5px; left: 5px; z-index: 10;" @onclick="() => OnStarClicked(kvp.Key)">
                                                     @if (IsPictureFavourite(kvp.Key))
                                                     {
                                                         <Icon Name="IconName.StarFill" Color="IconColor.Warning" Style="font-size: 4vh;" />
-                                                    } else
+                                                    }
+                                                    else
                                                     {
                                                         <Icon Name="IconName.Star" Color="IconColor.Warning" Style="font-size: 4vh;" />
                                                     }
                                                 </Button>
-                                                <Button Class="p-0 position-absolute" Style="box-shadow: none; border: none; top: 5px; right: 5px; height: 5vh; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
+                                                <Button Class="position-absolute" Style="box-shadow: none; border: none; top: 5px; right: 5px; z-index: 10;" @onclick="() => { this.showDeleteConfirmation = true; selectedImage = kvp.Key; }">
                                                     <Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 4vh;"></Icon>
                                                 </Button>
-                                                <img src="@kvp.Value" class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: contain;" />
+                                                <img src="@kvp.Value" style="width: 100%; height: 100%; object-fit: contain;" />
                                             </div>
                                         }
                                     </div>
@@ -62,9 +67,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" href="/admin/tree">Verlaten</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Submit">Volgende</Button>
+                <div class="buttons d-flex justify-content-end gap-3 mt-4">
+                    <Button Color="ButtonColor.Secondary" @onclick="() => showConfirmLeaveForm = true">Verlaten</Button>
+                    <Button Class="green-btn" Type="ButtonType.Submit">Volgende</Button>
                 </div>
             </EditForm>
         </Content>
@@ -97,7 +102,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                         </div>
                                     } else
                                     {
@@ -136,7 +141,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                         </div>
                                     } else
                                     {
@@ -175,7 +180,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                         </div>
                                     } else
                                     {
@@ -214,7 +219,7 @@
                                     if (filename.Contains(".pdf"))
                                     {
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Dark">PDF bekijken</Button></a>
+                                            <a href="@previewData" target="_blank" rel="noopener noreferrer"><Button Color="ButtonColor.Secondary">PDF bekijken</Button></a>
                                         </div>
                                     } else
                                     {
@@ -232,9 +237,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="buttons d-flex justify-content-end mt-4">
-                    <a class="d-flex align-items-center justify-content-center btn" style="background-color: #929393; color: white; margin-right: 1vw; width: 6vw; box-shadow: none; height: 5vh;" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</a>
-                    <Button Class="d-flex align-items-center justify-content-center" Style="background-color: #4EB862; color: white; width: 6vw; box-shadow: none; height: 5vh;" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
+                <div class="buttons d-flex justify-content-end mt-4 gap-3">
+                    <Button Color="ButtonColor.Secondary" Class="d-flex align-items-center justify-content-center" @onclick="() => this.showConfirmLeaveForm = true">Verlaten</Button>
+                    <Button Class="d-flex align-items-center justify-content-center green-btn" Type="ButtonType.Button" @onclick="() => this.showConfirmSaveForm = true">Bewaren</Button>
                 </div>
             </EditForm>
         </Content>
@@ -248,17 +253,21 @@
                    onConfirmation="this.DeletePicture"
                    confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?" />
 
-<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
-                   onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
-                   onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) this.ConfirmDeleteMaintenancePlan(); return Task.CompletedTask; }"
-                   confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?" />
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmLeaveForm"
+    onCancellation="() => { this.showConfirmLeaveForm = false; return Task.CompletedTask; }"
+    onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
+    confirmationTitle="Deze pagina verlaten?"
+    confirmationDescription="Niet opgeslagen wijzingen zullen verloren gaan"
+/>
 
-<ConfirmationPopup showConfirmationPopup="this.showConfirmLeaveForm"
-                   onConfirmation="@(() => { Navigation.NavigateTo("/admin/tree"); return Task.CompletedTask; })"
-                   confirmationDescription="Bent u zeker dat u de pagina wilt verlaten? Onopgeslagen wijzigingen zullen ongedaan wordedn gemaakt." />
-
-<ConfirmationPopup showConfirmationPopup="this.showConfirmSaveForm"
-                   onConfirmation="this.Submit" />
+<ConfirmationPopup 
+    showConfirmationPopup="this.showConfirmSaveForm"
+    confirmationTitle="Boom opslaan?"
+    confirmationDescription="Wenst u deze boom op te slaan?"
+    onCancellation="() => {this.showConfirmSaveForm = false; return Task.CompletedTask;}"
+    onConfirmation="this.Submit"
+/>
 
 @code {
     /// <summary>

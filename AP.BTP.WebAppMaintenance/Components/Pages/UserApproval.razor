@@ -7,70 +7,68 @@
 @using System.Text.Encodings.Web
 @using AP.BTP.Contracts.Enums
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+
 <PageTitle>Registratieaanvragen</PageTitle>
 
-<h3 class="text-center">Registratieaanvragen goedkeuren</h3>
+<h3 class="text-center">Registratieaanvragen</h3>
 
-<div class="d-flex justify-content-between px-3">
-    <a href="/admin/users" style="text-decoration: none;">
-        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4"
-                Style=" box-shadow: none; border: none; text-decoration: none;">
-            <Icon class="me-3" Name="IconName.ArrowLeft" Style="font-size: 2.5rem;"></Icon>
+<div class="row mb-3">
+    <div class="d-flex justify-content-between p-0">
+        <Button Class="d-flex align-items-center justify-content-center p-0 fs-4" Style=" box-shadow: none; border: none; text-decoration: none;" @onclick="() => NavigateBack()">
+            <Icon class="me-3" Name="IconName.ArrowLeft"></Icon>
             Goedgekeurde gebruikers
         </Button>
-    </a>
-    <div class="d-flex flex-column align-items-end">
-        <TextInput @bind-Value="@searchText"
-                   @oninput="OnSearchChanged"
-                   TextAlignment="Alignment.Start"
-                   Placeholder="Zoek gebruikers"
-                   Style="width: 15vw; border-width: 2px;" />
+        <div class="d-flex flex-column align-items-end">
+            <TextInput Class="shadow border" @bind-Value="@searchText" @oninput="OnSearchChanged" TextAlignment="Alignment.Start" Placeholder="Zoeken..." Style="width: 15vw; border-width: 2px;" />
+        </div>
     </div>
 </div>
-<div class="container-fluid m-0 p-3" Style="background-color: #D9D9D9; border-radius: 15px;">
-    @if (response?.Items == null || !response.Items.Any())
+<div class="p-3 mb-3 row shadow border" style="background-color: white; border-radius: 15px">
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold" @onclick='() => OnSortChanged("FirstName")' TooltipTitle="Sorteer op naam" TooltipColor="TooltipColor.Dark">
+            Naam @SortIndicator("FirstName")
+        </Button>
+    </div>
+    <div class="col-4">
+        <Button Class="shadow-none fw-bold px-2" @onclick='() => OnSortChanged("Email")' TooltipTitle="Sorteer op e-mail" TooltipColor="TooltipColor.Dark">
+            E-mail @SortIndicator("Email")
+        </Button>
+    </div>
+    <div class="col-3">
+        <Button Class="shadow-none fw-bold px-0" @onclick='() => OnSortChanged("PhoneNumber")' TooltipTitle="Sorteer op gsm-number" TooltipColor="TooltipColor.Dark">
+            Gsm-number @SortIndicator("PhoneNumber")
+        </Button>
+    </div>
+
+    <div class="col-2 fw-bold d-flex justify-content-end" style="padding: 0.375rem">
+        Goedkeuring
+    </div>
+
+    @if (response?.Items != null && response?.Items.Count() > 0)
     {
-        <p class="text-center mt-4">Er zijn momenteel geen gebruikers die een goedkeuring nodig hebben.</p>
-    } else
-    {
-        <div class="d-grid p-1 fw-bold"
-             style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
-            <div @onclick='() => OnSortChanged("FirstName")' style="cursor:pointer;">
-                Naam @SortIndicator("FirstName")
-            </div>
-            <div @onclick='() => OnSortChanged("Email")' style="cursor:pointer;">
-                E-mail @SortIndicator("Email")
-            </div>
-            <div @onclick='() => OnSortChanged("PhoneNumber")' style="cursor:pointer;">
-                Gsm-number @SortIndicator("PhoneNumber")
-            </div>
-            <div class="text-center">Goedkeuring</div>
-        </div>
-        <div style="overflow-x:hidden; max-height: 55vh;">
+        <div style="overflow-x:hidden; height: 52vh;">
             @foreach (List<UserDto> row in Rows)
             {
                 <div class="row">
                     @foreach (UserDto item in row)
                     {
                         <div class="p-2">
-                            <Card Class="px-2 mb-0" Style="background-color: #FFFFFF; border-radius: 10px; border: none;">
-                                <CardBody Class="p-0 d-grid align-items-center"
-                                          Style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem;">
-                                    <CardText class="m-0">@item.FirstName @item.LastName</CardText>
-                                    <CardText class="m-0">
-                                        <a href="mailto:@item.Email" style="text-decoration:none; color:#0d6efd;">
+                            <Card Class="py-2 px-3 mb-0 border shadow">
+                                <CardBody Class="p-0 row align-items-center">
+                                    <CardText class="m-0 col-3">@item.FirstName @item.LastName</CardText>
+                                    <CardText class="m-0 col-4">
+                                        <a href="mailto:@item.Email">
                                             @item.Email
                                         </a>
                                     </CardText>
-                                    <CardText class="m-0">@item.PhoneNumber</CardText>
-                                    <div class="p-1">
-                                        <Button title="Gebruiker goedkeuren"
-                                                Class="btn btn-success btn-sm"
+                                    <CardText class="m-0 col-3">@item.PhoneNumber</CardText>
+                                    <div class="d-flex justify-content-end gap-2 col-2">
+                                        <Button Class="green-btn" Size="ButtonSize.Small"
                                                 @onclick="() => { this.showEditUser = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.Check2" />
                                         </Button>
-                                        <Button title="Gebruiker afwijzen"
-                                                Class="btn btn-danger btn-sm"
+                                        <Button Class="red-btn" Size="ButtonSize.Small"
                                                 @onclick="() => { this.showDeleteConfirmation = true; selectedUserId = item.Id; }">
                                             <Icon Name="IconName.X" />
                                         </Button>
@@ -83,11 +81,15 @@
                 </div>
             }
         </div>
+    } else
+    {
+        <div class="p-0 d-flex justify-content-center align-items-center fs-3 text-muted" style="height: 52vh;">
+            Er zijn momenteel geen registratieaanvragen in afwachting
+        </div>
     }
 </div>
 
 <Pagination Class="justify-content-center"
-            Style="margin-top: 10px"
             ActivePageNumber="@currentPage"
             TotalPages="@totalPages"
             PageChanged="LoadPage"
@@ -100,25 +102,25 @@
 @if (this.showEditUser)
 {
     <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center" style="z-index: 10">
-        <div class="card position-absolute align-self-center p-4">
-            <h5>Selecteer de rol die aan deze gebruiker moet worden toegewezen</h5>
-            <select @bind="this.selectedRole" class="form-select mb-3">
-                @foreach (UserRole role in Enum.GetValues<UserRole>())
-                {
-                    <option value="@(role.ToString())">@role.ToString()</option>
-                }
-            </select>
-            @if (selectedRole == UserRole.Operator.ToString())
-            {
-                <h5>Selecteer de kweeksites die aan deze gebruiker moeten worden toegewezen</h5>
-                <p>Kweeksite 1</p>
-                <select @bind="this.site1" class="form-select mb-3">
-                    <option value=""></option>
-                    @foreach (PlantationSiteDto plantationSite in this.plantationSites)
+        <Card Class="position-absolute align-self-center p-4" Style="width: 35vw">
+            <CardTitle>Selecteer de rol die aan deze gebruiker moet worden toegewezen</CardTitle>
+            <CardBody>
+                <select @bind="this.selectedRole" class="form-select mb-3">
+                    @foreach (UserRole role in Enum.GetValues<UserRole>())
                     {
-                        <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
+                        <option value="@(role.ToString())">@role.ToString()</option>
                     }
                 </select>
+                @if (selectedRole == UserRole.Operator.ToString())
+                {
+                    <p>Kweeksite 1</p>
+                    <select @bind="this.site1" class="form-select mb-3">
+                        <option value=""></option>
+                        @foreach (PlantationSiteDto plantationSite in this.plantationSites)
+                        {
+                            <option value="@plantationSite.Id" disabled="@IsDisabled(plantationSite.Id, site2)">@plantationSite.Name</option>
+                        }
+                    </select>
 
                 <p>Kweeksite 2</p>
                 <select @bind="this.site2" class="form-select mb-3">
@@ -132,21 +134,24 @@
             @if (isLoading)
             {
 
-                <div class="spinner-border align-self-center" role="status">
-                    <span class="visually-hidden">Laden...</span>
-                </div>
-            } else
-            {
-                <div class="row gap-3">
-                    <div class="col">
-                        <button @onclick="CancelEditUser" class="btn btn-warning">Verlaten</button>
+                    <div class="spinner-border align-self-center" role="status">
+                        <span class="visually-hidden">Laden...</span>
                     </div>
-                    <div class="col">
-                        <button @onclick="ApproveUser" class="btn btn-secondary" disabled="@string.IsNullOrEmpty(selectedRole)">Bevestigen</button>
+                } else
+                {
+                    <div class="d-flex justify-content-between ">
+                        <Button Color="ButtonColor.Secondary" @onclick="CancelEditUser">Verlaten</Button>
+                        @if (selectedRole == UserRole.Operator.ToString())
+                        {
+                            <Button Class="green-btn" @onclick="ApproveUser" Disabled="GetEmptyField()">Bevestigen</Button>
+                        } else
+                        {
+                            <Button Class="green-btn" @onclick="ApproveUser" Disabled="@string.IsNullOrEmpty(selectedRole)">Bevestigen</Button>
+                        }
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </CardBody>
+        </Card>
     </div>
 }
 
@@ -187,7 +192,7 @@
     /// <summary>
     /// The maximum number of rows of user cards displayed per page.
     /// </summary>
-    private readonly int maxRows = 7;
+    private readonly int maxRows = 6;
 
     /// <summary>
     /// The calculated number of user cards displayed per page.
@@ -484,5 +489,14 @@
             Message = message,
             AutoHide = true
         });
+    }
+    private bool GetEmptyField()
+    {
+        return string.IsNullOrWhiteSpace(selectedRole) || site1 == null || site2 == null;
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/admin/users");
     }
 }
