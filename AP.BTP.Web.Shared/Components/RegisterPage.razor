@@ -139,10 +139,7 @@
     {
         var response = await this.client.PostAsJsonAsync<RegisterUserDTO>("user/auth/register", this.newUser);
 
-        if (response.IsSuccessStatusCode)
-        {
-            Navigation.NavigateTo("/login");
-        }
+        if (response.IsSuccessStatusCode) Navigation.NavigateTo("/login");
         else this.EnqueueToast(message: $"Er ging iets mis bij het registreren: {await response.Content.ReadAsStringAsync()}", type: ToastType.Warning);
     }
 
