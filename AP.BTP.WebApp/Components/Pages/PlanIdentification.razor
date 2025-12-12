@@ -13,14 +13,6 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="alert alert-danger alert-dismissible">
-                @errorMessage
-                <Button Class="btn-close" @onclick="() => errorMessage = string.Empty"></Button>
-            </div>
-        }
-
         <Card>
             <CardBody>
             @if (string.IsNullOrEmpty(previewImageUrl))
@@ -78,7 +70,7 @@
                         }
                     }
 
-                    @if (!isLoading && string.IsNullOrEmpty(errorMessage))
+                    @if (!isLoading)
                     {
                         <div class="d-flex mt-3">
                             <Button Class="flex-fill" Color="ButtonColor.Dark" @onclick="IdentifyPlant" disabled="@(selectedFile == null)">
@@ -93,17 +85,24 @@
     </div>
 </div>
 
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
+
 @code {
     /// <summary>
-    /// Error message to display to the user when validation or API calls fail.
+    /// Holds the list of toast messages to display in the UI.
     /// </summary>
-    private string errorMessage = "";
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
+    private Toasts? toastContainer;
 
     /// <summary>
     /// Base64 encoded data URL of the uploaded image for preview display.
     /// </summary>    
     private string previewImageUrl = "";
-    
+
     /// <summary>
     /// Indicates whether a plant identification API call is currently in progress.
     /// </summary>    
@@ -135,7 +134,7 @@
     /// Throws an exception if the API key is not configured.
     /// </summary>
     protected override void OnInitialized(){
-        plantApiKey = Configuration["PLANT_API"] 
+        plantApiKey = Configuration["PLANT_API"]
                 ?? throw new Exception("PLANT_API is missing");
     }
 
@@ -145,38 +144,51 @@
     /// Reads the file into memory and generates a base64 preview.
     /// </summary>
     /// <param name="e">File change event containing the uploaded file</param>
-    private async Task HandlePictureUpload(InputFileChangeEventArgs e) {
-        errorMessage = string.Empty;
+    private async Task HandlePictureUpload(InputFileChangeEventArgs ev) {
         plantResults = null;
-        selectedFile = e.File;
+        selectedFile = ev.File;
         fileBytes = null;
-        
+
         if (selectedFile != null)
         {
             if (selectedFile.Size > 10 * 1024 * 1024)
             {
-                errorMessage = "Bestand is te groot. Maximum grootte is 10MB.";
+                this.EnqueueToast(message: "Bestand is te groot. Maximum grootte is 10MB.", type: ToastType.Warning);
+
                 return;
             }
-            
+
             if (!selectedFile.ContentType.StartsWith("image/"))
             {
-                errorMessage = "Alleen afbeeldingen zijn toegestaan.";
+                this.EnqueueToast(message: "Alleen afbeeldingen zijn toegestaan.", type: ToastType.Warning);
+
                 return;
             }
-            
+
+            using MemoryStream ms = new MemoryStream();
+
             try
             {
-                using MemoryStream ms = new MemoryStream();
                 await selectedFile.OpenReadStream(10 * 1024 * 1024).CopyToAsync(ms);
 
-                fileBytes = ms.ToArray(); 
-                
+                fileBytes = ms.ToArray();
                 previewImageUrl = $"data:{selectedFile.ContentType};base64,{Convert.ToBase64String(fileBytes)}";
             }
-            catch (Exception ex)
+            catch (ObjectDisposedException e)
             {
-                errorMessage = $"Fout bij het laden van de afbeelding.";
+                this.EnqueueToast(message: $"Fout bij het laden van de afbeelding: {e}", type: ToastType.Warning);
+            }
+            catch (NotSupportedException e)
+            {
+                this.EnqueueToast(message: $"Fout bij het laden van de afbeelding: {e}", type: ToastType.Warning);
+            }
+            catch (ArgumentNullException e)
+            {
+                this.EnqueueToast(message: $"Fout bij het laden van de afbeelding: {e}", type: ToastType.Warning);
+            }
+            catch (IOException e)
+            {
+                this.EnqueueToast(message: $"Fout bij het laden van de afbeelding: {e}", type: ToastType.Warning);
             }
         }
     }
@@ -187,34 +199,38 @@
     /// Parses the response and displays the top matches.
     /// </summary>
     private async Task IdentifyPlant(){
-        if (selectedFile == null || fileBytes == null) return;
-        
-        isLoading = true;
-        errorMessage = string.Empty;
+        if (selectedFile == null || fileBytes == null)
+        {
+            this.EnqueueToast(message: "Selecteer een file om te identificeren.", type: ToastType.Warning);
+
+            return;
+        }
+
+        this.isLoading = true;
         plantResults = null;
-        
+
+        using HttpClient httpClient = new HttpClient();
+        using MultipartFormDataContent? content = new MultipartFormDataContent();
+
         try
         {
-            using HttpClient httpClient = new HttpClient();
-            using MultipartFormDataContent? content = new MultipartFormDataContent();
-            
             ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
             content.Add(fileContent, "images", selectedFile.Name);
-            
+
             content.Add(new StringContent("habit"), "organs");
-            
+
             string apiUrl = $"https://my-api.plantnet.org/v2/identify/all?api-key={plantApiKey}";
             HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 string jsonResponse = await response.Content.ReadAsStringAsync();
-                PlantNetResponseDTO? apiResult = JsonSerializer.Deserialize<PlantNetResponseDTO>(jsonResponse, new JsonSerializerOptions 
-                { 
-                    PropertyNameCaseInsensitive = true 
+                PlantNetResponseDTO? apiResult = JsonSerializer.Deserialize<PlantNetResponseDTO>(jsonResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
                 });
-                
+
                 if (apiResult?.Results != null && apiResult.Results.Any())
                 {
                     plantResults = apiResult.Results.Select(r => new PlantResultDTO() {
@@ -232,20 +248,37 @@
             else
             {
                 if(response.StatusCode == HttpStatusCode.NotFound) {
-                    errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding.";
+                    string errorMessage = response.StatusCode == HttpStatusCode.NotFound ? "Geen overeenkomende plant gevonden." : "Onverwacht probleem bij het identificeren van de afbeelding.";
+                    this.EnqueueToast(message: errorMessage, type: ToastType.Warning);
                 } else {
-                    errorMessage = $"Onverwacht probleem bij het identificeren van de afbeelding.";
+                    this.EnqueueToast(message: "Onverwacht probleem bij het identificeren van de afbeelding.", type: ToastType.Warning);
                 }
             }
-        }
-        catch (Exception ex)
+        } catch(InvalidOperationException e)
         {
-            errorMessage = $"Onverwacht probleem bij het identificeren van de afbeelding.";
-        }
-        finally
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        } catch (HttpRequestException e)
         {
-            isLoading = false;
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        } catch (UriFormatException e)
+        {
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        } catch (NotSupportedException e)
+        {
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        } catch (JsonException e)
+        {
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
         }
+        catch (ArgumentNullException e)
+        {
+            this.EnqueueToast(message: $"Onverwacht probleem bij het identificeren van de afbeelding: {e}", type: ToastType.Warning);
+        }
+
+        isLoading = false;
     }
 
     /// <summary>
@@ -255,6 +288,20 @@
         previewImageUrl = string.Empty;
         selectedFile = null;
         plantResults = null;
-        errorMessage = string.Empty;
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }

@@ -111,12 +111,6 @@
 
 @code {
     /// <summary>
-    /// The ID of the user whose details and tasks are being displayed.
-    /// This is passed as a parameter to the component.
-    /// </summary>
-    private string errorMessage = "";
-
-    /// <summary>
     /// Holds the list of toast messages to display in the UI.
     /// </summary>
     private List<ToastMessage> toastMessages = new List<ToastMessage>();
@@ -170,14 +164,6 @@
     /// </summary>
     private async Task LoadUser()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Client is null";
-            StateHasChanged();
-
-            return;
-        }
-
         TaskListDTO? response = await this.client.GetFromJsonAsync<TaskListDTO>($"tasklist/day?date={this.selectedDate:yyyy-MM-dd}");
         this.todayTasks = response;
 
@@ -215,14 +201,6 @@
 
     private async Task StartTask()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "De client kon niet gevonden worden!";
-            this.showStartConfirmation = false;
-            StateHasChanged();
-            return;
-        }
-
         if (this.selectedTask == null)
         {
             this.EnqueueToast(message: "De geselecteerde taak kon niet gevonden worden!", type: ToastType.Warning);
@@ -285,15 +263,6 @@
 
     private async Task EndTask()
     {
-        if (this.client == null)
-        {
-            this.errorMessage = "Client is null";
-            this.showEndConfirmation = false;
-            StateHasChanged();
-
-            return;
-        }
-
         if (this.selectedTask == null)
         {
             this.EnqueueToast(message: "De geselecteerde taak kon niet gevonden worden!", type: ToastType.Warning);
@@ -337,7 +306,7 @@
             this.selectedTask.EndTime = (await response.Content.ReadFromJsonAsync<TaskItemDTO>())?.EndTime;
         } catch (ArgumentNullException e)
         {
-            this.errorMessage = $"Er is een fout opgetreden bij het beëindigen van de taak: {e.Message}";
+            this.EnqueueToast(message: $"Er is een fout opgetreden bij het beëindigen van de taak: {e.Message}", type: ToastType.Warning);
         }
 
         this.selectedTask = null;
@@ -347,12 +316,6 @@
 
     private async Task ShowGroundPlan()
     {
-        if (client == null)
-        {
-            errorMessage = "Client is null";
-            return;
-        }
-
         if (todayTasks == null)
         {
             this.EnqueueToast(message: "Geen locatie beschikbaar op deze datum", type: ToastType.Warning);
