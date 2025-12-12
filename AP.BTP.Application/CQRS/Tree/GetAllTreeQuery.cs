@@ -9,7 +9,7 @@ namespace AP.BTP.Application.CQRS.Tree
     /// <summary>
     /// Represents a query to retrieve all trees in the system.
     /// </summary>
-    public class GetAllTreeQuery: IRequest<IEnumerable<TreeDto>>  // TODO this should probably be merged in with GetTreeQuery
+    public class GetAllTreeQuery: IRequest<IEnumerable<TreeDto>>
     {
         /// <summary>
         /// An optional search string to filter trees by relevant fields (e.g., species name).

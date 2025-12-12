@@ -387,11 +387,9 @@
         selectedUser = user;
         showEditUser = true;
 
-        // Reset first
         site1 = null;
         site2 = null;
 
-        // Preselect existing plantation sites if they exist
         if (user.PlantationSites != null && user.PlantationSites.Any())
         {
             List<PlantationSiteDto>? sites = user.PlantationSites.Take(2).ToList();

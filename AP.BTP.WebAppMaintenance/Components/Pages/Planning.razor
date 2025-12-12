@@ -578,7 +578,7 @@ else
     /// Deletes a task item with the given ID locally.
     /// </summary>
     /// <param name="taskItem">The taskItem to be deleted.</param>
-    private Task DeleteTaskItem(int? id)  // TODO add confirmation message
+    private Task DeleteTaskItem(int? id)
     {
         if ((id == null || id == 0) && selectedTaskItem != null)
         {
@@ -603,7 +603,7 @@ else
         else if (selectedTaskItem != null)
         {
             selectedTaskItem.IsDeleted = true;
-            EnqueueToast(message: "De taak is succesvol verwijderd.", ToastType.Success);  // TODO Geen isDeleted in de Dto
+            EnqueueToast(message: "De taak is succesvol verwijderd.", ToastType.Success);
         }
 
         this.ShowDeleteConfirm = false;

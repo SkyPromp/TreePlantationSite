@@ -27,8 +27,7 @@ namespace AP.BTP.Domain
         /// <summary>
         /// Gets or sets the user associated with this task list.
         /// </summary>
-        public User? User { get; set; }  // Not required because of seeding
-        // TODO see if we can make it also nullable
+        public User? User { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of the plantation site that this task list belongs to.

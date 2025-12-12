@@ -41,7 +41,7 @@ namespace AP.BTP.WebAPI.Controllers
             return Ok(await mediator.Send(new GetZoneByIdQuery() { Id = id }));
         }
 
-        // <summary>
+        /// <summary>
         /// Retrieves all zones for a given plantation site.
         /// </summary>
         /// <param name="plantationSiteId">The ID of the plantation site to filter zones by.</param>

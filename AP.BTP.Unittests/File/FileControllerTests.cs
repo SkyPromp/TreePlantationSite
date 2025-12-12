@@ -13,10 +13,8 @@ namespace AP.BTP.Unittests.File
         [TestMethod]
         public async Task Upload_Should_Return_415_When_Invalid_FileType()
         {
-            // Arrange
             var envMock = new Mock<IWebHostEnvironment>();
 
-            // Simulate content root
             envMock.Setup(e => e.ContentRootPath).Returns(Path.GetTempPath());
 
             var controller = new FileController(envMock.Object);

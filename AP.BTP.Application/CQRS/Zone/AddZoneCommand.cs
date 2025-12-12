@@ -101,7 +101,7 @@ namespace AP.BTP.Application.CQRS.Zone
         /// <returns>The newly created <see cref="ZoneDto"/>.</returns>
         public async Task<ZoneDto> Handle(AddZoneCommand request, CancellationToken cancellationToken)
         {
-            if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+            if(request.Zone.Name != null) request.Zone.Name = request.Zone.Name.Trim();
 
             Domain.Zone zone = mapper.Map<Domain.Zone>(request.Zone);
 

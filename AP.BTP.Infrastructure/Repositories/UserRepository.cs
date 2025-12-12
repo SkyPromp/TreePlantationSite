@@ -249,7 +249,7 @@ namespace AP.BTP.Infrastructure.Repositories
         /// <returns>The <see cref="User"/> entity if found and not soft-deleted; otherwise, <c>null</c>.</returns>
         public async Task<User?> GetById(int id)
         {
-            User? user = await this.dbSet  // TODO read warning
+            User? user = await this.dbSet
                 .Include(u => u.PlantationSites.Where(p => !p.IsDeleted))
                     .ThenInclude(p => p.Zones.Where(z => !z.IsDeleted))
                 .Include(u => u.TaskLists.Where(tl => !tl.IsDeleted))

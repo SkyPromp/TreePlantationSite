@@ -65,7 +65,6 @@ namespace AP.BTP.WebAPI
             {
                 BtpContext db = scope.ServiceProvider.GetRequiredService<BtpContext>();
 
-                // Retry a few times if SQL Server isn't ready yet
                 int retryCount = 5;
                 TimeSpan delay = TimeSpan.FromSeconds(5);
                 for (int i = 0; i < retryCount; i++)
@@ -73,12 +72,12 @@ namespace AP.BTP.WebAPI
                     try
                     {
                         db.Database.Migrate();
-                        break; // success
+                        break;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Database migration failed: {ex.Message}");
-                        if (i == retryCount - 1) throw; // last attempt, rethrow
+                        if (i == retryCount - 1) throw;
                         Thread.Sleep(delay);
                     }
                 }

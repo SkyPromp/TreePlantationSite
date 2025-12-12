@@ -142,7 +142,7 @@ namespace AP.BTP.Application.CQRS.Zone
         /// <returns>The created zones as a <see cref="ZoneDto"/>.</returns>
         public async Task<ZoneDto> Handle(AddZonesManyCommand request, CancellationToken cancellationToken)
         {
-            foreach(ZoneDto zone in request.Zones) if(zone.Name != null) zone.Name = zone.Name.Trim();  // Name cannot be null because of validator, but doesn't hurt to make sure
+            foreach(ZoneDto zone in request.Zones) if(zone.Name != null) zone.Name = zone.Name.Trim();
             
             IEnumerable<Domain.Zone> zones = mapper.Map<IEnumerable<Domain.Zone>>(request.Zones);
 

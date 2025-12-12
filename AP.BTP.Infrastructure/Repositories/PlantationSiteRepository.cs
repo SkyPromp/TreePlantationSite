@@ -9,7 +9,7 @@ namespace AP.BTP.Infrastructure.Repositories
     /// Repository for managing <see cref="PlantationSite"/> entities in the database.
     /// Implements <see cref="IPlantationSiteRepository"/>.
     /// </summary>
-    public class PlantationSiteRepository : IPlantationSiteRepository  // TODO: should have a namespace
+    public class PlantationSiteRepository : IPlantationSiteRepository
     {
         private readonly DbSet<PlantationSite> dbSet;
 

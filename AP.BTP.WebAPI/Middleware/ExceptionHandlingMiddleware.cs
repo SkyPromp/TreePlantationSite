@@ -50,7 +50,7 @@ namespace AP.BTP.WebAPI.Middleware
                         {
                             "USER_ALREADY_EXISTS" => StatusCodes.Status409Conflict,
                             "AUTH0_EMPTY_RESPONSE" => StatusCodes.Status502BadGateway,
-                            "AUTH0_USER_CREATION_FAILED" => StatusCodes.Status502BadGateway, // Recommended
+                            "AUTH0_USER_CREATION_FAILED" => StatusCodes.Status502BadGateway,
                             _ => StatusCodes.Status500InternalServerError
                         },
                         Message = auth0UserCreationException.Message,

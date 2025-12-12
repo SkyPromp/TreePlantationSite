@@ -135,7 +135,6 @@ namespace AP.BTP.Unittests.Tree
         [DataRow("MaintenancePlanWinter")]
         public async Task Should_Have_Error_When_Unsupported_File_Type(string propertyName)
         {
-            // Arrange
             AddTreeCommand command = new AddTreeCommand
             {
                 Tree = new TreeDto
@@ -147,10 +146,8 @@ namespace AP.BTP.Unittests.Tree
 
             SetProperty(command.Tree, propertyName, "file.exe");
 
-            // Act
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldHaveValidationErrorFor($"Tree.{propertyName}");
         }
 
@@ -161,7 +158,6 @@ namespace AP.BTP.Unittests.Tree
         [DataRow("MaintenancePlanWinter")]
         public async Task Should_Not_Have_Error_When_Supported_File_Type(string propertyName)
         {
-            // Arrange
             AddTreeCommand command = new AddTreeCommand
             {
                 Tree = new TreeDto
@@ -173,10 +169,8 @@ namespace AP.BTP.Unittests.Tree
 
             SetProperty(command.Tree, propertyName, "document.pdf");
 
-            // Act
             TestValidationResult<AddTreeCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldNotHaveValidationErrorFor($"TreeDTO.{propertyName}");
         }
 

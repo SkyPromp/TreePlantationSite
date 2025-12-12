@@ -32,17 +32,14 @@ namespace AP.BTP.Unittests.TaskList
         [DataRow(-100)]
         public async Task Should_Have_Error_When_TaskListId_Not_Greater_Than_Zero(int taskListId)
         {
-            // Arrange
             PatchTaskListZoneCommand command = new PatchTaskListZoneCommand
             {
                 TaskListId = taskListId,
                 ZoneId = 1
             };
 
-            // Act
             TestValidationResult<PatchTaskListZoneCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.TaskListId)
                 .WithErrorMessage("Task list ID must be greater than 0") != null);
         }
@@ -50,7 +47,6 @@ namespace AP.BTP.Unittests.TaskList
         [TestMethod]
         public async Task Should_Have_Error_When_TaskList_Does_Not_Exist()
         {
-            // Arrange
             taskListRepoMock.Setup(r => r.GetById(It.IsAny<int>()))
                 .ReturnsAsync((Domain.TaskList?)null);
 
@@ -60,10 +56,8 @@ namespace AP.BTP.Unittests.TaskList
                 ZoneId = 1
             };
 
-            // Act
             TestValidationResult<PatchTaskListZoneCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.TaskListId)
                 .WithErrorMessage("Task list does not exist or has been deleted") != null);
         }
@@ -71,7 +65,6 @@ namespace AP.BTP.Unittests.TaskList
         [TestMethod]
         public async Task Should_Have_Error_When_TaskList_Is_Deleted()
         {
-            // Arrange
             Domain.User user = new Domain.User() {Id = 1, Auth0Id = "1", FirstName = "Test"};
 
             taskListRepoMock.Setup(r => r.GetById(1))
@@ -90,10 +83,8 @@ namespace AP.BTP.Unittests.TaskList
                 ZoneId = 1
             };
 
-            // Act
             TestValidationResult<PatchTaskListZoneCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(command => command.TaskListId)
                 .WithErrorMessage("Task list does not exist or has been deleted") != null);
         }
@@ -101,7 +92,6 @@ namespace AP.BTP.Unittests.TaskList
         [TestMethod]
         public async Task Should_Not_Have_Error_When_ZoneId_Is_Null()
         {
-            // Arrange
             Domain.User user = new Domain.User() {Id = 1, Auth0Id = "1", FirstName = "Test"};
 
             taskListRepoMock.Setup(r => r.GetById(1))
@@ -120,17 +110,14 @@ namespace AP.BTP.Unittests.TaskList
                 ZoneId = null
             };
 
-            // Act
             TestValidationResult<PatchTaskListZoneCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldNotHaveAnyValidationErrors();
         }
 
         [TestMethod]
         public async Task Should_Not_Have_Error_When_Valid_Command()
         {
-            // Arrange
             Domain.User user = new Domain.User() {Id = 1, Auth0Id = "1", FirstName = "Test"};
 
             taskListRepoMock.Setup(r => r.GetById(1))
@@ -157,10 +144,8 @@ namespace AP.BTP.Unittests.TaskList
                 ZoneId = 1
             };
 
-            // Act
             TestValidationResult<PatchTaskListZoneCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             result.ShouldNotHaveAnyValidationErrors();
         }
     }

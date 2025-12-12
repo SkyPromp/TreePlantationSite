@@ -97,7 +97,7 @@ namespace AP.BTP.Application.CQRS.PlantationSite
         public async Task<PlantationSiteDto> Handle(UpdatePlantationSiteCommand request, CancellationToken cancellationToken)
         {
             Domain.PlantationSite plantationSite = mapper.Map<Domain.PlantationSite>(request.UpdatedSite);
-            uow.PlantationSiteRepository.Update(plantationSite);  // If you really don't want to update is deleted (which shouldn't be in a DTO anyways) you can manually change the isDeleted value from plantationSite after the mapping
+            uow.PlantationSiteRepository.Update(plantationSite);
             await uow.Commit();
             
             return mapper.Map<PlantationSiteDto>(request.UpdatedSite);

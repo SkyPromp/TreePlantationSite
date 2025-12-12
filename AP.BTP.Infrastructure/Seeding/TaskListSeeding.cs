@@ -40,7 +40,7 @@ namespace AP.BTP.Infrastructure.Seeding
                 {
                     int weekday = i % 7;
 
-                    if ((weekday + dayoffset) % 7 == 5) dayoffset += 2;  // Only 5 days/week
+                    if ((weekday + dayoffset) % 7 == 5) dayoffset += 2;
 
                     int plantationSiteBaseId = ((i - daysToSetDayToMonday + dayoffset) / 7) % 2 + 1;
 

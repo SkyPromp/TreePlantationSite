@@ -88,7 +88,6 @@ namespace AP.BTP.Unittests.TaskItem
         [TestMethod]
         public async Task Should_Have_Error_When_Total_Duration_Exceeds_480()
         {
-            // Arrange
             Domain.User user = new Domain.User() { Auth0Id = "Auth0", Id = 1};
             Domain.TaskList taskList = new Domain.TaskList() { Id = 1, UserId = user.Id, Date = DateTime.Now, User = user };
             
@@ -108,10 +107,8 @@ namespace AP.BTP.Unittests.TaskItem
                 TaskItem = new TaskItemDto { Id = 0, Title = "Test", Description="Test", TaskListId = 1, DurationInMinutes = 100 }
             };
 
-            // Act
             TestValidationResult<AddTaskItemCommand> result = await validator.TestValidateAsync(command);
 
-            // Assert
             Assert.IsTrue(result.ShouldHaveValidationErrorFor(c => c.TaskItem)
                 .WithErrorMessage("Total task duration for this day cannot exceed 8 hours (480 minutes)") != null);
         }

@@ -49,7 +49,7 @@ namespace AP.BTP.Application.CQRS.TaskList
                 .WithMessage("Zone ID must be greater than 0 when specified")
                 .MustAsync(async (zoneId, cancellation) =>
                 {
-                    if (!zoneId.HasValue) return true; // skip if null
+                    if (!zoneId.HasValue) return true;
                     Domain.Zone? zone = await uow.ZoneRepository.GetById(zoneId.Value);
                     return zone != null && !zone.IsDeleted;
                 })
