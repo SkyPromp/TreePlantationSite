@@ -31,8 +31,7 @@
     @if (response?.Items == null || !response.Items.Any())
     {
         <p class="text-center mt-4">Er zijn momenteel geen gebruikers die een goedkeuring nodig hebben.</p>
-    }
-    else
+    } else
     {
         <div class="d-grid p-1 fw-bold"
              style="grid-template-columns: 1fr 2fr 2fr auto; column-gap: 1rem; border-radius: 10px;">
@@ -136,8 +135,7 @@
                 <div class="spinner-border align-self-center" role="status">
                     <span class="visually-hidden">Laden...</span>
                 </div>
-            }
-            else
+            } else
             {
                 <div class="row gap-3">
                     <div class="col">
@@ -152,28 +150,12 @@
     </div>
 }
 
-<ConfirmationPopup 
-    showConfirmationPopup="this.showDeleteConfirmation"
-    onCancellation="this.CancelEditUser"
-    onConfirmation="this.RejectUser"
-    confirmationDescription="Ben je zeker dat je deze gebruiker wil afwijzen?"
-/>
+<Toasts Class="m-3" @ref="toastContainer" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-@if (this.showSuccessToast)
-{
-    <div class="toast-container position-fixed top-50 start-50 translate-middle-x mt-3" style="z-index: 1055;">
-        <div class="toast show text-white bg-success shadow" style="opacity:@toastOpacity; transition: opacity 0.5s ease;">
-            <div class="toast-body">
-                ✅ Gebruiker is succesvol goedgekeurd!
-            </div>
-        </div>
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(this.errorMessage))
-{
-    <p>@errorMessage</p>
-}
+<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
+                   onCancellation="this.CancelEditUser"
+                   onConfirmation="this.RejectUser"
+                   confirmationDescription="Ben je zeker dat je deze gebruiker wil afwijzen?" />
 
 @code {
     /// <summary>
@@ -181,6 +163,16 @@
     /// Used to filter pending users by name or email.
     /// </summary>
     private string? searchText = null;
+
+    /// <summary>
+    /// Holds the list of toast messages to display in the UI.
+    /// </summary>
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    /// <summary>
+    /// Reference to the <see cref="Toasts"/> component used to render toast notifications.
+    /// </summary>
+    private Toasts? toastContainer;
 
     /// <summary>
     /// The paginated response containing pending users retrieved from the backend.
@@ -218,14 +210,9 @@
     private System.Timers.Timer? debounceTimer;
 
     /// <summary>
-    /// The HTTP client used for API communication. TODO: make optional and handle null cases.
+    /// The HTTP client used for API communication.
     /// </summary>
     HttpClient client = default!;
-
-    /// <summary>
-    /// Stores any error messages that occur during data fetching or API actions.
-    /// </summary>
-    private string errorMessage = "";
 
     /// <summary>
     /// Flag indicating whether the edit user modal or section is visible.
@@ -257,11 +244,6 @@
     /// The selected user ID during approval.
     /// </summary>
     private int? selectedUserId;
-
-    /// <summary>
-    /// Indicates whether the success toast notification should be displayed.
-    /// </summary>
-    private bool showSuccessToast = false;
 
     /// <summary>
     /// The opacity level of the success toast for fade-in/out animation.
@@ -330,25 +312,28 @@
 
         HttpResponseMessage responseMessage = await client.PostAsJsonAsync($"user/{selectedUserId}/approval", new ApproveUserDto() { Role = selectedRole });
 
-        if (responseMessage.IsSuccessStatusCode)
+        if (!responseMessage.IsSuccessStatusCode)
         {
-            await LoadPage(currentPage);
-            StateHasChanged();
+            EnqueueToast(message: "Er is iets misgegaan bij het goedkeuren van de gebruiker.", ToastType.Warning);
+            isLoading = false;
 
-            List<int> selectedSites = new List<int>();
-            if (site1.HasValue)
-                selectedSites.Add(site1.Value);
-            if (site2.HasValue)
-                selectedSites.Add(site2.Value);
+            return;
+        }
+
+        await LoadPage(currentPage);
+        StateHasChanged();
+
+        List<int> selectedSites = new List<int>();
+        if (site1.HasValue)
+            selectedSites.Add(site1.Value);
+        if (site2.HasValue)
+            selectedSites.Add(site2.Value);
 
             UserDto user = responseMessage.Content.ReadFromJsonAsync<UserDto>().Result!;
 
-            await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
-
-            await CancelEditUser();
-
-            await ShowSuccessToast();
-        }
+        await client.PutAsJsonAsync($"user/{user.Id}/sites", new LinkUserToPlantationSitesDto() { PlantationSiteIds = selectedSites });
+        await CancelEditUser();
+        this.EnqueueToast("Gebruiker is succesvol goedgekeurd!", ToastType.Success);
 
         isLoading = false;
     }
@@ -392,25 +377,17 @@
     /// </summary>
     private async Task LoadPlantationSites()
     {
-        try
-        {
-            List<PlantationSiteDto>? plantationSiteDtoResponse;
+        List<PlantationSiteDto>? plantationSiteDtoResponse;
 
-            plantationSiteDtoResponse = await this.client.GetFromJsonAsync<List<PlantationSiteDto>>("PlantationSite/all");
+        plantationSiteDtoResponse = await this.client.GetFromJsonAsync<List<PlantationSiteDto>>("PlantationSite/all");
 
-            if (plantationSiteDtoResponse != null)
-            {
-                this.plantationSites = plantationSiteDtoResponse;
-                StateHasChanged();
-            }
-            else
-            {
-                this.errorMessage = "Er is iets misgegaan bij het laden van de kweeksites.";
-            }
-        }
-        catch (Exception e)
+        if (plantationSiteDtoResponse != null)
         {
-            this.errorMessage = e.Message;
+            this.plantationSites = plantationSiteDtoResponse;
+            StateHasChanged();
+        } else
+        {
+            EnqueueToast(message: "Er is iets misgegaan bij het laden van de kweeksites.", ToastType.Warning);
         }
     }
 
@@ -438,25 +415,6 @@
     private static bool IsDisabled(int id, int? otherSite) => otherSite.HasValue && id == otherSite.Value;
 
     /// <summary>
-    /// Displays a temporary success toast message with fade-in and fade-out animations.
-    /// </summary>
-    private async Task ShowSuccessToast()
-    {
-        showSuccessToast = true;
-        toastOpacity = 1.0;
-        StateHasChanged();
-
-        await Task.Delay(2500);
-
-        toastOpacity = 0.0;
-        StateHasChanged();
-
-        await Task.Delay(500);
-        showSuccessToast = false;
-        StateHasChanged();
-    }
-
-    /// <summary>
     /// Rejects a pending user by sending a deletion request.
     /// Refreshes the user list afterward.
     /// </summary>
@@ -473,16 +431,21 @@
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 await LoadPage(currentPage);
+                EnqueueToast(message: "De gebruiker is correct afgewezen geweest.", ToastType.Success);
                 StateHasChanged();
-            }
-            else
+            } else
             {
-                errorMessage = $"Kon gebruiker niet afwijzen: {httpResponseMessage.StatusCode}";
+                EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {httpResponseMessage.StatusCode}", ToastType.Warning);
             }
-        }
-        catch (Exception ex)
+        } catch (InvalidOperationException e)
         {
-            errorMessage = $"Fout bij het afwijzen van gebruiker: {ex.Message}";
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (HttpRequestException e)
+        {
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
+        } catch (TaskCanceledException e)
+        {
+            EnqueueToast(message: $"Fout bij het afwijzen van gebruiker: {e.Message}", ToastType.Warning);
         }
 
         await CancelEditUser();
@@ -498,8 +461,7 @@
         if (sortBy == column)
         {
             sortDirection = sortDirection == "asc" ? "desc" : "asc";
-        }
-        else
+        } else
         {
             sortBy = column;
             sortDirection = "asc";
@@ -514,7 +476,23 @@
     /// <param name="column">The column that needs to be sorted.</param>
     private string SortIndicator(string column)
     {
-        if (sortBy != column) return "";
+        if (sortBy != column)
+            return "";
         return sortDirection == "asc" ? "↑" : "↓";
+    }
+
+    /// Adds a toast message to the toast container.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="type">The message type to display.</param>
+    private void EnqueueToast(string message, ToastType type)
+    {
+        this.toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = type.ToString(),
+            Message = message,
+            AutoHide = true
+        });
     }
 }
