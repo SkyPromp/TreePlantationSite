@@ -639,9 +639,13 @@
     /// <param name="task">The task item to edit.</param>
     private void EditTaskItem(TaskItemDto task)
     {
+        TaskItemDto newTask = new TaskItemDto() { Id = task.Id, Description = task.Description, Title = task.Description, TaskListId = task.TaskListId, EndTime=task.EndTime, DurationInMinutes=task.DurationInMinutes, StartTime=task.StartTime, IsDeleted=task.IsDeleted };
+
         IsNewTask = false;
         selectedTaskItem = task;
-        this.taskToBeAdded = task;
+
+
+        this.taskToBeAdded = newTask;
         this.taskDurationHours = task.DurationInMinutes / 60;
         this.taskDurationMinutes = task.DurationInMinutes % 60;
         this.ShowAddTaskItem = true;
@@ -882,6 +886,7 @@
     /// </summary>
     private void CancelAddTask()
     {
+        this.taskToBeAdded = null;
         this.ShowAddTaskItem = false;
     }
 
