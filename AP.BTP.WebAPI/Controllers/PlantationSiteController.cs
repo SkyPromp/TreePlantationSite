@@ -83,7 +83,7 @@ namespace AP.BTP.WebAPI.Controllers
 
             PlantationSiteDto newPlantationSite = await mediator.Send(new AddPlantationSiteCommand() { PlantationSite = plantationSiteDTO });
 
-            if (zones != null)
+            if (zones != null && zones!.Any())
             {
                 foreach (ZoneDto zone in zones) zone.PlantationSiteId = newPlantationSite.Id;
 
