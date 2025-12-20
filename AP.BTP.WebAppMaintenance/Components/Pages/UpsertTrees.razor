@@ -88,7 +88,7 @@
 
                                     @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSpring) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSpring))
                                     {
-                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanSpring = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { RemoveMaintenancePlanFromUI(Season.Spring); }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
                                     }
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
 
                                     @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanSummer) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanSummer))
                                     {
-                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanSummer = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { RemoveMaintenancePlanFromUI(Season.Summer); }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
                                     }
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
 
                                     @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanAutumn) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanAutumn))
                                     {
-                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanAutumn = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { RemoveMaintenancePlanFromUI(Season.Autumn); }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
                                     }
                                 </div>
                             </div>
@@ -205,7 +205,7 @@
 
                                     @if (!string.IsNullOrWhiteSpace(Tree.MaintenancePlanWinter) && maintenancePreviews.ContainsKey(Tree.MaintenancePlanWinter))
                                     {
-                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { this.Tree.MaintenancePlanWinter = null; this.showDeleteConfirmationMaintenancePlan = false; }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
+                                        <Button Class="p-0" Style="box-shadow: none; border: none;  height: 5vh;" @onclick="() => { this.ConfirmDeleteMaintenancePlan = () => { RemoveMaintenancePlanFromUI(Season.Winter); }; this.showDeleteConfirmationMaintenancePlan = true; }"><Icon Name="IconName.Trash" Color="IconColor.Danger" Style="font-size: 3vh;" Class="d-flex"></Icon></Button>
                                     }
                                 </div>
                             </div>
@@ -248,10 +248,19 @@
 
 <Toasts Class="m-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" ShowCloseButton="false" />
 
-<ConfirmationPopup showConfirmationPopup="this.showDeleteConfirmation"
-                   onCancellation="this.CancelDeletePicture"
-                   onConfirmation="this.DeletePicture"
-                   confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?" />
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmation"
+    onCancellation="this.CancelDeletePicture"
+    onConfirmation="this.DeletePicture"
+    confirmationTitle="Afbeelding verwijderen?"
+    confirmationDescription="Bent u zeker dat u deze afbeelding wilt verwijderen?" />
+
+<ConfirmationPopup 
+    showConfirmationPopup="this.showDeleteConfirmationMaintenancePlan"
+    onCancellation="() => { if (this.CancelDeleteMaintenancePlan != null) this.CancelDeleteMaintenancePlan(); return Task.CompletedTask; }"
+    onConfirmation="() => { if (this.ConfirmDeleteMaintenancePlan != null) { this.ConfirmDeleteMaintenancePlan(); StateHasChanged(); } return Task.CompletedTask; }"
+    confirmationTitle="Onderhoundsplan verwijderen?"
+    confirmationDescription="Bent u zeker dat u dit onderhoudsplan wilt verwijderen?" />
 
 <ConfirmationPopup 
     showConfirmationPopup="this.showConfirmLeaveForm"
@@ -912,11 +921,13 @@
     /// <summary>
     /// The function that shall be run when the maintanceplan deletion is cancelled
     /// </summary>
-    private void CancelDeleteMaintenancePlan()
+    private Task CancelDeleteMaintenancePlan()
     {
         this.ConfirmDeleteMaintenancePlan = null;
         this.showDeleteConfirmationMaintenancePlan = false;
         StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -1019,5 +1030,49 @@
             Message = message,
             AutoHide = true
         });
+    }
+
+    /// <summary>
+    /// Removes a maintenance plan from the UI immediately, but marks it for deletion on save.
+    /// </summary>
+    private void RemoveMaintenancePlanFromUI(Season season)
+    {
+        string? fileKey = season switch
+        {
+            Season.Spring => Tree.MaintenancePlanSpring,
+            Season.Summer => Tree.MaintenancePlanSummer,
+            Season.Autumn => Tree.MaintenancePlanAutumn,
+            Season.Winter => Tree.MaintenancePlanWinter,
+            _ => null
+        };
+
+        if (!string.IsNullOrWhiteSpace(fileKey))
+        {
+            maintenancePreviews.Remove(fileKey);
+            qrCodes.Remove(fileKey);
+            maintenanceFileNames.Remove(fileKey);
+            
+            newMaintenanceFiles.Remove(fileKey);
+        }
+
+        switch (season)
+        {
+            case Season.Spring:
+                Tree.MaintenancePlanSpring = null;
+                break;
+            case Season.Summer:
+                Tree.MaintenancePlanSummer = null;
+                break;
+            case Season.Autumn:
+                Tree.MaintenancePlanAutumn = null;
+                break;
+            case Season.Winter:
+                Tree.MaintenancePlanWinter = null;
+                break;
+        }
+
+        showDeleteConfirmationMaintenancePlan = false;
+        EnqueueToast("Het onderhoudsplan zal verwijderd worden bij het opslaan.", ToastType.Success);
+        StateHasChanged();
     }
 }
