@@ -540,7 +540,7 @@ AUTH0_MANAGEMENT_CLIENT_SECRET=9SG1Fzf8qVPoeAe-W0eUZYqkNRRZ...
 
 ---
 
-#### 6. Rollen configureren
+#### 6. Rollen aanmaken
 
 1. Ga naar **User Management** -> **Roles**
 2. Klik **Create Role**
@@ -552,6 +552,65 @@ AUTH0_MANAGEMENT_CLIENT_SECRET=9SG1Fzf8qVPoeAe-W0eUZYqkNRRZ...
 Voor elke rol:
 1. Geef een **Name** en **Description**
 2. Klik **Create**
+
+---
+
+#### 7. Eerste gebruiker aanmaken
+
+Voor **demo en development doeleinden** zijn er standaard 3 gebruikers aanwezig:
+
+| Rol | Email | Wachtwoord |
+|-----|-------|------------|
+| Admin | `Admin123@admin.admin` | `Admin123@admin.admin` |
+| Manager | `Manager123@manager.manager` | `Manager123@manager.manager` |
+| Operator | `Operator123@operator.operator` | `Operator123@operator.operator` |
+
+Deze gebruikers worden:
+- Manueel aangemaakt in Auth0
+- Toegevoegd aan de database (via seed data)
+- Gekoppeld aan de juiste rollen
+
+**Let op:** Deze demo accounts zijn **niet geschikt voor productie**! Zie hieronder voor productie setup.
+
+---
+
+##### Productie setup (handmatig gebruiker aanmaken)
+
+Voor **productie** moet je handmatig een admin gebruiker aanmaken:
+
+**Stap 1: Gebruiker in Auth0 aanmaken**
+
+1. Ga naar **User Management** → **Users**
+2. Klik **Create User**
+3. Vul in:
+   - **Email**: `jouw.email@bedrijf.be`
+   - **Password**: Kies een sterk wachtwoord
+   - **Connection**: `Username-Password-Authentication`
+4. Klik **Create**
+
+**Stap 2: Admin rol toewijzen**
+
+1. Klik op de zojuist aangemaakte gebruiker
+2. Ga naar het tabblad **Roles**
+3. Klik **Assign Roles**
+4. Selecteer `Admin`
+5. Klik **Assign**
+
+**Stap 3: Gebruiker in database toevoegen**
+
+De gebruiker moet ook in de applicatie database worden toegevoegd. Dit gebeurt automatisch bij de eerste login, of kan handmatig via SQL:
+
+```sql
+INSERT INTO [dbo].[User] (Auth0Id, FirstName, LastName, PhoneNumber, Email, IsApproved, Role, IsDeleted)
+VALUES 
+  ('auth0|xxxxx', 'Jouw', 'Naam', '+32123456789', 'jouw.email@bedrijf.be', 1, 'Admin', 0);
+```
+
+De `Auth0Id` kan je vinden in Auth0 → Users → (jouw gebruiker) → Details → "user_id".
+
+**Voor productie deployment:**
+1. Maak een eigen admin account aan volgens bovenstaande stappen
+2. Update eventueel seeding code om demo accounts niet meer toe te voegen
 
 ---
 
