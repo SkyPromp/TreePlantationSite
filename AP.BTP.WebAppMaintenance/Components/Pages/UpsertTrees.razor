@@ -627,9 +627,11 @@
                     await GeneratePreview(created.Id.ToString(), created.Path, FileType.Picture);
                 }
             }
+            this.showConfirmSaveForm = false;
         } catch (ArgumentNullException e)
         {
             EnqueueToast(message: $"Er ging iets mis bij het opslagen van de foto's: {e}", ToastType.Warning);
+            this.showConfirmSaveForm = false;
         }
     }
 
